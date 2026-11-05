@@ -162,5 +162,6 @@ await __Y(64);(function(){const asph=tex(cv(256,256,(x,w,h)=>{x.fillStyle="#5d5f
   if(dash.length){const dm=new THREE.InstancedMesh(new THREE.BoxGeometry(3,0.04,0.15),mL,dash.length);dash.forEach((q,i)=>{d.rotation.set(0,q[3],0);d.position.set(q[0],q[1],-q[2]);d.updateMatrix();dm.setMatrixAt(i,d.matrix)});WG.add(dm)}
   if(poles.length){const pm=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.08,0.11,8,6),new THREE.MeshStandardMaterial({color:0x5d6166,metalness:0.6,roughness:0.4}),poles.length),hm=new THREE.InstancedMesh(new THREE.BoxGeometry(1.4,0.18,0.35),M.lamp,poles.length);
     poles.forEach((q,i)=>{d.rotation.set(0,q[3],0);d.position.set(q[0],q[1]+4,-q[2]);d.updateMatrix();pm.setMatrixAt(i,d.matrix);d.translateZ(-0.6);d.position.y=q[1]+8;d.updateMatrix();hm.setMatrixAt(i,d.matrix)});pm.castShadow=true;WG.add(pm,hm)}
+  ["a","p","c","s"].forEach(k=>{geo[k].p=[];geo[k].u=[]}); // free the raw arrays: the meshes keep their own Float32 copies
 })();
 
