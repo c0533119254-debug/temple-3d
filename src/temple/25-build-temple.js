@@ -158,7 +158,7 @@ await __Y(86);function build(){
     CL("13 שופרות",231,351.2,8,sf)}
   // binyan
   const bi=I("הבניין שמול הגזרה","יחזקאל מ״א, יב","70 × 90 אמה מבפנים, עם קיר של 5 אמות. למה הוא משמש — לא מפורש. הגובה כאן בניחוש.");
-  box(0,200,80,300,7.5,37.5,M.stone,bi);box(-0.4,199.6,80.4,300.4,37.5,39,M.stoneL,null);for(let k=0;k<9;k++)box(80,207+k*10.5,81,210+k*10.5,7.5,37.5,M.stone2,null);
+  box(0,200,80,300,7.5,37.5,M.stone,bi);box(0,199.6,80.4,300.4,37.5,39,M.stoneL,null);for(let k=0;k<9;k++)box(80,207+k*10.5,81,210+k*10.5,7.5,37.5,M.stone2,null);
   }
   let HG=null,colH=COL.length;if(RB){HG=new THREE.Group();HG.position.y=8.5*A;ROOT.add(HG);group=HG}
   // the House
