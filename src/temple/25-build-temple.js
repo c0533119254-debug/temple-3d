@@ -84,7 +84,7 @@ await __Y(86);function build(){
   gate("n",250,25,3.5,-1,I("השער החיצוני הצפוני","יחזקאל מ׳, כ-כג; מ״ו, ט","שער באורך 50 אמה ורוחב 25, עם תאים, אילים ואולם, ו־7 מדרגות. דרכו נכנסים ברגלים."));
   gate("n",250,475,3.5,1,I("השער החיצוני הדרומי","יחזקאל מ׳, כד-כז","מי שנכנס מצפון יוצא מדרום, וכך הזרמים לא נתקלים זה בזה."));
   gate("e",475,250,3.5,1,I("השער החיצוני המזרחי — סגור","יחזקאל מ״ד, א-ב; מידות א, ג","📜 \"השער הזה סגור יהיה, לא יפתח, ואיש לא יבא בו\" (יחזקאל מד, ב). 💡 זה שער אחד: מבפנים הוא השער החיצוני המזרחי של יחזקאל, ומבחוץ חזיתו היא שער שושן (מידות א, ג). הוא סגור, ולכן אין לו שימוש ואין סופרים בו מדרגות. 💡 הקרקע שמחוצה לו נמוכה (כ־21- מ׳), כי ריבוע 500 האמה יוצא מזרחה מהחומה של היום אל מדרון הקדרון, ושם יש מילוי."),true);
-  {const gi=I("שער המזרח — שער שושן","מידות א, ג; יחזקאל מד, א–ג","⚖️ \"שער המזרחי, עליו שושן הבירה צורה\" (מידות א, ג). 📜 \"השער הזה סגור יהיה, לא יפתח\" (יחזקאל מד, ב). 💡 בתוכנית זה השער המזרחי של חומת 500 האמה, שהיא הר הבית. זה אותו שער כמו \"השער החיצוני המזרחי — סגור\": שושן הוא שם החזית שלו מבחוץ. הדלתות הגדולות סגורות תמיד, ומעליהן תבליט של שושן הבירה. ⚖️ לפי המשנה כבש הפרה יוצא מהשער המזרחי (מידות א, ג). 💡 לכן לפני השער יש רחבה שממנה יוצא הכבש, והכהן עובר אליה בפשפש הקטן שבצד השער, שפתוח. כך השער \"סגור\" כדברי יחזקאל, והכבש עדיין יוצא ממנו.");
+  {const gi=I("שער המזרח — שער שושן","מידות א, ג; יחזקאל מד, א–ג","⚖️ \"שער המזרחי, עליו שושן הבירה צורה\" (מידות א, ג). 📜 \"השער הזה סגור יהיה, לא יפתח\" (יחזקאל מד, ב). 💡 בתוכנית זה השער המזרחי של חומת 500 האמה, שהיא הר הבית. זה אותו שער כמו \"השער החיצוני המזרחי — סגור\": שושן הוא שם החזית שלו מבחוץ. הדלתות הגדולות סגורות תמיד, ומעליהן תבליט של שושן הבירה. ⚖️ לפי המשנה כבש הפרה יוצא מהשער המזרחי (מידות א, ג). 💡 לכן ראש כבש הפרה רחב ומתחיל צמוד לשער, והכהן עולה עליו בפשפש הקטן שבצד השער, שפתוח. כך השער \"סגור\" כדברי יחזקאל, והכבש עדיין יוצא ממנו.");
     // east-gate cleanup: two closed bronze leaves inside a stone frame (jambs + lintel), the seam and bands show it is a door that stays shut
     {const dh=GATE==="high"?35:15,y1=3.5+dh;box(500,245,500.3,255,3.5,y1,M.bronze,gi,{cast:false});box(500.3,249.9,500.38,250.1,3.5,y1,M.dark,null,{noCol:true,cast:false});
       [0.25,0.5,0.75].forEach(f=>box(500.3,245.3,500.36,254.7,3.5+dh*f-0.15,3.5+dh*f+0.15,M.gold,null,{noCol:true,cast:false}));
@@ -462,26 +462,30 @@ await __Y(86);function build(){
       [[244,54],[256,54],[244,446],[256,446],[446,244],[12,40],[484,40],[12,460],[484,460],[244,146],[256,146],[244,354],[256,354],[354,244],[204,196],[323,196],[204,304],[323,304],[232,357],[268,357]].forEach(([u,v])=>add(STAND,gd,{u,v,y:3.5,a:face(u,v,250,250),c:LV}));
       add(STAND,gd,{u:90,v:250,y:7.5,a:face(90,250,250,250),c:LV});[[230,150],[270,146],[226,190]].forEach(([u,v])=>add(STAND,gd,{u,v,y:3.5,a:face(u,v,250,250),c:PR}))}
     // -- Kevesh HaParah: arches on arches to the Mount of Olives (Parah 3:6) --
-    {const kp=I("כבש הפרה","פרה ג, ו; מידות ב, ד","📜 \"וכבש היו עושין מהר הבית להר המשחה, כיפין על גבי כיפין, וכיפה כנגד האום\" — גשר על קשתות מעל קשתות, כדי שיהיה חלל תחתיו ולא תהיה בו טומאת קבר. עליו הכהן מוציא את הפרה האדומה להר הזיתים. 💡 השער המזרחי ביחזקאל סגור לעולם (מ״ד, ב), ולכן הכהן יוצא בפשפש קטן שבצד השער, אל רחבה שלפני השער, וממנה יוצא הגשר. ⚖️ \"כל הכתלים שהיו שם היו גבוהים, חוץ מכותל המזרחי, שהכהן השורף את הפרה עומד בראש הר המשחה ומתכוון ורואה בפתחו של היכל\" (מידות ב, ד). בהדמיה בודקים שמסוף הכבש רואים את פתח ההיכל. הרוחב, השיפוע וגודל הקשתות הם הצעה.");
+    {const kp=I("כבש הפרה","פרה ג, ו; מידות ב, ד","📜 \"וכבש היו עושין מהר הבית להר המשחה, כיפין על גבי כיפין, וכיפה כנגד האום\" — גשר על קשתות מעל קשתות, כדי שיהיה חלל תחתיו ולא תהיה בו טומאת קבר. עליו הכהן מוציא את הפרה האדומה להר הזיתים. 💡 השער המזרחי ביחזקאל סגור לעולם (מ״ד, ב), ולכן הכהן יוצא בפשפש קטן שבצד השער. 💡 ראש הגשר רחב כמו השער ומחבר את השער והפשפש, ומשם הגשר מצטמצם בהדרגה, על הציר של ההיכל עד מקום השריפה. ⚖️ \"כל הכתלים שהיו שם היו גבוהים, חוץ מכותל המזרחי, שהכהן השורף את הפרה עומד בראש הר המשחה ומתכוון ורואה בפתחו של היכל\" (מידות ב, ד). בהדמיה בודקים שמסוף הכבש רואים את פתח ההיכל. הרוחב, השיפוע וגודל הקשתות הם הצעה.");
       if(RB)kp.t=kp.t.replace(/💡 השער המזרחי ביחזקאל[^⚖]*/,"📜 לפי מסכת מידות הכבש יוצא בשער המזרחי עצמו: \"שער המזרחי... שבו כהן גדול השורף את הפרה ופרה וכל מסעדיה יוצאין להר המשחה\" (מידות א, ג). ");
       // east-gate cleanup: the wicket moves from v=220 (where the last east chamber, v 198-232, blocked it from inside) to the free strip between that chamber and the gate (v 232-237.5)
-      const KU=RB?541:500,BV=RB?241:234.75,BW=2.3,SL=0.03,yD=u=>Y3+(u-KU)*SL,P=[];for(let u=KU+2;u<1500;u+=20){P.push(u);if(GY(u,BV)>yD(u)-1.5)break}const ue=P[P.length-1];
-      if(!RB){box(500,BV-1.55,500.1,BV+1.55,3.5,9,M.dark,kp,{noCol:true,cast:false});box(500,BV-2.6,501.2,BV+2.6,9,10.2,M.stoneL,null,{noCol:true});
-      [-1,1].forEach(sd=>box(500,BV+sd*1.55-(sd>0?0:1.05),501.2,BV+sd*1.55+(sd>0?1.05:0),3.5,9,M.stone2,kp,{noCol:true}));
-      // east-gate landing (user request): the closed gate and the open wicket both face one paved landing, and the bridge leaves from it
-      {const li=I("הרחבה שלפני שער המזרח","מידות א, ג; פרה ג, ו; יחזקאל מד, ב","⚖️ \"שער המזרחי... שבו כהן גדול השורף את הפרה ופרה וכל מסעדיה יוצאין להר המשחה\" (מידות א, ג). 📜 \"השער הזה סגור יהיה\" (יחזקאל מד, ב). 💡 רחבה לפני השער: הדלתות הגדולות סגורות, הפשפש שבצד פתוח אליה, וממנה יוצא כבש הפרה. המידות הן הצעה.");
-        box(501.2,231.5,510,263.5,2.6,3.5,M.stoneL,li,{noCol:true});box(509.6,237.1,510,263.5,3.5,5.2,M.stone2,null,{noCol:true});box(501.2,263.1,510,263.5,3.5,5.2,M.stone2,null,{noCol:true});box(501.2,231.5,510,231.9,3.5,5.2,M.stone2,null,{noCol:true});
-        [247.5,262].forEach(v=>{const g=GY(509,v);box(508,v-1,510,v+1,g-1,2.6,M.stoneL,li,{noCol:true})})}
+      // user request: the bridge leaves on the gate axis, as wide as the landing in front of the gate (37 amot), and narrows gently to 4.6 amot over ~100 amot (💡 sizes are a suggestion)
+      const KU=RB?541:500,BV=RB?241:250,PV=234.75,BW=2.3,BW0=RB?BW:18.5,BWf=u=>u<=512||RB?BW0:u>=612?BW:BW+(BW0-BW)*0.5*(1+Math.cos(Math.PI*(u-512)/100)),SL=0.03,yD=u=>Y3+(u-KU)*SL,P=[];for(let u=KU+2;u<1500;u+=20){P.push(u);if(GY(u,BV)>yD(u)-1.5)break}const ue=P[P.length-1];
+      if(!RB){box(500,PV-1.55,500.1,PV+1.55,3.5,9,M.dark,kp,{noCol:true,cast:false});box(500,PV-2.6,501.2,PV+2.6,9,10.2,M.stoneL,null,{noCol:true});
+      [-1,1].forEach(sd=>box(500,PV+sd*1.55-(sd>0?0:1.05),501.2,PV+sd*1.55+(sd>0?1.05:0),3.5,9,M.stone2,kp,{noCol:true}));
       {const pi=I("פשפש כבש הפרה","פרה ג, ו; יחזקאל מד, ב; מידות ד, ב","💡 פתח קטן בחומה המזרחית, צמוד לשער המזרח הסגור מצפון, בין השער ללשכה האחרונה. דרכו בלבד יוצא הכהן עם הפרה אל הכבש. 📜 שער המזרח עצמו נשאר סגור (יחזקאל מד, ב). ⚖️ \"פשפש\" הוא פתח קטן בצד שער גדול, כמו שני הפשפשים של שער ההיכל (מידות ד, ב).");
-        box(493.9,BV-1.55,494,BV+1.55,3.5,9,M.dark,pi,{noCol:true,cast:false});box(492.8,BV-2.6,494,BV+2.6,9,10.2,M.stoneL,null,{noCol:true});CL("פשפש כבש הפרה",503,BV,13,pi,true)}}
-      P.forEach(u=>{const g=GY(u,BV);if(g<yD(u)-1.5)box(u-1.1,BV-BW,u+1.1,BV+BW,g-1,yD(u)-0.9,M.stoneL,kp,{noCol:true})});
+        box(493.9,PV-1.55,494,PV+1.55,3.5,9,M.dark,pi,{noCol:true,cast:false});box(492.8,PV-2.6,494,PV+2.6,9,10.2,M.stoneL,null,{noCol:true});CL("פשפש כבש הפרה",503,PV,13,pi,true)}}
+      P.forEach(u=>{const g=GY(u,BV),w=BWf(u);if(g<yD(u)-1.5)box(u-1.1,BV-w,u+1.1,BV+w,g-1,yD(u)-0.9,M.stoneL,kp,{noCol:true})});
       const AR=[];for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],m=(a+b)/2,gm=Math.max(GY(a,BV),GY(b,BV),GY(m,BV)),top=yD(m)-0.9;for(let t=top-10;t>gm;t-=10)AR.push([m,t])}
       if(AR.length){const Wd=17.8,sh=new THREE.Shape();sh.moveTo(0,0);sh.lineTo(0,10*A);sh.lineTo(Wd*A,10*A);sh.lineTo(Wd*A,0);sh.absarc(Wd/2*A,0,Wd/2*A,0,Math.PI,false);
         const ag=new THREE.ExtrudeGeometry(sh,{depth:2*BW*A,bevelEnabled:false});ag.translate(-Wd/2*A,0,-BW*A);const am=new THREE.InstancedMesh(ag,M.stoneL,AR.length),d=new THREE.Object3D();
-        AR.forEach(([m,t],i)=>{const q=W(m,BV);d.position.set(q[0],t*A,q[1]);d.updateMatrix();am.setMatrixAt(i,d.matrix)});am.castShadow=true;am.receiveShadow=true;am.userData=kp;cPick.push(am);group.add(am)}
-      {const KS=RB?KU:510,L=ue-KS,mu=(KS+ue)/2,q=W(mu,BV),g=new THREE.Group();g.position.set(q[0],(yD(mu)-0.45)*A,q[1]);g.rotation.z=Math.atan(SL);
-        const dk=new THREE.Mesh(new THREE.BoxGeometry(L*A*Math.hypot(1,SL),0.9*A,2*BW*A),M.stoneL);dk.castShadow=true;dk.receiveShadow=true;dk.userData=kp;cPick.push(dk);g.add(dk);
-        [-1,1].forEach(sd=>{const pp=new THREE.Mesh(new THREE.BoxGeometry(L*A*Math.hypot(1,SL),1.3*A,0.35*A),M.stone2);pp.position.set(0,1.1*A,sd*(BW-0.18)*A);pp.castShadow=true;g.add(pp)});group.add(g)}
+        AR.forEach(([m,t],i)=>{const q=W(m,BV);d.position.set(q[0],t*A,q[1]);d.scale.set(1,1,BWf(m)/BW);d.updateMatrix();am.setMatrixAt(i,d.matrix)});am.castShadow=true;am.receiveShadow=true;am.userData=kp;cPick.push(am);group.add(am)}
+      {const KS=RB?KU:501.2,U=[];for(let u=KS;u<ue;u+=4)U.push(u);U.push(ue);
+        // a slab between the outlines o0(u) and o1(u) (v offsets from BV), from yD(u)+y0 to yD(u)+y1
+        const slab=(o0,o1,y0,y1,mat,info)=>{const pos=[],uv=[],idx=[],n=U.length,V=(u,o,y)=>{const q=W(u,BV+o);pos.push(q[0],(yD(u)+y)*A,q[1]);uv.push(u*A/2.6,(o+y)*A/2.6)};
+          U.forEach(u=>{V(u,o0(u),y0);V(u,o1(u),y0);V(u,o0(u),y1);V(u,o1(u),y1)});
+          for(let i=0;i<n-1;i++){const a=i*4,b=a+4;[[a+2,b+2,a+3],[b+2,b+3,a+3],[a,a+1,b],[b,a+1,b+1],[a,b,a+2],[b,b+2,a+2],[a+1,a+3,b+1],[b+1,a+3,b+3]].forEach(t=>idx.push(...t))}
+          const e=(n-1)*4;idx.push(0,2,1,1,2,3,e,e+1,e+2,e+1,e+3,e+2);
+          const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+          const m=new THREE.Mesh(g,mat.userData.ds||(mat.userData.ds=Object.assign(mat.clone(),{side:THREE.DoubleSide})));m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m)};
+        slab(u=>-BWf(u),u=>BWf(u),-0.9,0,M.stoneL,kp);
+        [-1,1].forEach(sd=>slab(u=>sd*(BWf(u)-0.35),u=>sd*BWf(u),0,1.75,M.stone2,null))}
       CL("כבש הפרה",KU+260,BV,yD(KU+260)+6,kp,false);cLabels[cLabels.length-1].pr=1;
       // the purity centre and the place of burning at the far end
       const pc=I("מרכז טהרה","במדבר יט, יא-יט; פרה ג","⚖️ טמא מת צריך הזאה של מי חטאת — אפר הפרה האדומה במים חיים — ביום השלישי וביום השביעי, ואחר כך טבילה. 💡 כאן מוצע מרכז טהרה מחוץ להר, בסוף כבש הפרה בהר הזיתים: מקוואות, מקום הזאה וחדרים להחלפת בגדים.");
@@ -643,7 +647,7 @@ await __Y(86);function build(){
     // east-gate cleanup: no outlet high on the outside of the wall any more; the water stays in a covered channel and comes out at the foot of the Mount (see the spring below)
   }
   (function(){
-    const s0=W(505,268),x0=s0[0],n0=-s0[1];
+    const s0=W(505,273),x0=s0[0],n0=-s0[1];
     const ribbon=(pts,w0,w1,lift)=>{const pos=[],uv=[],idx=[];let acc=0;
       for(let k=0;k<pts.length;k++){const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],o=pts[Math.max(k-1,0)];const dx=q[0]-o[0],dz=q[2]-o[2],l=Math.hypot(dx,dz)||1;const nx=-dz/l,nz=dx/l;const w=(w0+(w1-w0)*k/(pts.length-1))/2;
         if(k>0)acc+=Math.hypot(p[0]-pts[k-1][0],p[2]-pts[k-1][2]);
@@ -654,7 +658,7 @@ await __Y(86);function build(){
     let xe=x0;while(inPoly(xe+1,n0,MOUNT_S)&&xe<x0+250)xe+=1;
     // stone channel across the platform
     while(inPoly(xe+0.1,n0,MOUNT_S)&&xe<x0+250)xe+=0.1;
-    const gf=S2G(xe+3,n0),hb=H(gf[0],gf[1]),f0p=x=>x+0.15,u500=x=>500+(x-W(500,268)[0])/A;
+    const gf=S2G(xe+3,n0),hb=H(gf[0],gf[1]),f0p=x=>x+0.15,u500=x=>500+(x-W(500,273)[0])/A;
     if(!M.fallMist){M.fallMist=new THREE.MeshStandardMaterial({map:waterTex,color:0xffffff,transparent:true,opacity:0.38,depthWrite:false,side:THREE.DoubleSide,roughness:0.4});M.mist=new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:0.16,depthWrite:false,roughness:1});M.rock=new THREE.MeshStandardMaterial({color:0x8a8070,roughness:0.95,flatShading:true});
       M.palmLeaf=new THREE.MeshStandardMaterial({color:0x557232,roughness:0.9,side:THREE.DoubleSide});M.reed=new THREE.MeshStandardMaterial({color:0x8e9a52,roughness:0.95})}
     // east-gate cleanup: instead of a spout and a 20 m waterfall, the water comes out at the foot of the wall in a small arched outlet and trickles into a pool.
@@ -663,7 +667,7 @@ await __Y(86);function build(){
       const f0=xe+0.15,Bx=(w,h,d,x,y,z,m)=>{const b=new THREE.Mesh(wbox(w,h,d,2.6),m);b.position.set(x,y,z);b.castShadow=true;b.receiveShadow=true;b.userData=sp;cPick.push(b);group.add(b)};
       Bx(0.5,0.35,3.4,f0+0.2,hb+2.75,-n0,M.stone2);[-1,1].forEach(sd=>Bx(0.5,2.6,0.6,f0+0.2,hb+1.3,-n0+sd*1.4,M.stone2));Bx(0.08,2.2,2.2,f0-0.02,hb+1.4,-n0,M.dark);
       Bx(1.4,0.22,1.0,f0+0.65,hb+0.95,-n0,M.stone2);const pr=new THREE.Mesh(new THREE.PlaneGeometry(0.8,0.75),M.water2);pr.position.set(f0+1.38,hb+0.62,-n0);pr.rotation.y=Math.PI/2;pr.userData=sp;cPick.push(pr);group.add(pr);
-      CL("המעיין למרגלות החומה",u500(f0),268,(hb+5)/A,sp,true)}
+      CL("המעיין למרגלות החומה",u500(f0),273,(hb+5)/A,sp,true)}
     const px=f0p(xe)+5.6;
     const pool=new THREE.Mesh(new THREE.CircleGeometry(5.5,28),M.river);pool.rotation.x=-Math.PI/2;pool.position.set(px,hb+0.35,-n0);pool.userData=rv;cPick.push(pool);group.add(pool);
     const fo=new THREE.Mesh(new THREE.RingGeometry(0.3,3,24),M.foam);fo.rotation.x=-Math.PI/2;fo.position.set(px-0.6,hb+0.42,-n0);group.add(fo);
