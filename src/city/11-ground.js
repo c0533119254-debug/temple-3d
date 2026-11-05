@@ -48,7 +48,7 @@ const GROUND=(function(){const b=SATB.old,X0=(b.w-LON0)*94630,X1=(b.e-LON0)*9463
     g.computeVertexNormals();
     if(k==="old"){const B=SATB.mt,mx0=(B.w-LON0)*94630+b.st,mx1=(B.e-LON0)*94630-b.st,mn0=(B.s-LAT0)*110574+b.st,mn1=(B.nn-LAT0)*110574-b.st,ins=v=>{const x=p.getX(v),n=-p.getZ(v);return x>mx0&&x<mx1&&n>mn0&&n<mn1};
       const idx=g.index.array,keep=[];for(let t=0;t<idx.length;t+=3)if(!(ins(idx[t])&&ins(idx[t+1])&&ins(idx[t+2])))keep.push(idx[t],idx[t+1],idx[t+2]);g.setIndex(keep)}
-    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:GROUND.forTile(b),roughness:1,metalness:0,envMapIntensity:0.2}));m.receiveShadow=true;SATG.add(m)});
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:GROUND.forTile(b),roughness:1,metalness:0,envMapIntensity:0.2,polygonOffset:po<0,polygonOffsetFactor:po,polygonOffsetUnits:po}));m.receiveShadow=true;SATG.add(m)}); /* ריצודים: בשוליים האריח של הר הבית חופף לאריח העיר (13 ס״מ ביניהם); polygonOffset שומר שהפנימי תמיד מעל */
   const sh=new THREE.Shape();MOUNT.forEach((q,i)=>i?sh.lineTo(q[0],q[1]):sh.moveTo(q[0],q[1]));sh.closePath();
   const g=new THREE.ShapeGeometry(sh),uv=g.attributes.uv,p=g.attributes.position;for(let i=0;i<p.count;i++){const q=satUV(SATB.mt,p.getX(i),p.getY(i));uv.setXY(i,q[0],q[1])}
   g.rotateX(-Math.PI/2);const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({map:loadSat(SATB.mt),roughness:1,envMapIntensity:0.2}));m.position.y=0;m.receiveShadow=true;SATTOP.add(m);
