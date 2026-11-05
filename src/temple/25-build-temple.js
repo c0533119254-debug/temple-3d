@@ -691,7 +691,7 @@ await __Y(86);function build(){
       TP("palm",PL,t=>0.75+t[3]*0.14);TP("fig",FG,t=>0.55+t[3]*0.22);TP("carob",CB,t=>0.6+t[3]*0.2);
       {const RD=[],SH=[];for(let k=1;k<pts.length;k++){if(FLAG[k])continue;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1;[-1,1].forEach(sd=>{
           if(r()<0.75){const off=wid[k]/2+0.2+r()*1.4,cx=p[0]-dz/l*off*sd,cz=p[2]+dx/l*off*sd;for(let j=0;j<6;j++)RD.push([cx+(r()-0.5)*1.6,p[1]+1.0,cz+(r()-0.5)*1.6,1.2+r()*1.6,(r()-0.5)*0.25,(r()-0.5)*0.25])}
-          if(r()<0.35){const off=wid[k]/2+1.5+r()*3,x=p[0]-dz/l*off*sd,z=p[2]+dx/l*off*sd;const g=S2G(x,-z);if(!onRoad(g[0],g[1],1.5))SH.push([x,H(g[0],g[1]),z,0.7+r()*0.6,r()<0.4])}
+          if(r()<0.35){const off=wid[k]/2+1.5+r()*3,x=p[0]-dz/l*off*sd,z=p[2]+dx/l*off*sd;const g=S2G(x,-z);if(!onRoad(g[0],g[1],1.5)&&!inPoly(g[0],g[1],MOUNT_BIG))SH.push([x,H(g[0],g[1]),z,0.7+r()*0.6,r()<0.4])}
           if(r()<0.4){const off=wid[k]/2-0.4+r()*1.2;ROCKS.push([p[0]-dz/l*off*sd,p[1]+0.9,p[2]+dx/l*off*sd,0.25+r()*0.6])}})}
         const d=new THREE.Object3D(),c=new THREE.Color();
         if(RD.length){const g=new THREE.ConeGeometry(0.045,1,3);g.translate(0,0.5,0);const rm=new THREE.InstancedMesh(g,M.reed,RD.length);RD.forEach((t,i)=>{d.position.set(t[0],t[1],t[2]);d.scale.set(1,t[3],1);d.rotation.set(t[4],0,t[5]);d.updateMatrix();rm.setMatrixAt(i,d.matrix);c.setHSL(0.17+(i%7)*0.008,0.35,0.36+(i%5)*0.03);rm.setColorAt(i,c)});group.add(rm)}
