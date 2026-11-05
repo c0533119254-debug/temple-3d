@@ -18,10 +18,11 @@ function sillSteps(add,off,gf,x,n,a,y,w){const q=off(x,n,a,1.6,0),g0=gf(q[0],q[1
 
 // ---- topic 5: plants that grow out of the old walls of the Mount (capers and hyssop) ----
 // 📜 "מן הארז אשר בלבנון ועד האזוב אשר יצא בקיר" (מלכים א ה, יג). 💡 like today: capers hang from the joints of the Western Wall and the other Herodian walls.
+// #25: a caper clump is about 0.6–1 m across (it read as a rock at 2 m), and none grows on a gate
 (function(){const r=rng(4747),C=[],Hs=[],P=MOUNT;let ar=0;for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];ar+=a[0]*b[1]-b[0]*a[1]}const out=ar>0?1:-1;
   for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn);if(L<6)continue;const ox=dn/L*out,on=-dx/L*out;
     for(let s=3;s<L-3;s+=2.2){if(r()<0.72)continue;const x=a[0]+dx*s/L,n=a[1]+dn*s/L,g=H(x+ox*3,n+on*3),hw=-g;if(hw<4)continue;
-      const y=g+2.5+r()*(hw-3.5),big=r()<0.6;(big?C:Hs).push([x+ox*(big?0.35:0.15),y-(big?0:0.2),-(n+on*(big?0.35:0.15)),big?1.1+r()*0.8:1.0+r()*0.6,Math.atan2(ox,on)])}}
+      const y=g+2.5+r()*(hw-3.5),big=r()<0.6;(big?C:Hs).push([x+ox*(big?0.35:0.15),y-(big?0:0.2),-(n+on*(big?0.35:0.15)),big?0.5+r()*0.35:1.0+r()*0.6,Math.atan2(ox,on)])}}
   TREES5.plant(WG,"caper",C,{n:"צלף בחומה",r:"💡 כמו היום בכותל המערבי",t:"💡 הצלף (Capparis spinosa) צומח היום מבין אבני הכותל ושאר חומות הר הבית, ותלוי מהן כשיח ירוק־כחלחל עם פרחים לבנים."});
   TREES5.plant(WG,"hyssop",Hs,{n:"אזוב בקיר",r:"מלכים א ה, יג",t:"📜 \"ועד האזוב אשר יצא בקיר\" (מלכים א ה, יג): האזוב צומח בסדקי קירות. ⚖️ רב סעדיה גאון והרמב״ם מזהים את האזוב עם הזעתר (צעתר)."});
 })();

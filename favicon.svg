@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    path{fill:none;stroke:#a67c22;stroke-width:2.75;stroke-linejoin:miter;stroke-linecap:butt}
+    .door{stroke-linejoin:round;stroke-linecap:butt}
+    @media (prefers-color-scheme:light){path{stroke:#8a6418}}
+    @media (prefers-color-scheme:dark){path{stroke:#d4a63a}}
+  </style>
+  <path d="M16 4.2 26.8 12.4V28.1H5.2V12.4Z"/>
+  <path class="door" d="M11.8 28.1 L11.8 19.2 L12.12 17.59 L13.03 16.23 L14.39 15.32 L16 15 L17.61 15.32 L18.97 16.23 L19.88 17.59 L20.2 19.2 L20.2 28.1"/>
+</svg>
