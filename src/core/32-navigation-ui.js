@@ -22,7 +22,9 @@ stage.addEventListener("wheel",e=>{if(e.target!==el||busy())return;e.preventDefa
 function zoomTick(dt){if(Math.abs(zAcc)<0.5||!zPt){zAcc=0;return}const step=zAcc*Math.min(1,dt*14);zAcc-=step;
   const cp=camera.position,t=controls.target;const f=Math.exp(step*0.0011);const dist=cp.distanceTo(zPt);
   if(f<1&&dist*f<2.2)return;if(f>1&&cp.distanceTo(t)*f>controls.maxDistance)return;
-  const np=zPt.clone().add(cp.clone().sub(zPt).multiplyScalar(f)),nt=zPt.clone().add(t.clone().sub(zPt).multiplyScalar(f));
+  let np=zPt.clone().add(cp.clone().sub(zPt).multiplyScalar(f)),nt=zPt.clone().add(t.clone().sub(zPt).multiplyScalar(f));
+  // item 29: zooming in never passes through a wall: stop 0.6 m before it, and drop the rest of the wheel
+  if(f<1){const h=segHit(cp,np);if(h<1){zAcc=0;const L=cp.distanceTo(np),k=(h*L-0.6)/L;if(k<=0.02)return;np=cp.clone().lerp(np,k);nt=t.clone().lerp(nt,k)}}
   const g=floorAt(np.x,np.z);if(np.y<g+1.6)np.y=g+1.6;const gt=floorAt(nt.x,nt.z);if(nt.y<gt-0.5)nt.y=gt;
   cp.copy(np);t.copy(nt);camSaved=false;camLim=1e9;controls.update();
   // near the ground the view levels toward the horizon, like Earth
