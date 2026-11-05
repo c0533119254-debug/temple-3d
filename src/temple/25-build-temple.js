@@ -615,22 +615,23 @@ await __Y(86);function build(){
   // river
   const rivStart=group.children.length;
   const rv=I("הנחל שיוצא מהמקדש","יחזקאל מ״ז, א-יב; רש״י שם","📜 \"והנה מים יצאים מתחת מפתן הבית קדימה... והמים ירדים מתחת מכתף הבית הימנית, מנגב למזבח\" (מ״ז, א). 📜 מחוץ לשער המזרחי הסגור: \"והנה מים מפכים מן הכתף הימנית\" (מ״ז, ב) — ⚖️ רש״י: מעט מים, כמו שיוצאים מפך. 📜 ככל שהולכים מזרחה המים גדלים: אחרי 1000 אמה עד הקרסוליים, אחרי 2000 עד הברכיים, אחרי 3000 עד המותניים, ואחרי 4000 \"נחל אשר לא אוכל לעבר\" (מ״ז, ג-ה). הם יורדים אל הערבה ובאים אל ים המלח, \"ונרפאו המים\" (מ״ז, ח), ועל שתי הגדות \"כל עץ מאכל\" שנותן פרי בכל חודש (מ״ז, יב). 💡 מה שנבחר כאן: במקדש המים זורמים מעל הקרקע, בתעלת אבן צרה ופתוחה, כי יחזקאל רואה אותם ומודד אותם. מתחת לחומה, לכבש ולכבישים הם עוברים בצינור מקורה. בקצה הר הבית יש מפל אל ערוץ הקדרון, ומשם נחל טבעי דרומה במורד הקדרון — זה הכיוון שבו המים באמת יכולים לרדת לים המלח. על הגדות: עצי מאכל (זית, תמר, תאנה), קנים, הרדופים וסלעים.");
+  // item 26: the channel runs 1.5 amot further south, so it does not cut the Ulam steps or the altar base.
   // stage 5 (user request): from under the south side of the House's front, past the altar on the south, as a small open channel with stone curbs
   {const chan=(u0,u1,vc,y,wd)=>{box(u0,vc-wd/2,u1,vc+wd/2,y,y+0.04,M.water,rv,{cast:false,noCol:true});[-1,1].forEach(sd=>box(u0,vc+sd*(wd/2+0.2)-0.2,u1,vc+sd*(wd/2+0.2)+0.2,y,y+0.12,M.stone2,null,{cast:false,noCol:true,tile:2}))};
-    chan(203,300,266.5,7.5,1.4);box(203,265.6,203.06,267.4,7.5,8.4,M.dark,rv,{cast:false,noCol:true});
+    chan(203,300,268,7.5,1.4);box(203,267.1,203.06,268.9,7.5,8.4,M.dark,rv,{cast:false,noCol:true});
     // under the altar ramp in a culvert
-    [241.94,258].forEach(u=>box(u,265.6,u+0.06,267.4,7.5,8.3,M.dark,null,{cast:false,noCol:true}));
+    [241.94,258].forEach(u=>box(u,267.1,u+0.06,268.9,7.5,8.3,M.dark,null,{cast:false,noCol:true}));
     // three small steps down the edge of the inner court, south of the inner east gate
-    for(let k=0;k<3;k++){const u0=300+k*0.9,top=6.5-k;box(u0,265.6,u0+0.9,267.4,3.5,top,M.stone2,null,{noCol:true,tile:2});box(u0,265.8,u0+0.9,267.2,top,top+0.04,M.water,rv,{cast:false,noCol:true});box(u0-0.05,265.8,u0+0.01,267.2,top,top+1,M.water,rv,{cast:false,noCol:true})}
-    box(302.65,265.8,302.71,267.2,3.5,4.5,M.water,rv,{cast:false,noCol:true});
-    chan(302.7,494,266.5,3.5,1.4);
+    for(let k=0;k<3;k++){const u0=300+k*0.9,top=6.5-k;box(u0,267.1,u0+0.9,268.9,3.5,top,M.stone2,null,{noCol:true,tile:2});box(u0,267.3,u0+0.9,268.7,top,top+0.04,M.water,rv,{cast:false,noCol:true});box(u0-0.05,267.3,u0+0.01,268.7,top,top+1,M.water,rv,{cast:false,noCol:true})}
+    box(302.65,267.3,302.71,268.7,3.5,4.5,M.water,rv,{cast:false,noCol:true});
+    chan(302.7,494,268,3.5,1.4);
     // through the outer wall in a covered culvert, out "from the right shoulder" of the closed east gate, gurgling into a small basin
-    box(493.92,265.6,494,267.4,3.5,4.9,M.dark,rv,{cast:false,noCol:true});box(493.85,265.3,494,267.7,4.9,5.3,M.stoneL,null,{cast:false,noCol:true});
-    box(500,265.6,500.08,267.4,1.9,3.3,M.dark,rv,{cast:false,noCol:true});box(500,265.3,500.2,267.7,3.3,3.7,M.stoneL,null,{cast:false,noCol:true});
-    box(500.08,265.8,500.6,267.2,1.9,2.0,M.stone2,null,{cast:false,noCol:true});box(500.55,265.85,500.62,267.15,0.25,2.0,M.water,rv,{cast:false,noCol:true});
-    box(500,264.2,505,268.8,0,0.25,M.stone2,null,{noCol:true});box(500.3,264.5,504.7,268.5,0.25,0.27,M.water,rv,{cast:false,noCol:true})}
+    box(493.92,267.1,494,268.9,3.5,4.9,M.dark,rv,{cast:false,noCol:true});box(493.85,266.8,494,269.2,4.9,5.3,M.stoneL,null,{cast:false,noCol:true});
+    box(500,267.1,500.08,268.9,1.9,3.3,M.dark,rv,{cast:false,noCol:true});box(500,266.8,500.2,269.2,3.3,3.7,M.stoneL,null,{cast:false,noCol:true});
+    box(500.08,267.3,500.6,268.7,1.9,2.0,M.stone2,null,{cast:false,noCol:true});box(500.55,267.35,500.62,268.65,0.25,2.0,M.water,rv,{cast:false,noCol:true});
+    box(500,265.7,505,270.3,0,0.25,M.stone2,null,{noCol:true});box(500.3,266,504.7,270,0.25,0.27,M.water,rv,{cast:false,noCol:true})}
   (function(){
-    const s0=W(505,266.5),x0=s0[0],n0=-s0[1];
+    const s0=W(505,268),x0=s0[0],n0=-s0[1];
     const ribbon=(pts,w0,w1,lift)=>{const pos=[],uv=[],idx=[];let acc=0;
       for(let k=0;k<pts.length;k++){const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],o=pts[Math.max(k-1,0)];const dx=q[0]-o[0],dz=q[2]-o[2],l=Math.hypot(dx,dz)||1;const nx=-dz/l,nz=dx/l;const w=(w0+(w1-w0)*k/(pts.length-1))/2;
         if(k>0)acc+=Math.hypot(p[0]-pts[k-1][0],p[2]-pts[k-1][2]);
@@ -786,7 +787,7 @@ await __Y(86);function build(){
       const pal=[0x6b5b4a,0x3e4a5c,0x8a7a62,0x5c3f3a,0xa89a84,0x2f3a2e,0x7b6c8a],bm=new THREE.InstancedMesh(bodyG,M.people,P.length),hm=new THREE.InstancedMesh(headG,M.people,P.length),d=new THREE.Object3D(),c=new THREE.Color();
       P.forEach((p,i)=>{const w=W(p[0],p[1]);d.position.set(w[0],p[2]*A+0.72,w[1]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xf6f4ee:pal[i%pal.length]);bm.setColorAt(i,c);d.position.y=p[2]*A+1.52;d.updateMatrix();hm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xf6f4ee:0xb38b6d);hm.setColorAt(i,c)});group.add(bm,hm)}
     {const am=I("האמה — הניקוז לנחל קדרון","מידות ג, ב; ג, ו; יומא נח ע״ב; מעילה ג, ג","⚖️ הדם והנסכים יורדים בשיתין אל מתחת למזבח, ומשם \"מתערבין באמה ויוצאין לנחל קדרון\", ונמכרים לגננים לזבל. אמת מים עוברת בעזרה ויוצאת תחת שער המים. 💡 כאן התעלה מכוסה באבנים ויש בה סבכות קטנות — ניקוז נסתר כמו היום. המסלול המדויק בהערכה.");const run=(u0,v0,u1,v1)=>{box(u0,v0,u1,v1,yA,yA+0.03,M.stone2,am,{cast:false,noCol:true,tile:2});const L=Math.max(u1-u0,v1-v0);for(let k=3;k<L;k+=6){const a=u1-u0>v1-v0?[u0+k-0.4,v0+0.1,u0+k+0.4,v1-0.1]:[u0+0.1,v0+k-0.4,u1-0.1,v0+k+0.4];box(a[0],a[1],a[2],a[3],yA+0.03,yA+0.05,M.iron,am,{cast:false,noCol:true})}};
-      run(222.4,276,223.6,306);run(190,305,223.6,306.2);run(189.4,306.2,190.6,AZ.v1);CL("האמה",206,305.6,yA+2,am)}
+      run(222.4,274.6,223.6,306);run(190,305,223.6,306.2);run(189.4,306.2,190.6,AZ.v1);CL("האמה",206,305.6,yA+2,am)}
     // gates of the Middot plan for the gate tour
     {const P=(cu,cv,axis,outward,L,n,y0,floor,nm)=>GLIST.push({axis,cu,cv,floor,outward,n,y0,L,pass:10,nm,hw:5});
       azG.n.forEach((u,k)=>k===2?P(u,AZ.v0-15.5,"n",-1,31,32,0,yA,GN[k]+" (דרך בית המוקד)"):P(u,AZ.v0-WT/2,"n",-1,WT,32,0,yA,GN[k]));azG.s.forEach((u,k)=>P(u,AZ.v1+WT/2,"n",1,WT,32,0,yA,GS[k]));
