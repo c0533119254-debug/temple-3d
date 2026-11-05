@@ -1,21 +1,37 @@
 // ---- time of day ----
 function b64url(path,cb){fetch(path).then(r=>r.text()).then(t=>__AFTER(()=>cb(URL.createObjectURL(new Blob([b64bytes(t)]))))).catch(()=>{})}
 const SKY={morning:{f:"sky_morning.hdr.txt",exp:0.5,sun:1.55,hemi:0.26,fog:[1.146,0.841,0.699]},noon:{f:"sky_noon.hdr.txt",exp:0.46,sun:1.2,hemi:0.34,fog:[0.613,0.66,0.796]},evening:{f:"sky_evening.hdr.txt",exp:0.46,sun:1.25,hemi:0.28,fog:[1.146,0.841,0.699]}},SKYT={};
-const TIMES={morning:{el:15,az:100,exp:0.42,fog:0xd8d0c6,sunI:2.2,hemi:0.28},noon:{el:48,az:165,exp:0.34,fog:0xcfdbe4,sunI:2.1,hemi:0.35},evening:{el:10,az:265,exp:0.5,fog:0xd9b89a,sunI:1.7,hemi:0.25},night:{el:-12,az:250,exp:0.62,fog:0x162034,sunI:0,hemi:0.22}};
-// topic 6 stage 1: a real night. 💡 full moon (the festivals fall on the 15th of a lunar month, Lev 23:6, 23:34), high in the south near midnight.
+// topic 6 stage 2: the sun at its real place over Jerusalem for an hour of the day (NOAA solar position formulas, https://gml.noaa.gov/grad/solcalc/solareqns.PDF).
+// 📜 place: the Dome of the Rock, 31.778° N 35.235° E (OpenStreetMap). Local standard time UTC+2 (no summer time: the hours of the Temple are the hours of the sun).
+// 💡 DOY = day of the year. 105 = 15 April, an average date for Pesach (15 Nisan falls between late March and late April).
+let HOUR=null,DOY=105;const JLM={lat:31.778,lon:35.235,tz:2};
+function sunAt(h,doy){doy=doy||DOY;const r=Math.PI/180,g=2*Math.PI/365*(doy-1+(h-12)/24),
+  eq=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g)),
+  de=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g),
+  ts=h*60+eq+4*JLM.lon-60*JLM.tz,ha=(ts/4-180)*r,la=JLM.lat*r,
+  ce=Math.sin(la)*Math.sin(de)+Math.cos(la)*Math.cos(de)*Math.cos(ha),el=Math.asin(Math.max(-1,Math.min(1,ce))),
+  az=Math.atan2(Math.sin(ha),Math.cos(ha)*Math.sin(la)-Math.tan(de)*Math.cos(la))/r+180;
+  return{el:el/r,az:az}}
+// a direction in the scene for an elevation and a compass bearing (0 = north, 90 = east); the scene is turned with the mount walls (G2S)
+function skyVec(el,az){const r=Math.PI/180,c=Math.cos(el*r),q=G2S(Math.sin(az*r)*c,Math.cos(az*r)*c);return new THREE.Vector3(q[0],Math.sin(el*r),-q[1]).normalize()}
+function setHour(h){HOUR=((h%24)+24)%24;const sp=sunAt(HOUR);TIME=sp.el<=-7?"night":HOUR<10.5?"morning":HOUR>14.5?"evening":"noon";applyTime();return sp}
+// the four buttons are fixed hours: morning 6:30 (sun ~16° up in the east), noon 11:39 = midday (חצות היום, the sun due south), evening 17:15 (~10° up in the west), night 23:30
+const TIMES={morning:{h:6.5,el:15,az:100,exp:0.42,fog:0xd8d0c6,sunI:2.2,hemi:0.28},noon:{h:11.65,el:48,az:165,exp:0.34,fog:0xcfdbe4,sunI:2.1,hemi:0.35},evening:{h:17.25,el:10,az:265,exp:0.5,fog:0xd9b89a,sunI:1.7,hemi:0.25},night:{h:23.5,el:-12,az:250,exp:0.62,fog:0x162034,sunI:0,hemi:0.22}};
+// topic 6 stage 1: a real night. 💡 full moon (the festivals fall on the 15th of a lunar month, Lev 23:6, 23:34), opposite the sun (stage 2).
 // The sky is a dark-blue gradient that gets a little lighter at the horizon, and the fog has the horizon's colour, so the far ground fades into the sky instead of a hard line.
-const NIGHT={top:[0.012,0.022,0.055],hor:[0.075,0.105,0.17],moonAz:165,moonEl:52,moonC:0xa8bce8,moonI:0.32,hemiS:0x2c3c62,hemiG:0x0c0e13,tex:null,env:null,moon:null};
+const NIGHT={top:[0.012,0.022,0.055],hor:[0.075,0.105,0.17],moonC:0xa8bce8,moonI:0.32,hemiS:0x2c3c62,hemiG:0x0c0e13,tex:null,env:null,moon:null};
 function nightSky(){if(NIGHT.tex)return;const W=8,Hh=256,cv=document.createElement("canvas");cv.width=W;cv.height=Hh;const c=cv.getContext("2d"),im=c.createImageData(W,Hh);
   for(let y=0;y<Hh;y++){const v=y/(Hh-1),e=Math.abs(0.5-v)*2,k=Math.pow(1-e,6),q=v>0.5?0.55:1;for(let x=0;x<W;x++){const o=(y*W+x)*4;for(let j=0;j<3;j++)im.data[o+j]=Math.round(255*Math.pow((NIGHT.top[j]+(NIGHT.hor[j]-NIGHT.top[j])*k)*q,1/2.2));im.data[o+3]=255}}
   c.putImageData(im,0,0);const t=new THREE.CanvasTexture(cv);t.mapping=THREE.EquirectangularReflectionMapping;t.encoding=THREE.sRGBEncoding;NIGHT.tex=t;NIGHT.env=pmrem.fromEquirectangular(t).texture;
-  const az=THREE.MathUtils.degToRad(NIGHT.moonAz),el=THREE.MathUtils.degToRad(NIGHT.moonEl),d=new THREE.Vector3(Math.sin(az)*Math.cos(el),Math.sin(el),-Math.cos(az)*Math.cos(el));NIGHT.dir=d;
-  const m=new THREE.Mesh(new THREE.CircleGeometry(150,40),new THREE.MeshBasicMaterial({color:0xf3eedd,fog:false,toneMapped:false}));m.position.copy(d).multiplyScalar(14000);m.lookAt(0,0,0);m.renderOrder=-1;m.visible=false;m.userData.moon=1;scene.add(m);NIGHT.moon=m}
+  
+  const m=new THREE.Mesh(new THREE.CircleGeometry(150,40),new THREE.MeshBasicMaterial({color:0xf3eedd,fog:false,toneMapped:false}));m.renderOrder=-1;m.visible=false;m.userData.moon=1;scene.add(m);NIGHT.moon=m}
 function applyTime(){renderer.shadowMap.needsUpdate=true;
-  const t=TIMES[TIME],night=TIME==="night";
-  const phi=THREE.MathUtils.degToRad(90-Math.max(t.el,-2)),theta=THREE.MathUtils.degToRad(t.az);
-  const d2=new THREE.Vector3(Math.sin(theta)*Math.sin(phi),Math.cos(phi),-Math.cos(theta)*Math.sin(phi));
+  const t=TIMES[TIME],night=TIME==="night",sp=sunAt(HOUR!=null?HOUR:t.h),tw=!night&&sp.el<4;
+  const d2=skyVec(Math.max(sp.el,-2),sp.az);
+  // 💡 full moon = opposite the sun; when it is still low (early night) keep it at least 20° up so the moonlight reaches into the courts
+  NIGHT.dir=skyVec(Math.max(20,-sp.el),sp.az+180);
   su.sunPosition.value.copy(d2);sky.visible=!night;stars.visible=night;
-  if(night)nightSky();scene.background=night?NIGHT.tex:null;if(NIGHT.moon){NIGHT.moon.visible=night;NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position)}
+  if(night)nightSky();scene.background=night?NIGHT.tex:null;if(NIGHT.moon){NIGHT.moon.visible=night;NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position);NIGHT.moon.lookAt(camera.position)}
   scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
   renderer.toneMappingExposure=t.exp;
   if(BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
@@ -25,7 +41,10 @@ function applyTime(){renderer.shadowMap.needsUpdate=true;
   M.win.emissiveIntensity=night?2.2:0;if(M.win2)M.win2.emissiveIntensity=night?2.6:0;M.lamp.color.set(night?0xffd28a:0x8a7a5a);
   if(fireLight)fireLight.intensity=night?1.6:0.25;
   bloom.strength=night?0.55:0.12;bloom.threshold=night?0.75:0.96;
-  const sk=SKY[TIME];if(sk&&!SKYT[TIME]){const key=TIME;SKYT[key]={};try{b64url(sk.f,url=>new THREE.RGBELoader().setDataType(THREE.HalfFloatType).load(url,t=>{t.mapping=THREE.EquirectangularReflectionMapping;SKYT[key]={bg:t,env:pmrem.fromEquirectangular(t).texture};if(TIME===key)applyTime()}))}catch(e){}}
+  if(tw){const k=Math.max(0,Math.min(1,(sp.el+7)/11)),nf=new THREE.Color(TIMES.night.fog);// dawn and dusk: from 7° below the horizon (0) to 4° above it (1)
+    sun.color.set(0xff9a5c);sun.intensity=t.sunI*Math.max(0,Math.min(1,(sp.el+1)/5));hemi.intensity=0.22+(t.hemi-0.22)*k;renderer.toneMappingExposure=0.62+(t.exp-0.62)*k;
+    scene.fog.color.lerpColors(nf,new THREE.Color(t.fog),k);RING.material.color.copy(scene.fog.color).multiplyScalar(0.85);stars.visible=k<0.35}
+  const sk=tw?null:SKY[TIME];if(sk&&!SKYT[TIME]){const key=TIME;SKYT[key]={};try{b64url(sk.f,url=>new THREE.RGBELoader().setDataType(THREE.HalfFloatType).load(url,t=>{t.mapping=THREE.EquirectangularReflectionMapping;SKYT[key]={bg:t,env:pmrem.fromEquirectangular(t).texture};if(TIME===key)applyTime()}))}catch(e){}}
   const L=sk&&SKYT[TIME]&&SKYT[TIME].bg?SKYT[TIME]:null;
   if(L){sky.visible=false;scene.background=L.bg;scene.environment=L.env;scene.fog=new THREE.FogExp2(new THREE.Color(sk.fog[0],sk.fog[1],sk.fog[2]),0.00013);RING.material.color.copy(scene.fog.color);renderer.toneMappingExposure=sk.exp;sun.intensity=sk.sun;hemi.intensity=sk.hemi;hemi.color.set(TIME==="morning"?0xf0e2d0:0xdfe8f2);return}
   if(!night){if(envRT)envRT.dispose();const s2=new THREE.Scene(),sk=new THREE.Sky();sk.scale.setScalar(1000);sk.material.uniforms.sunPosition.value.copy(d2);["turbidity","rayleigh","mieCoefficient","mieDirectionalG"].forEach(k=>sk.material.uniforms[k].value=su[k].value);s2.add(sk);envRT=pmrem.fromScene(s2);scene.environment=envRT.texture}

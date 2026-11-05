@@ -71,7 +71,7 @@ function depthProbe(){const now=performance.now();if(!WALK&&camera.position.y-fl
 function seg(id,attr,cb){const box=document.getElementById(id);box.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||!b.dataset[attr])return;box.querySelectorAll("button[data-"+attr+"]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));cb(b.dataset[attr])})}
 let VIEW="home";
 seg("viewSeg","v",v=>{if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(TOUR)stopTour();VIEW=v;closeInfo();if(v==="drone"){startDrone();return}if(v==="walk"){fadeJump(startWalk);return}if(DRONE){stopDrone();flyTo(v,1400);return}if(WALK){fadeJump(()=>{stopWalk();flyTo(v,0)});return}flyTo(v,1200)});
-seg("timeSeg","t",v=>{TIME=v;applyTime()});
+seg("timeSeg","t",v=>{TIME=v;HOUR=null;applyTime()});
 seg("facSeg","f",v=>{FMODE=v;build()});
 seg("planSeg","pl",v=>{PLAN=v;const md=v!=="ez";document.getElementById("facSeg").style.opacity=md?0.45:1;document.getElementById("gateSeg").style.opacity=md?0.45:1;keepCam(build);if(v==="rambam")showInfo(HELP.plan);else closeInfo()});
 seg("gateSeg","g",v=>{GATE=v;build()});
