@@ -99,6 +99,8 @@ const HF=()=>(PLAN==="ez"?13.56:22)*A,OC=()=>3.5*A;   // OC: the floor inside th
 const GN={"250,25":"השער החיצוני הצפוני","250,475":"השער החיצוני הדרומי","475,250":"השער החיצוני המזרחי (הסגור)","250,175":"השער הפנימי הצפוני","250,325":"השער הפנימי הדרומי","325,250":"השער הפנימי המזרחי"};
 const W2=(u,v)=>[COMP.X0+u*A,-(COMP.N0-v*A)];
 const findL=re=>labels.find(L=>L.txt&&re.test(L.txt));
+// all the pieces that carry one name (a gate made of several leaves), as one box
+function pickAll(re){const bb=new THREE.Box3();let k=0;cPick.forEach(o=>{const d=o.userData;if(!d||!d.n||!re.test(d.n))return;const b=new THREE.Box3().setFromObject(o);if(!b.isEmpty()){bb.union(b);k++}});return k?bb:null}
 function pickBox(re,near){let best=null,bd=1e9;cPick.forEach(o=>{const d=o.userData;if(!d||!d.n||!re.test(d.n))return;const bb=new THREE.Box3().setFromObject(o);if(bb.isEmpty())return;const c=bb.getCenter(new V3());const dd=near?Math.hypot(c.x-near[0],c.z-near[1]):0;if(dd<bd){bd=dd;best=bb}});return best}
 function allPickBox(re){const bb=new THREE.Box3();let n=0;cPick.forEach(o=>{const d=o.userData;if(d&&d.n&&re.test(d.n)){bb.expandByObject(o);n++}});return n?bb:null}
 // gate stop: G = the gate face on the outer side; dir = unit vector pointing out; inner = a point on the far side of the passage
@@ -132,7 +134,7 @@ function stopsFor(mode){const S=[];const rb=mode==="rambam";
     polyGate(/^שער הרחמים$/,MOUNT,"שער הרחמים (שער הזהב)",false,{closed:"סגור (היום)",od:8});
     ["שער האריות","שער הפרחים","שער שכם","השער החדש","שער יפו","שער ציון","שער האשפות"].forEach(n=>polyGate(new RegExp("^"+n+"$"),OLD,n+" (חומת העיר)",true))}
   // openings of the House
-  {const d=pickBox(/^שער ההיכל$/);if(d){const c=d.getCenter(new V3());S.push(gStop("שער ההיכל",[d.max.x,c.z],[1,0],[d.min.x-8,c.z],{od:24,It:[d.min.x,c.z],iRef:HF(),hw:d.getSize(new V3()).z/2}))}}
+  {const d=pickAll(/^שער ההיכל$/);if(d){const c=d.getCenter(new V3());S.push(gStop("שער ההיכל",[d.max.x,c.z],[1,0],[d.min.x-8,c.z],{od:24,It:[d.min.x,c.z],iRef:HF(),hw:d.getSize(new V3()).z/2}))}}
   {const d=pickBox(/^הפתח לקודש הקודשים$/)||pickBox(/^שתי הפרוכות$/);if(d){const c=d.getCenter(new V3());S.push(gStop("הפתח לקודש הקודשים",[d.max.x,c.z],[1,0],[d.min.x-7,c.z],{It:[d.min.x,c.z],oRef:HF(),iRef:HF()}))}}
   {const d=pickBox(/^פתחי הצלעות$/,[0,-1e4]);if(d){const c=d.getCenter(new V3());S.push(gStop("פתח הצלעות (צפון)",[c.x,d.min.z],[0,-1],[c.x,d.min.z+1.4],{od:8,It:[c.x,d.min.z],oRef:7.5*A,iRef:HF(),oM:[c.x,d.min.z-1],hw:1}))}}
   // rooms: the chambers, the Kotel, the Ulam, the Heikhal, the Kodesh HaKodashim
@@ -148,7 +150,7 @@ function stopsFor(mode){const S=[];const rb=mode==="rambam";
   {const done=new Set(labels.filter(L=>L.c&&L.info&&L.info.n).map(L=>L.info.n));const grp={};cPick.forEach(o=>{const n=o.userData&&o.userData.n;if(!n||!/^לשכ/.test(n)||done.has(n)||seen.has(n))return;(grp[n]=grp[n]||[]).push(o)});
     Object.keys(grp).forEach(n=>{const bb=new THREE.Box3().setFromObject(grp[n][0]),c=bb.getCenter(new V3()),s=bb.getSize(new V3());room(n,[c.x,c.z],Math.max(2,s.x/2),Math.max(2,s.z/2))})}
   {const L=findL(/^הכותל המערבי$/);if(L)S.push(gStop("הכותל המערבי",[L.v.x-3,L.v.z],[-1,0],[L.v.x+12,L.v.z],{od:18,It:[L.v.x-3,L.v.z]}))}
-  {const d=pickBox(/^שער ההיכל$/),k=pickBox(/^הפתח לקודש הקודשים$/)||pickBox(/^שתי הפרוכות$/);if(d&&k){const z=d.getCenter(new V3()).z,dx=d.max.x;
+  {const d=pickAll(/^שער ההיכל$/),k=pickBox(/^הפתח לקודש הקודשים$/)||pickBox(/^שתי הפרוכות$/);if(d&&k){const z=d.getCenter(new V3()).z,dx=d.max.x;
     // the Ulam front: first wall met by a ray from the east, beside the opening
     let fx=dx+6.3;{RC.set(new V3(dx+60,HF()+1.6,z-5.5),new V3(-1,0,0));RC.far=80;const h=RC.intersectObjects(targets(),false)[0];if(h&&h.point.x>dx+1)fx=h.point.x}
     S.push({name:"האולם",kind:"room",G:[fx,z],O:[fx+15,z],Ot:[fx,z],I:[fx-3.2,z],It:[dx,z],oRef:null,iRef:HF(),stepTo:[fx,z]});
