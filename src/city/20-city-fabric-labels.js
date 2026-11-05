@@ -6,7 +6,8 @@ await __Y(75);function instBlocks(o){
   while(k<o.count&&tries<o.count*15){tries++;
     const x=o.area[0]+r()*(o.area[1]-o.area[0]),n=o.area[2]+r()*(o.area[3]-o.area[2]);if(!o.test(x,n)||!satOK(x,n))continue;
     const w=o.size[0]+r()*(o.size[1]-o.size[0]),dd=o.size[0]+r()*(o.size[1]-o.size[0]),h=o.ht[0]+r()*(o.ht[1]-o.ht[0]);
-    const y=H(x,n);d.position.set(x,y+h/2-1.2,-n);d.scale.set(w,h+1.2,dd);d.rotation.set(0,(o.rot||0)+(r()-0.5)*0.1,0);d.updateMatrix();mesh.setMatrixAt(k,d.matrix);
+    if(!clearAt(x,n,Math.max(w,dd)/2))continue;
+    const y=TY(x,n);d.position.set(x,y+h/2-1.2,-n);d.scale.set(w,h+1.2,dd);d.rotation.set(0,(o.rot||0)+(r()-0.5)*0.1,0);d.updateMatrix();mesh.setMatrixAt(k,d.matrix);
     c.setHex(o.tint[Math.floor(r()*o.tint.length)]);mesh.setColorAt(k,c);k++;
     if(o.domes&&r()<o.domes){const rad=Math.min(w,dd)*0.22+0.8;d.position.set(x+(r()-0.5)*w*0.3,y+h-1.2,-n+(r()-0.5)*dd*0.3);d.scale.set(rad,rad*0.75,rad);d.rotation.set(0,0,0);d.updateMatrix();domes.setMatrixAt(kd++,d.matrix)}
   }
@@ -25,11 +26,11 @@ instBlocks({count:260,seed:19,area:[720,1450,-700,1100],test:(x,n)=>x>750,size:[
 instBlocks({count:280,seed:23,area:[-860,-420,-920,-590],test:(x,n)=>segDist(x,n,HINNOM)[0]>55&&!inPoly(x,n,OLD),size:[10,22],ht:[6,12],tint:tints,domes:0.2});
 (function(){
   const r=rng(31),cnt=SMALL?1100:2600,can=new THREE.InstancedMesh(new THREE.SphereGeometry(1,7,5),M.leaf,cnt),trk=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.25,0.35,1,5),M.trunk,cnt),d=new THREE.Object3D();let k=0,tries=0;
-  while(k<cnt&&tries<cnt*10){tries++;const x=215+r()*600,n=-1000+r()*2200;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n))continue;if(segDist(x,n,KIDRON)[0]<8)continue;if(x>760&&r()<0.6)continue;
-    if(x>430&&x<720&&Math.abs(n-10)<170)continue;const y=H(x,n),s=1.8+r()*1.6;d.position.set(x,y+s*0.9,-n);d.scale.set(s,s*0.7,s);d.updateMatrix();can.setMatrixAt(k,d.matrix);d.position.set(x,y+s*0.35,-n);d.scale.set(1,s*0.7,1);d.updateMatrix();trk.setMatrixAt(k,d.matrix);k++}
+  while(k<cnt&&tries<cnt*10){tries++;const x=215+r()*600,n=-1000+r()*2200;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n)||!clearAt(x,n,2))continue;if(segDist(x,n,KIDRON)[0]<8)continue;if(x>760&&r()<0.6)continue;
+    if(x>430&&x<720&&Math.abs(n-10)<170)continue;const y=TY(x,n),s=1.8+r()*1.6;d.position.set(x,y+s*0.9,-n);d.scale.set(s,s*0.7,s);d.updateMatrix();can.setMatrixAt(k,d.matrix);d.position.set(x,y+s*0.35,-n);d.scale.set(1,s*0.7,1);d.updateMatrix();trk.setMatrixAt(k,d.matrix);k++}
   can.count=trk.count=k;can.castShadow=true;TGRP().add(can);TGRP().add(trk);
   const cy=new THREE.InstancedMesh(new THREE.ConeGeometry(1,1,6),M.cypress,500);k=0;tries=0;
-  while(k<500&&tries<6000){tries++;const x=-1500+r()*2700,n=-1100+r()*2600;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n))continue;const y=H(x,n),s=1.6+r()*1.2,hh=9+r()*7;d.position.set(x,y+hh/2,-n);d.scale.set(s,hh,s);d.updateMatrix();cy.setMatrixAt(k++,d.matrix)}
+  while(k<500&&tries<6000){tries++;const x=-1500+r()*2700,n=-1100+r()*2600;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n)||!clearAt(x,n,2))continue;const y=TY(x,n),s=1.6+r()*1.2,hh=9+r()*7;d.position.set(x,y+hh/2,-n);d.scale.set(s,hh,s);d.updateMatrix();cy.setMatrixAt(k++,d.matrix)}
   cy.count=k;cy.castShadow=true;TGRP().add(cy);
 })();
 }
@@ -38,7 +39,7 @@ SATPH=0;cityPass();SATPH=1;cityPass();SATPH=null;
   const psh=new THREE.Shape();PLAZA.forEach((q,i)=>i?psh.lineTo(q[0],q[1]):psh.moveTo(q[0],q[1]));const pg=new THREE.ShapeGeometry(psh);pg.rotateX(-Math.PI/2);{const uv=pg.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/4,uv.getY(i)/4)}
   const pz=new THREE.Mesh(pg,M.pave);pz.position.y=(PLZ+0.25);pz.receiveShadow=true;pz.renderOrder=2;
   pz.userData={n:"רחבת הכותל",r:"",t:"הרחבה נשארת רחבת תפילה. בתוכנית היא גם גישה מערבית להר ושטח המתנה לפי משמרות בחגים. הכותל עצמו — הקיר המערבי של ההר — לא משתנה."};WG.add(pz);PICK.push(pz);
-  {const ks=new THREE.Shape();KZ.forEach((q,i)=>i?ks.lineTo(q[0],q[1]):ks.moveTo(q[0],q[1]));const kg=new THREE.ShapeGeometry(ks);kg.rotateX(-Math.PI/2);{const uv=kg.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/4,uv.getY(i)/4)}const km=new THREE.Mesh(kg,M.pave);km.position.y=(PLZ+0.24);km.receiveShadow=true;km.renderOrder=2;km.userData={n:"רחבת העלייה לשער קיפונוס",r:"הצעה של התוכנית",t:"💡 רחבה מרוצפת וישרה בין רחבת הכותל לבין המדרגות של שער קיפונוס. מכאן עולים להר במדרגות או במעליות."};WG.add(km);PICK.push(km)}
+  {const ks=new THREE.Shape();KZ.forEach((q,i)=>i?ks.lineTo(q[0],q[1]):ks.moveTo(q[0],q[1]));const kg=new THREE.ShapeGeometry(ks);kg.rotateX(-Math.PI/2);{const uv=kg.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/4,uv.getY(i)/4)}const km=new THREE.Mesh(kg,M.pave);km.position.y=(PLZ+0.17);km.receiveShadow=true;km.renderOrder=2;km.userData={n:"רחבת העלייה לשער קיפונוס",r:"הצעה של התוכנית",t:"💡 רחבה מרוצפת וישרה בין רחבת הכותל לבין המדרגות של שער קיפונוס. מכאן עולים להר במדרגות או במעליות."};WG.add(km);PICK.push(km)}
 })();
 const stars=(function(){const g=new THREE.BufferGeometry(),v=[],r=rng(77);for(let i=0;i<2500;i++){const th=r()*Math.PI*2,ph=Math.acos(r()*0.95);v.push(15000*Math.sin(ph)*Math.cos(th),15000*Math.cos(ph),15000*Math.sin(ph)*Math.sin(th))}g.setAttribute("position",new THREE.Float32BufferAttribute(v,3));const p=new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:1.6,sizeAttenuation:false,transparent:true,opacity:0.85,fog:false}));p.visible=false;scene.add(p);return p})();
 

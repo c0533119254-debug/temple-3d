@@ -36,7 +36,7 @@ await __Y(64);(function(){const asph=tex(cv(256,256,(x,w,h)=>{x.fillStyle="#5d5f
   {const car=ROADS.filter(rd=>!(rd.c===4||(rd.c<=1&&inPoly(rd.p[0][0],rd.p[0][1],OLD)&&inPoly(rd.p[rd.p.length-1][0],rd.p[rd.p.length-1][1],OLD))));
     const GR={};car.forEach((rd,k)=>rd.p.forEach(q=>{const key=Math.floor(q[0]/8)+"_"+Math.floor(q[1]/8);(GR[key]||(GR[key]=[])).push([q[0],q[1],k])}));
     const others=(x,n,k,r)=>{const o=new Set(),gx=Math.floor(x/8),gn=Math.floor(n/8),m=Math.ceil(r/8);for(let i=-m;i<=m;i++)for(let j=-m;j<=m;j++)(GR[(gx+i)+"_"+(gn+j)]||[]).forEach(p=>{if(p[2]!==k&&Math.hypot(p[0]-x,p[1]-n)<r)o.add(p[2])});return o};
-    const yAt=(rd,i)=>(isNaN(rd.hs[i])?rd.h[i]:rd.hs[i])+0.15+0.04*rd.c+0.025;
+    const yAt=(rd,i)=>(isNaN(rd.hs[i])?rd.h[i]:rd.hs[i])+0.15+0.04*rd.c+0.06;
     const stops=[],arrows=[],caps=[],zebra=[],lights=[],signs=[];
     car.forEach((rd,k)=>{if(rd.p.length<4)return;const half=rd.w/2;
       [0,1].forEach(endI=>{const P=endI?rd.p.slice().reverse():rd.p,idx=i=>endI?rd.p.length-1-i:i;const E=P[0],nb=others(E[0],E[1],k,half+3);
