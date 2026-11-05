@@ -1,0 +1,27 @@
+# סדר החלקים של התוכנית. הם מחוברים בסדר הזה לסקריפט אחד.
+# core/ = משותף (Claude), temple/ = המקדש (Claude), city/ = העיר והדרכים (Grok)
+# קובץ חדש: מוסיפים שורה במקום הנכון ומבקשים ב-REQUESTS.md
+core/00-setup.js
+core/01-dem-data.js
+core/02-terrain-materials.js
+city/10-roads.js
+city/11-ground.js
+temple/20-mount-platform.js
+city/12-old-city-wall.js
+city/13-buildings.js
+city/14-weathering.js
+city/15-trees.js
+city/16-road-surfaces.js
+city/17-landmarks.js
+city/18-old-city-areas.js
+city/19-living-city.js
+city/20-city-fabric-labels.js
+temple/21-compound-mount-gates.js
+city/22-transport.js
+temple/23-actors.js
+temple/24-stories.js
+temple/25-build-temple.js
+core/30-time-views-hud.js
+core/31-loop.js
+core/32-navigation-ui.js
+core/33-lod-quality-review.js
