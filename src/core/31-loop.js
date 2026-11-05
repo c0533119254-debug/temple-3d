@@ -36,6 +36,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   if(TRN&&SHOW_TR&&(!reduce||TRN.riding))TRN.tick(rawdt||dt,tt);
   FIG.U.uT.value=tt;if(!reduce){if(ACTS)ACTS.tick(dt,tt);if(CROWDT)CROWDT(dt,tt)}
   if(STORY)STORY.tick(now);
+  if(NIGHT.moon&&NIGHT.moon.visible){NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position);NIGHT.moon.lookAt(camera.position)} // the moon stays at its place in the sky when the camera moves (note from Grok on #20)
   if(SSAO&&ssaoC&&TIME!=="night"&&!WALK)ssaoC.render();else if(TIME==="night"&&QL!=="low"&&!SMALL)composer.render();else renderer.render(scene,camera); // topic 6: at night the glow (bloom) of fire, lamps and windows; not on weak devices
   const w=stage.clientWidth,h=stage.clientHeight;
   if((++HUDF)%4===0)hudTick();
