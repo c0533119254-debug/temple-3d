@@ -1,7 +1,7 @@
 await __Y(86);function build(){
   if(group){scene.remove(group);group.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
   cLabels.forEach(L=>{L.el.remove();labels.splice(labels.indexOf(L),1)});cLabels=[];cPick=[];flames=[];
-  COL=[];GLIST=[];ACTS=null;CROWDT=null;ksm=null;PFX=[];MENL=null;
+  COL=[];GLIST=[];EGATE=null;ACTS=null;CROWDT=null;ksm=null;PFX=[];MENL=null;
   group=new THREE.Group();scene.add(group);
   const RB=PLAN==="middot"||PLAN==="rambam",COMB=PLAN==="rambam",ROOT=group;
   const ref=LOC==="kodesh"?[125,250]:(RB?[238,259]:[250,250]);
@@ -94,6 +94,10 @@ await __Y(86);function build(){
   gate("n",250,175,7.5,-1,I("השער הפנימי הצפוני","יחזקאל מ׳, לה-מג","שער לחצר הפנימית, עם 8 מדרגות. לידו שולחנות השחיטה."));
   gate("n",250,325,7.5,1,I("השער הפנימי הדרומי","יחזקאל מ׳, כח-לא","שער לחצר הפנימית, עם 8 מדרגות."));
   gate("e",325,250,7.5,1,I("השער הפנימי המזרחי","יחזקאל מ״ו, א-ב","סגור בששת ימי המעשה, ונפתח בשבת ובראש חודש. הנשיא משתחווה על מפתן השער."));
+  // topic 6 stage 7: the doors of the inner east gate. 📜 "יהיה סגור ששת ימי המעשה, וביום השבת יפתח, וביום החדש יפתח... והשער לא יסגר עד הערב" (Ezek 46:1-2).
+  // 💡 two bronze leaves at the inner-court end of the passage (the threshold where the Nasi bows, 46:2); their height and material are not given. Shown by gateDoors() in core/30.
+  {const di=I("דלתות השער הפנימי המזרחי","יחזקאל מ״ו, א-ב","📜 \"שער החצר הפנימית הפנה קדים יהיה סגור ששת ימי המעשה, וביום השבת יפתח, וביום החדש יפתח\", \"והשער לא יסגר עד הערב\". 💡 מקום הדלתות בקצה המעבר, וגובהן וחומרן לא מפורשים.");
+    EGATE=[box(300,245,300.4,250,7.5,7.5+(GATE==="high"?37:17),M.bronze,di,{noCol:true}),box(300,250,300.4,255,7.5,7.5+(GATE==="high"?37:17),M.bronze,di,{noCol:true})];EGATE.forEach(m=>m.visible=false)}
   box(499.7,245,500.3,255,3.5,23.5,M.bronze,I("השער הסגור","יחזקאל מ״ד, ב","דלתות השער המזרחי סגורות לעולם."),{cast:false});
   // 30 chambers
   const pi=I("לשכה בחצר החיצונה","יחזקאל מ׳, יז; מ״ו, כד","אחת מ־30 הלשכות שעל הרצפה — 10 בצפון, 10 בדרום ו־10 במזרח (מלבי״ם). עומק 4 אמות. כאן העם אוכל את בשר השלמים. הגובה בהערכה.");
@@ -275,6 +279,7 @@ await __Y(86);function build(){
     KDS={p:new THREE.Vector3(...(()=>{const q=W(134,252);return[q[0],13.56*A+3.6,q[1]]})()),t:new THREE.Vector3(...(()=>{const q=W(118,250);return[q[0],13.56*A+0.6,q[1]]})())}}
   INT={p:new THREE.Vector3(...(()=>{const q=W(172,250);return[q[0],fl*A+2.4,q[1]]})()),t:new THREE.Vector3(...(()=>{const q=W(137,250);return[q[0],fl*A+2.2,q[1]]})())};
   {const a=W(115,240),b=W(199,260);INTBOX={x0:Math.min(a[0],b[0]),x1:Math.max(a[0],b[0]),z0:Math.min(a[1],b[1]),z1:Math.max(a[1],b[1]),y1:53.5*A}}
+  {const a=W(115,240),b=W(135.5,260);KBOX={x0:Math.min(a[0],b[0]),x1:Math.max(a[0],b[0]),z0:Math.min(a[1],b[1]),z1:Math.max(a[1],b[1])}} // topic 6: the Holy of Holies part of the house (west of the partition at u≈132–135; the "kodesh" view stands at u=134), for its own darker light
   for(let k=0;k<=6;k++){const v=250-ulW/2+k*ulW/6;if(Math.abs(v-250)<D/2+1)continue;box(199,v-1,200,v+1,13.5,104.5,M.marble,hi,{tile:2.6})}
   for(let k=0;k<=8;k++){const u=bu0+k*(183-bu0)/8;box(u-1,250-bodyW/2-1,u+1,250-bodyW/2,(ez?34.5:13.5),104.5,M.marble,null,{tile:2.6});box(u-1,250+bodyW/2,u+1,250+bodyW/2+1,(ez?34.5:13.5),104.5,M.marble,null,{tile:2.6})}
   box(182.6,250-ulW/2-0.6,200.2,250+ulW/2+0.6,13.5,15,M.stone,null);
