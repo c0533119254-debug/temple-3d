@@ -19,14 +19,14 @@ const PLAZA_BIG=(()=>{const P=GEO.PLAZA;let cx=0,cn=0;P.forEach(q=>{cx+=q[0]/P.l
 const ROCK=(()=>{const q=G2S(GEO.ROCK[0],GEO.ROCK[1]);return{x:q[0],n:q[1]}})();
 
 const QSET=(()=>{try{return localStorage.getItem("tm_q")||"auto"}catch(e){return"auto"}})();const QL=REVIEW?"low":QSET!=="auto"?QSET:(()=>{let soft=false;try{const g=document.createElement("canvas").getContext("webgl"),x=g&&g.getExtension("WEBGL_debug_renderer_info");soft=!!(x&&/swiftshader|llvmpipe|software/i.test(g.getParameter(x.UNMASKED_RENDERER_WEBGL)))}catch(e){}const small=Math.min(innerWidth,innerHeight)<720,mem=navigator.deviceMemory||8,cpu=navigator.hardwareConcurrency||8;return(soft||(small&&(mem<=4||cpu<=6))||mem<=2||cpu<=2)?"low":"high"})();
-const renderer=new THREE.WebGLRenderer({antialias:QL!=="low",powerPreference:"high-performance",logarithmicDepthBuffer:true});
+const renderer=new THREE.WebGLRenderer({antialias:QL!=="low",powerPreference:"high-performance",logarithmicDepthBuffer:false});
 const SMALL=Math.min(window.innerWidth,window.innerHeight)<720;const PRMAX=REVIEW?0.5:Math.min(QL==="low"?1:(SMALL?1.5:2),window.devicePixelRatio||1);let PR=PRMAX,frN=0,frT=0;renderer.setPixelRatio(PR);
 renderer.outputEncoding=THREE.sRGBEncoding;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.55;
 renderer.shadowMap.enabled=!REVIEW;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
 stage.insertBefore(renderer.domElement,stage.firstChild);
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(40,1,0.3,60000);
+const camera=new THREE.PerspectiveCamera(40,1,1,60000); // no logarithmic depth (it cancels polygonOffset), near 1 m: far/near = 60,000 (request from Grok 5.11.2026)
 const controls=new THREE.OrbitControls(camera,renderer.domElement);
 controls.enableDamping=true;controls.dampingFactor=0.08;controls.rotateSpeed=0.4;controls.zoomSpeed=1.2;controls.autoRotate=false;controls.enablePan=true;controls.screenSpacePanning=false;controls.keyPanSpeed=20;controls.maxPolarAngle=Math.PI*0.497;controls.minDistance=1.5;controls.maxDistance=6000;
 
