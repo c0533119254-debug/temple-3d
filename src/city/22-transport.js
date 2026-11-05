@@ -136,7 +136,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
   // topic 2, stage 8: the pilgrim roads, drawn as faint golden stone ribbons, each with a label at its start
   {const rm=new THREE.MeshStandardMaterial({color:0xe2b04a,roughness:0.85,transparent:true,opacity:0.8,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-3});
     const DEST={"שער שכם":"שער המועצה","שער הפרחים":"שער חטה","העופל":"שער השבטים","ממילא":"שער השלשלת","שער האשפות":"שער קיפונוס","בריכת השילוح":"שערי חולדה","בריכת השילוח":"שערי חולדה"};
-    const pos=[],idx=[];const yAt=(x,n)=>inPoly(x,n,MOUNT)?0.18:(inPoly(x,n,GEO.PLAZA)||inPoly(x,n,KZ))?(PLZ+0.45):Math.max(H(x,n),TY(x,n),surfY(x,n))+0.15;
+    const pos=[],idx=[];const yAt=(x,n)=>inPoly(x,n,MOUNT)?0.20:(inPoly(x,n,GEO.PLAZA)||inPoly(x,n,KZ))?(PLZ+0.45):Math.max(H(x,n),TY(x,n),surfY(x,n))+0.22;
     TR.pil.forEach(p=>{const P=p.p,R=[];for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.ceil(L/3));for(let k=0;k<m;k++)R.push([a[0]+(b[0]-a[0])*k/m,a[1]+(b[1]-a[1])*k/m])}R.push(P[P.length-1]);
       for(let i=0;i<R.length;i++){const a=R[Math.max(0,i-1)],b=R[Math.min(R.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1,nx=-(b[1]-a[1])/L*1.3,nn=(b[0]-a[0])/L*1.3,x=R[i][0],n=R[i][1];
         const b0=pos.length/3;pos.push(x+nx,yAt(x+nx,n+nn),-(n+nn),x-nx,yAt(x-nx,n-nn),-(n-nn));if(i>0)idx.push(b0-2,b0-1,b0,b0-1,b0+1,b0)}
