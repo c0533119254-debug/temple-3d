@@ -19,6 +19,7 @@ city/20-city-fabric-labels.js
 temple/21-compound-mount-gates.js
 city/22-transport.js
 city/23-topic4.js
+city/24-topic5.js
 temple/23-actors.js
 temple/24-stories.js
 temple/25-build-temple.js
