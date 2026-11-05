@@ -43,7 +43,16 @@ function nightSky(){if(NIGHT.tex)return;const W=8,Hh=256,cv=document.createEleme
   c.putImageData(im,0,0);const t=new THREE.CanvasTexture(cv);t.mapping=THREE.EquirectangularReflectionMapping;t.encoding=THREE.sRGBEncoding;NIGHT.tex=t;NIGHT.env=pmrem.fromEquirectangular(t).texture;
   
   const m=new THREE.Mesh(new THREE.CircleGeometry(150,40),new THREE.MeshBasicMaterial({color:0xf3eedd,fog:false,toneMapped:false}));m.renderOrder=-1;m.visible=false;m.userData.moon=1;scene.add(m);NIGHT.moon=m}
-function applyTime(){renderer.shadowMap.needsUpdate=true;
+// topic 6 stage 6: light inside the house. INSIDE = 0 outside, 1 in the Heikhal, 2 in the Holy of Holies (set by the loop).
+// 📜 inside the Heikhal the light is the menorah, "להעלות נר תמיד" (Ex 27:20), and by day the open door from the Ulam; the windows give light out, not in (Menachot 86b).
+// 📜 the Holy of Holies is dark: "ה׳ אמר לשכן בערפל" (I Kings 8:12). 💡 a faint light stays so that it can be seen in the model.
+// Before: the gold walls had their own glow (emissive) and the sky light reached inside as if there were no roof, so even the Holy of Holies at night was bright gold.
+const INL={1:{hemi:0.5,sun:0.3,glow:0.6,exp:1.5,men:2.6},2:{hemi:0.15,sun:0.08,glow:0.15,exp:1.2,men:1.5}};
+function insideLight(){const q=INL[INSIDE];if(!M.panel.userData.g0){M.panel.userData.g0=M.panel.emissiveIntensity;M.goldFloor.userData.g0=M.goldFloor.emissiveIntensity}
+  const g=q?q.glow:1;M.panel.emissiveIntensity=M.panel.userData.g0*g;M.goldFloor.emissiveIntensity=M.goldFloor.userData.g0*g;if(!q)return;
+  hemi.intensity*=q.hemi;sun.intensity*=q.sun;renderer.toneMappingExposure*=q.exp;scene.environment=null} // no sky reflections on the gold inside: it shines only from the menorah and the door
+function applyTime(){applyTime0();insideLight()}
+function applyTime0(){renderer.shadowMap.needsUpdate=true;
   const t=TIMES[TIME],night=TIME==="night",sp=sunAt(HOUR!=null?HOUR:t.h),tw=!night&&sp.el<4;
   const d2=skyVec(Math.max(sp.el,-2),sp.az);
   // 💡 full moon = opposite the sun; when it is still low (early night) keep it at least 20° up so the moonlight reaches into the courts

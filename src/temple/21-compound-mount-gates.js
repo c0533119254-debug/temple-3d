@@ -1,5 +1,5 @@
 // ---- compound ----
-let PALMF=null,SSAO=false,ssaoC=null,PLAN="ez",RIVG=null,WALLG=null,SHOW_RIVER=true,SHOW_WALL=false,KDS=null,INT=null,INTBOX=null,COMP=null,COL=[],GLIST=[];function interiorPose(){return[INT.p.clone(),INT.t.clone()]}
+let PALMF=null,SSAO=false,ssaoC=null,PLAN="ez",RIVG=null,WALLG=null,SHOW_RIVER=true,SHOW_WALL=false,KDS=null,INT=null,INTBOX=null,KBOX=null,INSIDE=0,COMP=null,COL=[],GLIST=[];function interiorPose(){return[INT.p.clone(),INT.t.clone()]}
 let FESTG=null,SHOW_FEST=false;const HELP_FEST={n:"מצב חג",r:"סוכה ה; ביכורים ג; סוטה ז, ח",t:"⚖️ מראה את ההר בחג: ארבע המנורות של שמחת בית השואבה והרוקדים באבוקות, בימת ההקהל של המלך, ותהלוכת הביכורים עם השור. לחצו על כל אחד מהם כדי לקרוא עליו. 💡 המקומות בחצר החיצונה הם הצעה."};
 let group=null,cPick=[],cLabels=[],C=new THREE.Vector3(),flames=[],smoke=null,smokeData=[],fireLight=null,ksm=null,PFX=[],MENL=null;
 // stage 5b: natural fire and smoke (the page uses a logarithmic depth buffer, so the shaders include the logdepth chunks). Each particle is a soft, rotated puff that rises, changes colour and fades.

@@ -275,6 +275,7 @@ await __Y(86);function build(){
     KDS={p:new THREE.Vector3(...(()=>{const q=W(134,252);return[q[0],13.56*A+3.6,q[1]]})()),t:new THREE.Vector3(...(()=>{const q=W(118,250);return[q[0],13.56*A+0.6,q[1]]})())}}
   INT={p:new THREE.Vector3(...(()=>{const q=W(172,250);return[q[0],fl*A+2.4,q[1]]})()),t:new THREE.Vector3(...(()=>{const q=W(137,250);return[q[0],fl*A+2.2,q[1]]})())};
   {const a=W(115,240),b=W(199,260);INTBOX={x0:Math.min(a[0],b[0]),x1:Math.max(a[0],b[0]),z0:Math.min(a[1],b[1]),z1:Math.max(a[1],b[1]),y1:53.5*A}}
+  {const a=W(115,240),b=W(135.5,260);KBOX={x0:Math.min(a[0],b[0]),x1:Math.max(a[0],b[0]),z0:Math.min(a[1],b[1]),z1:Math.max(a[1],b[1])}} // topic 6: the Holy of Holies part of the house (west of the partition at u≈132–135; the "kodesh" view stands at u=134), for its own darker light
   for(let k=0;k<=6;k++){const v=250-ulW/2+k*ulW/6;if(Math.abs(v-250)<D/2+1)continue;box(199,v-1,200,v+1,13.5,104.5,M.marble,hi,{tile:2.6})}
   for(let k=0;k<=8;k++){const u=bu0+k*(183-bu0)/8;box(u-1,250-bodyW/2-1,u+1,250-bodyW/2,(ez?34.5:13.5),104.5,M.marble,null,{tile:2.6});box(u-1,250+bodyW/2,u+1,250+bodyW/2+1,(ez?34.5:13.5),104.5,M.marble,null,{tile:2.6})}
   box(182.6,250-ulW/2-0.6,200.2,250+ulW/2+0.6,13.5,15,M.stone,null);
