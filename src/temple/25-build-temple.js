@@ -388,7 +388,7 @@ await __Y(86);function build(){
     [170,175,180].forEach(v=>[282.4,317.6].forEach(u=>{cyl(u,v,3.56,YT-1.6,0.42,0.42,M.marble,lg,12);box(u-0.6,v-0.6,u+0.6,v+0.6,YT-1.6,YT-0.9,M.stoneL,null,{noCol:true,cast:false})}));
     [285.5,291,309,314.5].forEach(u=>{cyl(u,168.4,3.56,YT-1.6,0.42,0.42,M.marble,lg,12);box(u-0.6,167.8,u+0.6,169,YT-1.6,YT-0.9,M.stoneL,null,{noCol:true,cast:false})});
     box(281.8,167.8,318.2,169,YT-0.9,YT-0.5,M.stoneL,null,{noCol:true,cast:false});[281.8,317].forEach(u=>box(u,169,u+1.2,181,YT-0.9,YT-0.5,M.stoneL,null,{noCol:true,cast:false}));
-    box(300,200,320,210,3.5,7.5,M.pave,null,{cast:false,tile:9,col:true});box(281,200.4,319,209,7.5,7.56,M.marble,null,{cast:false,noCol:true,tile:4});
+    box(281,200,320,210,3.5,7.5,M.pave,null,{cast:false,tile:9,col:true});box(281,200.4,319,209,7.5,7.56,M.marble,null,{cast:false,noCol:true,tile:4});
     const kd=I("החצי שבקודש — מקום הפיס","יומא כה ע״א; תמיד ב, ה; ה, א","⚖️ החצי הצפוני של הלשכה נמצא בתוך העזרה, ופתחו לעזרה. 📜 \"פייס במזרחה\" (יומא כה ע״א) — הפיס בצד המזרחי של הלשכה. כאן הכהנים עושים את הפיס — ההגרלה מי יעבוד בכל עבודה (\"פייס בלשכת הגזית\", יומא כה ע״א), ולכאן הם באים לקרוא את שמע בבוקר (תמיד ה, א). 💡 קיר נמוך מפריד בין החצי של החול, שרצפתו נמוכה, לבין החצי של הקודש, שבגובה רצפת העזרה. 💡 הכהנים עומדים כאן במעגל, כמו בשעת הפיס.");
     box(281,199.6,319,200.4,3.5,8.6,M.stone2,kd);
     for(let k=0;k<13;k++){const an=k/13*Math.PI*2,u=310+Math.cos(an)*3,v=204.8+Math.sin(an)*2.6;add(STAND,kd,{u,v,y:7.56,a:face(u,v,310,204.8),c:0xfaf8f2})}
