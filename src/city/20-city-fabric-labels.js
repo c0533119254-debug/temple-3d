@@ -6,7 +6,8 @@ await __Y(75);function instBlocks(o){
   while(k<o.count&&tries<o.count*15){tries++;
     const x=o.area[0]+r()*(o.area[1]-o.area[0]),n=o.area[2]+r()*(o.area[3]-o.area[2]);if(!o.test(x,n)||!satOK(x,n))continue;
     const w=o.size[0]+r()*(o.size[1]-o.size[0]),dd=o.size[0]+r()*(o.size[1]-o.size[0]),h=o.ht[0]+r()*(o.ht[1]-o.ht[0]);
-    const y=H(x,n);d.position.set(x,y+h/2-1.2,-n);d.scale.set(w,h+1.2,dd);d.rotation.set(0,(o.rot||0)+(r()-0.5)*0.1,0);d.updateMatrix();mesh.setMatrixAt(k,d.matrix);
+    if(!clearAt(x,n,Math.max(w,dd)/2))continue;
+    const y=TY(x,n);d.position.set(x,y+h/2-1.2,-n);d.scale.set(w,h+1.2,dd);d.rotation.set(0,(o.rot||0)+(r()-0.5)*0.1,0);d.updateMatrix();mesh.setMatrixAt(k,d.matrix);
     c.setHex(o.tint[Math.floor(r()*o.tint.length)]);mesh.setColorAt(k,c);k++;
     if(o.domes&&r()<o.domes){const rad=Math.min(w,dd)*0.22+0.8;d.position.set(x+(r()-0.5)*w*0.3,y+h-1.2,-n+(r()-0.5)*dd*0.3);d.scale.set(rad,rad*0.75,rad);d.rotation.set(0,0,0);d.updateMatrix();domes.setMatrixAt(kd++,d.matrix)}
   }
