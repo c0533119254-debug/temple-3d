@@ -207,11 +207,39 @@ DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEac
 // method drawer
 {const d=DR.method.d;const grp=[...document.querySelectorAll(".controls .cgroup")];const m=grp.find(g=>g.querySelector("#planSeg"));if(m)m.querySelectorAll(".ctl").forEach(c=>d.appendChild(c));
   d.appendChild(mk("p","ch",'המודל מראה שיטה אחת בכל פעם. הכפתור i ליד כל אפשרות מסביר את המחלוקת ואת המקור.'));const fit=$("fit");if(fit)d.appendChild(fit)}
-// view drawer: time slider, background, layers
-{const d=DR.view.d;const T=["tM","tN","tE","tL"],TN=["בוקר","צהריים","ערב","לילה"];
-  const w=mk("div","ctl",'<div class="cl">שעה ביום: <b id="tsv">בוקר</b></div><input type="range" id="tslider" min="0" max="3" step="1" value="0" aria-label="שעה ביום"><div class="tlabels">'+TN.map(t=>'<span>'+t+'</span>').join("")+'</div>');d.appendChild(w);
-  const tsl=w.querySelector("#tslider");tsl.addEventListener("input",()=>{const i=+tsl.value;$("tsv").textContent=TN[i];$(T[i]).click()});
-  T.forEach((id,i)=>$(id).addEventListener("click",()=>{tsl.value=i;$("tsv").textContent=TN[i]}));
+// view drawer: hour slider (עלות השחר until the night), day type, festival, background, layers
+{const d=DR.view.d;const HMIN=4.5,HMAX=23.5,SPAN=HMAX-HMIN;
+  const fmtH=h=>{let H=Math.floor(h),M=Math.round((h-H)*60);if(M===60){H+=1;M=0}H=((H%24)+24)%24;return (H<10?"0":"")+H+":"+(M<10?"0":"")+M};
+  const bucket=h=>{const sp=sunAt(h);return sp.el<=-7?"night":h<10.5?"morning":h>14.5?"evening":"noon"};
+  const BN={morning:"בוקר",noon:"צהריים",evening:"ערב",night:"לילה"};
+  const w=mk("div","ctl hourctl",'<div class="cl">שעה ביום: <b id="hsv"></b></div><div class="hslide"><div class="hmarks" id="hmarks" aria-hidden="true"></div><input type="range" id="hslider" min="4.5" max="23.5" step="0.05" aria-label="שעה ביום"></div><div class="hcap" id="hcap" aria-live="polite"></div><div class="hlist" id="hlist"></div>');d.appendChild(w);
+  const hsl=$("hslider"),hsv=$("hsv"),hcap=$("hcap"),hmarks=$("hmarks"),hlist=$("hlist");
+  let zKey=null,zs=[];
+  function marks(){if(zKey===DOY)return;zKey=DOY;zs=zmanim(DOY);const bits=[];
+    zs.forEach(z=>{const p=(z.h-HMIN)/SPAN;if(p<0||p>1)return;bits.push('<i style="right:'+(p*100).toFixed(2)+'%" title="'+esc(z.n)+'"></i>')});
+    hmarks.innerHTML=bits.join("");
+    hlist.innerHTML=zs.map(z=>'<span>'+esc(z.n)+'</span>').join('<span class="dot" aria-hidden="true">·</span>')}
+  function readout(h){const z=zmanAt(h,DOY),t=bucket(h);
+    hsv.innerHTML='<bdi class="n">'+fmtH(h)+'</bdi> · '+BN[t];
+    hcap.textContent=z?z.n:"";
+    hsl.setAttribute("aria-valuetext",fmtH(h)+" "+BN[t]+(z?" "+z.n:""));
+    hsl.setAttribute("aria-valuenow",String(Math.round(h*20)/20));
+    hlist.querySelectorAll("span:not(.dot)").forEach(s=>s.classList.toggle("on",!!(z&&s.textContent===z.n)));
+    hmarks.querySelectorAll("i").forEach(el=>el.classList.toggle("on",!!(z&&el.title===z.n)))}
+  let raf=0;
+  function applyH(h){setHour(h);document.querySelectorAll("#timeSeg button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===bucket(h)?"true":"false"))}
+  hsl.addEventListener("input",()=>{const h=+hsl.value;marks();readout(h);if(!raf)raf=requestAnimationFrame(()=>{raf=0;applyH(+hsl.value)})});
+  hsl.addEventListener("change",()=>{if(raf){cancelAnimationFrame(raf);raf=0}const h=+hsl.value;readout(h);applyH(h)});
+  ["tM","tN","tE","tL"].forEach(id=>$(id).addEventListener("click",()=>{if(raf){cancelAnimationFrame(raf);raf=0}const h=TIMES[$(id).dataset.t].h;hsl.value=String(h);marks();readout(h)}));
+  hsl.value=String(Math.max(HMIN,Math.min(HMAX,HOUR!=null?HOUR:TIMES[TIME].h)));marks();readout(+hsl.value);
+  const days=[["chol","חול"],["shabbat","שבת"],["rosh","ראש חודש"]];
+  const dw=mk("div","ctl",'<div class="cl">סוג היום</div><div class="seg tap" id="daySeg" role="group" aria-label="סוג היום">'+days.map(([k,n])=>'<button type="button" data-day="'+k+'" aria-pressed="'+(DAY===k?"true":"false")+'">'+n+'</button>').join("")+'</div>');d.appendChild(dw);
+  dw.querySelector("#daySeg").addEventListener("click",e=>{const b=e.target.closest("button[data-day]");if(!b)return;dw.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));setDay(b.dataset.day)});
+  // setFest returns immediately for an unknown key, so it cannot be cleared — no "ללא" button.
+  const fests=[["pesach","פסח"],["shavuot","שבועות"],["sukkot","סוכות"]];
+  const curF=Object.keys(FEST).find(k=>FEST[k].doy===DOY)||"";
+  const fw=mk("div","ctl",'<div class="cl">חג</div><div class="seg tap" id="festSeg" role="group" aria-label="חג">'+fests.map(([k,n])=>'<button type="button" data-fest="'+k+'" aria-pressed="'+(curF===k?"true":"false")+'">'+n+'</button>').join("")+'</div>');d.appendChild(fw);
+  fw.querySelector("#festSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-fest]");if(!b)return;fw.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));setFest(b.dataset.fest);zKey=null;marks();readout(+hsl.value)});
   const ts=$("timeSeg");if(ts)ts.closest(".ctl").style.display="none";
   const v=[...document.querySelectorAll(".controls .cgroup")].find(g=>g.querySelector("#floorSeg"));if(v)v.querySelectorAll(".ctl").forEach(c=>{if(!c.querySelector("#timeSeg"))d.appendChild(c)})}
 // help drawer
