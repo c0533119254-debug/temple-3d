@@ -34,7 +34,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   if(TRN&&SHOW_TR&&(!reduce||TRN.riding))TRN.tick(rawdt||dt,tt);
   FIG.U.uT.value=tt;if(!reduce){if(ACTS)ACTS.tick(dt,tt);if(CROWDT)CROWDT(dt,tt)}
   if(STORY)STORY.tick(now);
-  if(SSAO&&ssaoC&&TIME!=="night"&&!WALK)ssaoC.render();else renderer.render(scene,camera);
+  if(SSAO&&ssaoC&&TIME!=="night"&&!WALK)ssaoC.render();else if(TIME==="night"&&QL!=="low"&&!SMALL)composer.render();else renderer.render(scene,camera); // topic 6: at night the glow (bloom) of fire, lamps and windows; not on weak devices
   const w=stage.clientWidth,h=stage.clientHeight;
   if((++HUDF)%4===0)hudTick();
   const cp=camera.position,inHouse=INTBOX&&cp.x>INTBOX.x0&&cp.x<INTBOX.x1&&cp.z>INTBOX.z0&&cp.z<INTBOX.z1&&cp.y<INTBOX.y1;if(WG.visible===!!inHouse){WG.visible=!inHouse;document.getElementById("exitB").hidden=!inHouse}
@@ -71,7 +71,7 @@ function depthProbe(){const now=performance.now();if(!WALK&&camera.position.y-fl
 function seg(id,attr,cb){const box=document.getElementById(id);box.addEventListener("click",e=>{const b=e.target.closest("button");if(!b||!b.dataset[attr])return;box.querySelectorAll("button[data-"+attr+"]").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));cb(b.dataset[attr])})}
 let VIEW="home";
 seg("viewSeg","v",v=>{if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(TOUR)stopTour();VIEW=v;closeInfo();if(v==="drone"){startDrone();return}if(v==="walk"){fadeJump(startWalk);return}if(DRONE){stopDrone();flyTo(v,1400);return}if(WALK){fadeJump(()=>{stopWalk();flyTo(v,0)});return}flyTo(v,1200)});
-seg("timeSeg","t",v=>{TIME=v;applyTime()});
+seg("timeSeg","t",v=>{TIME=v;HOUR=null;applyTime()});
 seg("facSeg","f",v=>{FMODE=v;build()});
 seg("planSeg","pl",v=>{PLAN=v;const md=v!=="ez";document.getElementById("facSeg").style.opacity=md?0.45:1;document.getElementById("gateSeg").style.opacity=md?0.45:1;keepCam(build);if(v==="rambam")showInfo(HELP.plan);else closeInfo()});
 seg("gateSeg","g",v=>{GATE=v;build()});
