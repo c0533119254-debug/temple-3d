@@ -15,7 +15,7 @@ python3 -m http.server 8000
 ואז לפתוח בדפדפן: http://localhost:8000
 מצב בדיקה: http://localhost:8000/#review=1
 
-גם Netlify מגיש את התיקייה כמו שהיא (ראו `netlify.toml`).
+האתר מתפרסם אוטומטית ל־GitHub Pages אחרי כל מיזוג ל־main (ראו `.github/workflows/pages.yml`). גם Netlify מגיש את התיקייה כמו שהיא (ראו `netlify.toml`).
 
 ## מה יש בתיקייה
 
