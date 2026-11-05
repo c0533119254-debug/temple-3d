@@ -1,19 +1,27 @@
 // ---- time of day ----
 function b64url(path,cb){fetch(path).then(r=>r.text()).then(t=>__AFTER(()=>cb(URL.createObjectURL(new Blob([b64bytes(t)]))))).catch(()=>{})}
 const SKY={morning:{f:"sky_morning.hdr.txt",exp:0.5,sun:1.55,hemi:0.26,fog:[1.146,0.841,0.699]},noon:{f:"sky_noon.hdr.txt",exp:0.46,sun:1.2,hemi:0.34,fog:[0.613,0.66,0.796]},evening:{f:"sky_evening.hdr.txt",exp:0.46,sun:1.25,hemi:0.28,fog:[1.146,0.841,0.699]}},SKYT={};
-const TIMES={morning:{el:15,az:100,exp:0.42,fog:0xd8d0c6,sunI:2.2,hemi:0.28},noon:{el:48,az:165,exp:0.34,fog:0xcfdbe4,sunI:2.1,hemi:0.35},evening:{el:10,az:265,exp:0.5,fog:0xd9b89a,sunI:1.7,hemi:0.25},night:{el:-12,az:250,exp:0.95,fog:0x111a2c,sunI:0,hemi:0.2}};
+const TIMES={morning:{el:15,az:100,exp:0.42,fog:0xd8d0c6,sunI:2.2,hemi:0.28},noon:{el:48,az:165,exp:0.34,fog:0xcfdbe4,sunI:2.1,hemi:0.35},evening:{el:10,az:265,exp:0.5,fog:0xd9b89a,sunI:1.7,hemi:0.25},night:{el:-12,az:250,exp:0.62,fog:0x162034,sunI:0,hemi:0.22}};
+// topic 6 stage 1: a real night. 💡 full moon (the festivals fall on the 15th of a lunar month, Lev 23:6, 23:34), high in the south near midnight.
+// The sky is a dark-blue gradient that gets a little lighter at the horizon, and the fog has the horizon's colour, so the far ground fades into the sky instead of a hard line.
+const NIGHT={top:[0.012,0.022,0.055],hor:[0.075,0.105,0.17],moonAz:165,moonEl:52,moonC:0xa8bce8,moonI:0.32,hemiS:0x2c3c62,hemiG:0x0c0e13,tex:null,env:null,moon:null};
+function nightSky(){if(NIGHT.tex)return;const W=8,Hh=256,cv=document.createElement("canvas");cv.width=W;cv.height=Hh;const c=cv.getContext("2d"),im=c.createImageData(W,Hh);
+  for(let y=0;y<Hh;y++){const v=y/(Hh-1),e=Math.abs(0.5-v)*2,k=Math.pow(1-e,6),q=v>0.5?0.55:1;for(let x=0;x<W;x++){const o=(y*W+x)*4;for(let j=0;j<3;j++)im.data[o+j]=Math.round(255*Math.pow((NIGHT.top[j]+(NIGHT.hor[j]-NIGHT.top[j])*k)*q,1/2.2));im.data[o+3]=255}}
+  c.putImageData(im,0,0);const t=new THREE.CanvasTexture(cv);t.mapping=THREE.EquirectangularReflectionMapping;t.encoding=THREE.sRGBEncoding;NIGHT.tex=t;NIGHT.env=pmrem.fromEquirectangular(t).texture;
+  const az=THREE.MathUtils.degToRad(NIGHT.moonAz),el=THREE.MathUtils.degToRad(NIGHT.moonEl),d=new THREE.Vector3(Math.sin(az)*Math.cos(el),Math.sin(el),-Math.cos(az)*Math.cos(el));NIGHT.dir=d;
+  const m=new THREE.Mesh(new THREE.CircleGeometry(150,40),new THREE.MeshBasicMaterial({color:0xf3eedd,fog:false,toneMapped:false}));m.position.copy(d).multiplyScalar(14000);m.lookAt(0,0,0);m.renderOrder=-1;m.visible=false;m.userData.moon=1;scene.add(m);NIGHT.moon=m}
 function applyTime(){renderer.shadowMap.needsUpdate=true;
   const t=TIMES[TIME],night=TIME==="night";
   const phi=THREE.MathUtils.degToRad(90-Math.max(t.el,-2)),theta=THREE.MathUtils.degToRad(t.az);
   const d2=new THREE.Vector3(Math.sin(theta)*Math.sin(phi),Math.cos(phi),-Math.cos(theta)*Math.sin(phi));
   su.sunPosition.value.copy(d2);sky.visible=!night;stars.visible=night;
-  scene.background=night?new THREE.Color(0x070b16):null;
+  if(night)nightSky();scene.background=night?NIGHT.tex:null;if(NIGHT.moon){NIGHT.moon.visible=night;NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position)}
   scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
   renderer.toneMappingExposure=t.exp;
-  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x4a3518:0x000000);if(TRN)TRN.night(night);
-  if(night){sun.color.set(0xa9bce6);sun.intensity=0.45;sun.position.set(C.x-300,600,C.z+200)}
+  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
+  if(night){sun.color.set(NIGHT.moonC);sun.intensity=NIGHT.moonI;sun.position.copy(C).addScaledVector(NIGHT.dir,900)}
   else{sun.color.set(TIME==="evening"?0xffc28a:TIME==="morning"?0xffd3a0:0xfff1dc);sun.intensity=t.sunI;sun.position.copy(C).addScaledVector(d2,900)}
-  sun.target.position.copy(C);hemi.intensity=t.hemi;hemi.color.set(night?0x334466:0xdfe8f2);
+  sun.target.position.copy(C);hemi.intensity=t.hemi;hemi.color.set(night?NIGHT.hemiS:0xdfe8f2);hemi.groundColor.set(night?NIGHT.hemiG:0x7a6a52);
   M.win.emissiveIntensity=night?2.2:0;if(M.win2)M.win2.emissiveIntensity=night?2.6:0;M.lamp.color.set(night?0xffd28a:0x8a7a5a);
   if(fireLight)fireLight.intensity=night?1.6:0.25;
   bloom.strength=night?0.55:0.12;bloom.threshold=night?0.75:0.96;
@@ -21,7 +29,7 @@ function applyTime(){renderer.shadowMap.needsUpdate=true;
   const L=sk&&SKYT[TIME]&&SKYT[TIME].bg?SKYT[TIME]:null;
   if(L){sky.visible=false;scene.background=L.bg;scene.environment=L.env;scene.fog=new THREE.FogExp2(new THREE.Color(sk.fog[0],sk.fog[1],sk.fog[2]),0.00013);RING.material.color.copy(scene.fog.color);renderer.toneMappingExposure=sk.exp;sun.intensity=sk.sun;hemi.intensity=sk.hemi;hemi.color.set(TIME==="morning"?0xf0e2d0:0xdfe8f2);return}
   if(!night){if(envRT)envRT.dispose();const s2=new THREE.Scene(),sk=new THREE.Sky();sk.scale.setScalar(1000);sk.material.uniforms.sunPosition.value.copy(d2);["turbidity","rayleigh","mieCoefficient","mieDirectionalG"].forEach(k=>sk.material.uniforms[k].value=su[k].value);s2.add(sk);envRT=pmrem.fromScene(s2);scene.environment=envRT.texture}
-  else scene.environment=null;
+  else scene.environment=NIGHT.env;
 }
 
 // ---- views & tour ----
