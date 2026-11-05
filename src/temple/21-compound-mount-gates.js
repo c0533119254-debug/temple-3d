@@ -53,6 +53,8 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     for(let i=0;i<T.N;i++){const top=T.thr+(i+1)*T.h,d0=T.run(i),dd=T.tread+((i%T.FL===T.FL-1)&&i<T.N-1?T.LAND:0),p=P(-(d0+dd/2),0);steps.push([p[0],top,p[1],w.a,T.tw,top+46,dd+0.02]);
       if(-d0>R0+0.3)stoneG.push([p[0],Math.min(top+4,-0.45)+0.2,p[1],w.a,T.tw,0.4,dd+0.04])}
     {const p=P(-T.tot-0.3,0);steps.push([p[0],0,p[1],w.a,T.tw,46,0.62])}
+    // #25: dressed stone walls along the passage, so the opening shows a lit stair hall and not the dark rock of the mount
+    if(T.k==="K")[-1,1].forEach(sd=>{const p=P(-T.D/2,sd*(hw+0.25));stoneG.push([p[0],(T.thr-0.6+(-0.3))/2,p[1],w.a,0.5,-0.3-(T.thr-0.6),T.D])});
     {const p=P(-0.2,0);stoneG.push([p[0],T.thr-23,p[1],w.a,T.tw,46,0.42]);stoneG.push([p[0],(T.thr+4.2)/2,p[1],w.a,T.tw,-(T.thr+4.2)+0.2,0.42])}
     // the roof: the same paving as the plaza on top, plain stone under it
     {const q=(nn,al)=>P(nn,al),c=[q(0,-hw),q(R0,-hw),q(R0,hw),q(0,hw)],sh=new THREE.Shape();c.forEach((p,i)=>i?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));sh.closePath();
@@ -79,7 +81,10 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     if(g.k==="S"){const W2=(g.w+4)/2,o0=g.w*0.09,o1=g.w*0.39,ot=thr+oh*0.8;
       if(T){seg(-W2,-o1,bot,top,-0.4,2.8);seg(-o0,o0,bot,top,-0.4,2.8);seg(o1,W2,bot,top,-0.4,2.8);seg(-o1,o1,ot,top,-0.4,2.8);seg(-o1,o1,bot,thr,-0.4,2.8)}else stoneG.push([w.x+w.ox*1.2,(top+bot)/2,w.n+w.on*1.2,w.a,g.w+4,top-bot,3.2]);
       [-1,1].forEach(s=>{const px=w.x+w.ox*2.85+fx*s*g.w*0.24,pn=w.n+w.on*2.85+fn*s*g.w*0.24;PORT.push([px,pn,w,face,base,thr+oh*0.8,g.w*0.15]);if(!T){darkB.push([px,thr+oh*0.4,pn,w.a,g.w*0.3,oh*0.8,0.2]);darkA.push([px,thr+oh*0.8,pn,w.a,g.w*0.15])}})}
-    else if(g.k==="K"){seg(-ow/2-0.8,ow/2+0.8,thr+4.2,1.04,-0.6,0.6)}
+    else if(g.k==="K"){// a proper gateway, like Barclay's Gate: the wall closes flush round a 5.6 m opening, with jambs, one great lintel stone and a relieving arch over it
+      const OH=4.2,F=0.3;seg(-4.05,4.05,thr+OH,1.04,-1.5,F);[-1,1].forEach(sd=>seg(sd<0?-4.05:ow/2,sd<0?-ow/2:4.05,thr-0.3,thr+OH,-1.5,F));
+      [-1,1].forEach(sd=>seg(sd<0?-ow/2-0.75:ow/2,sd<0?-ow/2:ow/2+0.75,thr,thr+OH,F,F+0.28));seg(-ow/2-1.1,ow/2+1.1,thr+OH,thr+OH+1.9,F,F+0.36);seg(-ow/2-1.3,ow/2+1.3,thr+OH+1.9,thr+OH+2.15,F,F+0.46);
+      g.arch_={c:P(F+0.18,0),y:thr+OH+2.15,r:3.1,a:w.a}}
     else if(TOW){stoneG.push([w.x+w.ox*1.2,(top+bot)/2,w.n+w.on*1.2,w.a,g.w+4,top-bot,3.2]);const px=w.x+w.ox*2.85,pn=w.n+w.on*2.85;PORT.push([px,pn,w,face,base,thr+oh*0.7,ow/2]);if(g.n!=="שער טדי"){darkB.push([px,thr+oh*0.35,pn,w.a,ow,oh*0.7,0.2]);darkA.push([px,thr+oh*0.7,pn,w.a,ow/2])}}
     else{// v80 (item 20): a real gateway: two piers, a lintel and a cornice, open between them
       const o=g.w*0.6/2;seg(-o-1.4,-o,thr,thr+6,-1.5,1.5);seg(o,o+1.4,thr,thr+6,-1.5,1.5);seg(-o,o,thr+4.2,thr+6,-1.5,1.5);seg(-o-1.6,o+1.6,thr+6,thr+6.4,-1.7,1.7);
@@ -190,6 +195,8 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     stoneG.forEach(p=>{const [x,y,n,a,sx,sy,sz]=p,ax=Math.abs(sx),ay=Math.abs(sy),az=Math.abs(sz);if(ax<1e-3||ay<1e-3||az<1e-3)return;const g=new THREE.BoxGeometry(ax,ay,az),uv=g.attributes.uv,y0=y-ay/2;
       const dims=[[az,1],[az,1],[ax,az],[ax,az],[ax,1],[ax,1]];for(let f=0;f<6;f++)for(let k=0;k<4;k++){const i=f*4+k,u=uv.getX(i),v=uv.getY(i);if(f===2||f===3)uv.setXY(i,u*ax/16,v*az/16);else uv.setXY(i,u*dims[f][0]/16,(y0+v*ay+30)/32)}
       g.rotateY(a);g.translate(x,y,-n);gs.push(g)});
+    G.forEach(g=>{const A=g.arch_;if(!A)return;const NV=11;for(let i=0;i<NV;i++){const t=(i+0.5)/NV*Math.PI,len=A.r*Math.PI/NV*0.94;const b=new THREE.BoxGeometry(len,0.85,0.36),uv=b.attributes.uv;for(let k=0;k<uv.count;k++)uv.setXY(k,uv.getX(k)*len/16,uv.getY(k)*0.85/32+i*0.07);
+      b.rotateZ(t-Math.PI/2);b.translate(Math.cos(t)*A.r,Math.sin(t)*A.r,0);b.rotateY(A.a);b.translate(A.c[0],A.y,-A.c[1]);gs.push(b)}});
     if(gs.length){const U=THREE.BufferGeometryUtils,mg=U&&U.mergeBufferGeometries?U.mergeBufferGeometries(gs):null;
       if(mg){const m=new THREE.Mesh(mg,M.mgate);m.castShadow=true;m.receiveShadow=true;m.userData=gInfo;PICK.push(m);GATEG.add(m)}else im(box,gateM,stoneG,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])},gInfo)}}
   im(box,dark,darkB,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])});
