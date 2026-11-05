@@ -1,6 +1,6 @@
 <!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <meta charset="utf-8">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 88"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)</script>
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 91"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)</script>
 <title>הדמיית המקדש בירושלים</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -402,6 +402,13 @@ body.touring .infocard{display:none!important}
         </div>
       </div>
       <div class="ctl">
+        <div class="cl">יום בשבוע</div>
+        <div class="seg" role="group" aria-label="יום בשבוע" id="shabSeg">
+          <button type="button" data-sh="0" aria-pressed="true">יום חול</button>
+          <button type="button" data-sh="1" aria-pressed="false">שבת / יום טוב</button>
+        </div>
+      </div>
+      <div class="ctl">
         <div class="cl">רקע <button type="button" class="help" data-help="floor" aria-label="הסבר על הרקע">i</button></div>
         <div class="seg" role="group" aria-label="רקע" id="floorSeg">
           <button type="button" data-s="sat" aria-pressed="true" id="sS">קרקע</button>
@@ -432,6 +439,7 @@ body.touring .infocard{display:none!important}
           <button type="button" data-k="cem" aria-pressed="false">בתי קברות</button>
           <button type="button" data-k="pk" aria-pressed="true">חניונים גדולים</button>
           <button type="button" data-k="hsr" aria-pressed="true">רכבת מהירה (סכמטי)</button>
+          <button type="button" data-k="khn" aria-pressed="false">דרכים לכוהנים</button>
         </div>
       </div>
     </div>
@@ -9507,10 +9515,20 @@ await __Y(64);(function(){const asph=tex(cv(256,256,(x,w,h)=>{x.fillStyle="#5d5f
       if(A.length===4){const ax=A[0]/10,an=A[1]/10,bx_=A[2]/10,bn=A[3]/10,L=Math.hypot(bx_-ax,bn-an),ang=Math.atan2(bn-an,bx_-ax),D=[];for(let t=0;t<L;t+=14)D.push(t);
         const dm=new THREE.InstancedMesh(new THREE.BoxGeometry(8,0.3,3),new THREE.MeshBasicMaterial({color:0xff8a1c,toneMapped:false,transparent:true,opacity:0.85}),D.length);D.forEach((t,i)=>{const x=ax+(bx_-ax)*t/L,n=an+(bn-an)*t/L;o3.rotation.set(0,ang,0);o3.position.set(x,Math.max(TY(x,n),bldTop(x,n))+3,-n);o3.updateMatrix();dm.setMatrixAt(i,o3.matrix)});dm.userData=info;g.add(dm);PICK.push(dm)}
       OSM4.hsr.forEach(([q,nm,loc])=>{const x=q[0]/10,n=q[1]/10,y=TY(x,n),s=sprite("רכבת","#ff8a1c","#ffffff",6);s.position.set(x,y+14,-n);s.userData={n:"תחנת "+nm+" (מתוכננת, תת-קרקעית)",r:info.r,t:(loc?loc+". ":"")+"המיקום בערך. "+info.t};g.add(s);PICK.push(s);const p=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,11,6),new THREE.MeshStandardMaterial({color:0xff8a1c}));p.position.set(x,y+5.5,-n);g.add(p)})}
+    // ⚖️ a kohen keeps 4 amot (about 2 m) away from a grave (Vayikra 21:1; Shulchan Arukh YD 371:5). The data gives only the cemetery outline,
+    // so every road piece inside it or within 2.5 m of its edge is marked red. Where nothing is marked, the data shows no cemetery.
+    {const g=mkG("khn"),CP=OSM4.cem.map(([nm,rel,A])=>{const P=[];let x0=1e9,x1=-1e9,n0=1e9,n1=-1e9;for(let i=0;i<A.length;i+=2){const x=A[i]/10,n=A[i+1]/10;P.push([x,n]);x0=Math.min(x0,x);x1=Math.max(x1,x);n0=Math.min(n0,n);n1=Math.max(n1,n)}return{P,x0:x0-3,x1:x1+3,n0:n0-3,n1:n1+3}});
+      const dSeg=(x,n,a,b)=>{const dx=b[0]-a[0],dn=b[1]-a[1],L2=dx*dx+dn*dn||1,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/L2));return Math.hypot(x-a[0]-dx*t,n-a[1]-dn*t)};
+      const bad=(x,n,hw)=>CP.some(c=>{if(x<c.x0-hw||x>c.x1+hw||n<c.n0-hw||n>c.n1+hw)return false;if(inPoly(x,n,c.P))return true;for(let i=0;i<c.P.length-1;i++)if(dSeg(x,n,c.P[i],c.P[i+1])<hw+2.5)return true;return false});
+      const R=[];car.forEach(rd=>{const p=rd.p;for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.ceil(L/4)),ang=Math.atan2(b[1]-a[1],b[0]-a[0]);
+        for(let j=0;j<m;j++){const t=(j+0.5)/m,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t;if(bad(x,n,rd.w/2))R.push([x,yAt(rd,i)*(1-t)+yAt(rd,i+1)*t,n,ang,L/m,rd.w])}}});
+      if(R.length){const km=new THREE.InstancedMesh(new THREE.BoxGeometry(1,0.05,1),new THREE.MeshStandardMaterial({color:0xe03a30,emissive:0x7a1410,roughness:0.8,transparent:true,opacity:0.65,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-3}),R.length);
+        R.forEach((q,i)=>{o3.rotation.set(0,q[3],0);o3.position.set(q[0],q[1]+0.03,-q[2]);o3.scale.set(q[4]+0.05,1,q[5]);o3.updateMatrix();km.setMatrixAt(i,o3.matrix)});o3.scale.set(1,1,1);km.renderOrder=3;km.userData.noLOD=true;
+        km.userData={noLOD:true,n:"דרך שכוהן לא הולך בה",r:"ויקרא כא, א; שולחן ערוך יורה דעה שעא, ה; גבול בית הקברות מ-OpenStreetMap",t:"⚖️ כוהן מתרחק ארבע אמות (כ-2 מ') מקבר. 💡 מסומנים באדום קטעי כביש שעוברים בתוך שטח של בית קברות או ליד הגבול שלו, לפי הנתונים בלבד. במקום שלא מסומן, הנתונים לא מראים שם בית קברות."};g.add(km);PICK.push(km)}OSMN.khn=R.length}
     window.__OSM4=OSMN}
     {const box=document.getElementById("osmSeg"),ph=window.innerWidth<700||/Mobi/i.test(navigator.userAgent);
       const set=(k,on)=>{(OSML[k]||[]).forEach(o=>o.visible=on);if(k==="sig")window.__T4OFF=!on;if(k==="ln")(OSML.lnOff||[]).forEach(o=>o.visible=!on);const b=box&&box.querySelector('[data-k="'+k+'"]');if(b)b.setAttribute("aria-pressed",on?"true":"false")};
-      [["sig",1],["sgn",1],["rb",1],["ln",1],["nm",!ph],["cem",0],["pk",!ph],["hsr",1]].forEach(([k,on])=>set(k,!!on));
+      [["sig",1],["sgn",1],["rb",1],["ln",1],["nm",!ph],["cem",0],["pk",!ph],["hsr",1],["khn",0]].forEach(([k,on])=>set(k,!!on));
       if(box)box.addEventListener("click",e=>{const b=e.target.closest("button[data-k]");if(!b)return;set(b.dataset.k,b.getAttribute("aria-pressed")!=="true")})}
 
     window.__T4J={zebra:zebra.length,lights:lights.length,signs:signs.length,stops:stops.length,arrows:arrows.length,caps:caps.length}}
@@ -9974,6 +9992,10 @@ let LIFE_LG=null;const LIFE=(function(){const WK=[[[-1086.5,-713.1],[-1083.9,-70
   const ib=FIG.mesh(NP,FIG.mat(0xffffff)),ih=new THREE.InstancedMesh(head,mH,NP),c=new THREE.Color();
   const P=[];for(let k=0;k<NP;k++){const q=walks[Math.floor(r()*walks.length)];P.push({q,t:r()*q.len,v:(0.9+r()*0.6)*(r()<0.5?1:-1),s:0.9+r()*0.18,ph:r()*6});c.setHex(cloth[Math.floor(r()*cloth.length)]);ib.setColorAt(k,c);c.setHex(skin[Math.floor(r()*skin.length)]);ih.setColorAt(k,c)}
   ib.castShadow=false;WG.add(ib,ih);
+  // ---- topic 4 stage 9: Shabbat / Yom Tov (⚖️ no driving; 💡 how many people walk and what they wear)
+  let SHB=false;const r2=rng(7781),NS=SMALL?600:1800,DRC=drives.filter(q=>Math.hypot(q.p[0][0],q.p[0][1])<1000),sb=FIG.mesh(NS,FIG.mat(0xffffff)),sh=new THREE.InstancedMesh(head,mH,NS),SP=[],clS=[0xf2f0ea,0xeeeeea,0x1d2430,0x111111,0x2b2f38,0x3e5c7a,0xd8cfbf,0x6b5b4a];
+  for(let k=0;k<NS;k++){const q=DRC[Math.floor(r2()*DRC.length)];SP.push({q,t:r2()*q.len,v:(0.8+r2()*0.5)*(r2()<0.5?1:-1),s:0.88+r2()*0.2,ph:r2()*6,off:(r2()-0.5)*Math.max(1,q.w-1.6)});c.setHex(clS[Math.floor(r2()*clS.length)]);sb.setColorAt(k,c);c.setHex(skin[Math.floor(r2()*skin.length)]);sh.setColorAt(k,c)}
+  sb.visible=sh.visible=false;sb.userData.noLOD=sh.userData.noLOD=true;sb.castShadow=false;sb.frustumCulled=sh.frustumCulled=false;WG.add(sb,sh);
   // ---- topic 4 stage 7: a car shape (💡 a 4.4 m family car) ----
   const CARG=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonIndexed():g;["uv","uv2"].forEach(k=>g.attributes[k]&&g.deleteAttribute(k));return g},col=(g,c)=>{g=strip(g);const C=new THREE.Color(c),a=new Float32Array(g.attributes.position.count*3);for(let i=0;i<a.length;i+=3){a[i]=C.r;a[i+1]=C.g;a[i+2]=C.b}g.setAttribute("color",new THREE.BufferAttribute(a,3));return g};
     const ext=(pts,w)=>{const sh=new THREE.Shape();sh.moveTo(pts[0][0],pts[0][1]);pts.slice(1).forEach(p=>sh.lineTo(p[0],p[1]));const g=new THREE.ExtrudeGeometry(sh,{depth:w,bevelEnabled:true,bevelThickness:0.04,bevelSize:0.04,bevelSegments:1});g.translate(0,0,-w/2);return g};
@@ -9990,16 +10012,19 @@ let LIFE_LG=null;const LIFE=(function(){const WK=[[[-1086.5,-713.1],[-1083.9,-70
   const C=[];for(let k=0;k<NC;k++){const q=drives[Math.floor(r()*drives.length)];const dir=r()<0.5?1:-1;C.push({q,t:r()*q.len,v:(7+r()*6)*dir,side:-dir*(q.w/4)});c.setHex(carC[Math.floor(r()*carC.length)]);ic.setColorAt(k,c)}
   ic.castShadow=false;icd.castShadow=false;WG.add(ic,icd);
   const d=new THREE.Object3D();
-  return{tick(dt,tt){for(let k=0;k<NP;k++){const o=P[k];o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}const a=at(o.q,o.t),y=a[3],bob=Math.abs(Math.sin(tt*6+o.ph))*0.04;
+  return{tick(dt,tt){if(SHB&&sb.visible){for(let k=0;k<NS;k++){const o=SP[k];o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}const a=at(o.q,o.t),x=a[0]-Math.sin(a[2])*o.off,n=a[1]+Math.cos(a[2])*o.off,y=(a[3]??TY(x,n))+0.17+0.04*(o.q.c||0),bob=Math.abs(Math.sin(tt*6+o.ph))*0.04;
+        d.position.set(x,y+bob,-n);d.rotation.set(0,a[2]+(o.v<0?Math.PI:0),0);d.scale.setScalar(o.s);d.updateMatrix();sb.setMatrixAt(k,d.matrix);d.position.y=y+bob+1.56*o.s;d.updateMatrix();sh.setMatrixAt(k,d.matrix)}sb.instanceMatrix.needsUpdate=sh.instanceMatrix.needsUpdate=true}
+    for(let k=0;k<NP;k++){const o=P[k];o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}const a=at(o.q,o.t),y=a[3],bob=Math.abs(Math.sin(tt*6+o.ph))*0.04;
       d.position.set(a[0],y+bob,-a[1]);d.rotation.set(0,a[2]+(o.v<0?Math.PI:0),0);d.scale.setScalar(o.s);d.updateMatrix();ib.setMatrixAt(k,d.matrix);d.position.y=y+bob+1.56*o.s;d.updateMatrix();ih.setMatrixAt(k,d.matrix)}
-    ib.instanceMatrix.needsUpdate=true;ih.instanceMatrix.needsUpdate=true;
+    ib.instanceMatrix.needsUpdate=true;ih.instanceMatrix.needsUpdate=true;if(SHB)return;
     if(!LIFE_LG&&window.__T4L){LIFE_LG={};window.__T4L.forEach(L=>{const key=Math.floor(L[0]/20)+"_"+Math.floor(L[2]/20);(LIFE_LG[key]||(LIFE_LG[key]=[])).push(L)})}
     const TT=(performance.now()/1000)%22;
     for(let k=0;k<NC;k++){const o=C[k];let hold=false;if(LIFE_LG&&o.x!==undefined&&!window.__T4OFF){const hx=Math.cos(o.h),hn=Math.sin(o.h),gx=Math.floor(o.x/20),gn=Math.floor(o.n/20);
         for(let ii=-1;ii<=1&&!hold;ii++)for(let jj=-1;jj<=1&&!hold;jj++)(LIFE_LG[(gx+ii)+"_"+(gn+jj)]||[]).forEach(L=>{if(hold)return;const dx=L[0]-o.x,dn=L[2]-o.n,ahead=dx*hx+dn*hn,lat=Math.abs(-dx*hn+dn*hx);if(ahead<1.5||ahead>9||lat>9)return;if(Math.cos(L[3]-o.h)<0.85)return;const A=Math.cos(2*L[3])>=0,t=A?TT:(TT+11)%22;if(t>=9)hold=true})}
       if(!hold)o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.t=o.v>0?0:o.q.len}const a=at(o.q,o.t),nx=-Math.sin(a[2]),nn=Math.cos(a[2]);const x=a[0]+nx*o.side,n=a[1]+nn*o.side;
       o.x=x;o.n=n;o.h=a[2]+(o.v<0?Math.PI:0);d.position.set(x,(a[3]??TY(x,n))+0.17+0.04*(o.q.c||0),-n);d.rotation.set(0,o.h,0);d.scale.setScalar(1);d.updateMatrix();ic.setMatrixAt(k,d.matrix);icd.setMatrixAt(k,d.matrix)}ic.instanceMatrix.needsUpdate=icd.instanceMatrix.needsUpdate=true},
-    set visible(v){ib.visible=ih.visible=ic.visible=icd.visible=v}}})();
+    set visible(v){ib.visible=ih.visible=v;ic.visible=icd.visible=v&&!SHB;sb.visible=sh.visible=v&&SHB},
+    shabbat(on){SHB=on;ic.visible=icd.visible=ib.visible&&!on;sb.visible=sh.visible=ib.visible&&on}}})();
 
 // ---- city fabric ----
 await __Y(75);function instBlocks(o){
@@ -10430,6 +10455,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
       const fx=Math.cos(p[2]),fn=Math.sin(p[2]);cam.position.set(p[0]+fx*3.6,p[3]+2.7,-(p[1]+fn*3.6));cam.lookAt(tx,fa[3]+2.2,-tn)},
     ride(i){const t=TRAINS[Math.floor(i/SEG)];if(!t)return;if(TOUR)stopTour();if(WALK)stopWalk();if(DRONE)stopDrone();tween=null;RIDE=t;controls.enabled=false;rideB.hidden=false;showInfo(INFO.lrt(t.q.n))},
     stopRide(){if(!RIDE)return;const p=segPos(RIDE,0);RIDE=null;rideB.hidden=true;controls.enabled=true;camera.position.set(p[0]-Math.cos(p[2])*60,p[3]+45,-(p[1]-Math.sin(p[2])*60));controls.target.set(p[0],p[3],-p[1]);controls.update()},
+    shab(on){[typeof tb!=="undefined"&&tb,typeof tc!=="undefined"&&tc,typeof tw!=="undefined"&&tw,typeof tn!=="undefined"&&tn,typeof tpn!=="undefined"&&tpn,typeof bb!=="undefined"&&bb,typeof bw!=="undefined"&&bw,typeof bd!=="undefined"&&bd,cb].forEach(m=>{if(m)m.visible=!on});if(on)this.stopRide()},
     night(on){[winM,entM].forEach(m=>{m.emissive.setHex(on?0xffd9a0:0);m.emissiveIntensity=on?0.9:0});canM.emissive.setHex(on?0x8899aa:0);if(cb)cb.material.emissive.setHex(on?0x552222:0)},
     set visible(v){g.visible=v}};
   return api})();
@@ -10688,6 +10714,25 @@ await __Y(86);function build(){
     const m=new THREE.Mesh(rbox(Math.max(w,0.01),Math.max(h,0.01),Math.max(d,0.01),o.tile||3.2),mat);const p=W((u0+u1)/2,(v0+v1)/2);{const uv=m.geometry.attributes.uv,off=y0*A/(o.tile||3.2);for(const f of[0,1,4,5])for(let k=0;k<4;k++)uv.setY(f*4+k,uv.getY(f*4+k)+off)}
     m.position.set(p[0],(y0+y1)/2*A,p[1]);m.castShadow=o.cast!==false;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m);
     if(o.col||(!o.noCol&&o.cast!==false&&h>0.9))COL.push({x0:p[0]-w/2,x1:p[0]+w/2,z0:p[1]-d/2,z1:p[1]+d/2,y0:y0*A,y1:y1*A});return m}
+  window.__CHD=[];
+  // hollow chamber: walls t thick, a real opening on one side, a stone frame outside, steps down to the outside floor
+  function hroom(u0,v0,u1,v1,yF,yT,mat,info,dr,o){o=o||{};const t=o.t||0.8,yB=o.yB==null?yF:o.yB,w=dr.w||3,h=dr.h||4.5,c=dr.c,sd=dr.side;
+    if(yB<yF-0.01)box(u0,v0,u1,v1,yB,yF,mat,info);
+    const MI=M.inner||(M.inner=new THREE.MeshStandardMaterial({color:0x564d42,roughness:0.95,envMapIntensity:0.2}));
+    box(u0+t,v0+t,u1-t,v1-t,yF,yF+0.02,o.open?M.pave:MI,null,{noCol:true,cast:false,tile:6});
+    if(!o.open){const e=0.04,X0_=u0+t,X1_=u1-t,Y0_=v0+t,Y1_=v1-t;if(sd!=="u0")box(X0_,Y0_,X0_+e,Y1_,yF,yT,MI,null,{noCol:true,cast:false});if(sd!=="u1")box(X1_-e,Y0_,X1_,Y1_,yF,yT,MI,null,{noCol:true,cast:false});if(sd!=="v0")box(X0_,Y0_,X1_,Y0_+e,yF,yT,MI,null,{noCol:true,cast:false});if(sd!=="v1")box(X0_,Y1_-e,X1_,Y1_,yF,yT,MI,null,{noCol:true,cast:false});box(X0_,Y0_,X1_,Y1_,yT-e,yT,MI,null,{noCol:true,cast:false})}
+    const Wl=(q,a0,a1,y0,y1)=>{if(a1-a0<0.01||y1-y0<0.01)return;if(q==="u0")box(u0,a0,u0+t,a1,y0,y1,mat,info);else if(q==="u1")box(u1-t,a0,u1,a1,y0,y1,mat,info);else if(q==="v0")box(a0,v0,a1,v0+t,y0,y1,mat,info);else box(a0,v1-t,a1,v1,y0,y1,mat,info)};
+    const R={u0:[v0,v1],u1:[v0,v1],v0:[u0+t,u1-t],v1:[u0+t,u1-t]};
+    ["u0","u1","v0","v1"].forEach(q=>{const [a,b]=R[q];if(q!==sd){Wl(q,a,b,yF,yT);return}Wl(q,a,c-w/2,yF,yT);Wl(q,c+w/2,b,yF,yT);Wl(q,c-w/2,c+w/2,yF+h,yT)});
+    if(o.roof)box(u0-0.3,v0-0.3,u1+0.3,v1+0.3,yT,yT+0.6,M.stone2,null);
+    const sg=(sd==="u0"||sd==="v0")?-1:1,f=sd==="u0"?u0:sd==="u1"?u1:sd==="v0"?v0:v1,isU=sd[0]==="u";
+    const P=(d0,d1,a0,a1,y0,y1,m,op)=>{const p0=Math.min(f+sg*d0,f+sg*d1),p1=Math.max(f+sg*d0,f+sg*d1);if(isU)box(p0,a0,p1,a1,y0,y1,m,null,op);else box(a0,p0,a1,p1,y0,y1,m,null,op)};
+    if(!o.noFrame){P(-0.01,0.45,c-w/2-0.55,c-w/2,yF,yF+h,M.stoneL,{noCol:true});P(-0.01,0.45,c+w/2,c+w/2+0.55,yF,yF+h,M.stoneL,{noCol:true});P(-0.01,0.6,c-w/2-0.8,c+w/2+0.8,yF+h,yF+h+0.7,M.stone2,{noCol:true})}
+    const yo=o.yo==null?yF:o.yo;if(yF-yo>0.1){const n=Math.max(1,Math.round((yF-yo)/0.5)),hh=(yF-yo)/n;P(0,1.2,c-w/2-0.5,c+w/2+0.5,yo,yF,M.stone2,{noCol:true});for(let k=1;k<n;k++)P(1.2+k-1,1.2+k,c-w/2-0.5,c+w/2+0.5,yo,yF-k*hh,M.stone2,{noCol:true})}
+    if(dr.nm){const dc=isU?[f,c]:[c,f];window.__CHD.push({nm:dr.nm,u:dc[0],v:dc[1],ax:isU?"u":"v",s:sg,y:yF,yo,w,dp:isU?(u1-u0):(v1-v0)})}}
+  // a door frame on a solid wall face (for the small outer chambers): jambs and a lintel that stand out, so the opening has depth
+  function dframe(ax,f,sg,c,w,y,h){const P=(d0,d1,a0,a1,y0,y1,m)=>{const p0=Math.min(f+sg*d0,f+sg*d1),p1=Math.max(f+sg*d0,f+sg*d1);if(ax==="u")box(p0,a0,p1,a1,y0,y1,m,null,{noCol:true,cast:false});else box(a0,p0,a1,p1,y0,y1,m,null,{noCol:true,cast:false})};
+    P(0,0.4,c-w/2-0.5,c-w/2,y,y+h,M.stoneL);P(0,0.4,c+w/2,c+w/2+0.5,y,y+h,M.stoneL);P(0,0.55,c-w/2-0.8,c+w/2+0.8,y+h,y+h+0.6,M.stone2)}
   function cyl(u,v,y0,y1,r0,r1,mat,info,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1*A,r0*A,(y1-y0)*A,seg||20),mat);const p=W(u,v);m.position.set(p[0],(y0+y1)/2*A,p[1]);m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m);return m}
   if(!RB){
   // floors
@@ -10752,12 +10797,12 @@ await __Y(86);function build(){
     const m=(c0+c1)/2;B(m-1.8,m+1.8,-0.05,0.28,8,8.75,M.stoneL);B(m-1.8,m-1.2,-0.05,0.18,4,8,M.stoneL);B(m+1.2,m+1.8,-0.05,0.18,4,8,M.stoneL);
     for(let a=c0+1.5;a<c1-1;a+=3)B(a-0.25,a+0.25,0,0.5,9.2,9.75,M.wood)};
   segs.forEach(([a0,a1])=>{box(a0,6,a1,12,3.5,4,M.pave,rp,{noCol:true,tile:9});box(a0,488,a1,494,3.5,4,M.pave,rp,{noCol:true,tile:9});box(488,a0,494,a1,3.5,4,M.pave,rp,{noCol:true,tile:9});
-    if(GATE!=="high"){for(let k=0;k<5;k++){const c0=a0+k*(L5+4),c1=c0+L5;box(c0,6,c1,10,4,10,M.stoneL,pi);box(c0-0.3,5.7,c1+0.3,10.3,10,10.6,M.stone2,null);box((c0+c1)/2-1.2,10,(c0+c1)/2+1.2,10.08,4,8,M.dark,null,{cast:false,noCol:true});
-      box(c0,490,c1,494,4,10,M.stoneL,pi);box(c0-0.3,489.7,c1+0.3,494.3,10,10.6,M.stone2,null);box((c0+c1)/2-1.2,489.92,(c0+c1)/2+1.2,490,4,8,M.dark,null,{cast:false,noCol:true});
-      box(490,c0,494,c1,4,10,M.stoneL,pi);box(489.7,c0-0.3,494.3,c1+0.3,10,10.6,M.stone2,null);box(489.92,(c0+c1)/2-1.2,490,(c0+c1)/2+1.2,4,8,M.dark,null,{cast:false,noCol:true});
+    if(GATE!=="high"){for(let k=0;k<5;k++){const c0=a0+k*(L5+4),c1=c0+L5;box(c0,6,c1,10,4,10,M.stoneL,pi);box(c0-0.3,5.7,c1+0.3,10.3,10,10.6,M.stone2,null);box((c0+c1)/2-1.2,10,(c0+c1)/2+1.2,10.08,4,8,M.dark,null,{cast:false,noCol:true});dframe("v",10,1,(c0+c1)/2,2.4,4,4);
+      box(c0,490,c1,494,4,10,M.stoneL,pi);box(c0-0.3,489.7,c1+0.3,494.3,10,10.6,M.stone2,null);box((c0+c1)/2-1.2,489.92,(c0+c1)/2+1.2,490,4,8,M.dark,null,{cast:false,noCol:true});dframe("v",490,-1,(c0+c1)/2,2.4,4,4);
+      box(490,c0,494,c1,4,10,M.stoneL,pi);box(489.7,c0-0.3,494.3,c1+0.3,10,10.6,M.stone2,null);box(489.92,(c0+c1)/2-1.2,490,(c0+c1)/2+1.2,4,8,M.dark,null,{cast:false,noCol:true});dframe("u",490,-1,(c0+c1)/2,2.4,4,4);
       dec(c0,c1,10,1,"v");dec(c0,c1,490,-1,"v");dec(c0,c1,490,-1,"u")}}});
   if(GATE==="high"){const Y0=53.5,PP=[],gi=I("המרפסת על העמודים","יחזקאל מ׳, יז-יח; רש״י שם; רד״ק שם; מידות ב, ה","⚖️ לפי רש״י, הרד״ק והרמח״ל: \"לשכות ורצפה\" — הרצפה היא מרפסת (גזוזטרא) על עמודים לאורך חומת החצר, כמו הגזוזטרא בעזרת הנשים בבית שני (מידות ב, ה). 💡 עובי העמודים, המרחק ביניהם והעלייה למרפסת בהערכה."),pi2=I("לשכה בחצר החיצונה","יחזקאל מ׳, יז-יח; רש״י שם; משכני עליון לרמח״ל","📜 \"שלשים לשכות אל הרצפה\" (מ׳, יז). ⚖️ לפי רש״י והרמח״ל תחתית הלשכות בגובה 50 אמה, כנגד גובה השער, והן עומדות על המרפסת שעל העמודים: 10 בצפון, 10 בדרום ו־10 במזרח, חמש מכל צד של השער. בפינות, בחצרות המבשלות, אין מרפסת ואין לשכות. 💡 מידות הלשכה בהערכה.");
-    const side=(a0,a1,f,o,ax)=>{const R=(b0,b1,d0,d1,y0,y1,m,inf,op)=>{const p0=Math.min(f+o*d0,f+o*d1),p1=Math.max(f+o*d0,f+o*d1);if(ax==="v")box(b0,p0,b1,p1,y0,y1,m,inf,op);else box(p0,b0,p1,b1,y0,y1,m,inf,op)};R(a0,a1,0,6,Y0-0.7,Y0,M.pave,gi,{noCol:true,tile:9});R(a0,a1,5.7,6,Y0,Y0+1.2,M.stoneL,null,{noCol:true,cast:false});for(let k=0;k<5;k++){const c0=a0+k*(L5+4),c1=c0+L5,m=(c0+c1)/2;R(c0,c1,0,4,Y0,Y0+6,M.stoneL,pi2,{noCol:true});R(c0-0.3,c1+0.3,-0.3,4.3,Y0+6,Y0+6.6,M.stone2,null,{noCol:true});R(m-1.2,m+1.2,4,4.08,Y0,Y0+4,M.dark,null,{noCol:true,cast:false})}const n=20;for(let q=0;q<=n;q++){const a=a0+0.8+q*(a1-a0-1.6)/n;[0.8,5.2].forEach(d=>{const p=f+o*d;PP.push(ax==="v"?[a,p]:[p,a])})}};
+    const side=(a0,a1,f,o,ax)=>{const R=(b0,b1,d0,d1,y0,y1,m,inf,op)=>{const p0=Math.min(f+o*d0,f+o*d1),p1=Math.max(f+o*d0,f+o*d1);if(ax==="v")box(b0,p0,b1,p1,y0,y1,m,inf,op);else box(p0,b0,p1,b1,y0,y1,m,inf,op)};R(a0,a1,0,6,Y0-0.7,Y0,M.pave,gi,{noCol:true,tile:9});R(a0,a1,5.7,6,Y0,Y0+1.2,M.stoneL,null,{noCol:true,cast:false});for(let k=0;k<5;k++){const c0=a0+k*(L5+4),c1=c0+L5,m=(c0+c1)/2;R(c0,c1,0,4,Y0,Y0+6,M.stoneL,pi2,{noCol:true});R(c0-0.3,c1+0.3,-0.3,4.3,Y0+6,Y0+6.6,M.stone2,null,{noCol:true});R(m-1.2,m+1.2,4,4.08,Y0,Y0+4,M.dark,null,{noCol:true,cast:false});R(m-1.7,m-1.2,4,4.4,Y0,Y0+4,M.stoneL,null,{noCol:true,cast:false});R(m+1.2,m+1.7,4,4.4,Y0,Y0+4,M.stoneL,null,{noCol:true,cast:false});R(m-2,m+2,4,4.55,Y0+4,Y0+4.6,M.stone2,null,{noCol:true,cast:false})}const n=20;for(let q=0;q<=n;q++){const a=a0+0.8+q*(a1-a0-1.6)/n;[0.8,5.2].forEach(d=>{const p=f+o*d;PP.push(ax==="v"?[a,p]:[p,a])})}};
     segs.forEach(([a0,a1])=>{side(a0,a1,6,1,"v");side(a0,a1,494,-1,"v");side(a0,a1,494,-1,"u")});
     const ig=new THREE.CylinderGeometry(0.55*A,0.65*A,(Y0-0.7-4)*A,10),im=new THREE.InstancedMesh(ig,M.stoneL,PP.length),d=new THREE.Object3D();PP.forEach((q,k)=>{const p=W(q[0],q[1]);d.position.set(p[0],(Y0-0.7+4)/2*A,p[1]);d.updateMatrix();im.setMatrixAt(k,d.matrix)});im.castShadow=true;im.receiveShadow=true;im.userData=gi;cPick.push(im);group.add(im)}
   // kitchens
@@ -10776,13 +10821,13 @@ await __Y(86);function build(){
     const rows=[[100,200,vIn,vIn+dir*20],[150,200,vIn+dir*30,vIn+dir*50]];
     rows.forEach(([u0,u1,va,vb],ri)=>{const lo=Math.min(va,vb),hi=Math.max(va,vb);for(let s=0;s<3;s++){const ins=s*3,y0=3.5+s*8,y1=y0+8;
       const v0=ri===0?(dir<0?lo+ins:lo):(dir<0?lo:lo+ins),v1=ri===0?(dir<0?hi:hi-ins):(dir<0?hi-ins:hi);
-      box(u0+ins*0.5,v0,u1-ins*0.5,v1,y0,y1,M.stoneL,info);box(u0+ins*0.5-0.3,v0-0.3,u1-ins*0.5+0.3,v1+0.3,y1,y1+0.6,M.stone2,null);
+      if(s===0){const nmP=(FMODE==="ez"&&!RB&&!COMB)?(vIn<250?(ri===0?"לשכת העץ":"לשכות הכהנים"):(ri===0?"לשכות הכהנים (דרום)":"לשכת עושי לחם הפנים")):null;hroom(u0,v0,u1,v1,y0,y1,M.stoneL,info,{side:"u1",c:(v0+v1)/2,w:3,h:5.5,nm:nmP},{noFrame:true})}else box(u0+ins*0.5,v0,u1-ins*0.5,v1,y0,y1,M.stoneL,info);box(u0+ins*0.5-0.3,v0-0.3,u1-ins*0.5+0.3,v1+0.3,y1,y1+0.6,M.stone2,null);
       const face=dir<0?v0:v1;for(let k=0;k<Math.floor((u1-u0-ins)/5);k++){const uu=u0+ins*0.5+2.5+k*5;box(uu-0.6,face-0.06,uu+0.6,face+0.06,y0+3,y0+6.5,M.win,null,{cast:false})}}});
   }
   priestBlock(200,-1,"לשכות הכהנים (צפון)");priestBlock(300,1,"לשכות הכהנים (דרום)");
   if(FMODE==="ez"&&!RB&&!COMB){const ek=I("מקום אכילת קדשי הקדשים","יחזקאל מ״ב, יג-יד; רש״י שם","📜 \"לשכות הצפון לשכות הדרום... הנה לשכות הקדש אשר יאכלו שם הכהנים... קדשי הקדשים\" (מ״ב, יג). בהן אוכלים הכהנים את קדשי הקדשים, ושם מניחים את בגדי הקודש לפני שיוצאים אל העם (מ״ב, יד).");CL("אכילת קדשי הקדשים",150,180,26,ek,false);CL("אכילת קדשי הקדשים",150,320,26,ek,false)}
   {const mb=I("המבוא מהקדים","יחזקאל מ״ב, ט","📜 \"ומתחתה הלשכות האלה המבוא מהקדים בבאו להנה מהחצר החצנה\" — הכניסה לקומה התחתונה של לשכות הכהנים היא ממזרח, מהחצר החיצונה. 💡 גודל הפתח בהערכה.");
-    [[200,-1],[300,1]].forEach(([vIn,dir])=>[10,40].forEach(o=>{const vm=vIn+dir*o;box(200,vm-1.5,200.1,vm+1.5,3.5,9,M.dark,mb,{cast:false,noCol:true});box(199.9,vm-2.1,200.35,vm+2.1,9,9.7,M.stoneL,null,{noCol:true,cast:false});
+    [[200,-1],[300,1]].forEach(([vIn,dir])=>[10,40].forEach(o=>{const vm=vIn+dir*o;box(199.9,vm-2.1,200.35,vm+2.1,9,9.7,M.stoneL,null,{noCol:true,cast:false});
       [-1,1].forEach(sd=>box(199.9,vm+sd*1.8-0.3,200.25,vm+sd*1.8+0.3,3.5,9,M.stoneL,null,{noCol:true,cast:false}))}))}
   // stage 4: the chambers named in Middot 5:3-4 and Middot 1:6, placed in Ezekiel's priest chambers (⚖️ names; 💡 placement)
   {const nm=(t,src,tx)=>I(t,src,tx+" ⚖️ יחזקאל לא מפרט את שמות הלשכות. המקום כאן לפי השיטה שלשכות בית שני (מידות ה, ג-ד) עומדות בצדי העזרה.");
@@ -10790,8 +10835,9 @@ await __Y(86);function build(){
       ["לשכת המדיחין","מידות ה, ג","⚖️ בדרום. שם מדיחים את קרבי הקדשים."],["בית אבטינס","יומא יט ע״א; תמיד א, א","⚖️ עלייה שבה עשו את הקטורת, ובה שמרו הכהנים בלילה."]],
       N=[["לשכת העץ","מידות ה, ד","⚖️ בצפון. לשכת הכהן הגדול (ויש אומרים: לשכת פרהדרין)."],["לשכת הגולה","מידות ה, ד","⚖️ בצפון. שם הבור והגלגל, ומשם מספקים מים לכל העזרה."],
       ["לשכת הטלאים","מידות א, ו; תמיד ג, ג","⚖️ שם שמרו את הכבשים לקרבן התמיד, ארבעה ימים לפני הקרבתם."],["לשכת עושי לחם הפנים","מידות א, ו","⚖️ שם אפו את לחם הפנים."]];
-    const SP=FMODE==="ez"&&!RB&&!COMB?[[228,312,17],[228,328,17],null,[272,320,17]]:null;S.forEach((c,k)=>{const li=nm(c[0],c[1],c[2]);if(SP){if(SP[k])CL(c[0],SP[k][0],SP[k][1],SP[k][2],li)}else CL(c[0],112.5+k*25,310,31,li)});
-    N.forEach((c,k)=>{const u=112.5+k*25,li=nm(c[0],c[1],c[2]);if(COMB&&k>=2)CL(c[0],k===2?207:222,166,19,I(c[0],"מידות א, ו",c[2]+" ⚖️ לפי מסכת מידות היא אחת מארבע הלשכות של בית המוקד."));else if(FMODE==="ez"&&!RB&&!COMB){const NP=[[112.5,190,31],[272,180,17],[228,180,17],[110,212,20]];CL(c[0],NP[k][0],NP[k][1],NP[k][2],li)}else CL(c[0],u,190,31,li)});
+    const SP=FMODE==="ez"&&!RB&&!COMB?[[231.5,309,14],[231.5,322,14],null,[268.5,319,14]]:null;S.forEach((c,k)=>{const li=nm(c[0],c[1],c[2]);if(SP){if(SP[k])CL(c[0],SP[k][0],SP[k][1],SP[k][2],li)}else CL(c[0],112.5+k*25,310,31,li)});
+    N.forEach((c,k)=>{const u=112.5+k*25,li=nm(c[0],c[1],c[2]);if(COMB&&k>=2)CL(c[0],k===2?207:222,166,19,I(c[0],"מידות א, ו",c[2]+" ⚖️ לפי מסכת מידות היא אחת מארבע הלשכות של בית המוקד."));else if(FMODE==="ez"&&!RB&&!COMB){const NP=[[112.5,190,31],[268.5,180,14],[231.5,162.5,14],[175,340,26]];CL(c[0],NP[k][0],NP[k][1],NP[k][2],li)}else CL(c[0],u,190,31,li)});
+    if((FMODE==="ez"&&!RB&&!COMB)){[[226,304,237,314,"u0",309,S[0]],[226,317,237,327,"u0",322,S[1]],[263,313,274,325,"u1",319,S[3]],[263,174,274,186,"u1",180,N[1]],[226,157,237,168,"u0",162.5,N[2]]].forEach(([a,b,c2,d,sd,cc,e])=>{hroom(a,b,c2,d,3.5,11,M.stoneL,nm(e[0],e[1],e[2]),{side:sd,c:cc,nm:e[0]});box(a-0.3,b-0.3,c2+0.3,d+0.3,11,11.6,M.stone2,null)})}
     // the immersion room on the roof of the Parvah
     {const pv=nm("בית הטבילה על גג הפרוה","יומא ג, ג; מידות ה, ג","⚖️ על גג לשכת הפרוה היה בית טבילה, ושם טבל הכהן הגדול ביום הכיפורים.");const u=137.5;if(!(FMODE==="ez"&&!RB&&!COMB)){
       box(u-5,303.5,u+5,312,28.1,32,M.stoneL,pv);box(u-5.3,303.2,u+5.3,312.3,32,32.5,M.stone2,null);box(u-1,312,u+1,312.08,28.1,31,M.dark,null,{cast:false,noCol:true})}}}
@@ -10799,7 +10845,7 @@ await __Y(86);function build(){
   {const ho=I("לשכת החותמות","שקלים ה, ג-ד","⚖️ מי שצריך נסכים קונה \"חותם\" (מעין שובר) אצל הממונה על החותמות, ומקבל בו את הנסכים אצל הממונה על הנסכים. 💡 המקום כאן ליד השער הפנימי הדרומי — הצעה.");
     const sk=I("לשכת השקלים","שקלים ג, א-ב; ה, ו","⚖️ לשכה שבה אוספים את מחצית השקל, ושלוש פעמים בשנה \"תורמים את הלשכה\" — משם קונים את קרבנות הציבור. 💡 המקום כאן הצעה.");
     const sf=I("שלושה עשר שופרות","שקלים ו, א; ו, ה","⚖️ \"שלשה עשר שופרות היו במקדש\" — תיבות צרות מלמעלה ורחבות מלמטה (כמו שופר), שלא יכניסו יד ויגנבו. על כל אחת כתוב למה התרומה: תקלין חדתין, תקלין עתיקין, קינין, גוזלי עולה, עצים, לבונה, זהב לכפורת, ושש לנדבה. 💡 המקום כאן הצעה.");
-    [[263,ho,"לשכת החותמות"],[227,sk,"לשכת השקלים"]].forEach(([u0,inf,t])=>{box(u0,338,u0+10,349,3.5,11,M.stoneL,inf);box(u0-0.3,337.7,u0+10.3,349.3,11,11.6,M.stone2,null);const dx=u0<250?u0+10:u0;box(dx-0.08,342,dx+0.08,345,3.5,8,M.dark,null,{cast:false,noCol:true});CL(t,u0+5,343.5,15,inf)});
+    [[263,ho,"לשכת החותמות"],[227,sk,"לשכת השקלים"]].forEach(([u0,inf,t])=>{hroom(u0,338,u0+10,349,3.5,11,M.stoneL,inf,{side:u0<250?"u0":"u1",c:343.5,nm:t});box(u0-0.3,337.7,u0+10.3,349.3,11,11.6,M.stone2,null);CL(t,u0+5,343.5,15,inf)});
     for(let k=0;k<13;k++){const u=226+k*0.85;cyl(u,351.2,3.5,4.9,0.32,0.1,M.bronze,sf,10);cyl(u,351.2,4.9,5.05,0.11,0.11,M.dark,null,8)}
     CL("13 שופרות",231,351.2,8,sf)}
   // binyan
@@ -10968,7 +11014,7 @@ await __Y(86);function build(){
   fireLight=new THREE.PointLight(0xff9a40,0.6,90,2);fireLight.position.set(fp[0],20*A,fp[1]);group.add(fireLight);
   // slaughter tables
   {const lw=I("הלשכה שמדיחים בה את העולה","יחזקאל מ׳, לח; מלבי״ם שם","📜 \"ולשכה ופתחה באילים השערים, שם ידיחו את העלה\" — לשכה שפתחה ליד אילי השער, ובה רוחצים את הקרבן לפני שמקריבים. ⚖️ לפי המלבי״ם היא בשער הצפוני הפנימי, שבו שוחטים. ⚖️ לפי רש״י (מ׳, לח) זו לשכת המדיחין. 💡 מידות הלשכה ומקומה המדויק (כאן ממזרח לאולם השער) בהערכה.");
-    box(263,150,272,160,3.5,11,M.stoneL,lw);box(262.7,149.7,272.3,160.3,11,11.6,M.stone2,null);box(263,149.92,266,150,3.5,8,M.dark,lw,{cast:false,noCol:true});box(262.8,149.75,266.2,150.05,8,8.6,M.stoneL,null,{cast:false,noCol:true});
+    hroom(263,150,272,160,3.5,11,M.stoneL,lw,{side:"v0",c:266,nm:"הדחת העולה · לשכת המדיחין"});box(262.7,149.7,272.3,160.3,11,11.6,M.stone2,null);
     cyl(268.5,148.3,3.5,4.6,1.1,1.25,M.stone2,lw,16);cyl(268.5,148.3,4.45,4.62,0.95,0.95,M.water,null,16);CL("הדחת העולה · לשכת המדיחין",267.5,155,14,lw)}
   const tb=I("שולחנות השחיטה","יחזקאל מ׳, לט-מג","ארבעה שולחנות מכל צד של השער הצפוני, ועוד ארבעה שולחנות של אבן גזית לכלים. כאן שוחטים את העולה, החטאת והאשם.");
   [229,269].forEach(u=>{for(let k=0;k<4;k++)box(u,162+k*7,u+2,163.5+k*7,3.5,4.5,M.stoneL,tb,{noCol:true})});
@@ -10998,9 +11044,9 @@ await __Y(86);function build(){
   const SG=new THREE.Group(),colS=COL.length,grpS=group,sgL=cLabels.length;if(RB){group.add(SG);group=SG}
   if(!RB){const sg=I("לשכת המשוררים ולשכת שומרי משמרת הבית","יחזקאל מ׳, מד-מה; מלבי״ם שם","\"ומחוצה לשער הפנימי לשכות שרים בחצר הפנימית, אשר אל כתף שער הצפון ופניהם דרך הדרום\" — לשכה ליד השער הצפוני, פונה לדרום, לכהנים \"שמרי משמרת הבית\". הגובה בהערכה.");
     const sp=I("לשכת שומרי משמרת המזבח","יחזקאל מ׳, מד-מו; מלבי״ם שם","לשכה ליד השער הדרומי, פונה לצפון — \"לכהנים שמרי משמרת המזבח, הם בני צדוק\". הגובה בהערכה.");
-    if(GATE==="high"&&!RB&&!COMB){const sl=I("לשכת הלויים המשוררים","יחזקאל מ׳, מד; רש״י שם; משכני עליון לרמח״ל","📜 \"ומחוצה לשער הפנימי לשכות שרים בחצר הפנימית, אשר אל כתף שער הצפון ופניהם דרך הדרום\" (מ׳, מד). ⚖️ לפי רש״י והרמח״ל זו לשכת הלויים המשוררים, בכתף המזרחית של השער הצפוני הפנימי, והיא מחולקת לשתיים. הפתחים פונים לדרום. 💡 המידות והגובה בהערכה."),pl=I("לשכת הכהנים שבכתף שער המזרח","יחזקאל מ׳, מד-מו; משכני עליון לרמח״ל","📜 \"אחד אל כתף שער הקדים, פני דרך הצפן\" (מ׳, מד). ⚖️ לפי הרמח״ל זו לשכה לכהנים, בכתף הדרומית של השער המזרחי הפנימי, ופתחה לצפון. משם לובשים הכהנים את בגדיהם. 💡 המידות והגובה בהערכה.");box(266,200,288,208,7.5,15,M.stoneL,sl);box(265.7,199.7,288.3,208.3,15,15.6,M.stone2,null);box(276.8,200,277.2,208,7.5,15,M.stone2,null,{noCol:true});[271,282].forEach(u=>box(u-1,208,u+1,208.08,7.5,11,M.dark,null,{cast:false,noCol:true}));box(278,266,296,274,7.5,15,M.stoneL,pl);box(277.7,265.7,296.3,274.3,15,15.6,M.stone2,null);box(286,265.92,288,266,7.5,11,M.dark,null,{cast:false,noCol:true});CL("לשכת המשוררים",277,204,18,sl,false);CL("לשכת הכהנים",287,270,18,pl,false)}else{
-    box(212,200,234,208,7.5,15,M.stoneL,sg);box(211.7,199.7,234.3,208.3,15,15.6,M.stone2,null);box(222,208,224,208.08,7.5,11,M.dark,null,{cast:false,noCol:true});
-    box(212,292,234,300,7.5,15,M.stoneL,sp);box(211.7,291.7,234.3,300.3,15,15.6,M.stone2,null);box(222,291.92,224,292,7.5,11,M.dark,null,{cast:false,noCol:true});
+    if(GATE==="high"&&!RB&&!COMB){const sl=I("לשכת הלויים המשוררים","יחזקאל מ׳, מד; רש״י שם; משכני עליון לרמח״ל","📜 \"ומחוצה לשער הפנימי לשכות שרים בחצר הפנימית, אשר אל כתף שער הצפון ופניהם דרך הדרום\" (מ׳, מד). ⚖️ לפי רש״י והרמח״ל זו לשכת הלויים המשוררים, בכתף המזרחית של השער הצפוני הפנימי, והיא מחולקת לשתיים. הפתחים פונים לדרום. 💡 המידות והגובה בהערכה."),pl=I("לשכת הכהנים שבכתף שער המזרח","יחזקאל מ׳, מד-מו; משכני עליון לרמח״ל","📜 \"אחד אל כתף שער הקדים, פני דרך הצפן\" (מ׳, מד). ⚖️ לפי הרמח״ל זו לשכה לכהנים, בכתף הדרומית של השער המזרחי הפנימי, ופתחה לצפון. משם לובשים הכהנים את בגדיהם. 💡 המידות והגובה בהערכה.");hroom(266,200,277,208,7.5,15,M.stoneL,sl,{side:"v1",c:271,w:2.4,nm:"לשכת המשוררים"});hroom(277,200,288,208,7.5,15,M.stoneL,sl,{side:"v1",c:282,w:2.4});box(265.7,199.7,288.3,208.3,15,15.6,M.stone2,null);hroom(278,266,296,274,7.5,15,M.stoneL,pl,{side:"v0",c:287,w:2.4,nm:"לשכת הכהנים"});box(277.7,265.7,296.3,274.3,15,15.6,M.stone2,null);CL("לשכת המשוררים",277,204,18,sl,false);CL("לשכת הכהנים",287,270,18,pl,false)}else{
+    hroom(212,200,234,208,7.5,15,M.stoneL,sg,{side:"v1",c:223,nm:"לשכת המשוררים ולשכת שומרי משמרת הבית"});box(211.7,199.7,234.3,208.3,15,15.6,M.stone2,null);
+    hroom(212,292,234,300,7.5,15,M.stoneL,sp,{side:"v0",c:223,nm:"לשכת שומרי משמרת המזבח"});box(211.7,291.7,234.3,300.3,15,15.6,M.stone2,null);
     }
     const tv=I("השולחנות שבאולם השער","יחזקאל מ׳, לט; מלבי״ם שם","\"ובאולם השער שנים שלחנות מפו ושנים שלחנות מפה, לשחוט אליהם העולה והחטאת והאשם\" — ארבעה שולחנות של אבן בתוך אולם השער הצפוני הפנימי. המידות לא מפורשות.");
     [[245.3,153.2],[245.3,156.4],[253.5,153.2],[253.5,156.4]].forEach(c=>box(c[0],c[1],c[0]+1.2,c[1]+2,7.5,8.6,M.marble,tv,{noCol:true}))}
@@ -11088,7 +11134,7 @@ await __Y(86);function build(){
       CL("השולחנים",221,59,9,sh,true)}
     // -- the passage down to the mikveh (Tamid 1:1) --
     if(!RB){const tb=I("המסיבה לבית הטבילה","תמיד א, א; מידות א, ט","⚖️ כהן שנטמא בלילה יוצא והולך במסיבה ההולכת תחת הבירה, והנרות דולקים מכאן ומכאן, עד שמגיע לבית הטבילה. ושם בית הכסא של כבוד ומדורה. 📜 \"וזה היה כבודו: מצאו נעול, יודע שיש שם אדם\". 💡 כאן הכניסה היא בית קטן ובו מדרגות היורדות מתחת לקרקע, ליד השער הפנימי הצפוני. במצב הרמב״ם הוא צמוד לבית המוקד, כמו במשנה.");
-      box(228,172,234.5,180,3.5,9.5,M.stoneL,tb);box(227.7,171.7,234.8,180.3,9.5,10.1,M.stone2,null);box(229.7,171.92,232.8,172,3.5,7.6,M.dark,tb,{cast:false,noCol:true});
+      hroom(228,172,234.5,180,3.5,9.5,M.stoneL,tb,{side:"v0",c:231.25,w:2.6,h:4,nm:"בית הטבילה"});box(227.7,171.7,234.8,180.3,9.5,10.1,M.stone2,null);box(229.2,175.5,233.3,179,3.5,3.56,M.dark,tb,{cast:false,noCol:true});
       CL("בית הטבילה",231,176,13,tb,true)}
     // -- the 24 watches (Middot 1:1) --
     if(!RB){const gd=I("שומרי המשמרת — 24 מקומות","מידות א, א; רמב״ם, הלכות בית הבחירה ח, א-ה","📜 \"בשלשה מקומות הכהנים שומרים בבית המקדש... והלוים בעשרים ואחד מקום\". ⚖️ הכהנים: בבית אבטינס, בבית הניצוץ ובבית המוקד. הלויים: חמשה על שערי הר הבית, ארבעה על ארבע פינותיו מתוכו, חמשה על שערי העזרה, ארבעה על פינותיה מבחוץ, אחד בלשכת הקרבן, אחד בלשכת הפרוכת ואחד אחורי בית הכפורת. ⚖️ השמירה היא כבוד לבית, לא מפחד (רמב״ם, הלכות בית הבחירה ח, א). 💡 ביחזקאל יש רק שלושה שערים בכל חצר, ולכן בחלק מהשערים עומדים שני שומרים, אחד מכל צד. המקומות המדויקים הם הצעה.");
@@ -11399,13 +11445,13 @@ await __Y(86);function build(){
       hwall(EN.u0,EN.u1+WT,AZ.v0-WT,AZ.v0,[],true,yN+20);hwall(EN.u0,EN.u1+WT,AZ.v1,AZ.v1+WT,[],true,yN+20);hwall(EN.u1,EN.u1+WT,AZ.v0,AZ.v1,[250],false,yN+20);
       box(EN.u1,245,EN.u1+WT,255,0,yN,M.pave,null,{noCol:true});for(let k=0;k<12;k++)box(EN.u1+WT+k,242,EN.u1+WT+k+1,258,0,yN-k*0.5,M.stone2,null,{noCol:true});
       const LS=[["לשכת הנזירים","דרום־מזרח: שם הנזירים מבשלים את שלמיהם ומגלחים",EN.u1-40,AZ.v1-40],["לשכת דיר העצים","צפון־מזרח: כהנים בעלי מומים מתליעים את העצים",EN.u1-40,AZ.v0],["לשכת המצורעים","צפון־מערב: שם טובלים המצורעים",EN.u0,AZ.v0],["לשכת בית שמניה","דרום־מערב: שם נותנים יין ושמן",EN.u0,AZ.v1-40]];
-      LS.forEach(([nm,tx,u,v])=>{const li=I(nm,"מידות ב, ה",tx+". לשכות בלי גג — \"וכן הן עתידות להיות\".");box(u,v,u+40,v+1.2,yN,yN+10,M.stoneL,li);box(u,v+38.8,u+40,v+40,yN,yN+10,M.stoneL,li);box(u,v,u+1.2,v+40,yN,yN+10,M.stoneL,li);box(u+38.8,v,u+40,v+40,yN,yN+10,M.stoneL,li);CL(nm,u+20,v+20,yN+13)});
+      LS.forEach(([nm,tx,u,v])=>{const li=I(nm,"מידות ב, ה",tx+". לשכות בלי גג — \"וכן הן עתידות להיות\".");hroom(u,v,u+40,v+40,yN,yN+10,M.stoneL,li,{side:v===AZ.v0?"v1":"v0",c:u+20,w:4,h:6.5,nm},{t:1.2,open:true});CL(nm,u+20,v+20,yN+13)});
       [[EN.u0+40,EN.u1-40,AZ.v0+0.3,AZ.v0+5],[EN.u0+40,EN.u1-40,AZ.v1-5,AZ.v1-0.3]].forEach(r=>box(r[0],r[2],r[1],r[3],yN+9,yN+10,M.wood,I("הגזוזטרא","מידות ב, ה; סוכה נא ע״ב","מרפסת מסביב לעזרת נשים — \"תיקון גדול\" לשמחת בית השואבה."),{noCol:true}));
       CL("עזרת נשים",(EN.u0+EN.u1)/2,250,yN+16,null,false)}
     // chambers of the azarah (Middot 5:3-4; Rambam 5:17-18) and Beit HaMoked
     {const ch=[["לשכת הגולה","בדרום: שם הבור והגלגל, ומשם מספקים מים לכל העזרה",212,AZ.v1-10,15.5,10],["לשכת העץ","בדרום: לשכת כהן גדול",196,AZ.v1-10,15.5,10],
        ["לשכת המלח","בצפון: שם נותנים מלח לקרבן",206,AZ.v0,18,10],["לשכת הפרוה","בצפון: שם מולחים עורות הקדשים, ועל גגה בית הטבילה לכהן גדול ביום הכיפורים",226,AZ.v0,18,10],["לשכת המדיחין","בצפון: שם מדיחים קרבי הקדשים",246,AZ.v0,18,10]];
-      ch.forEach(([nm,tx,u,v,w,d])=>{const li=I(nm,"מידות ה, ג-ד; רמב״ם, הלכות בית הבחירה ה, יז-יח",tx+".");box(u,v,u+w,v+d,0,yA+14,M.stoneL,li);CL(nm,u+w/2,v+d/2,yA+17)});
+      ch.forEach(([nm,tx,u,v,w,d])=>{const li=I(nm,"מידות ה, ג-ד; רמב״ם, הלכות בית הבחירה ה, יז-יח",tx+".");hroom(u,v,u+w,v+d,yA,yA+14,M.stoneL,li,{side:v===AZ.v0?"v1":"v0",c:u+w/2,nm},{yB:0,roof:true});CL(nm,u+w/2,v+d/2,yA+17)});
       const bm=I("בית המוקד","מידות א, ו-ח; רמב״ם, הלכות בית הבחירה ה, ט-יב","בצפון העזרה, בנוי כיפה, ורובדין של אבן מסביב. שם ישנו זקני בית אב. בו ארבע לשכות: הטלאים, עושי לחם הפנים, אבני המזבח ששיקצום מלכי יוון, ומדרגות למקווה שמתחת לבית.");
       const b0=AZ.v0-WT-26,b1=AZ.v0-WT,yT=yA+16,pd=I("שני הפתחים של בית המוקד","מידות א, ז; תמיד א, א","📜 \"ושני פתחים היו לבית המוקד, אחד פתוח לחיל ואחד פתוח לעזרה\". ⚖️ הפתח הצפוני יוצא אל החיל, והפתח הדרומי הוא שער בית המוקד שבכותל העזרה.");
       box(175,b0,205,b1,0,yA,M.stoneL,bm);box(175,b0,185,b0+1.5,yA,yT,M.stoneL,bm);box(195,b0,205,b0+1.5,yA,yT,M.stoneL,bm);box(185,b0,195,b0+1.5,yA+10,yT,M.stoneL,pd);
@@ -11838,6 +11884,8 @@ seg("floorSeg","s",v=>{FLOOR=v;applyFloor()});applyFloor();
 function keepCam(fn){const o=C.clone();fn();const d=C.clone().sub(o);d.y=0;camera.position.add(d);controls.target.add(d);controls.update()}
 seg("locSeg","l",v=>{LOC=v;build();VIEW="top";document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="top"?"true":"false"));flyTo("top",1200);showInfo(HELP.loc)});
 seg("amahSeg","a",v=>{A=parseFloat(v);keepCam(build)});
+document.getElementById("shabSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-sh]");if(!b)return;const on=b.dataset.sh==="1";document.querySelectorAll("#shabSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));LIFE.shabbat(on);TRN.shab(on);
+  if(on)showInfo({n:"שבת / יום טוב",r:"שמות כ, י; שמות לה, ג; שמות יב, טז",t:"⚖️ בשבת וביום טוב לא נוסעים: אין מכוניות, אוטובוסים, רכבות ורכבל. 💡 הרחובות מתמלאים בהולכי רגל, והרבה מהם בבגדי שבת."})});
 document.getElementById("optSeg").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const on=b.getAttribute("aria-pressed")!=="true";b.setAttribute("aria-pressed",on?"true":"false");if(!b.dataset.o)return;if(b.dataset.o==="ssao"){SSAO=on;if(on&&!ssaoC){ssaoC=new THREE.EffectComposer(renderer);const sp=new THREE.SSAOPass(scene,camera,stage.clientWidth,stage.clientHeight);sp.kernelRadius=6;sp.minDistance=0.0004;sp.maxDistance=0.02;ssaoC.addPass(sp);ssaoC.addPass(new THREE.ShaderPass(THREE.GammaCorrectionShader));ssaoC.setSize(stage.clientWidth,stage.clientHeight)}if(on)showInfo({n:"איכות גבוהה",r:"",t:"מוסיף הצללה עדינה בין בניינים ובפינות (SSAO). כבד לכרטיס המסך — מומלץ רק במחשב חזק."});return}if(b.dataset.o==="people"){SHOW_PEOPLE=on;LIFE.visible=on;build()}else if(b.dataset.o==="river"){SHOW_RIVER=on;if(RIVG)RIVG.visible=on;if(on)showInfo(HELP.river)}else if(b.dataset.o==="transit"){SHOW_TR=on;TRN.visible=on;if(!on)TRN.stopRide();else showInfo(HELP.transit)}else if(b.dataset.o==="wall"){SHOW_WALL=on;if(WALLG)WALLG.visible=on;if(on)showInfo(HELP.wall)}else if(b.dataset.o==="fest"){SHOW_FEST=on;if(FESTG)FESTG.visible=on;if(on)showInfo(HELP_FEST)}else if(b.dataset.o==="mini"){document.getElementById("mini").hidden=!on;if(on)hudTick()}else SHOW_LABELS=on});
 resize();build();flyTo("home",0);try{renderer.compile(scene,camera)}catch(e){}
 labels.forEach(L=>{if(L.info)return;const o=PICK.find(m=>m.userData&&m.userData.n===L.txt);L.info=o?o.userData:{n:L.txt,r:"",t:"מקום בעיר העתיקה ובסביבתה. לוחצים על מבנה במודל כדי לקרוא עליו."}});
@@ -12240,7 +12288,7 @@ function countSteps(a,b,y0){const dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz)|
   for(let i=1;i<=n;i++){const t=i/n,x=a[0]+dx*t,z=a[1]+dz*t;let y=null;for(const o of [0,-1,1]){const q=floorY(x+px*o,z+pz*o,prev);if(q!=null&&Math.abs(q-prev)<=0.8&&(y==null||q<y))y=q}
     if(y==null)continue;const d=y-prev;if(d>0.09)up++;else if(d<-0.09)down++;prev=y}return{up,down}}
 // ---- the stop list ----
-const HF=()=>13.56*A,OC=()=>3.5*A;   // OC: the floor inside the outer gates   // house floor and outer-court floor (m), as references for roofed places
+const HF=()=>(PLAN==="ez"?13.56:22)*A,OC=()=>3.5*A;   // OC: the floor inside the outer gates   // house floor and outer-court floor (m), as references for roofed places
 const GN={"250,25":"השער החיצוני הצפוני","250,475":"השער החיצוני הדרומי","475,250":"השער החיצוני המזרחי (הסגור)","250,175":"השער הפנימי הצפוני","250,325":"השער הפנימי הדרומי","325,250":"השער הפנימי המזרחי"};
 const W2=(u,v)=>[COMP.X0+u*A,-(COMP.N0-v*A)];
 const findL=re=>labels.find(L=>L.txt&&re.test(L.txt));
@@ -12278,20 +12326,22 @@ function stopsFor(mode){const S=[];const rb=mode==="rambam";
     ["שער האריות","שער הפרחים","שער שכם","השער החדש","שער יפו","שער ציון","שער האשפות"].forEach(n=>polyGate(new RegExp("^"+n+"$"),OLD,n+" (חומת העיר)",true))}
   // openings of the House
   {const d=pickBox(/^שער ההיכל$/);if(d){const c=d.getCenter(new V3());S.push(gStop("שער ההיכל",[d.max.x,c.z],[1,0],[d.min.x-8,c.z],{od:24,It:[d.min.x,c.z],iRef:HF(),hw:d.getSize(new V3()).z/2}))}}
-  {const d=pickBox(/^הפתח לקודש הקודשים$/);if(d){const c=d.getCenter(new V3());S.push(gStop("הפתח לקודש הקודשים",[d.max.x,c.z],[1,0],[d.min.x-7,c.z],{It:[d.min.x,c.z],oRef:HF(),iRef:HF()}))}}
+  {const d=pickBox(/^הפתח לקודש הקודשים$/)||pickBox(/^שתי הפרוכות$/);if(d){const c=d.getCenter(new V3());S.push(gStop("הפתח לקודש הקודשים",[d.max.x,c.z],[1,0],[d.min.x-7,c.z],{It:[d.min.x,c.z],oRef:HF(),iRef:HF()}))}}
   {const d=pickBox(/^פתחי הצלעות$/,[0,-1e4]);if(d){const c=d.getCenter(new V3());S.push(gStop("פתח הצלעות (צפון)",[c.x,d.min.z],[0,-1],[c.x,d.min.z+1.4],{od:8,It:[c.x,d.min.z],oRef:7.5*A,iRef:HF(),oM:[c.x,d.min.z-1],hw:1}))}}
   // rooms: the chambers, the Kotel, the Ulam, the Heikhal, the Kodesh HaKodashim
   const C0=W2(250,250),seen=new Set();
   const room=(name,c,hx,hz,o)=>{o=o||{};let dir=o.dir;if(!dir){const dx=C0[0]-c[0],dz=C0[1]-c[1];dir=Math.abs(dx)>Math.abs(dz)?[Math.sign(dx)||1,0]:[0,Math.sign(dz)||1]}
     const h=dir[0]?hx:hz,door=[c[0]+dir[0]*h,c[1]+dir[1]*h];
     S.push({name,kind:"room",G:door,O:[door[0]+dir[0]*15,door[1]+dir[1]*15],Ot:door,I:[c[0]-dir[0]*h*0.6,c[1]-dir[1]*h*0.6],It:[door[0]+dir[0]*6,door[1]+dir[1]*6],iM:[c[0],c[1]],oRef:o.oRef==null?null:o.oRef,iRef:o.iRef==null?"o":o.iRef,stepTo:door})};
+  (window.__CHD||[]).forEach(d=>{if(!d.nm||seen.has(d.nm))return;seen.add(d.nm);const p=W2(d.u,d.v),dir=d.ax==="u"?[d.s,0]:[0,d.s],dp=Math.max(1.5,d.dp*A-1.6);
+    const st=gStop(d.nm,p,dir,[p[0]-dir[0]*dp,p[1]-dir[1]*dp],{It:[p[0]+dir[0]*3,p[1]+dir[1]*3],iM:[p[0]-dir[0]*1.2,p[1]-dir[1]*1.2],oRef:d.yo*A,iRef:d.y*A,hw:d.w/2*A,od:14});st.kind="room";S.push(st)});
   const CH=/לשכ|בית המוקד|בית אבטינס|בית הטבילה/;
-  labels.forEach(L=>{if(!L.c||!L.txt||!CH.test(L.txt+" "+(L.info&&L.info.n||"")))return;const nm=L.txt;if(seen.has(nm))return;seen.add(nm);
+  labels.forEach(L=>{if(!L.c||!L.txt||!CH.test(L.txt+" "+(L.info&&L.info.n||"")))return;const nm=L.txt;if(seen.has(nm)||[...seen].some(x=>nm.startsWith(x+" —"))||S.some(q=>q.name===nm))return;seen.add(nm);
     const bb=pickBox(/./,[L.v.x,L.v.z]);let hx=4,hz=4;if(bb){const s=bb.getSize(new V3());if(s.x<40&&s.z<40){hx=Math.max(2,s.x/2);hz=Math.max(2,s.z/2)}}room(nm,[L.v.x,L.v.z],hx,hz)});
-  {const done=new Set(labels.filter(L=>L.c&&L.info&&L.info.n).map(L=>L.info.n));const grp={};cPick.forEach(o=>{const n=o.userData&&o.userData.n;if(!n||!/^לשכ/.test(n)||done.has(n))return;(grp[n]=grp[n]||[]).push(o)});
+  {const done=new Set(labels.filter(L=>L.c&&L.info&&L.info.n).map(L=>L.info.n));const grp={};cPick.forEach(o=>{const n=o.userData&&o.userData.n;if(!n||!/^לשכ/.test(n)||done.has(n)||seen.has(n))return;(grp[n]=grp[n]||[]).push(o)});
     Object.keys(grp).forEach(n=>{const bb=new THREE.Box3().setFromObject(grp[n][0]),c=bb.getCenter(new V3()),s=bb.getSize(new V3());room(n,[c.x,c.z],Math.max(2,s.x/2),Math.max(2,s.z/2))})}
   {const L=findL(/^הכותל המערבי$/);if(L)S.push(gStop("הכותל המערבי",[L.v.x-3,L.v.z],[-1,0],[L.v.x+12,L.v.z],{od:18,It:[L.v.x-3,L.v.z]}))}
-  {const d=pickBox(/^שער ההיכל$/),k=pickBox(/^הפתח לקודש הקודשים$/);if(d&&k){const z=d.getCenter(new V3()).z,dx=d.max.x;
+  {const d=pickBox(/^שער ההיכל$/),k=pickBox(/^הפתח לקודש הקודשים$/)||pickBox(/^שתי הפרוכות$/);if(d&&k){const z=d.getCenter(new V3()).z,dx=d.max.x;
     // the Ulam front: first wall met by a ray from the east, beside the opening
     let fx=dx+6.3;{RC.set(new V3(dx+60,HF()+1.6,z-5.5),new V3(-1,0,0));RC.far=80;const h=RC.intersectObjects(targets(),false)[0];if(h&&h.point.x>dx+1)fx=h.point.x}
     S.push({name:"האולם",kind:"room",G:[fx,z],O:[fx+15,z],Ot:[fx,z],I:[fx-3.2,z],It:[dx,z],oRef:null,iRef:HF(),stepTo:[fx,z]});
