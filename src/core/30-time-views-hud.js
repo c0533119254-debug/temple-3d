@@ -14,6 +14,24 @@ function sunAt(h,doy){doy=doy||DOY;const r=Math.PI/180,g=2*Math.PI/365*(doy-1+(h
   return{el:el/r,az:az}}
 // a direction in the scene for an elevation and a compass bearing (0 = north, 90 = east); the scene is turned with the mount walls (G2S)
 function skyVec(el,az){const r=Math.PI/180,c=Math.cos(el*r),q=G2S(Math.sin(az*r)*c,Math.cos(az*r)*c);return new THREE.Vector3(q[0],Math.sin(el*r),-q[1]).normalize()}
+// topic 6 stage 3: the times of the day in the Temple, for the hour slider (topic 7) and the stories. h = local standard hour.
+// ⚖️ "seasonal hours" (שעות זמניות): the day from sunrise to sunset in 12 parts (Rambam, commentary on the Mishna, Berachot 1:2). Others count from dawn to the stars (Magen Avraham 58:1) – not used here.
+function hourAtEl(el,am,doy){let a=am?0:12,b=am?12:24;for(let i=0;i<40;i++){const m=(a+b)/2,e=sunAt(m,doy).el;if((e<el)===am)a=m;else b=m}return(a+b)/2}
+function zmanim(doy){const ne=hourAtEl(-0.833,true,doy),sh=hourAtEl(-0.833,false,doy),zh=(sh-ne)/12,Z=(n,h,tag,src,t)=>({n,h,tag,src,t});
+  return[Z("עלות השחר",ne-1.2,"⚖️","פסחים צד, א: ארבעה מילין לפני הזריחה; 72 דקות (מיל = 18 דקות), ויש אומרים 90 דקות","השחר עולה במזרח. מכאן כשרות עבודות היום (מגילה כ, א)"),
+    Z("האיר פני כל המזרח",ne-0.6,"📜","תמיד ג, ב; יומא כח, א","הממונה אומר: \"צאו וראו אם הגיע זמן השחיטה\". כשהאיר כל המזרח עד חברון – שוחטים את תמיד של שחר. 💡 השעה לא מפורשת; כאן באמצע בין עלות השחר לזריחה"),
+    Z("הנץ החמה",ne,"📜","ברכות ט, ב","השמש זורחת מעל הר הזיתים"),
+    Z("חצות היום",ne+6*zh,"⚖️","פסחים נח, א","השמש בדרום, הצל הקצר ביותר. מכאן מנחה גדולה (שש ומחצה)"),
+    Z("שחיטת תמיד של בין הערביים",ne+8.5*zh,"⚖️","פסחים ה, א","\"תמיד נשחט בשמונה ומחצה וקרב בתשעה ומחצה\". בערב פסח – שעה אחת קודם, ואחריו הפסח"),
+    Z("הקטרת תמיד של בין הערביים",ne+9.5*zh,"⚖️","פסחים ה, א",""),
+    Z("שקיעת החמה",sh,"📜","ברכות ב, ב","השמש שוקעת במערב, מאחורי הבית"),
+    Z("צאת הכוכבים",hourAtEl(-8.5,false,doy),"⚖️","שבת לה, ב; 💡 שמש 8.5° מתחת לאופק","שלושה כוכבים בינוניים. כאן מתחיל הלילה")]}
+// the time of the day near an hour (within 20 minutes), for a caption under the slider: null when none
+function zmanAt(h,doy){let b=null;zmanim(doy).forEach(z=>{const d=Math.abs(z.h-h);if(d<=1/3&&(!b||d<Math.abs(b.h-h)))b=z});return b}
+// topic 6 stage 4: the festivals in the sky. 📜 Pesach 15 Nisan (Lev 23:5-6), Shavuot 50 days after the Omer (Lev 23:15-16), Sukkot 15 Tishrei (Lev 23:34).
+// 💡 the solar date moves every year; these are average days of the year: 15 April, 4 June, 8 October. On the 15th the moon is full (stage 1).
+const FEST={pesach:{doy:105,n:"פסח"},shavuot:{doy:155,n:"שבועות"},sukkot:{doy:281,n:"סוכות"}};
+function setFest(k){const f=FEST[k];if(!f)return;DOY=f.doy;applyTime();return f}
 function setHour(h){HOUR=((h%24)+24)%24;const sp=sunAt(HOUR);TIME=sp.el<=-7?"night":HOUR<10.5?"morning":HOUR>14.5?"evening":"noon";applyTime();return sp}
 // the four buttons are fixed hours: morning 6:30 (sun ~16° up in the east), noon 11:39 = midday (חצות היום, the sun due south), evening 17:15 (~10° up in the west), night 23:30
 const TIMES={morning:{h:6.5,el:15,az:100,exp:0.42,fog:0xd8d0c6,sunI:2.2,hemi:0.28},noon:{h:11.65,el:48,az:165,exp:0.34,fog:0xcfdbe4,sunI:2.1,hemi:0.35},evening:{h:17.25,el:10,az:265,exp:0.5,fog:0xd9b89a,sunI:1.7,hemi:0.25},night:{h:23.5,el:-12,az:250,exp:0.62,fog:0x162034,sunI:0,hemi:0.22}};
