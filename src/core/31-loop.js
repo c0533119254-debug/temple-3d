@@ -7,7 +7,6 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   const moving=idle<250;const tgt=REVIEW?PR:moving?Math.max(0.75,PR*0.7):PR;if(Math.abs(renderer.getPixelRatio()-tgt)>0.01&&(!moving||idle<16)){renderer.setPixelRatio(tgt);lastW=0;resize()}
   if(PERF.on){PERF.f++;if(now0-PERF.t>1000){PERF.fps=PERF.f*1000/(now0-PERF.t);PERF.f=0;PERF.t=now0;const i=renderer.info;document.getElementById("perfbox").textContent="פריימים לשנייה "+PERF.fps.toFixed(0)+" · קריאות ציור "+i.render.calls+" · משולשים: "+(i.render.triangles/1e6).toFixed(2)+" מיליון · גיאומטריות "+i.memory.geometries+" · טקסטורות "+i.memory.textures+" · רזולוציה ×"+renderer.getPixelRatio().toFixed(2)+" · טעינה "+((window.__LOADT||0)/1000).toFixed(1)+" ש׳ · איכות "+(QL==="low"?"חסכונית":"גבוהה")}}}
   const rawdt=clock.getDelta(),dt=Math.min(0.1,rawdt),now=performance.now(),tt=now/1000;
-  if(TOUR&&now>=TOUR.next){TOUR.i++;if(TOUR.i>=TOUR_STEPS.length)stopTour();else{const s=TOUR_STEPS[TOUR.i];const [p,t]=s.p?stPose(s):viewPose(s.v);if(needFade(camera.position,p))routeTo(p,t,2600);else tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:now,dur:reduce?1:3800,arc:true};TOUR.next=now+s.d;const cap=document.getElementById("cap");cap.textContent=s.cap;cap.hidden=false}}
   if(tween&&!tween.fx){tween.fx=true;if(tween.p1&&tween.t1)fixPhi(tween.p1,tween.t1)} // #18 B1: every flight ends inside the limits of the controls
   if(tween){const k=Math.min(1,(now-tween.start)/tween.dur),e=k<0.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;if(tween.path){const n=tween.path.length-1,f=e*n,i=Math.min(n-1,Math.floor(f)),g=f-i,sg=g*g*(3-2*g);camera.position.lerpVectors(tween.path[i],tween.path[i+1],sg);controls.target.lerpVectors(tween.tpath[i],tween.tpath[i+1],sg);if(k>=1){tween=null;controls.update()}}else{camera.position.lerpVectors(tween.p0,tween.p1,e);controls.target.lerpVectors(tween.t0,tween.t1,e);if(tween.arc)camera.position.y+=Math.sin(Math.PI*e)*Math.min(120,tween.p0.distanceTo(tween.p1)*0.15);{const fl=floorAt(camera.position.x,camera.position.z)+2;if(camera.position.y<fl&&k<1)camera.position.y=fl}if(k>=1){tween=null;controls.update()}}}
   if(TRN&&TRN.riding){TRN.camTick(camera)}else if(DRONE){droneTick(dt)}else if(WALK){const fw=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),st=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
@@ -57,7 +56,8 @@ await __Y(96);function safeCam(p,t){try{const objs=[];const big=o=>{if(!o.geomet
     return hit<L+0.4?hit:1e9};
   if(hitAt(p)>1e8)return;
   const off=p.clone().sub(t),Y=new THREE.Vector3(0,1,0);
-  for(const dy of [0,8,18,30])for(const an of [0,0.45,-0.45,0.9,-0.9]){const q=t.clone().add(off.clone().applyAxisAngle(Y,an));q.y+=dy;if(hitAt(q)>1e8){p.copy(q);return}}
+  // #12: try more places (farther, higher, around the target) before pulling the camera in close; pulling in made tour steps show a wall or the inside of the crowd
+  for(const f of [1,1.25,0.8,1.6])for(const dy of [0,8,18,30,45])for(const an of [0,0.45,-0.45,0.9,-0.9,1.4,-1.4,2.1,-2.1,Math.PI]){const q=t.clone().add(off.clone().applyAxisAngle(Y,an).multiplyScalar(f));q.y+=dy;if(hitAt(q)>1e8){p.copy(q);return}}
   const d=off.clone().normalize(),h=hitAt(p);p.copy(t).addScaledVector(d,Math.max(2.5,Math.min(h,off.length())-1.2))}catch(e){}}
 // labels behind walls: a small depth render when the camera rests, compared with each label's distance
 const PRB={rt:null,buf:null,W:192,H:120,sig:"",mat:null,t:0};
