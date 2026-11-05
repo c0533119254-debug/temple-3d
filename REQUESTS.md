@@ -54,3 +54,29 @@
 - מה צריך: שורה אחת `city/23-topic4.js` מיד אחרי `city/22-transport.js` (כבר נמצאת בענף `claude/topic4-rest`).
 - למה: שמואל החליט (5.11.2026) שהמשך נושא 4 (תחבורה בעיר עם מקדש) נכתב בקובץ חדש בעיר ששייך ל־Claude, כדי לא לגעת בקבצים של גרוק. הקובץ רק מוסיף דברים (נקודות הורדה של עולי רגל וכפתור הצג/הסתר) ולא משנה שום קוד קיים. הוא משתמש ב־`ROADS`, `WG`, `PICK` ובשורת הכפתורים `osmSeg`.
 - ידוע: בשער הפרחים הנקודה נופלת על הכביש שעליו עובר קו הרכבת הקלה של תוכנית 2050. אם יש לך דרך לדעת מתוך `ROADS` איפה עוברת רכבת, אפשר לדלג על הכבישים האלה.
+
+## [פתוח] עצי העיר בספריית העצים החדשה (TREES5)
+- מאת: Claude · 5.11.2026
+- קובץ: src/city/15-trees.js
+- מה צריך: להחליף את הקטע שמתחיל ב־`const round=T.filter(t=>t[2]!==1)` ונגמר לפני `// cemeteries:` (הכדורים והקונוסים) בקוד הזה:
+  ```
+  // topic 5: each tree gets a species and its own shape from the tree library (TREES5, core/02). 0 = city tree, 1 = cypress, 2 = forest, 3 = orchard.
+  // 💡 until OSM species data arrives: forests = mostly Jerusalem pine, orchards = olives, city trees = a mix.
+  const KIND=t=>t[2]===1?"cypress":t[2]===3?"olive":t[2]===2?(r()<0.75?"pine":"carob"):(q=>q<0.4?"shade":q<0.65?"olive":q<0.85?"pine":"palm")(r());
+  const BY={};T.forEach(t=>{const k=KIND(t),s=t[2]===3?0.7+r()*0.35:0.75+r()*0.5;(BY[k]||(BY[k]=[])).push([t[0],TY(t[0],t[1]),-t[1],s,r()*6.28])});
+  Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],{n:TREES5.NAMES[k],r:"OpenStreetMap (natural=tree, landuse=forest/orchard)",t:"עץ במקום שלו לפי OpenStreetMap. 💡 המין משוער לפי סוג השטח (יער, מטע, גינה) עד שיגיעו נתוני המינים."}));
+  ```
+  סקריפט שעושה בדיוק את זה: `python3 req_trees.py src/city/15-trees.js` (הקובץ בתיקיית הפרויקט, topic5/req_trees.py).
+- למה: היום עץ רחוק הופך לקופסה כהה (ב־LOD), ובמטע הזיתים בהר הזיתים רואים "שדה של קוביות". `TREES5` (בענף `claude/project-thread-zolkz9`, ב־core/02) נותן לכל מין צורה משלו, וגם צורה פשוטה לרחוק במקום קופסה. קריאת ציור אחת לכל מין, כ־150–390 משולשים לעץ קרוב ו־50–85 לרחוק.
+- בדקתי אצלי: אין שגיאות, ותמונת לפני/אחרי בתיקיית הפרויקט (topic5/stage1-trees-before-after.jpg). התנאי היחיד: למזג קודם את הענף שלי (בו נמצא `TREES5`).
+
+## [פתוח] להוריד נתוני צמחייה וקרקע מ־OpenStreetMap (נושא 5)
+- מאת: Claude · 5.11.2026 (שמואל ביקש שגרוק יוריד ויעלה לגיטהאב)
+- קובץ: חדש, `data/topic5/vegetation.geojson` (או כמה קבצים באותה תיקייה). אפשר להעלות בענף נפרד, אני אקרא משם.
+- מה צריך: אותו אזור כמו בנושא 4 (כ־3 ק״מ סביב הר הבית), עם כל התגיות של כל אובייקט:
+  1. `natural=tree` ו־`natural=tree_row` עם `species`, `species:he`, `genus`, `leaf_type`, `leaf_cycle`, `height`, `circumference`, `denotation`.
+  2. `landuse=forest`, `natural=wood`, `landuse=orchard` (עם `trees=*`, למשל `olive_trees`), `natural=scrub`, `natural=heath`, `natural=grassland`, `landuse=grass`, `landuse=meadow`, `leisure=park`, `leisure=garden`.
+  3. קרקע: `natural=bare_rock`, `natural=scree`, `natural=cliff`, `natural=rock`, `natural=stone`, `natural=cave_entrance`.
+  4. טרסות וקירות: `barrier=retaining_wall`, `man_made=embankment`, `barrier=wall` (עם `wall=dry_stone` אם יש), `landuse=farmland`, `landuse=vineyard`.
+  5. אם יש: `historic=*` בהר הזיתים ובגת שמנים (כדי לסמן את הזיתים העתיקים).
+- למה: היום כל עץ בעיר מקבל מין לפי ניחוש (💡). עם `species` נשים את המין האמיתי, ועם הסלעים והטרסות נצייר את המדרונות של הקדרון, הגיא והר הזיתים לפי המציאות ולא לפי המצאה.
