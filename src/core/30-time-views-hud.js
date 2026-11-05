@@ -101,7 +101,7 @@ function groundAt(x,z){const n=-z;
       if(u>=242&&u<=258&&v>=264.1&&v<=296.1)return(7.5+9*(296.1-v)/32)*A;
       if(u>=238&&u<=262&&v>=238&&v<=264)return 16.5*A;
       if(u>=98&&u<=203&&v>=COMP.vmin&&v<=COMP.vmax)return 13.56*A;if(u<=300&&v>=200&&v<=300)return 7.5*A;return 3.5*A}}
-  if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n);return surfY(g[0],g[1])}}
+  if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n),dl=DUNG.lotY(g[0],g[1]);return dl!=null?dl:surfY(g[0],g[1])}}
 function blocked(x,z,feet){const r=0.6;for(const c of COL){if(x>c.x0-r&&x<c.x1+r&&z>c.z0-r&&z<c.z1+r&&c.y1>feet+0.55&&c.y0<feet+1.7)return true}return false}
 const JOY={x:0,y:0};
 let DRONE=false,WALK=false,yaw=0,pitch=0;const keys={};

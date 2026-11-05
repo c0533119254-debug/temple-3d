@@ -1,7 +1,7 @@
 // ---- topic 4 (Claude): transport of a city with a Temple. This file belongs to Claude (decided by Shmuel, 5.11.2026). ----
 // 📜 three pilgrimage feasts a year (Devarim 16:16). 💡 where the pilgrims' buses stop: next to the start of each pilgrim road.
 // The start points are copied from TR.pil in city/22-transport.js (the pilgrim roads already in the model).
-{const PILS=[["שער שכם",-714.6,489.0],["שער הפרחים",-252.6,540.5],["העופל",336.6,236.4],["ממילא",-884.1,-161.4],["שער האשפות",-169.3,-414.0],["בריכת השילוח",-9,-835]];
+{const PILS=[["שער שכם",-714.6,489.0],["שער הפרחים",-252.6,540.5],["העופל",336.6,236.4],["ממילא",-884.1,-161.4],["בריכת השילוח",-9,-835]];
   const OSML=window.OSML||(window.OSML={}),g=new THREE.Group();g.name="osm_drop";WG.add(g);(OSML.drop||(OSML.drop=[])).push(g);
   const cars=ROADS.filter(rd=>rd.c>=1&&rd.c<=3&&rd.w>=6);
   const yAt=(rd,i)=>(isNaN(rd.hs[i])?rd.h[i]:rd.hs[i])+0.15+0.04*rd.c+0.025;
@@ -30,3 +30,35 @@
   window.__T4DROP=DROPS;
   // its own show/hide button, added to the "שכבות דרך" row without editing index.html
   const box=document.getElementById("osmSeg");if(box){const bt=document.createElement("button");bt.type="button";bt.dataset.k="drop";bt.setAttribute("aria-pressed","true");bt.textContent="הורדת עולי רגל";box.appendChild(bt)}}
+
+// ---- the Dung Gate bus terminal (Claude, #30, 5.11.2026) ----
+// 💡 Buses do not enter the gate. They stop at a terminal on the open lot across the road (the Givati lot of today):
+// a lane through the lot, a raised stone platform, benches and a sign. Passengers cross on a zebra crossing,
+// walk along the pavement under the wall and go in through the gate on foot. The lane and the slots are DUNG in core/00-setup.js.
+{const P=DUNG.P,ang=DUNG.ANG,g=new THREE.Group();g.name="dung_terminal";WG.add(g);
+  const Y=(x,n)=>surfY(x,n),T=DUNG.top;
+  const mk=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.9,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-4},o||{}));
+  const asph=mk(0x4f5154,{roughness:1,metalness:0,envMapIntensity:0.15}),white=mk(0xf1efe6,{emissive:0x111111}),yel=mk(0xf2c230,{emissive:0x221a00}),stone=M.wall,plat=new THREE.MeshStandardMaterial({color:0xb9ad94,roughness:0.95,envMapIntensity:0.2}),kerb=new THREE.MeshStandardMaterial({color:0x8f877a,roughness:0.9,envMapIntensity:0.2});
+  const info={n:"מסוף האוטובוסים של שער האשפות",r:"💡 הצעה. דברים טז, טז (שלוש פעמים בשנה)",t:"💡 האוטובוסים לא נכנסים בשער האשפות. הם עוצרים כאן, במגרש שמול השער, בנתיב משלהם ליד רציף אבן. 📜 שלוש פעמים בשנה עולים לרגל: עולי הרגל יורדים כאן, חוצים במעבר החציה, הולכים על המדרכה שלאורך החומה ונכנסים בשער ברגל. בתוך השער אין כלי רכב."};
+  const box=(u0,u1,v0,v1,y0,y1,mat,pick)=>{const m=P((u0+u1)/2,(v0+v1)/2),b=new THREE.Mesh(mat===M.wall?wbox(u1-u0,y1-y0,v1-v0,6):new THREE.BoxGeometry(u1-u0,y1-y0,v1-v0),mat);b.position.set(m[0],(y0+y1)/2,-m[1]);b.rotation.y=ang;b.castShadow=b.receiveShadow=true;b.userData=info;g.add(b);if(pick)PICK.push(b);return b};
+  const low=(u0,u1,v0,v1)=>{let m=1e9;for(let a=u0;a<=u1+0.01;a+=(u1-u0)/2)for(let b=v0;b<=v1+0.01;b+=(v1-v0)/3){const p=P(a,b);m=Math.min(m,Y(p[0],p[1]))}return m};
+  // a ribbon along (u,v) points, w metres wide, at the terrace height + lift
+  const ribbon=(pts,w,lift,mat)=>{const D=[];for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/1.5));for(let j=0;j<k;j++)D.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}D.push(pts[pts.length-1]);
+    const pos=[],idx=[];D.forEach((q,i)=>{const a=D[Math.max(0,i-1)],b=D[Math.min(D.length-1,i+1)],du=b[0]-a[0],dv=b[1]-a[1],L=Math.hypot(du,dv)||1;[1,-1].forEach(sd=>{const uu=q[0]-dv/L*w/2*sd,p=P(uu,q[1]+du/L*w/2*sd);pos.push(p[0],T(uu)+lift,-p[1])});if(i)idx.push(2*i-2,2*i,2*i-1,2*i-1,2*i,2*i+1)});
+    const geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));geo.setIndex(idx);geo.computeVertexNormals();const m=new THREE.Mesh(geo,mat);m.receiveShadow=true;m.userData=info;g.add(m);return m};
+  // the terrace, in 2 m steps along the road, with its stone face down to the slope
+  for(let u=-30;u<36;u+=2){const t=Math.min(T(u),T(u+2));box(u,u+2,6,18.2,low(u,u+2,6,18.2)-0.6,t,stone,true)}
+  PICK.push(ribbon(DUNG.LANE,3.8,0.03,asph));
+  ribbon(DUNG.LANE.filter(q=>q[0]>=-14&&q[0]<=20).map(q=>[q[0],11.35]),0.15,0.05,yel);   // the stop line along the platform
+  ribbon(DUNG.LANE.filter(q=>q[0]>=-16&&q[0]<=22).map(q=>[q[0],7.85]),0.12,0.05,white);  // the lane edge on the road side
+  // the platform: 20 cm above the terrace, with a kerb on the lane side and stone benches
+  for(let u=-28;u<20;u+=4){const t=Math.min(T(u),T(u+4));box(u,u+4,11.6,17.5,t-0.2,t+0.2,plat,true);box(u,u+4,11.6,11.9,t-0.2,t+0.22,kerb);
+    if(u%8===0&&u>-24){const bn=box(u+1.1,u+2.9,16,16.5,t+0.2,t+0.65,kerb)}}
+  // zebra crossing from the platform over both carriageways to the pavement under the wall
+  for(let v=-6.5;v<=5.6;v+=1){const p=P(-27,v),z=new THREE.Mesh(new THREE.BoxGeometry(3,0.04,0.5),white);z.position.set(p[0],Y(p[0],p[1])+0.07,-p[1]);z.rotation.y=ang;g.add(z)}
+  // the sign, in the same blue as the pilgrim drop-off signs
+  {const cv=document.createElement("canvas");cv.width=512;cv.height=256;const c=cv.getContext("2d");c.fillStyle="#1f56b8";c.fillRect(0,0,512,256);c.fillStyle="#fff";c.textAlign="center";c.direction="rtl";
+    c.font="bold 58px Arial";c.fillText("מסוף שער האשפות",256,92);c.font="bold 46px Arial";c.fillText("הורדת עולי רגל",256,180);
+    const sp=P(-22,12.4),y=T(-22)+0.2,pole=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,3.2,6),new THREE.MeshStandardMaterial({color:0x4a4f55,metalness:0.5,roughness:0.45}));pole.position.set(sp[0],y+1.6,-sp[1]);g.add(pole);
+    const b=new THREE.Mesh(new THREE.BoxGeometry(1.8,0.9,0.06),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv),toneMapped:false}));b.position.set(sp[0],y+3.5,-sp[1]);b.rotation.y=ang+Math.PI/2;b.userData=info;g.add(b);PICK.push(b);
+    const q=P(0,14),qs=G2S(q[0],q[1]);label("מסוף שער האשפות",qs[0],y+6,-qs[1],null,info)}}
