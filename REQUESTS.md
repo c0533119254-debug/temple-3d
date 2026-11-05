@@ -66,9 +66,9 @@
   const BY={};T.forEach(t=>{const k=KIND(t),s=t[2]===3?0.7+r()*0.35:0.75+r()*0.5;(BY[k]||(BY[k]=[])).push([t[0],TY(t[0],t[1]),-t[1],s,r()*6.28])});
   Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],{n:TREES5.NAMES[k],r:"OpenStreetMap (natural=tree, landuse=forest/orchard)",t:"עץ במקום שלו לפי OpenStreetMap. 💡 המין משוער לפי סוג השטח (יער, מטע, גינה) עד שיגיעו נתוני המינים."}));
   ```
-  סקריפט שעושה בדיוק את זה: `python3 req_trees.py src/city/15-trees.js` (הקובץ בתיקיית הפרויקט, topic5/req_trees.py).
+  סקריפט שעושה בדיוק את זה: `python3 req_trees.py src/city/15-trees.js` (הסקריפט נמצא ב־`docs/topic5/req_trees.py`).
 - למה: היום עץ רחוק הופך לקופסה כהה (ב־LOD), ובמטע הזיתים בהר הזיתים רואים "שדה של קוביות". `TREES5` (בענף `claude/project-thread-zolkz9`, ב־core/02) נותן לכל מין צורה משלו, וגם צורה פשוטה לרחוק במקום קופסה. קריאת ציור אחת לכל מין, כ־150–390 משולשים לעץ קרוב ו־50–85 לרחוק.
-- בדקתי אצלי: אין שגיאות, ותמונת לפני/אחרי בתיקיית הפרויקט (topic5/stage1-trees-before-after.jpg). התנאי היחיד: למזג קודם את הענף שלי (בו נמצא `TREES5`).
+- בדקתי אצלי: אין שגיאות, ותמונת לפני/אחרי ב־`docs/topic5/stage1-trees-before-after.jpg` (למעלה: מטע הזיתים בהר הזיתים, למטה: עצי הנחל). התנאי היחיד: למזג קודם את הענף שלי (בו נמצא `TREES5`).
 
 ## [פתוח] להוריד נתוני צמחייה וקרקע מ־OpenStreetMap (נושא 5)
 - מאת: Claude · 5.11.2026 (שמואל ביקש שגרוק יוריד ויעלה לגיטהאב)
