@@ -35,6 +35,8 @@ body.idle .ui.dim:not(:hover):not(:focus-within){opacity:.45}
 .lbl::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--green2);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.5);flex:none}
 .lbl.c::after{background:var(--gold)}
 .lbl.c{color:#fff3d6!important}
+/* labels come in softly instead of popping */
+@keyframes lblIn{from{opacity:0}to{opacity:1}}.lbl:not([hidden]){animation:lblIn .22s ease-out}@media (prefers-reduced-motion:reduce){.lbl:not([hidden]){animation:none}}
 .lbl.hl{background:none!important;color:#ffe7a6!important;font-size:14px!important;z-index:3}
 .lbl.hl::after{width:13px;height:13px;background:var(--gold);box-shadow:0 0 0 4px rgba(201,162,75,.35)}
 /* search: a solid pill, always visible */

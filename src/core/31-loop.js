@@ -42,9 +42,33 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   const cp=camera.position,inHouse=INTBOX&&cp.x>INTBOX.x0&&cp.x<INTBOX.x1&&cp.z>INTBOX.z0&&cp.z<INTBOX.z1&&cp.y<INTBOX.y1;if(WG.visible===!!inHouse){WG.visible=!inHouse;document.getElementById("exitB").hidden=!inHouse}{const ins=inHouse?(KBOX&&cp.x>KBOX.x0&&cp.x<KBOX.x1&&cp.z>KBOX.z0&&cp.z<KBOX.z1?2:1):0;if(ins!==INSIDE){INSIDE=ins;applyTime()}}
   const LOWC=WALK||camera.position.y<60;if(LOWC&&(++OCCF%10===0)){const o=camera.position;labels.forEach(L=>{const dx=L.v.x-o.x,dy=L.v.y-o.y,dz=L.v.z-o.z,len=Math.hypot(dx,dy,dz);L.occ=false;for(const c of COL){if(L.v.x>c.x0&&L.v.x<c.x1&&L.v.z>c.z0&&L.v.z<c.z1)continue;let t0=0,t1=1;const sl=(a,d,lo,hi)=>{if(Math.abs(d)<1e-9)return a>=lo&&a<=hi;let u=(lo-a)/d,v=(hi-a)/d;if(u>v){const q=u;u=v;v=q}t0=Math.max(t0,u);t1=Math.min(t1,v);return t0<=t1};if(sl(o.x,dx,c.x0,c.x1)&&sl(o.y,dy,c.y0,c.y1)&&sl(o.z,dz,c.z0,c.z1)&&t1>0&&t0<0.97){L.occ=true;break}}})}
   depthProbe();lodTick();
-  const BOX=[];LBN=0;labels.forEach(L=>{L._d=camera.position.distanceTo(L.v)});labels.slice().sort((a,b)=>((b.force?1:0)-(a.force?1:0))||((b.pr||0)-(a.pr||0))||((b.c?1:0)-(a.c?1:0))||((b.el.hidden?0:1)-(a.el.hidden?0:1))||(a._d-b._d)).forEach(L=>{if(!L.force&&(!SHOW_LABELS||(!L.c&&camera.position.y>420)||(FLOOR==="satm"&&(L.c||cLabels.includes(L)))||(L.wall&&!SHOW_WALL)||(L.tr&&!SHOW_TR)||(L.yk&&!(ACTS&&ACTS.yk&&ACTS.yk.g.visible))||(LOWC&&L.occ)||L.docc||(L.inh?!inHouse:inHouse)||(WALK&&!L.c))){L.el.hidden=true;return}tmp.copy(L.v).project(camera);const dist=camera.position.distanceTo(L.v);const vis=tmp.z<1&&Math.abs(tmp.x)<1.05&&Math.abs(tmp.y)<1.05&&dist<(L.m?(WALK?140:230):(WALK?(L.c?300:700):(L.c?1800:4200)))&&(L.force||dist>(L.inh?1:(L.c?6:60)));let ok=vis;if(vis){const bw=(L.txt?L.txt.length:8)*7+18,sx=Math.max(bw/2+4,Math.min(w-bw/2-4,(tmp.x+1)/2*w)),sy=Math.max(40,(1-tmp.y)/2*h);const r=[sx-bw/2,sy-34,sx+bw/2,sy-12];const hitB=r=>BOX.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);if(hitB(r)){let done=false;if(L.pr){const X=Math.round(sx),Y=Math.round(sy);for(const [rr,tr] of [[[r[0],sy+4,r[2],sy+26],"translate(-50%,20%)"],[[sx+8,sy-11,sx+8+bw,sy+11],"translate(8px,-50%)"],[[sx-8-bw,sy-11,sx-8,sy+11],"translate(calc(-100% - 8px),-50%)"],[[r[0],sy-58,r[2],sy-36],"translate(-50%,-230%)"],[[r[0],sy+30,r[2],sy+52],"translate(-50%,140%)"],[[sx+56,sy-11,sx+56+bw,sy+11],"translate(56px,-50%)"],[[sx-56-bw,sy-11,sx-56,sy+11],"translate(calc(-100% - 56px),-50%)"]]){if(!hitB(rr)){BOX.push(rr);L.el.style.transform="translate("+X+"px,"+Y+"px) "+tr;done=true;break}}}if(!done)ok=false}else{BOX.push(r);L.el.style.transform="translate("+Math.round(sx)+"px,"+Math.round(sy)+"px) translate(-50%,-120%)"}}if(ok&&!L.force&&++LBN>LMAX)ok=false;L.el.hidden=!ok});
+  layoutLabels(w,h,inHouse,LOWC);
   requestAnimationFrame(frame);
 }
+// ---- labels: a calm, tidy layout ----
+// one label per name (the nearest), no label under the buttons or half off the screen,
+// a label keeps its place among its neighbours, and shows/hides only after the change holds a moment (no flicker while the camera moves)
+const UIX={f:0,r:[]};
+function uiRects(){if(UIX.f++%20)return UIX.r;const sr=stage.getBoundingClientRect();UIX.r=[];document.querySelectorAll("#sbox,#rail,#hud,.zgrp,#mini,#infocard,.story,#tbar,#stStrip,.exitb").forEach(e=>{if(e.hidden||!e.isConnected)return;const k=e.getBoundingClientRect();if(k.width<2||k.height<2)return;UIX.r.push([k.left-sr.left-6,k.top-sr.top-6,k.right-sr.left+6,k.bottom-sr.top+6])});return UIX.r}
+const ALT=[["translate(-50%,-120%)",(sx,sy,bw)=>[sx-bw/2,sy-34,sx+bw/2,sy-12]],["translate(-50%,20%)",(sx,sy,bw)=>[sx-bw/2,sy+4,sx+bw/2,sy+26]],["translate(8px,-50%)",(sx,sy,bw)=>[sx+8,sy-11,sx+8+bw,sy+11]],["translate(calc(-100% - 8px),-50%)",(sx,sy,bw)=>[sx-8-bw,sy-11,sx-8,sy+11]],["translate(-50%,-230%)",(sx,sy,bw)=>[sx-bw/2,sy-58,sx+bw/2,sy-36]],["translate(-50%,140%)",(sx,sy,bw)=>[sx-bw/2,sy+30,sx+bw/2,sy+52]]];
+function layoutLabels(w,h,inHouse,LOWC){const now=performance.now(),cp=camera.position,BOX=uiRects().slice(),used=new Set();LBN=0;
+  const hitB=r=>BOX.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
+  labels.forEach(L=>{L._d=cp.distanceTo(L.v)});
+  const set=(L,on,hard)=>{if(hard||L.force){L._on=on;L._sw=0}else if(on!==!!L._on){if(!L._sw)L._sw=now;if(now-L._sw>=(on?160:320)){L._on=on;L._sw=0}}else L._sw=0;L.el.hidden=!L._on};
+  labels.slice().sort((a,b)=>((b.force?1:0)-(a.force?1:0))||((b.pr||0)-(a.pr||0))||((b.c?1:0)-(a.c?1:0))||((b._on?1:0)-(a._on?1:0))||(a._d-b._d)).forEach(L=>{
+    if(!L.force&&(!SHOW_LABELS||(!L.c&&cp.y>420)||(FLOOR==="satm"&&(L.c||cLabels.includes(L)))||(L.wall&&!SHOW_WALL)||(L.tr&&!SHOW_TR)||(L.yk&&!(ACTS&&ACTS.yk&&ACTS.yk.g.visible))||(LOWC&&L.occ)||L.docc||(L.inh?!inHouse:inHouse)||(WALK&&!L.c))){set(L,false,true);return}
+    const key=L.txt||"";if(key&&used.has(key)&&!L.force){set(L,false,true);return}
+    tmp.copy(L.v).project(camera);const dist=L._d;
+    if(!(tmp.z<1&&Math.abs(tmp.x)<1&&Math.abs(tmp.y)<1&&dist<(L.m?(WALK?140:230):(WALK?(L.c?300:700):(L.c?1800:4200)))&&(L.force||dist>(L.inh?1:(L.c?6:60))))){set(L,false,true);return}
+    const bw=(L.txt?L.txt.length:8)*7+22,sx=(tmp.x+1)/2*w,sy=(1-tmp.y)/2*h;
+    // the place the label had last time is tried first, so it does not hop between places
+    const n=L.pr||L.force?ALT.length:1,first=(L._alt||0)<n?(L._alt||0):0;let pick=-1,rect=null;
+    for(let q=0;q<n;q++){const a=q===0?first:(q<=first?q-1:q);const r=ALT[a][1](sx,sy,bw);if(r[0]<4||r[2]>w-4||r[1]<4||r[3]>h-4)continue;if(!hitB(r)){pick=a;rect=r;break}}
+    let ok=pick>=0&&(L.force||LBN<LMAX);
+    set(L,ok,false);
+    if(!L._on)return;if(key)used.add(key);LBN++;
+    if(pick<0){pick=Math.min(L._alt||0,ALT.length-1);rect=ALT[pick][1](sx,sy,bw)}
+    L._alt=pick;BOX.push(rect);L.el.style.transform="translate("+Math.round(sx)+"px,"+Math.round(sy)+"px) "+ALT[pick][0]})}
 // camera guard: keep a tour camera out of walls, with a clear line of sight to what it shows
 await __Y(96);function safeCam(p,t){try{const objs=[];const big=o=>{if(!o.geometry)return false;if(!o.geometry.boundingSphere)o.geometry.computeBoundingSphere();return o.geometry.boundingSphere.radius*Math.max(o.scale.x,o.scale.y,o.scale.z)>3};
   if(group)group.traverseVisible(o=>{if(o.isMesh&&!o.isInstancedMesh&&o.material&&!o.material.transparent&&!cPick.includes(o)&&big(o))objs.push(o)});GATEG.traverseVisible(o=>{if(o.isMesh)objs.push(o)});
