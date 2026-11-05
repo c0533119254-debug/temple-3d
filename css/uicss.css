@@ -244,3 +244,16 @@ body.touring .infocard{display:none!important}
 
 
 .loading{background:radial-gradient(circle at 50% 40%,#22314d,#0b1222)!important;z-index:50}.ldbox{text-align:center;color:#F5EFE0;font-family:var(--f-body)}.ldt{font:700 20px var(--f-display);margin-bottom:12px}.ldbar{width:min(320px,70vw);height:6px;border-radius:3px;background:rgba(245,239,224,.15);overflow:hidden;margin:0 auto}.ldbar i{display:block;height:100%;width:var(--p,2%);background:#C9A24B;transition:width .25s}.lds{margin-top:10px;font-size:13px;color:rgba(245,239,224,.7)}
+
+/* topic 7, phone stage: every tap target at least 44×44 px (Apple HIG / WCAG 2.5.5). Small round icons keep their look and get a larger invisible hit area */
+@media (max-width:700px),(pointer:coarse){
+  .dr button:not(.help),#chips button,.controls button:not(.help),.stctl button,#tbar button,#sgo,#infoX,.ic-btns button{min-height:44px!important}
+  .stctl button,#tbar button,#sgo,#infoX,.dr .x,button.x{min-width:44px!important}
+  .dr .x,button.x{min-height:44px!important}
+  .dr button:not(.help),.controls button:not(.help){height:auto!important}
+  #stFold,#stX{min-width:44px!important;min-height:44px!important}
+  #stSpeed,#revBtn{min-height:44px!important}
+  button.help{position:relative}
+  button.help::after{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+  .ic-src a{display:inline-flex;align-items:center;min-height:44px}
+}
