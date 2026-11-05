@@ -6,12 +6,11 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
   const T=[];F.trees.forEach(q=>{if(free(q[0],q[1]))T.push([q[0],q[1],r()<0.3?1:0])});
   F.green.forEach(g=>{if(g.k==="g"&&r()<0.5)return;let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;g.p.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
     const step=g.k==="o"?7:g.k==="f"?6:11;for(let x=xa;x<xb;x+=step)for(let n=na;n<nb;n+=step){const xx=x+(r()-0.5)*step*0.8,nn=n+(r()-0.5)*step*0.8;if(inPoly(xx,nn,g.p)&&free(xx,nn)&&T.length<(SMALL?2500:6000))T.push([xx,nn,g.k==="f"?(r()<0.6?2:0):g.k==="o"?3:(r()<0.3?1:0)])}});
-  const round=T.filter(t=>t[2]!==1),cyp=T.filter(t=>t[2]===1);
-  if(round.length){const can=new THREE.InstancedMesh((()=>{const g=new THREE.IcosahedronGeometry(1,0),pp=g.attributes.position;for(let i=0;i<pp.count;i++){const x=pp.getX(i),y=pp.getY(i),z=pp.getZ(i),k=0.8+0.25*Math.sin(x*4.1+z*3.3)*Math.cos(y*3.7);pp.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals();return g})(),new THREE.MeshStandardMaterial({color:0xffffff,roughness:1,envMapIntensity:0.15,flatShading:true}),round.length),trk=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.18,0.28,1,5),M.trunk,round.length);
-    round.forEach((t,i)=>{const y=TY(t[0],t[1]),s=t[2]===3?1.5+r()*0.8:t[2]===2?2.2+r()*1.6:1.8+r()*2;d.rotation.set(0,r()*6,0);d.position.set(t[0],y+s*1.25,-t[1]);d.scale.set(s*(0.9+r()*0.4),s*(t[2]===2?1.0:0.62+r()*0.2),s*(0.9+r()*0.4));d.updateMatrix();can.setMatrixAt(i,d.matrix);
-      c.setHSL(t[2]===3?0.17:0.2+r()*0.06,t[2]===3?0.12:0.18+r()*0.08,0.13+r()*0.07);can.setColorAt(i,c);d.rotation.set(0,0,0);d.position.set(t[0],y+s*0.45,-t[1]);d.scale.set(1,s*0.95,1);d.updateMatrix();trk.setMatrixAt(i,d.matrix)});
-    can.castShadow=true;can.receiveShadow=true;trk.castShadow=true;WG.add(can,trk)}
-  if(cyp.length){const cy=new THREE.InstancedMesh(new THREE.ConeGeometry(1,1,7),M.cypress,cyp.length);cyp.forEach((t,i)=>{const y=TY(t[0],t[1]),hh=8+r()*7,s=0.8+r()*0.4;d.rotation.set(0,0,0);d.position.set(t[0],y+hh/2,-t[1]);d.scale.set(s,hh,s);d.updateMatrix();cy.setMatrixAt(i,d.matrix)});cy.castShadow=true;WG.add(cy)}
+  // topic 5: each tree gets a species and its own shape from the tree library (TREES5, core/02). 0 = city tree, 1 = cypress, 2 = forest, 3 = orchard.
+  // 💡 until OSM species data arrives: forests = mostly Jerusalem pine, orchards = olives, city trees = a mix.
+  const KIND=t=>t[2]===1?"cypress":t[2]===3?"olive":t[2]===2?(r()<0.75?"pine":"carob"):(q=>q<0.4?"shade":q<0.65?"olive":q<0.85?"pine":"palm")(r());
+  const BY={};T.forEach(t=>{const k=KIND(t),s=t[2]===3?0.7+r()*0.35:0.75+r()*0.5;(BY[k]||(BY[k]=[])).push([t[0],TY(t[0],t[1]),-t[1],s,r()*6.28])});
+  Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],{n:TREES5.NAMES[k],r:"OpenStreetMap (natural=tree, landuse=forest/orchard)",t:"עץ במקום שלו לפי OpenStreetMap. 💡 המין משוער לפי סוג השטח (יער, מטע, גינה) עד שיגיעו נתוני המינים."}));
   // cemeteries: rows of limestone graves (Mount of Olives faces the Temple Mount)
   const G=[],cap=SMALL?4000:10000;F.cem.forEach(cm=>{let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;cm.p.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
     const sx=cm.r==="j"?1.6:2.2,sn=cm.r==="j"?2.6:3.2;for(let n=na;n<nb&&G.length<cap;n+=sn)for(let x=xa;x<xb&&G.length<cap;x+=sx){const xx=x+(r()-0.5)*0.4,nn=n+(r()-0.5)*0.4;if(inPoly(xx,nn,cm.p)&&free(xx,nn)&&r()<0.85)G.push([xx,nn,cm.r])}});
