@@ -50,7 +50,7 @@ await __Y(86);function build(){
   const wi=I("החומה החיצונה","יחזקאל מ׳, ה; מ״ב, כ","חומה ברוחב ובגובה של קנה, 6 אמות, \"להבדיל בין הקדש לחל\".");
   [[0,0,237.5,6],[262.5,0,500,6],[0,494,237.5,500],[262.5,494,500,500],[0,6,6,494],[494,6,500,237.5],[494,262.5,500,494]].forEach(r=>{box(r[0],r[1],r[2],r[3],0,9.5,M.stone,wi);box(r[0]-0.4,r[1]-0.4,r[2]+0.4,r[3]+0.4,9.5,10.2,M.stoneL,null)});
   // gates
-  function gate(axis,cu,cv,floor,outward,info){
+  function gate(axis,cu,cv,floor,outward,info,closed){
     const L=50,Wd=25,pass=10,side=(Wd-pass)/2,hBody=GATE==="high"?40:20,hPylon=GATE==="high"?60:20;
     const along=(a0,a1,w0,w1,y0,y1,mat,inf,o)=>axis==="e"?box(cu+a0,cv+w0,cu+a1,cv+w1,y0,y1,mat,inf,o):box(cu+w0,cv+a0,cu+w1,cv+a1,y0,y1,mat,inf,o);
     const sa=s0=>outward*(L/2-s0),piece=(s0,s1,w0,w1,y0,y1,mat,inf,o)=>{const a0=sa(s0),a1=sa(s1);along(Math.min(a0,a1),Math.max(a0,a1),w0,w1,y0,y1,mat,inf,o)};
@@ -73,6 +73,8 @@ await __Y(86);function build(){
     [-1,1].forEach(e=>[-1,1].forEach(s=>{const hd=e===eU?1:3.5,a=e*(L/2-hd),w=s*(Wd/2-3.5);if(GATE==="high"){const ao=e*(L/2-1),uu=axis==="e"?cu+ao:cu+w,vv=axis==="e"?cv+w:cv+ao;cyl(uu,vv,3.5,floor+hPylon,1.05,1,M.stone,pyl,20);cyl(uu,vv,floor+hPylon,floor+hPylon+1.2,1,1.25,M.stoneL,null,20);for(let k=0;k<7;k++){const fr=new THREE.Mesh(PALMF||(PALMF=new THREE.ConeGeometry(0.35*A,3.2*A,4)),M.gold),p=W(uu,vv),an=k/7*Math.PI*2;fr.position.set(p[0]+Math.cos(an)*0.9*A,(floor+hPylon+2.2)*A,p[1]+Math.sin(an)*0.9*A);fr.rotation.set(Math.sin(an)*1.1,0,-Math.cos(an)*1.1);group.add(fr)}return}along(a-hd,a+hd,w-3.5,w+3.5,3.5,floor+hPylon,M.stone,pyl);
       const f=a+e*(hd+0.05);along(f-0.03,f+0.03,w-2.4,w+2.4,floor+6,floor+hPylon-6,M.palm,null,{cast:false})}));
     const wi=I("חלונות אטומות","יחזקאל מ׳, טז; רש״י שם","\"וחלונות אטומות אל התאים ואל אליהמה\". 📜 חלונות צרים מבפנים ורחבים מבחוץ, \"והאורות יוצאים דרכן מבית המקדש לכל העולם\" (מנחות פו ע״ב), עם סבכה של אבן. ועל האילים — תמרים.");[-15,-5,5,15].forEach(a=>[-1,1].forEach(s=>{const w=s*(Wd/2+0.05);along(a-1.5,a+1.5,w-0.06,w+0.06,floor+hBody-11,floor+hBody-7,M.lattice,wi,{cast:false,tile:3*A});along(a-1.9,a+1.9,w-0.12,w+0.12,floor+hBody-7,floor+hBody-6.6,M.stoneL,null,{cast:false})}))
+    // #15: the closed east gate (Ezek 44:2) gets no steps: outside it the ground falls ~21 m (the 500-amah square goes past the mount), so the steps ended in the air
+    if(closed)return;
     const n=floor>4?8:7,y0=floor>4?3.5:0;GLIST.push({axis,cu,cv,floor,outward,n,y0,L,pass});
     if(floor>4)along(-L/2,L/2,-pass/2,pass/2,3.5,floor,M.pave,null,{noCol:true,cast:false,tile:9});
     for(let k=0;k<n;k++){const a0=outward*(L/2+k),a1=outward*(L/2+k+1);along(Math.min(a0,a1),Math.max(a0,a1),-pass/2-1,pass/2+1,y0,y0+(n-k)*0.5,M.stone2,null,{noCol:true})}
@@ -81,7 +83,7 @@ await __Y(86);function build(){
   }
   gate("n",250,25,3.5,-1,I("השער החיצוני הצפוני","יחזקאל מ׳, כ-כג; מ״ו, ט","שער באורך 50 אמה ורוחב 25, עם תאים, אילים ואולם, ו־7 מדרגות. דרכו נכנסים ברגלים."));
   gate("n",250,475,3.5,1,I("השער החיצוני הדרומי","יחזקאל מ׳, כד-כז","מי שנכנס מצפון יוצא מדרום, וכך הזרמים לא נתקלים זה בזה."));
-  gate("e",475,250,3.5,1,I("השער החיצוני המזרחי — סגור","יחזקאל מ״ד, א-ב; מידות א, ג","📜 \"השער הזה סגור יהיה, לא יפתח, ואיש לא יבא בו\" (יחזקאל מד, ב). 💡 זה שער אחד: מבפנים הוא השער החיצוני המזרחי של יחזקאל, ומבחוץ חזיתו היא שער שושן (מידות א, ג). הוא סגור, ולכן אין לו שימוש ואין סופרים בו מדרגות. 💡 הקרקע שמחוצה לו נמוכה (כ־21- מ׳), כי ריבוע 500 האמה יוצא מזרחה מהחומה של היום אל מדרון הקדרון, ושם יש מילוי."));
+  gate("e",475,250,3.5,1,I("השער החיצוני המזרחי — סגור","יחזקאל מ״ד, א-ב; מידות א, ג","📜 \"השער הזה סגור יהיה, לא יפתח, ואיש לא יבא בו\" (יחזקאל מד, ב). 💡 זה שער אחד: מבפנים הוא השער החיצוני המזרחי של יחזקאל, ומבחוץ חזיתו היא שער שושן (מידות א, ג). הוא סגור, ולכן אין לו שימוש ואין סופרים בו מדרגות. 💡 הקרקע שמחוצה לו נמוכה (כ־21- מ׳), כי ריבוע 500 האמה יוצא מזרחה מהחומה של היום אל מדרון הקדרון, ושם יש מילוי."),true);
   {const gi=I("שער המזרח — שער שושן","מידות א, ג; יחזקאל מד, א–ג","⚖️ \"שער המזרחי, עליו שושן הבירה צורה\" (מידות א, ג). 📜 \"השער הזה סגור יהיה, לא יפתח\" (יחזקאל מד, ב). 💡 בתוכנית זה השער המזרחי של חומת 500 האמה, שהיא הר הבית. זה אותו שער כמו \"השער החיצוני המזרחי — סגור\": שושן הוא שם החזית שלו מבחוץ. הפתח אטום באבן, ומעליו תבליט של שושן הבירה. כבש הפרה לא עובר בו, אלא בפשפש משלו מצפון לו.");
     box(500,245,500.8,255,3.5,3.5+15,M.stone2,gi);
     const rc=cv(512,224,(x,Wc,Hh)=>{x.fillStyle="#d9c9a4";x.fillRect(0,0,Wc,Hh);const sh=f=>{x.save();x.translate(2,3);x.fillStyle="rgba(70,52,28,.45)";f();x.restore();x.fillStyle="#f1e6ca";f()};

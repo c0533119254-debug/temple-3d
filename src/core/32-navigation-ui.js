@@ -290,8 +290,8 @@ function showIntro(i){intro.hidden=false;intro.querySelector(".ill").innerHTML=I
   const end=()=>{intro.hidden=true;LS.set("tm_intro","1")};
   if(i<2){B("דלג",0,end);B("הבא",1,()=>showIntro(i+1)).focus()}else{B("✈ חקירה חופשית",0,end);B("🧭 סיור מודרך",1,()=>{end();toggleDr("tours")}).focus()}}
 intro.addEventListener("click",e=>{if(e.target===intro){intro.hidden=true;LS.set("tm_intro","1")}});
-function flyIn(then){try{const [p,t]=viewPose("olives");camAt(p,t);setTimeout(()=>{flyTo("home",4200);setTimeout(then,4300)},400)}catch(e){then()}}
-{const t0=performance.now();const wait=()=>{if($("loading")&&performance.now()-t0<240000){setTimeout(wait,200);return}const r=restore();if(!r&&!LS.get("tm_intro")&&!window.__EV)flyIn(()=>showIntro(0))};setTimeout(wait,300)}
+function flyIn(then){try{const [p,t]=viewPose("olives");if(camera.position.distanceTo(p)>5)camAt(p,t);setTimeout(()=>{flyTo("home",4200);setTimeout(then,4300)},400)}catch(e){then()}}
+{const t0=performance.now();const wait=()=>{if($("loading")&&performance.now()-t0<240000){setTimeout(wait,200);return}const r=restore();if(!r&&!LS.get("tm_intro")&&!window.__EV){LS.set("tm_intro","1");if(window.__TOUCHED)showIntro(0);else flyIn(()=>showIntro(0))}};setTimeout(wait,300)}
 window.__UI={buildIndex,run,toggleDr,showIntro,share,shareURL,restore,closeDr,chip,flyIn};
 })();
 // the stage must never scroll (focus on an off-screen item scrolled it sideways and showed a blue strip)
