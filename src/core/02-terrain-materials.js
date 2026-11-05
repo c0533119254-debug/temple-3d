@@ -240,3 +240,62 @@ const MERC=la=>Math.log(Math.tan(Math.PI/4+la*Math.PI/360)),LAT0=31.7780,LON0=35
 function inSat(x,n){const b=SATB.old,lon=LON0+x/94630,lat=LAT0+n/110574;return lon>b.w&&lon<b.e&&lat>b.s&&lat<b.nn}
 function satUV(b,x,n){const lon=LON0+x/94630,lat=LAT0+n/110574;return[(lon-b.w)/(b.e-b.w),(MERC(lat)-MERC(b.s))/(MERC(b.nn)-MERC(b.s))]}
 let FLOOR="sat";const SATG=new THREE.Group(),CITYSAT=new THREE.Group(),SATTOP=new THREE.Group();WG.add(SATG);WG.add(CITYSAT);WG.add(SATTOP);
+
+// ==== topic 5 (Claude): tree library — each species has its own shape (one merged mesh with colours = one draw call) ====
+// 💡 sizes are typical grown trees of the Jerusalem hills; shapes are drawn simply, not botanically exact.
+const TREES5=(function(){
+  const r=rng(5151),V=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0);
+  // a lumpy leaf mass: round normals (soft light even with few faces), darker at the bottom and inside
+  function blob(cx,cy,cz,rx,ry,rz,hex,det){const g=(q=>q.index?q.toNonIndexed():q)(new THREE.IcosahedronGeometry(1,det||0)),p=g.attributes.position,n=g.attributes.normal,col=[],c=new THREE.Color(hex);
+    for(let i=0;i<p.count;i++){V.set(p.getX(i),p.getY(i),p.getZ(i)).normalize();const hv=Math.sin(V.x*12.99+V.y*78.23+V.z*37.72+cx*3.1+cz*1.7)*43758.55,k=0.84+0.28*(hv-Math.floor(hv));n.setXYZ(i,V.x,V.y,V.z);p.setXYZ(i,cx+V.x*rx*k,cy+V.y*ry*k,cz+V.z*rz*k);
+      const sh=0.6+0.4*(V.y*0.5+0.5)+((hv*7)%1-0.5)*0.12;col.push(c.r*sh,c.g*sh,c.b*sh)}
+    g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.deleteAttribute("uv");return g}
+  // a branch or trunk piece from a to b
+  function limb(a,b,r0,r1,hex,seg){const L=Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]),g=(q=>q.index?q.toNonIndexed():q)(new THREE.CylinderGeometry(r1,r0,L,seg||5,1,true));g.translate(0,L/2,0);
+    V.set(b[0]-a[0],b[1]-a[1],b[2]-a[2]).normalize();g.applyMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(UP,V)));g.translate(a[0],a[1],a[2]);
+    const c=new THREE.Color(hex),col=[],p=g.attributes.position;for(let i=0;i<p.count;i++){const k=0.85+0.25*r();col.push(c.r*k,c.g*k,c.b*k)}g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.deleteAttribute("uv");return g}
+  function merge(list){let n=0;list.forEach(g=>n+=g.attributes.position.count);const P=new Float32Array(n*3),N=new Float32Array(n*3),C=new Float32Array(n*3);let o=0;
+    list.forEach(g=>{P.set(g.attributes.position.array,o*3);N.set(g.attributes.normal.array,o*3);C.set(g.attributes.color.array,o*3);o+=g.attributes.position.count;g.dispose()});
+    const m=new THREE.BufferGeometry();m.setAttribute("position",new THREE.BufferAttribute(P,3));m.setAttribute("normal",new THREE.BufferAttribute(N,3));m.setAttribute("color",new THREE.BufferAttribute(C,3));m.computeBoundingBox();m.computeBoundingSphere();return m}
+  const ring=(k,R,y,rr)=>{const out=[];for(let i=0;i<k;i++){const a=i/k*Math.PI*2+r()*0.6,d=R*(0.6+0.4*r());out.push([Math.cos(a)*d,y+(r()-0.5)*rr,Math.sin(a)*d])}return out};
+  const BARK=0x6e6253,BARKG=0x8a8070;
+  const B={
+    // olive (זית): short twisted trunk that splits, wide silvery crown — about 6 m high, 7 m wide
+    olive:(lo)=>{const L=[limb([0,0,0],[0.35,1.3,0.1],0.38,0.3,BARKG,6),limb([0.35,1.3,0.1],[1.1,2.6,0.5],0.26,0.16,BARKG),limb([0.35,1.3,0.1],[-0.6,2.8,-0.3],0.25,0.15,BARKG),limb([0.3,1.2,0],[0.2,3.0,-1.0],0.2,0.12,BARKG)];
+      if(lo)L.push(blob(0.2,3.9,0,3.3,1.8,3.3,0x7d8a62));else{L.push(blob(0,4.2,0,2.2,1.5,2.2,0x84906a));ring(6,2.0,3.6,0.8).forEach(q=>L.push(blob(q[0],q[1],q[2],1.5+r()*0.5,1.1+r()*0.3,1.5+r()*0.5,r()<0.5?0x7a875d:0x8c9673)))}return merge(L)},
+    // Jerusalem pine / Aleppo pine (אורן ירושלים): tall bare trunk, open flat clumps at the top — about 12 m
+    pine:(lo)=>{const top=[0.7,8.5,0.2],L=[limb([0,0,0],top,0.32,0.16,0x6a5a48,6),limb([0.5,6.2,0.15],[-1.6,9.4,0.6],0.12,0.07,0x6a5a48),limb([0.6,7.2,0.2],[2.3,9.8,-0.8],0.11,0.06,0x6a5a48)];
+      if(lo)L.push(blob(0.4,9.9,0,3.4,1.6,3.4,0x46592f));else{L.push(blob(0.7,10.6,0.1,1.9,1.1,1.9,0x4a5d33));[[-1.6,9.6,0.6],[2.3,10,-0.8],[0.2,9.0,1.9],[1.3,9.2,1.4],[-0.6,8.6,-1.6]].forEach(q=>L.push(blob(q[0],q[1],q[2],1.6+r()*0.5,0.85+r()*0.3,1.6+r()*0.5,r()<0.5?0x3f5230:0x4d6137)))}return merge(L)},
+    // Italian cypress (ברוש): a narrow dark spindle — about 13 m
+    cypress:(lo)=>{const pts=[];const K=lo?5:9;for(let i=0;i<=K;i++){const t=i/K;pts.push(new THREE.Vector2(Math.max(0.02,0.95*Math.pow(Math.sin(Math.PI*Math.min(1,t*1.08)),0.75)*(1-t*0.25)),0.6+t*12.4))}
+      const g=(q=>q.index?q.toNonIndexed():q)(new THREE.LatheGeometry(pts,lo?5:8)),p=g.attributes.position,c=new THREE.Color(0x2e3d26),col=[];for(let i=0;i<p.count;i++){const y=p.getY(i),k=0.7+0.3*(y/13)+(r()-0.5)*0.1;col.push(c.r*k,c.g*k,c.b*k)}
+      g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.deleteAttribute("uv");g.computeVertexNormals();return merge([g,limb([0,0,0],[0,0.8,0],0.18,0.15,0x5b4a38)])},
+    // date palm (תמר): ringed trunk, arching fronds, date bunches — about 10 m
+    palm:(lo)=>{const H=9,L=[limb([0,0,0],[0.25,H*0.5,0],0.3,0.26,0x7a6a55,7),limb([0.25,H*0.5,0],[0.6,H,0.1],0.26,0.22,0x7a6a55,7)],top=[0.6,H,0.1];
+      const F=lo?7:14,c=new THREE.Color(0x5b7b36),pos=[],col=[];for(let f=0;f<F;f++){const a=f/F*Math.PI*2+(f%2)*0.2,up=f%2?0.9:0.5,len=3.6+r()*0.8,ca=Math.cos(a),sa=Math.sin(a),S=lo?2:5;
+        const P=t=>{const d=t*len,h=up*1.6*t-2.6*t*t;return[top[0]+ca*d,top[1]+h,top[2]+sa*d]};
+        for(let s=0;s<S;s++){const t0=s/S,t1=(s+1)/S,w0=0.55*Math.sin(Math.PI*Math.min(1,t0+0.1)),w1=0.55*Math.sin(Math.PI*Math.min(1,t1+0.1)),A=P(t0),Bq=P(t1);
+          [[-1,1],[1,-1]].forEach(([s1])=>{const q=(p,w,dd)=>[p[0]-sa*w*s1,p[1]-0.12*w,p[2]+ca*w*s1];const a0=q(A,w0),b0=q(Bq,w1);pos.push(...A,...b0,...Bq,...A,...a0,...b0)});
+          for(let k=0;k<12;k++){const sh=0.75+0.3*(1-t0);col.push(c.r*sh,c.g*sh,c.b*sh)}}}
+      const fg=new THREE.BufferGeometry();fg.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));fg.setAttribute("color",new THREE.Float32BufferAttribute(col,3));fg.computeVertexNormals();L.push(fg);
+      if(!lo)ring(4,0.55,H-0.5,0.2).forEach(q=>L.push(blob(top[0]+q[0],q[1],top[2]+q[2],0.28,0.45,0.28,0xb5731e)));return merge(L)},
+    // fig (תאנה): several low stems, broad light-green crown — about 5 m high, 6 m wide
+    fig:(lo)=>{const L=[limb([0,0,0],[0.9,2.0,0.4],0.17,0.11,BARKG),limb([0,0,0],[-0.8,2.1,0.3],0.16,0.1,BARKG),limb([0,0,0],[0.1,2.2,-0.9],0.15,0.1,BARKG)];
+      if(lo)L.push(blob(0,3.1,0,3,1.5,3,0x5e7d3a));else{L.push(blob(0,3.5,0,2,1.3,2,0x648441));ring(5,1.9,2.9,0.5).forEach(q=>L.push(blob(q[0],q[1],q[2],1.4+r()*0.4,1.0,1.4+r()*0.4,r()<0.5?0x5a7a37:0x6b8a45)))}return merge(L)},
+    // carob (חרוב): short thick trunk, dense dark rounded crown — about 7 m
+    carob:(lo)=>{const L=[limb([0,0,0],[0.2,1.8,0],0.36,0.28,BARK,6),limb([0.2,1.8,0],[1.2,3.0,0.3],0.2,0.13,BARK),limb([0.2,1.8,0],[-0.9,3.1,-0.4],0.2,0.13,BARK)];
+      if(lo)L.push(blob(0,4.2,0,3.2,2.3,3.2,0x3f5b2d));else{L.push(blob(0,4.6,0,2.4,1.9,2.4,0x435f30));ring(6,1.9,3.9,0.9).forEach(q=>L.push(blob(q[0],q[1],q[2],1.5+r()*0.4,1.3,1.5+r()*0.4,r()<0.5?0x3b552a:0x4a6634)))}return merge(L)},
+    // a town shade tree (plane, ficus): straight trunk, round crown — about 9 m
+    shade:(lo)=>{const L=[limb([0,0,0],[0.1,3.2,0],0.25,0.2,0x7a6e60,6),limb([0.1,3.0,0],[1.2,4.6,0.4],0.13,0.08,0x7a6e60),limb([0.1,3.0,0],[-1.0,4.8,-0.3],0.13,0.08,0x7a6e60)];
+      if(lo)L.push(blob(0,6,0,3.2,2.8,3.2,0x55713a));else{L.push(blob(0,6.6,0,2.4,2.0,2.4,0x5a763d));ring(5,1.8,5.6,1).forEach(q=>L.push(blob(q[0],q[1],q[2],1.6,1.4,1.6,r()<0.5?0x506b36:0x617d44)))}return merge(L)}
+  };
+  const G={},mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.92,envMapIntensity:0.25,side:THREE.DoubleSide});
+  const geo=(k,lo)=>{const key=k+(lo?"_lo":"");return G[key]||(G[key]=B[k](lo))};
+  const NAMES={olive:"עץ זית",pine:"אורן ירושלים",cypress:"ברוש",palm:"תמר",fig:"תאנה",carob:"חרוב",shade:"עץ צל"};
+  // plant(parent, species, [[x,y,z,scale,rotY], ...] in scene coordinates, card) -> the mesh. Far away the distance LOD (core/33) swaps in the simple shape.
+  function plant(parent,k,list,card){if(!list.length)return null;const m=new THREE.InstancedMesh(geo(k,SMALL),mat,list.length),d=new THREE.Object3D(),c=new THREE.Color();
+    list.forEach((t,i)=>{const s=t[3]||1;d.position.set(t[0],t[1]-0.15,t[2]);d.rotation.set(0,t[4]!=null?t[4]:i*2.39,0);d.scale.set(s*(0.92+0.16*((i*7)%5)/4),s,s*(0.92+0.16*((i*3)%5)/4));d.updateMatrix();m.setMatrixAt(i,d.matrix);
+      const v=0.9+0.2*((i*13)%7)/6;c.setRGB(v,v,v*(0.95+0.1*((i*5)%3)/2));m.setColorAt(i,c)});
+    m.castShadow=true;m.receiveShadow=true;m.userData=Object.assign({farGeo:geo(k,true),lodR:230},card||{n:NAMES[k],r:"💡 צורה כללית של המין",t:NAMES[k]});parent.add(m);return m}
+  return {plant,geo,mat,NAMES,kinds:Object.keys(B)};
+})();

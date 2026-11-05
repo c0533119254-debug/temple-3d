@@ -16,18 +16,18 @@ function add(list){const fresh=[];
     fresh.push({o,n,M,C,P,r,far:null,part:false,ver:-1,g})});
   // parts: same parent, same count, same first/last positions -> the biggest is the body, the rest are parts
   fresh.forEach(a=>{fresh.forEach(b=>{if(a===b||a.o.parent!==b.o.parent||a.n!==b.n||a.part)return;const d0=Math.hypot(a.P[0]-b.P[0],a.P[2]-b.P[2]),d1=Math.hypot(a.P[a.n*3-3]-b.P[b.n*3-3],a.P[a.n*3-1]-b.P[b.n*3-1]);if(d0<Math.max(0.6,b.r)&&d1<Math.max(0.6,b.r)&&a.r<b.r*0.8)a.part=true})});
-  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=Math.max(250,e.r*120)*KQ;e.rp=Math.max(220,e.r*900)*KQ;
+  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=(o.userData.lodR||Math.max(250,e.r*120))*KQ;e.rp=Math.max(220,e.r*900)*KQ;
     if(!e.part&&t>16){const bb=e.g.boundingBox,sz=bb.getSize(new THREE.Vector3()),ce=bb.getCenter(new THREE.Vector3());let fg;
-      if(e.g.type==="BoxGeometry"){fg=new THREE.PlaneGeometry(sz.x,sz.z);fg.rotateX(-Math.PI/2);fg.translate(ce.x,bb.max.y,ce.z)}else{fg=new THREE.BoxGeometry(Math.max(sz.x,0.01),Math.max(sz.y,0.01),Math.max(sz.z,0.01));fg.translate(ce.x,ce.y,ce.z)}
+      if(o.userData.farGeo){fg=o.userData.farGeo}else if(e.g.type==="BoxGeometry"){fg=new THREE.PlaneGeometry(sz.x,sz.z);fg.rotateX(-Math.PI/2);fg.translate(ce.x,bb.max.y,ce.z)}else{fg=new THREE.BoxGeometry(Math.max(sz.x,0.01),Math.max(sz.y,0.01),Math.max(sz.z,0.01));fg.translate(ce.x,ce.y,ce.z)}
       const f=new THREE.InstancedMesh(fg,o.material,e.n);f.count=0;f.castShadow=false;f.receiveShadow=o.receiveShadow;f.frustumCulled=false;f.userData=o.userData;f.matrixAutoUpdate=o.matrixAutoUpdate;f.position.copy(o.position);f.quaternion.copy(o.quaternion);f.scale.copy(o.scale);f.matrix.copy(o.matrix);f.renderOrder=o.renderOrder;
       if(e.C){f.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(e.n*3),3)}
       Object.defineProperty(f,"__lodFar",{value:true});o.parent.add(f);e.far=f;if(cPick.includes(o))cPick.push(f);if(PICK.includes(o))PICK.push(f)}
     E.push(e)});
   last.set(1e9,0,0);upd(true)}
-function revert(e){const o=e.o;o.instanceMatrix.array.set(e.M);if(e.C&&o.instanceColor)o.instanceColor.array.set(e.C);o.count=e.n;o.instanceMatrix.needsUpdate=true;if(o.instanceColor)o.instanceColor.needsUpdate=true;if(e.far){e.far.parent&&e.far.parent.remove(e.far);e.far.geometry.dispose()}o.userData.noLOD=true}
+function revert(e){const o=e.o;o.instanceMatrix.array.set(e.M);if(e.C&&o.instanceColor)o.instanceColor.array.set(e.C);o.count=e.n;o.instanceMatrix.needsUpdate=true;if(o.instanceColor)o.instanceColor.needsUpdate=true;if(e.far){e.far.parent&&e.far.parent.remove(e.far);if(e.far.geometry!==o.userData.farGeo)e.far.geometry.dispose()}o.userData.noLOD=true}
 function upd(force){cam.copy(camera.position);if(!force&&cam.distanceToSquared(last)<64)return;last.copy(cam);
   for(let j=E.length-1;j>=0;j--){const e=E[j],o=e.o;
-    if(!inScene(o)){if(e.far){e.far.parent&&e.far.parent.remove(e.far);e.far.geometry.dispose()}E.splice(j,1);continue}
+    if(!inScene(o)){if(e.far){e.far.parent&&e.far.parent.remove(e.far);if(e.far.geometry!==o.userData.farGeo)e.far.geometry.dispose()}E.splice(j,1);continue}
     if(e.ver>=0&&o.instanceMatrix.version!==e.ver){revert(e);E.splice(j,1);continue}
     const A=o.instanceMatrix.array,CA=o.instanceColor&&o.instanceColor.array,R2=(e.part?e.rp:e.rn)**2;let k=0,kf=0;const F=e.far,FA=F&&F.instanceMatrix.array,FC=F&&F.instanceColor&&F.instanceColor.array;
     for(let i=0;i<e.n;i++){const dx=e.P[i*3]-cam.x,dy=e.P[i*3+1]-cam.y,dz=e.P[i*3+2]-cam.z,d2=dx*dx+dy*dy+dz*dz;
