@@ -285,13 +285,17 @@ const TREES5=(function(){
     // carob (חרוב): short thick trunk, dense dark rounded crown — about 7 m
     carob:(lo)=>{const L=[limb([0,0,0],[0.2,1.8,0],0.36,0.28,BARK,6),limb([0.2,1.8,0],[1.2,3.0,0.3],0.2,0.13,BARK),limb([0.2,1.8,0],[-0.9,3.1,-0.4],0.2,0.13,BARK)];
       if(lo)L.push(blob(0,4.2,0,3.2,2.3,3.2,0x3f5b2d));else{L.push(blob(0,4.6,0,2.4,1.9,2.4,0x435f30));ring(6,1.9,3.9,0.9).forEach(q=>L.push(blob(q[0],q[1],q[2],1.5+r()*0.4,1.3,1.5+r()*0.4,r()<0.5?0x3b552a:0x4a6634)))}return merge(L)},
+    // caper (צלף): a hanging blue-green clump that grows out of the joints of old walls, white flowers — about 1.2 m
+    caper:(lo)=>{const L=[blob(0,0,0,0.7,0.45,0.55,0x93ab86),blob(0.45,-0.25,0.1,0.45,0.35,0.4,0x9db58f),blob(-0.4,-0.2,0.05,0.42,0.32,0.38,0x8aa37f)];if(!lo)for(let i=0;i<7;i++)L.push(blob((r()-0.5)*1.3,(r()-0.6)*0.7,0.35+r()*0.2,0.07,0.07,0.07,r()<0.7?0xf4eef0:0xd9a7c7));return merge(L)},
+    // hyssop / za'atar (אזוב): a small grey-green upright tuft — about 0.5 m
+    hyssop:(lo)=>{const L=[];for(let i=0;i<(lo?2:4);i++)L.push(blob((r()-0.5)*0.35,0.18+r()*0.12,(r()-0.5)*0.25,0.16,0.3,0.16,0xa8b48f));return merge(L)},
     // a town shade tree (plane, ficus): straight trunk, round crown — about 9 m
     shade:(lo)=>{const L=[limb([0,0,0],[0.1,3.2,0],0.25,0.2,0x7a6e60,6),limb([0.1,3.0,0],[1.2,4.6,0.4],0.13,0.08,0x7a6e60),limb([0.1,3.0,0],[-1.0,4.8,-0.3],0.13,0.08,0x7a6e60)];
       if(lo)L.push(blob(0,6,0,3.2,2.8,3.2,0x55713a));else{L.push(blob(0,6.6,0,2.4,2.0,2.4,0x5a763d));ring(5,1.8,5.6,1).forEach(q=>L.push(blob(q[0],q[1],q[2],1.6,1.4,1.6,r()<0.5?0x506b36:0x617d44)))}return merge(L)}
   };
   const G={},mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.92,envMapIntensity:0.25,side:THREE.DoubleSide});
   const geo=(k,lo)=>{const key=k+(lo?"_lo":"");return G[key]||(G[key]=B[k](lo))};
-  const NAMES={olive:"עץ זית",pine:"אורן ירושלים",cypress:"ברוש",palm:"תמר",fig:"תאנה",carob:"חרוב",shade:"עץ צל"};
+  const NAMES={olive:"עץ זית",pine:"אורן ירושלים",cypress:"ברוש",palm:"תמר",fig:"תאנה",carob:"חרוב",shade:"עץ צל",caper:"צלף",hyssop:"אזוב"};
   // plant(parent, species, [[x,y,z,scale,rotY], ...] in scene coordinates, card) -> the mesh. Far away the distance LOD (core/33) swaps in the simple shape.
   function plant(parent,k,list,card){if(!list.length)return null;const m=new THREE.InstancedMesh(geo(k,SMALL),mat,list.length),d=new THREE.Object3D(),c=new THREE.Color();
     list.forEach((t,i)=>{const s=t[3]||1;d.position.set(t[0],t[1]-0.15,t[2]);d.rotation.set(0,t[4]!=null?t[4]:i*2.39,0);d.scale.set(s*(0.92+0.16*((i*7)%5)/4),s,s*(0.92+0.16*((i*3)%5)/4));d.updateMatrix();m.setMatrixAt(i,d.matrix);
