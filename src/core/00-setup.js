@@ -13,6 +13,18 @@ const GEO={"THETA":0.13538,"MOUNT":[[204.0,-212.1],[179.6,20.0],[179.0,25.1],[17
 const THETA=GEO.THETA,cT=Math.cos(THETA),sT=Math.sin(THETA);
 const G2S=(x,n)=>[x*cT+n*sT,-x*sT+n*cT],S2G=(x,n)=>[x*cT-n*sT,x*sT+n*cT];
 const KZ=[[-88.5,-175.5],[-122.4,-173.6],[-136,-185.8],[-150,-230],[-148,-262],[-80,-264],[-75,-250.5]];const MOUNT=GEO.MOUNT,OLD=GEO.OLD,WALL_LINE=GEO.WALL,PLAZA=GEO.PLAZA,GATES=GEO.GATES,COD=GEO.COD;
+// Dung Gate area (Claude, issue #30, 5.11.2026). 💡 Buses and cars do not enter the gate: the area inside is for people on foot.
+// Z = the no-traffic zone inside the wall, from the gate west to the Jewish Quarter road (geo metres).
+// The bus drop-off terminal sits on the open lot across the road from the gate (the Givati lot of today):
+// P(u,v) = a point u metres east along the road and v metres south of the road's centre line.
+const DUNG=(()=>{const Z=[[-383,-490],[-286,-490],[-285,-462],[-280,-455],[-275,-455],[-274,-443],[-206,-414],[-176,-363],[-146,-359],[-116,-354],[-90,-350],[-90,-200],[-383,-200]];
+  const O=[-38,-356.2],u=[0.9927,0.1211],v=[0.1211,-0.9927],P=(a,b)=>[O[0]+u[0]*a+v[0]*b,O[1]+u[1]*a+v[1]*b];
+  // the bus lane through the lot: in from the west, along the platform, out to the east (u,v)
+  const LANE=[[-30.4,1.1],[-25,2.2],[-20,5],[-16,8.2],[-12,9.6],[-8,9.6],[0,9.6],[4,9.6],[10,9.6],[16,9.6],[20,9.6],[24,8.4],[28,5.4],[32,2.4],[35,1.1]];
+  // the lot falls away from the road, so the terminal is a level stone terrace at the height of the road beside it
+  const UV=(x,n)=>{const dx=x-O[0],dn=n-O[1];return[dx*u[0]+dn*u[1],dx*v[0]+dn*v[1]]},top=a=>{const p=P(a,1.5);return surfY(p[0],p[1])+0.25};
+  const lotY=(x,n)=>{const q=UV(x,n);if(q[0]<-30||q[0]>36||q[1]<6||q[1]>18.2)return null;return top(q[0])+(q[1]>=11.6&&q[1]<=17.5&&q[0]>=-28&&q[0]<=20?0.2:0)};
+  return{Z,O,u,v,P,UV,top,lotY,LANE,SLOTS:[-8,4,16],ANG:Math.atan2(u[1],u[0])}})();
 const MOUNT_S=MOUNT.map(p=>G2S(p[0],p[1]));
 const MOUNT_BIG=MOUNT.map(p=>[40+(p[0]-40)*1.07,(p[1])*1.04]);
 const PLAZA_BIG=(()=>{const P=GEO.PLAZA;let cx=0,cn=0;P.forEach(q=>{cx+=q[0]/P.length;cn+=q[1]/P.length});return P.map(q=>[cx+(q[0]-cx)*1.15,cn+(q[1]-cn)*1.12])})();

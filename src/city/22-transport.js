@@ -51,7 +51,35 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
     im(new THREE.CylinderGeometry(0.06,0.06,3.8,6),postM,ENT,p=>{d.rotation.set(0,0,0);d.position.set(p[0]+Math.cos(p[3])*4.4,p[1]+1.9,-p[2]+Math.sin(p[3])*4.4)})}
   ENT.forEach(p=>{const q=S2G(p[0],p[2]);LG("מטרו",q[0],q[1],7);labels[labels.length-1].tr=1});
   // ---- buses and shelters
+  // ---- Dung Gate (Claude, #30): the lines that used to drive in through the gate (2, 38, 83, 746, 882) end at the
+  // drop-off terminal across the road (DUNG in core/00-setup.js). 💡 No bus drives inside the gate any more.
+  {const inZ=q=>inPoly(q[0],q[1],DUNG.Z),J=[-109,-372],dJ=q=>Math.hypot(q[0]-J[0],q[1]-J[1]);
+    const R11=[[-109,-372],[-104,-373],[-100,-372],[-96,-371],[-75,-363]],             // eastbound carriageway, junction → lot
+      UE=[[-3,-352.9],[4,-352.2],[11,-350.4],[15.5,-348],[16,-344.6],[12.5,-343.2],[6,-344.6],[0,-346.6]], // turn back at the east end
+      R957=[[-12,-347],[-24,-348],[-59,-355],[-71,-358],[-97,-366],[-105,-370]],      // westbound carriageway, back to the junction
+      UW=[[-108,-372.2],[-110.5,-375.5],[-108.5,-378.6],[-104,-378.2],[-100,-375]];     // turn back at the junction
+    const lane=(a,b)=>DUNG.LANE.filter(q=>q[0]>=a-0.01&&q[0]<=b+0.01).map(q=>{const p=DUNG.P(q[0],q[1]);p.push(DUNG.SLOTS.includes(q[0])?2:1);return p});
+    const lot=s=>{const u=DUNG.SLOTS[s];return{inn:lane(-99,u),out:lane(u,99)}};
+    const out=[];let k=0;
+    TR.bus.forEach(b=>{const P=b.p,ins=P.map(inZ);if(!ins.some(x=>x)&&dJ(P[0])>=15&&dJ(P[P.length-1])>=15){out.push(b);return}
+      const runs=[];let cur=null;P.forEach((q,i)=>{if(ins[i]){cur=null;return}if(!cur){cur={a:i,p:[]};runs.push(cur)}cur.p.push(q);cur.b=i});
+      runs.forEach(rn=>{let p=rn.p;const len=p.reduce((s,q,i)=>i?s+Math.hypot(q[0]-p[i-1][0],q[1]-p[i-1][1]):0,0);if(len<40)return;
+        const L=lot(k++%DUNG.SLOTS.length);
+        if(dJ(p[0])<15){ // the line starts at the gate: it now starts at the terminal
+          if(p.length>1&&p[1][0]>p[0][0]+2){const i=p.findIndex(q=>q[0]>13);p=[...L.out,...(i<0?[]:p.slice(i))]}
+          else{const i=p.findIndex(q=>dJ(q)>8);p=[...L.out,...UE,...R957,J,...(i<0?[]:p.slice(i))]}}
+        if(dJ(p[p.length-1])<15){ // the line ends at the gate: it now ends at the terminal
+          const n=p.length;if(n>1&&p[n-2][0]>p[n-1][0]+2){const i=p.map(q=>q[0]>-99).lastIndexOf(true);p=[...p.slice(0,i+1),[-105,-370],...UW,...R11.slice(3),...L.inn]}
+          else{let i=n-1;while(i>0&&dJ(p[i])<8)i--;p=[...p.slice(0,i+1),...R11,...L.inn]}}
+        out.push({r:b.r,p})})});
+    TR.bus=out;
+    // the pilgrims who come by bus: off at the platform, over the zebra crossing, along the pavement under the wall, in at the gate
+    const pl=TR.pil.find(q=>q.n==="שער האשפות");if(pl)pl.p=[DUNG.P(-12,13.8),DUNG.P(-27,13.8),DUNG.P(-27,7.5),DUNG.P(-27,-8.6),[-70,-351],[-82,-354],[-99,-361],[-104,-362.5],[-109,-361],[-113,-355],[-116,-348],[-118,-341],[-123,-332],[-126,-322],[-128,-314],[-130,-309],[-132,-304],[-136,-299],[-139,-292],[-138,-280],[-128,-250],[-124,-215],[-118,-192],[-111,-180]]}
   const BUSP=TR.bus.map(b=>{const q=mk(b.p,0.2);q.r=b.r;q.st=[];return q});
+  // terminal stretches: the lane is drawn exactly, so the bus keeps to it (no side offset there), and it stops at its slot
+  BUSP.forEach((q,j)=>{const P=TR.bus[j].p;let a=-1,b=-1;P.forEach((p,i)=>{if(p[2]){if(a<0)a=i;b=i}if(p[2]===2)q.st.push({s:q.l[i]})});if(a<0)return;
+    q.z0=q.l[a];q.z1=q.l[b];q.tS=a===0;q.tE=b===P.length-1;P.forEach((p,i)=>{if(p[2])q.h[i]=DUNG.top(DUNG.UV(p[0],p[1])[0])+0.03})});
+  const offK=(q,s)=>q.z0==null?1:Math.min(1,Math.max(0,Math.max(q.z0-s,s-q.z1)/8));
   const SHEL=[];TR.stops.forEach(s=>{const sp=toS(s);let best=null;BUSP.forEach(q=>{const pr=proj(q,sp[0],sp[1]);if(pr[0]<9){q.st.push({s:pr[1]});if(!best||pr[0]<best[0])best=[pr[0],q,pr[1]]}});if(best&&clearAt(s[0],s[1],2.4)){const a=at(best[1],best[2]);SHEL.push([sp[0],TY(s[0],s[1]),sp[1],a[2]])}});
   im(new THREE.BoxGeometry(4,0.1,1.6),canM,SHEL,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1]+2.5,-p[2])},{n:"תחנת אוטובוס",r:"משרד התחבורה — GTFS",t:"תחנות האוטובוס במקומות האמיתיים שלהן."});
   im(new THREE.BoxGeometry(4,2.3,0.06),canM,SHEL,p=>{d.rotation.set(0,p[3],0);const nx=-Math.sin(p[3]),nn=Math.cos(p[3]);d.position.set(p[0]+nx*0.75,p[1]+1.3,-(p[2]+nn*0.75))});
@@ -164,7 +192,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
     tick(dt,tt){dt=Math.min(dt,0.1);
       TRAINS.forEach((t,i)=>{drive(t,dt,st=>release(st.n),18,1.1);const vis=t.s>-5&&t.s<t.q.len+5;for(let k=0;k<SEG;k++){const p=segPos(t,k);d.rotation.set(0,p[2],0);d.scale.setScalar(vis&&p[4]>0&&p[4]<t.q.len?1:0.0001);d.position.set(p[0],p[3],-p[1]);d.updateMatrix();tb.setMatrixAt(i*SEG+k,d.matrix);tc.setMatrixAt(i*SEG+k,d.matrix);tw.setMatrixAt(i*SEG+k,d.matrix);if(k===0)tn.setMatrixAt(i*2,d.matrix);if(k===2)tpn.setMatrixAt(i,d.matrix);if(k===SEG-1){d.rotation.set(0,p[2]+Math.PI,0);d.updateMatrix();tn.setMatrixAt(i*2+1,d.matrix)}}});
       tb.instanceMatrix.needsUpdate=tc.instanceMatrix.needsUpdate=tw.instanceMatrix.needsUpdate=tn.instanceMatrix.needsUpdate=tpn.instanceMatrix.needsUpdate=true;
-      BUSES.forEach((b,i)=>{drive(b,dt,null,9,1.0);const a=at(b.q,b.s),o=-b.dir*1.8,x=a[0]-Math.sin(a[2])*o,n=a[1]+Math.cos(a[2])*o;d.rotation.set(0,a[2]+(b.dir<0?Math.PI:0),0);d.scale.setScalar(b.s>0&&b.s<b.q.len?1:0.0001);d.position.set(x,a[3],-n);d.updateMatrix();bb.setMatrixAt(i,d.matrix);bw.setMatrixAt(i,d.matrix);bd.setMatrixAt(i,d.matrix)});bb.instanceMatrix.needsUpdate=bw.instanceMatrix.needsUpdate=bd.instanceMatrix.needsUpdate=true;
+      BUSES.forEach((b,i)=>{if(b.lay){b.dw-=dt;if(b.dw<=0){b.lay=0;b.last=-1;if(b.lay2){b.lay2=0}else b.s=b.dir>0?-60:b.q.len+60}}else{drive(b,dt,null,9,1.0);const q=b.q;if((q.tE&&b.dir>0&&b.s>=q.len-0.05)||(q.tS&&b.dir<0&&b.s<=0.05)){b.s=b.dir>0?q.len-0.05:0.05;b.v=0;b.lay=1;b.dw=25+r()*20}else if((q.tS&&b.dir>0&&b.s<0&&b.s>-15)||(q.tE&&b.dir<0&&b.s>q.len&&b.s<q.len+15)){b.s=b.dir>0?0.05:q.len-0.05;b.v=0;b.lay=1;b.lay2=1;b.dw=15+r()*20}}const a=at(b.q,b.s),o=-b.dir*1.8*offK(b.q,b.s),x=a[0]-Math.sin(a[2])*o,n=a[1]+Math.cos(a[2])*o;d.rotation.set(0,a[2]+(b.dir<0?Math.PI:0),0);d.scale.setScalar(b.s>0&&b.s<b.q.len?1:0.0001);d.position.set(x,a[3],-n);d.updateMatrix();bb.setMatrixAt(i,d.matrix);bw.setMatrixAt(i,d.matrix);bd.setMatrixAt(i,d.matrix)});bb.instanceMatrix.needsUpdate=bw.instanceMatrix.needsUpdate=bd.instanceMatrix.needsUpdate=true;
       if(cb){CAB.forEach((o,i)=>{o.s+=5*dt*o.dir;if(o.s>o.q.len)o.s-=o.q.len;if(o.s<0)o.s+=o.q.len;const a=at(o.q,o.s),x=a[0]-Math.sin(a[2])*o.q.o,n=a[1]+Math.cos(a[2])*o.q.o;d.rotation.set(0,a[2],0);d.scale.setScalar(1);d.position.set(x,a[3],-n);d.updateMatrix();cb.setMatrixAt(i,d.matrix)});cb.instanceMatrix.needsUpdate=true}
       const FON=typeof SHOW_FEST!=="undefined"&&SHOW_FEST;PG.forEach((o,k)=>{let x,n,ang,y,bob=0;if(o.x&&!FON){d.rotation.set(0,0,0);d.scale.setScalar(0.0001);d.position.set(0,-500,0);d.updateMatrix();pgB.setMatrixAt(k,d.matrix);pgH.setMatrixAt(k,d.matrix);shp.setMatrixAt(k,d.matrix);return}
         if(o.mode==="wait"){const w=o.w;x=w[0];n=w[2];y=w[1];ang=w[3];if(!WAITSPOTS[o.n]||!WAITSPOTS[o.n].length){o.mode="walk";o.t=0}}
