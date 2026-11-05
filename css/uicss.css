@@ -204,11 +204,13 @@ body.touring .infocard{display:none!important}
   .dr{right:0;left:0;top:auto;bottom:60px;width:auto;max-height:58vh;border-radius:18px 18px 0 0;transform:translateY(24px)}
   .dr.full{max-height:calc(100% - 80px)}
   .dr .grab{display:block}
-  .infocard{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:auto;max-height:62vh!important;border-radius:18px 18px 0 0!important;border-right:0!important;animation:sheetIn .2s ease-out}
-  .infocard.full{max-height:calc(100% - 64px)!important}
-  @keyframes sheetIn{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-  .ic-hero{height:72px}
-  .ic-grab{display:block!important}
+  /* bottom sheet: full height, moved down by JS (core/32 sheetSet) to a strip / the buttons / half / full */
+  .infocard{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:calc(100% - 64px)!important;max-height:none!important;border-radius:18px 18px 0 0!important;border-right:0!important;animation:none!important;transition:transform .28s cubic-bezier(.2,.8,.2,1);will-change:transform;overscroll-behavior:contain;touch-action:none;box-shadow:0 -6px 24px rgba(0,0,0,.4)!important}
+  .infocard.full{touch-action:pan-y}
+  .infocard.drag{transition:none}
+  .ic-hero{display:none}
+  .ic-head{padding-top:6px}
+  .ic-grab{display:block!important;width:48px!important;height:5px!important;margin:0 auto!important;padding:10px 40px!important;background-clip:content-box!important;box-sizing:content-box;cursor:grab}
   body.pane .hud,body.pane #mini{left:12px!important}
   .hud{bottom:72px!important}
   #mini{bottom:72px!important}

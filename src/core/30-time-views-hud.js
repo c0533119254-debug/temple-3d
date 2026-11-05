@@ -261,11 +261,11 @@ function outTarget(p,c,box){const t=c.clone(),ray=new THREE.Ray(),v=new THREE.Ve
 // gates are seen from outside, from the side people come to them (od = that direction)
 // a camera pose that shows a ball (centre c, radius r) whole, from above at an angle, centred in the screen part that the info card and search bar leave free
 function frameView(c,r,dmin,box,od){const sr=stage.getBoundingClientRect(),W=sr.width,H=sr.height;let x0=0,x1=W,y0=0,y1=H;
-  const card=document.getElementById("infocard");if(card&&!card.hidden){const k=card.getBoundingClientRect();if(k.width>2&&k.height>2){if(k.height>H*0.8){if(k.left-sr.left<W/2)x0=Math.min(W*0.6,k.right-sr.left);else x1=Math.max(W*0.4,k.left-sr.left)}else y1=Math.max(H*0.45,H-k.height)}}
+  const card=document.getElementById("infocard");if(card&&!card.hidden){const k=card.getBoundingClientRect();if(k.width>2&&k.height>2){if(k.height>H*0.8&&!card.dataset.vis){if(k.left-sr.left<W/2)x0=Math.min(W*0.6,k.right-sr.left);else x1=Math.max(W*0.4,k.left-sr.left)}else y1=Math.max(H*0.45,H-(+card.dataset.vis||k.height))}}
   const sb=document.getElementById("sbox");if(sb&&!sb.hidden){const k=sb.getBoundingClientRect();if(k.width>W*0.6)y0=Math.min(H*0.3,k.bottom-sr.top)}
   const tanV=Math.tan(camera.fov*Math.PI/360),fr=Math.min(x1-x0,y1-y0)/H,d=Math.max(dmin||12,Math.min(700,r*1.2/(tanV*fr)));
   const el=r>60?0.8:0.62,dir=od?od.clone():camera.position.clone().sub(c);dir.y=0;if(dir.length()<1)dir.set(1,0,1);dir.normalize();
-  const p=c.clone().addScaledVector(dir,d*Math.cos(el));p.y+=d*Math.sin(el);const t=outTarget(p,c,box);try{safeCam(p,t)}catch(e){}
+  const p=c.clone().addScaledVector(dir,d*Math.cos(el));p.y+=d*Math.sin(el);let t=outTarget(p,c,box);try{safeCam(p,t)}catch(e){}t=outTarget(p,c,box);
   {const g=floorAt(p.x,p.z);if(isFinite(g)&&p.y<g+2)p.y=g+2}
   const f=t.clone().sub(p),dd=f.length();f.normalize();const rt=new THREE.Vector3().crossVectors(f,new THREE.Vector3(0,1,0)).normalize(),up=new THREE.Vector3().crossVectors(rt,f);
   const wpp=2*dd*tanV/H,ox=(x0+x1)/2-W/2,oy=(y0+y1)/2-H/2,sh=rt.multiplyScalar(-ox*wpp).addScaledVector(up,oy*wpp);

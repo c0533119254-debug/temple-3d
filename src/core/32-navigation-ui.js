@@ -267,7 +267,32 @@ showInfo=function(d){if(!d)return;_show(d);const pt=UIPT;UIPT=null;CUR.d=d;CUR.p
   if(src.length)h+='<div class="ic-row">'+I("book")+'<div class="ic-src">'+src.map(x=>'<a href="https://www.sefaria.org.il/search?q='+encodeURIComponent(x.replace(/[֑-ׇ]/g,""))+'&tab=text" target="_blank" rel="noopener">'+esc(x)+'</a>').join("")+'</div></div>';
   h+='<div class="ic-row ic-near" hidden></div></div>';
   $("infobody").innerHTML=h;card.hidden=false;card.classList.remove("full");card.scrollTop=0;document.body.classList.add("pane");
-  const g=card.querySelector(".ic-grab");if(g)grabSwipe(g,card,closeInfo)};
+  sheetOpen()};
+// ---- phone: the info card is a bottom sheet, like a map app. Drag it (anywhere on it) down to a strip with the name, or up to the buttons, half, or full screen; it snaps to the nearest; the model stays visible above it ----
+const SHEET={st:1,nc:0},isPhone=()=>window.innerWidth<=700;
+function sheetSnaps(){const H=stage.clientHeight,ch=card.offsetHeight,hd=card.querySelector(".ic-head"),bt=card.querySelector(".ic-btns");
+  const mini=Math.min(H*0.3,(hd?hd.offsetTop+hd.offsetHeight:90)+4),peek=Math.max(mini+40,Math.min(H*0.4,bt?bt.offsetTop+bt.offsetHeight+4:200)),half=Math.max(peek+40,Math.min(ch,H*0.58));return[mini,peek,half,ch]}
+function sheetPos(v){const ch=card.offsetHeight;card.style.transform="translateY("+Math.round(ch-v)+"px)";card.dataset.vis=Math.round(v)}
+function sheetSet(i){const s=sheetSnaps();SHEET.st=Math.max(0,Math.min(s.length-1,i));const full=SHEET.st===s.length-1;card.classList.toggle("full",full);card.style.overflowY=full?"auto":"hidden";if(!full)card.scrollTop=0;sheetPos(s[SHEET.st])}
+function sheetOpen(){if(!isPhone()){card.style.transform="";card.style.overflowY="";delete card.dataset.vis;return}
+  card.classList.add("drag");sheetPos(0);void card.offsetHeight;card.classList.remove("drag");sheetSet(1)}
+window.addEventListener("resize",()=>{if(card.hidden)return;if(isPhone())sheetSet(SHEET.st);else{card.style.transform="";card.style.overflowY="";delete card.dataset.vis}});
+{let dr=null;
+  const start=(y,tg)=>{if(!isPhone()||card.hidden)return;const full=SHEET.st===sheetSnaps().length-1;dr={y0:y,v0:+card.dataset.vis||0,st0:SHEET.st,moved:false,ok:!full||card.scrollTop<=0||!!tg.closest(".ic-grab,.ic-head"),h:[[y,performance.now()]]}};
+  const move=(y,ev)=>{if(!dr)return;const dy=y-dr.y0;if(!dr.moved){if(Math.abs(dy)<7)return;const full=SHEET.st===sheetSnaps().length-1;if(full&&!(dr.ok&&dy>0)){dr=null;return}dr.moved=true;card.classList.add("drag")}
+    if(ev.cancelable)ev.preventDefault();const s=sheetSnaps();sheetPos(Math.max(s[0]*0.4,Math.min(s[s.length-1],dr.v0-dy)));dr.h.push([y,performance.now()]);if(dr.h.length>5)dr.h.shift()};
+  const end=()=>{if(!dr)return;const d=dr;dr=null;if(!d.moved)return;card.classList.remove("drag");SHEET.nc=performance.now();
+    const a=d.h[0],b=d.h[d.h.length-1],vel=(b[0]-a[0])/Math.max(1,b[1]-a[1]),s=sheetSnaps(),v=+card.dataset.vis;
+    if(v<s[0]*(d.st0===0?0.75:0.45)){closeInfo();return}
+    let i=0;s.forEach((x,k)=>{if(Math.abs(x-v)<Math.abs(s[i]-v))i=k});
+    if(vel>0.45){i=-1;s.forEach((x,k)=>{if(x<v-8)i=k});if(i<0){if(d.st0===0){closeInfo();return}i=0}}else if(vel<-0.45){i=s.length-1;for(let k=s.length-1;k>=0;k--)if(s[k]>v+8)i=k}
+    sheetSet(i)};
+  card.addEventListener("touchstart",e=>{if(e.touches.length===1)start(e.touches[0].clientY,e.target);else dr=null},{passive:true});
+  card.addEventListener("touchmove",e=>{if(e.touches.length===1)move(e.touches[0].clientY,e)},{passive:false});
+  card.addEventListener("touchend",end);card.addEventListener("touchcancel",end);
+  card.addEventListener("pointerdown",e=>{if(e.pointerType==="mouse"&&e.target.closest(".ic-grab,.ic-head")){start(e.clientY,e.target);const mv=ev=>move(ev.clientY,ev),up=()=>{window.removeEventListener("pointermove",mv);window.removeEventListener("pointerup",up);end()};window.addEventListener("pointermove",mv);window.addEventListener("pointerup",up)}});
+  // a drag is not a tap on a button; a tap on the handle moves the sheet one step up (from full: back to the buttons)
+  card.addEventListener("click",e=>{if(performance.now()-SHEET.nc<350){e.stopPropagation();e.preventDefault();return}if(isPhone()&&e.target.closest(".ic-grab")){const n=sheetSnaps().length;sheetSet(SHEET.st<n-1?SHEET.st+1:1)}},true)}
 const _close=closeInfo;try{closeInfo=function(){_close();document.body.classList.remove("pane");CUR.pt=null}}catch(e){}
 new MutationObserver(()=>{document.body.classList.toggle("pane",!card.hidden)}).observe(card,{attributes:true,attributeFilter:["hidden"]});
 card.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
