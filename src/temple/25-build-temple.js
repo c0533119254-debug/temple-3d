@@ -70,9 +70,8 @@ await __Y(86);function build(){
     along(-L/2,L/2,-pass/2,pass/2,floor+hBody-5,floor+hBody,M.stone,info);
     along(-L/2-0.3,L/2+0.3,-Wd/2-0.3,Wd/2+0.3,floor+hBody,floor+hBody+1,M.stoneL,null);
     const pyl=I("אילי השער","יחזקאל מ׳, יד; מ׳, טז",(GATE==="high"?"⚖️ לפי רש״י (מ׳, יד) והרמח״ל: האילים הם מזוזות הפתח, עמודים עגולים \"כמין אילנות\" מאבני גזית, גבוהים 60 אמה. 📜 \"ואל אילו תמרים\" (מ׳, טז) — ובראשם צורת דקל. 💡 העובי (2 אמות) והכותרת בהערכה. המלבי״ם מפרש אחרת: 60 אמה היא מידה לאורך הקיר, ולא גובה.":"לפי המלבי״ם, האילים הם עמודים צמודים לקיר, ו\"ששים אמה\" היא מידה לאורך הקיר ולא גובה. ⚖️ \"ואל איל תמרים\" (מ׳, טז) — לפי המלבי״ם האילים \"היו על גביהם כצורת דקל תמר לנוי\". גובה השער לא כתוב ביחזקאל, וכאן הוא כ־20 אמה, בהערכה. (לפי רש״י האילים גבוהים 60 אמה — אפשר לראות בכפתור.)"));
-    [-1,1].forEach(e=>[-1,1].forEach(s=>{const hd=e===eU?1:3.5,a=e*(L/2-hd),w=s*(Wd/2-3.5);if(GATE==="high"){const ao=e*(L/2-1),uu=axis==="e"?cu+ao:cu+w,vv=axis==="e"?cv+w:cv+ao;cyl(uu,vv,3.5,floor+hPylon,1.05,1,M.stone,pyl,20);cyl(uu,vv,floor+hPylon,floor+hPylon+1.2,1,1.25,M.stoneL,null,20);for(let k=0;k<7;k++){const fr=new THREE.Mesh(PALMF||(PALMF=new THREE.ConeGeometry(0.35*A,3.2*A,4)),M.gold),p=W(uu,vv),an=k/7*Math.PI*2;fr.position.set(p[0]+Math.cos(an)*0.9*A,(floor+hPylon+2.2)*A,p[1]+Math.sin(an)*0.9*A);fr.rotation.set(Math.sin(an)*1.1,0,-Math.cos(an)*1.1);group.add(fr)}return}along(a-hd,a+hd,w-3.5,w+3.5,3.5,floor+hPylon,M.stone,pyl);along(a-hd-0.5,a+hd+0.5,w-4,w+4,floor+hPylon,floor+hPylon+1.4,M.stoneL,null);along(a-1.2,a+1.2,w-1.2,w+1.2,floor+hPylon+1.4,floor+hPylon+2.2,M.gold,null);{const uu=axis==="e"?cu+a:cu+w,vv=axis==="e"?cv+w:cv+a,p=W(uu,vv);for(let k=0;k<9;k++){const fr=new THREE.Mesh(PALMF||(PALMF=new THREE.ConeGeometry(0.35*A,3.2*A,4)),M.gold),an=k/9*Math.PI*2;fr.position.set(p[0]+Math.cos(an)*1*A,(floor+hPylon+3.4)*A,p[1]+Math.sin(an)*1*A);fr.rotation.set(Math.sin(an)*1.1,0,-Math.cos(an)*1.1);group.add(fr)}}
+    [-1,1].forEach(e=>[-1,1].forEach(s=>{const hd=e===eU?1:3.5,a=e*(L/2-hd),w=s*(Wd/2-3.5);if(GATE==="high"){const ao=e*(L/2-1),uu=axis==="e"?cu+ao:cu+w,vv=axis==="e"?cv+w:cv+ao;cyl(uu,vv,3.5,floor+hPylon,1.05,1,M.stone,pyl,20);cyl(uu,vv,floor+hPylon,floor+hPylon+1.2,1,1.25,M.stoneL,null,20);for(let k=0;k<7;k++){const fr=new THREE.Mesh(PALMF||(PALMF=new THREE.ConeGeometry(0.35*A,3.2*A,4)),M.gold),p=W(uu,vv),an=k/7*Math.PI*2;fr.position.set(p[0]+Math.cos(an)*0.9*A,(floor+hPylon+2.2)*A,p[1]+Math.sin(an)*0.9*A);fr.rotation.set(Math.sin(an)*1.1,0,-Math.cos(an)*1.1);group.add(fr)}return}along(a-hd,a+hd,w-3.5,w+3.5,3.5,floor+hPylon,M.stone,pyl);
       const f=a+e*(hd+0.05);along(f-0.03,f+0.03,w-2.4,w+2.4,floor+6,floor+hPylon-6,M.palm,null,{cast:false})}));
-    [-1,1].forEach(e=>{const f=e*(L/2+0.05);along(f-0.4,f+0.4,-pass/2-0.6,pass/2+0.6,floor+hBody-6,floor+hBody-5,M.gold,null)});
     const wi=I("חלונות אטומות","יחזקאל מ׳, טז; רש״י שם","\"וחלונות אטומות אל התאים ואל אליהמה\". 📜 חלונות צרים מבפנים ורחבים מבחוץ, \"והאורות יוצאים דרכן מבית המקדש לכל העולם\" (מנחות פו ע״ב), עם סבכה של אבן. ועל האילים — תמרים.");[-15,-5,5,15].forEach(a=>[-1,1].forEach(s=>{const w=s*(Wd/2+0.05);along(a-1.5,a+1.5,w-0.06,w+0.06,floor+hBody-11,floor+hBody-7,M.lattice,wi,{cast:false,tile:3*A});along(a-1.9,a+1.9,w-0.12,w+0.12,floor+hBody-7,floor+hBody-6.6,M.stoneL,null,{cast:false})}))
     const n=floor>4?8:7,y0=floor>4?3.5:0;GLIST.push({axis,cu,cv,floor,outward,n,y0,L,pass});
     if(floor>4)along(-L/2,L/2,-pass/2,pass/2,3.5,floor,M.pave,null,{noCol:true,cast:false,tile:9});
@@ -158,7 +157,7 @@ await __Y(86);function build(){
     CL("13 שופרות",231,351.2,8,sf)}
   // binyan
   const bi=I("הבניין שמול הגזרה","יחזקאל מ״א, יב","70 × 90 אמה מבפנים, עם קיר של 5 אמות. למה הוא משמש — לא מפורש. הגובה כאן בניחוש.");
-  box(0,200,80,300,7.5,37.5,M.stone,bi);box(-0.4,199.6,80.4,300.4,37.5,39,M.stoneL,null);for(let k=0;k<9;k++)box(80,207+k*10.5,81,210+k*10.5,7.5,37.5,M.stone2,null);
+  box(0,200,80,300,7.5,37.5,M.stone,bi);box(0,199.6,80.4,300.4,37.5,39,M.stoneL,null);for(let k=0;k<9;k++)box(80,207+k*10.5,81,210+k*10.5,7.5,37.5,M.stone2,null);
   }
   let HG=null,colH=COL.length;if(RB){HG=new THREE.Group();HG.position.y=8.5*A;ROOT.add(HG);group=HG}
   // the House
@@ -175,7 +174,10 @@ await __Y(86);function build(){
       for(let i=0;i<5;i++){const u=108+16*i;if(s===0&&i===2)continue;box(u-0.7,224.94,u+0.7,225,y0+2.2,y0+5.6,M.win,null,{cast:false});box(u-0.7,275,u+0.7,275.06,y0+2.2,y0+5.6,M.win,null,{cast:false})}
       box(99.94,249.3,100,250.7,y0+2.2,y0+5.6,M.win,null,{cast:false})}
     {const dr=I("פתחי הצלעות","יחזקאל מ״א, יא","\"ופתח הצלע למנח, פתח אחד דרך הצפון ופתח אחד לדרום\" — שני פתחים לצלעות, אחד בצפון ואחד בדרום, ודרכם יוצאים אל המנח, שהוא חלק היסוד שבולט מחוץ לצלעות. רוחב הפתח וגובהו לא מפורשים — כאן בהערכה.");
-      [[224.6,225.02],[274.98,275.4]].forEach(([a,b])=>{box(139,a,141,b,13.5,18,M.dark,dr,{cast:false,noCol:true});box(138.4,a-0.15,141.6,b+0.15,18,18.6,M.stoneL,null,{noCol:true});box(138.4,a-0.15,139,b+0.15,13.5,18,M.stoneL,null,{noCol:true});box(141,a-0.15,141.6,b+0.15,13.5,18,M.stoneL,null,{noCol:true})})}}
+      [[224.6,225.02],[274.98,275.4]].forEach(([a,b])=>{box(139,a,141,b,13.5,18,M.dark,dr,{cast:false,noCol:true});box(138.4,a-0.15,141.6,b+0.15,18,18.6,M.stoneL,null,{noCol:true});box(138.4,a-0.15,139,b+0.15,13.5,18,M.stoneL,null,{noCol:true});box(141,a-0.15,141.6,b+0.15,13.5,18,M.stoneL,null,{noCol:true})});
+      // item 7 (decided by Shmuel): steps from the inner court up to the munach, in front of each opening. 📜 the munach is the top of the 6-amah base (41:8, 41:11); 💡 12 steps of half an amah, 1 amah deep, 6 amot wide
+      const ms=I("המדרגות אל המנח","יחזקאל מ״א, ח; מ״א, יא","📜 הצלעות עומדות על יסוד \"מלוא הקנה שש אמות\" (מ״א, ח), ופתח הצלע נפתח \"למנח\" (מ״א, יא), שהוא ראש היסוד. 💡 הפסוק לא אומר איך עולים אל המנח. כאן 12 מדרגות של חצי אמה מהחצר, מול כל פתח, ומספרן ורוחבן הם הצעה.");
+      [[vmin,-1],[vmax,1]].forEach(([vf,o])=>{for(let k=0;k<12;k++){const a=vf+o*k,b=vf+o*(k+1);box(137,Math.min(a,b),143,Math.max(a,b),7.5,13.5-0.5*(k+1),k%2?M.stepD:M.stone2,k?null:ms,{noCol:true})}})}}
   function boxM(u0,v0,u1,v1,y0,y1,faces,info){const w=(u1-u0)*A,h=(y1-y0)*A,d=(v1-v0)*A;const mats=[0,1,2,3,4,5].map(i=>faces[i]||M.marble);
     const m=new THREE.Mesh(rbox(Math.max(w,0.01),Math.max(h,0.01),Math.max(d,0.01),2.6),mats);const p=W((u0+u1)/2,(v0+v1)/2);m.position.set(p[0],(y0+y1)/2*A,p[1]);m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m);COL.push({x0:p[0]-w/2,x1:p[0]+w/2,z0:p[1]-d/2,z1:p[1]+d/2,y0:y0*A,y1:y1*A});return m}
   const P=M.panel,vN=250-bodyW/2,vS=250+bodyW/2,ui0=ez?240:215,ui1=ez?260:285;
@@ -183,6 +185,9 @@ await __Y(86);function build(){
   boxM(bu0,vN,177,240,13.5,53.5,{4:P},hi);boxM(bu0,260,177,vS,13.5,53.5,{5:P},hi);boxM(bu0,240,115,260,13.5,53.5,{0:P},hi);
   const kd=I("הפתח לקודש הקודשים","יחזקאל מ״א, ג; מ״א, כג-כה","\"ושתים דלתות להיכל ולקדש, ושתים דלתות לדלתות, שתים מוסבות דלתות\" — פתח של 6 אמות ובו שתי דלתות, ולכל דלת שתי כנפיים שמתקפלות. הדלתות מצופות זהב עם כרובים ותמורים (מ״א, כה). ⚖️ לפי הרמח״ל (משכני עליון) הדלתות פתוחות תמיד, ולפני הפתח מסך גדול — פרוכת, שלא יסתכלו פנימה. רק הכהן הגדול נכנס, ביום הכיפורים.");
   if(ez){boxM(135,240,137,247,13.5,53.5,{0:P,1:P},kd);boxM(135,253,137,260,13.5,53.5,{0:P,1:P},kd);boxM(135,247,137,253,25.5,53.5,{0:P,1:P,3:P},kd);
+  // item 28: one gold skin over the whole wall (both faces), so the three stone pieces do not show seams or shifted panels. 💡 the panel pattern is the model's
+  {const sh=new THREE.Shape();sh.moveTo(-10*A,13.5*A);sh.lineTo(10*A,13.5*A);sh.lineTo(10*A,53.5*A);sh.lineTo(-10*A,53.5*A);sh.lineTo(-10*A,13.5*A);const ho=new THREE.Path();ho.moveTo(-3*A,13.5*A+0.001);ho.lineTo(-3*A,25.5*A);ho.lineTo(3*A,25.5*A);ho.lineTo(3*A,13.5*A+0.001);ho.lineTo(-3*A,13.5*A+0.001);sh.holes.push(ho);
+    [[137.02,Math.PI/2,-1],[134.98,-Math.PI/2,1]].forEach(([u,ry,sx])=>{const g=new THREE.ShapeGeometry(sh),pa=g.attributes.position,uv=g.attributes.uv;for(let i=0;i<pa.count;i++)uv.setXY(i,(sx*pa.getX(i)+10*A)/2.6,pa.getY(i)/2.6);uv.needsUpdate=true;const m=new THREE.Mesh(g,P),q=W(u,250);m.position.set(q[0],0,q[1]);m.rotation.y=ry;m.receiveShadow=true;m.userData=kd;cPick.push(m);group.add(m)})}
   box(132,247,135,247.22,13.5,25.5,M.panel,kd,{cast:false,tile:1.2,noCol:true});box(132,252.78,135,253,13.5,25.5,M.panel,kd,{cast:false,tile:1.2,noCol:true});{if(!M.parocS)M.parocS=new THREE.MeshStandardMaterial({color:0x14205a,roughness:1,metalness:0,side:THREE.DoubleSide});const pm=M.parocS;const g=new THREE.PlaneGeometry(7.2*A,12.6*A,40,1),pp=g.attributes.position;for(let i=0;i<pp.count;i++){pp.setZ(i,Math.sin(pp.getX(i)/(0.45*A)*Math.PI)*0.06*A)}g.computeVertexNormals();const m=new THREE.Mesh(g,pm),q=W(137.45,250);m.position.set(q[0],19.8*A,q[1]);m.rotation.y=Math.PI/2;m.castShadow=true;m.userData=I("הפרוכת","יחזקאל מ״א, ג; משכני עליון לרמח״ל; מלכים א ח, ח","⚖️ לפני פתח קודש הקודשים פרוסה פרוכת בגודל הפתח, \"לכסות המקום שלא יסתכלו לקדש הקדשים\". הדלתות עצמן פתוחות תמיד. 💡 הצבעים כמו בפרוכת המשכן: תכלת, ארגמן, תולעת שני ושש.");cPick.push(m);group.add(m);box(137.5,246.4,137.8,253.6,26,26.3,M.gold,null,{cast:false,noCol:true});}}
   else{const pk=I("שתי הפרוכות","רמב״ם, הלכות בית הבחירה ד, ב; יומא נא ע״ב","בבית שני לא היה כותל בין ההיכל לקודש הקודשים, אלא \"אמה טרקסין\" — אמה אחת, ושתי פרוכות זו לפני זו. 📜 הפרוכת \"תכלת וארגמן ותולעת שני ושש משזר, מעשה חשב יעשה אתה כרבים\" (שמות כו, לא) — ארוגה מארבעה מינים, ובה כרובים. ⚖️ עוביה טפח (שקלים ח, ה). 💡 צורת הכרובים והקפלים בהערכה.");
     if(!M.paroc){const Wd=512,Hd=1024,r=rng(606),cols=["#24387f","#5e2463","#9c1f2a","#ebe4d2"];
@@ -383,7 +388,7 @@ await __Y(86);function build(){
     [170,175,180].forEach(v=>[282.4,317.6].forEach(u=>{cyl(u,v,3.56,YT-1.6,0.42,0.42,M.marble,lg,12);box(u-0.6,v-0.6,u+0.6,v+0.6,YT-1.6,YT-0.9,M.stoneL,null,{noCol:true,cast:false})}));
     [285.5,291,309,314.5].forEach(u=>{cyl(u,168.4,3.56,YT-1.6,0.42,0.42,M.marble,lg,12);box(u-0.6,167.8,u+0.6,169,YT-1.6,YT-0.9,M.stoneL,null,{noCol:true,cast:false})});
     box(281.8,167.8,318.2,169,YT-0.9,YT-0.5,M.stoneL,null,{noCol:true,cast:false});[281.8,317].forEach(u=>box(u,169,u+1.2,181,YT-0.9,YT-0.5,M.stoneL,null,{noCol:true,cast:false}));
-    box(300,200,320,210,3.5,7.5,M.pave,null,{cast:false,tile:9,col:true});box(281,200.4,319,209,7.5,7.56,M.marble,null,{cast:false,noCol:true,tile:4});
+    box(281,200,320,210,3.5,7.5,M.pave,null,{cast:false,tile:9,col:true});box(281,200.4,319,209,7.5,7.56,M.marble,null,{cast:false,noCol:true,tile:4});
     const kd=I("החצי שבקודש — מקום הפיס","יומא כה ע״א; תמיד ב, ה; ה, א","⚖️ החצי הצפוני של הלשכה נמצא בתוך העזרה, ופתחו לעזרה. 📜 \"פייס במזרחה\" (יומא כה ע״א) — הפיס בצד המזרחי של הלשכה. כאן הכהנים עושים את הפיס — ההגרלה מי יעבוד בכל עבודה (\"פייס בלשכת הגזית\", יומא כה ע״א), ולכאן הם באים לקרוא את שמע בבוקר (תמיד ה, א). 💡 קיר נמוך מפריד בין החצי של החול, שרצפתו נמוכה, לבין החצי של הקודש, שבגובה רצפת העזרה. 💡 הכהנים עומדים כאן במעגל, כמו בשעת הפיס.");
     box(281,199.6,319,200.4,3.5,8.6,M.stone2,kd);
     for(let k=0;k<13;k++){const an=k/13*Math.PI*2,u=310+Math.cos(an)*3,v=204.8+Math.sin(an)*2.6;add(STAND,kd,{u,v,y:7.56,a:face(u,v,310,204.8),c:0xfaf8f2})}
@@ -609,22 +614,23 @@ await __Y(86);function build(){
   // river
   const rivStart=group.children.length;
   const rv=I("הנחל שיוצא מהמקדש","יחזקאל מ״ז, א-יב; רש״י שם","📜 \"והנה מים יצאים מתחת מפתן הבית קדימה... והמים ירדים מתחת מכתף הבית הימנית, מנגב למזבח\" (מ״ז, א). 📜 מחוץ לשער המזרחי הסגור: \"והנה מים מפכים מן הכתף הימנית\" (מ״ז, ב) — ⚖️ רש״י: מעט מים, כמו שיוצאים מפך. 📜 ככל שהולכים מזרחה המים גדלים: אחרי 1000 אמה עד הקרסוליים, אחרי 2000 עד הברכיים, אחרי 3000 עד המותניים, ואחרי 4000 \"נחל אשר לא אוכל לעבר\" (מ״ז, ג-ה). הם יורדים אל הערבה ובאים אל ים המלח, \"ונרפאו המים\" (מ״ז, ח), ועל שתי הגדות \"כל עץ מאכל\" שנותן פרי בכל חודש (מ״ז, יב). 💡 מה שנבחר כאן: במקדש המים זורמים מעל הקרקע, בתעלת אבן צרה ופתוחה, כי יחזקאל רואה אותם ומודד אותם. מתחת לחומה, לכבש ולכבישים הם עוברים בצינור מקורה. בקצה הר הבית יש מפל אל ערוץ הקדרון, ומשם נחל טבעי דרומה במורד הקדרון — זה הכיוון שבו המים באמת יכולים לרדת לים המלח. על הגדות: עצי מאכל (זית, תמר, תאנה), קנים, הרדופים וסלעים.");
+  // item 26: the channel runs 1.5 amot further south, so it does not cut the Ulam steps or the altar base.
   // stage 5 (user request): from under the south side of the House's front, past the altar on the south, as a small open channel with stone curbs
   {const chan=(u0,u1,vc,y,wd)=>{box(u0,vc-wd/2,u1,vc+wd/2,y,y+0.04,M.water,rv,{cast:false,noCol:true});[-1,1].forEach(sd=>box(u0,vc+sd*(wd/2+0.2)-0.2,u1,vc+sd*(wd/2+0.2)+0.2,y,y+0.12,M.stone2,null,{cast:false,noCol:true,tile:2}))};
-    chan(203,300,266.5,7.5,1.4);box(203,265.6,203.06,267.4,7.5,8.4,M.dark,rv,{cast:false,noCol:true});
+    chan(203,300,268,7.5,1.4);box(203,267.1,203.06,268.9,7.5,8.4,M.dark,rv,{cast:false,noCol:true});
     // under the altar ramp in a culvert
-    [241.94,258].forEach(u=>box(u,265.6,u+0.06,267.4,7.5,8.3,M.dark,null,{cast:false,noCol:true}));
+    [241.94,258].forEach(u=>box(u,267.1,u+0.06,268.9,7.5,8.3,M.dark,null,{cast:false,noCol:true}));
     // three small steps down the edge of the inner court, south of the inner east gate
-    for(let k=0;k<3;k++){const u0=300+k*0.9,top=6.5-k;box(u0,265.6,u0+0.9,267.4,3.5,top,M.stone2,null,{noCol:true,tile:2});box(u0,265.8,u0+0.9,267.2,top,top+0.04,M.water,rv,{cast:false,noCol:true});box(u0-0.05,265.8,u0+0.01,267.2,top,top+1,M.water,rv,{cast:false,noCol:true})}
-    box(302.65,265.8,302.71,267.2,3.5,4.5,M.water,rv,{cast:false,noCol:true});
-    chan(302.7,494,266.5,3.5,1.4);
+    for(let k=0;k<3;k++){const u0=300+k*0.9,top=6.5-k;box(u0,267.1,u0+0.9,268.9,3.5,top,M.stone2,null,{noCol:true,tile:2});box(u0,267.3,u0+0.9,268.7,top,top+0.04,M.water,rv,{cast:false,noCol:true});box(u0-0.05,267.3,u0+0.01,268.7,top,top+1,M.water,rv,{cast:false,noCol:true})}
+    box(302.65,267.3,302.71,268.7,3.5,4.5,M.water,rv,{cast:false,noCol:true});
+    chan(302.7,494,268,3.5,1.4);
     // through the outer wall in a covered culvert, out "from the right shoulder" of the closed east gate, gurgling into a small basin
-    box(493.92,265.6,494,267.4,3.5,4.9,M.dark,rv,{cast:false,noCol:true});box(493.85,265.3,494,267.7,4.9,5.3,M.stoneL,null,{cast:false,noCol:true});
-    box(500,265.6,500.08,267.4,1.9,3.3,M.dark,rv,{cast:false,noCol:true});box(500,265.3,500.2,267.7,3.3,3.7,M.stoneL,null,{cast:false,noCol:true});
-    box(500.08,265.8,500.6,267.2,1.9,2.0,M.stone2,null,{cast:false,noCol:true});box(500.55,265.85,500.62,267.15,0.25,2.0,M.water,rv,{cast:false,noCol:true});
-    box(500,264.2,505,268.8,0,0.25,M.stone2,null,{noCol:true});box(500.3,264.5,504.7,268.5,0.25,0.27,M.water,rv,{cast:false,noCol:true})}
+    box(493.92,267.1,494,268.9,3.5,4.9,M.dark,rv,{cast:false,noCol:true});box(493.85,266.8,494,269.2,4.9,5.3,M.stoneL,null,{cast:false,noCol:true});
+    box(500,267.1,500.08,268.9,1.9,3.3,M.dark,rv,{cast:false,noCol:true});box(500,266.8,500.2,269.2,3.3,3.7,M.stoneL,null,{cast:false,noCol:true});
+    box(500.08,267.3,500.6,268.7,1.9,2.0,M.stone2,null,{cast:false,noCol:true});box(500.55,267.35,500.62,268.65,0.25,2.0,M.water,rv,{cast:false,noCol:true});
+    box(500,265.7,505,270.3,0,0.25,M.stone2,null,{noCol:true});box(500.3,266,504.7,270,0.25,0.27,M.water,rv,{cast:false,noCol:true})}
   (function(){
-    const s0=W(505,266.5),x0=s0[0],n0=-s0[1];
+    const s0=W(505,268),x0=s0[0],n0=-s0[1];
     const ribbon=(pts,w0,w1,lift)=>{const pos=[],uv=[],idx=[];let acc=0;
       for(let k=0;k<pts.length;k++){const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],o=pts[Math.max(k-1,0)];const dx=q[0]-o[0],dz=q[2]-o[2],l=Math.hypot(dx,dz)||1;const nx=-dz/l,nz=dx/l;const w=(w0+(w1-w0)*k/(pts.length-1))/2;
         if(k>0)acc+=Math.hypot(p[0]-pts[k-1][0],p[2]-pts[k-1][2]);
@@ -766,9 +772,9 @@ await __Y(86);function build(){
       box(175,b0+1.5,176.5,b1,yA,yT,M.stoneL,bm);box(203.5,b0+1.5,205,b1,yA,yT,M.stoneL,bm);box(174.7,b0-0.3,205.3,b1,yT,yT+0.8,M.stone2,null,{noCol:true});
       [[176.5,b0+1.5,184,b0+3],[196,b0+1.5,203.5,b0+3],[176.5,b0+3,178,b1],[202,b0+3,203.5,b1]].forEach(r=>box(r[0],r[1],r[2],r[3],yA,yA+1,M.stone2,I("הרובדין שבבית המוקד","מידות א, ח; תמיד א, א","📜 \"ורובדין של אבן היו מקיפין אותו\" — ספסלי אבן, ועליהם ישנו זקני בית אב."),{noCol:true}));
       box(177,b0+4,181,b0+8,yA,yA+0.05,M.dark,I("הירידה לבית הטבילה","מידות א, ו; א, ט; תמיד א, א","📜 בלשכה שבצפון־מערב יורדים במסיבה ההולכת תחת הבירה לבית הטבילה. 💡 כאן רואים רק את פי המדרגות."),{cast:false,noCol:true});
-      const dm=new THREE.Mesh(new THREE.SphereGeometry(14.5*A,24,12,0,Math.PI*2,0,Math.PI/2),M.white);const q=W(190,(b0+b1)/2);dm.position.set(q[0],(yT+0.8)*A,q[1]);dm.userData=bm;cPick.push(dm);group.add(dm);CL("בית המוקד",190,(b0+b1)/2,yT+17);CL("פתח לחיל",190,b0-0.6,yA+11,pd,false)}
+      const dm=new THREE.Mesh(new THREE.SphereGeometry(14.5*A,24,12,0,Math.PI*2,0,Math.PI/2),M.white);const q=W(190,(b0+b1)/2);dm.position.set(q[0],(yT+0.8)*A,q[1]);dm.userData=bm;cPick.push(dm);group.add(dm);CL("בית המוקד",190,(b0+b1)/2,yT+17);window.__CHD.push({nm:"בית המוקד",u:190,v:b0,ax:"v",s:-1,y:yA,yo:yA,w:10,dp:26});CL("פתח לחיל",190,b0-0.6,yA+11,pd,false)}
     {const ba=I("בית אבטינס","יומא יט ע״א; תמיד א, א; מידות א, א","⚖️ עלייה שבה עשו את הקטורת, ושם שמרו הכהנים בלילה (אחד משלושת מקומות השמירה של הכהנים). 💡 לפי כמה מפרשים היא בדרום, ליד שער המים; המקום והגודל כאן הצעה.");
-      box(197,AZ.v1-1,215,AZ.v1+WT+1,yA+TH,yA+TH+9,M.stoneL,ba);box(196.7,AZ.v1-1.3,215.3,AZ.v1+WT+1.3,yA+TH+9,yA+TH+9.6,M.stone2,null);box(205,AZ.v1+WT+1,207,AZ.v1+WT+1.08,yA+TH+1,yA+TH+5,M.win2,null,{cast:false,noCol:true});CL("בית אבטינס",206,AZ.v1+2,yA+TH+13,ba)}
+      hroom(197,AZ.v1-1,215,AZ.v1+WT+1,yA+TH,yA+TH+9,M.stoneL,ba,{side:"u0",c:AZ.v1+WT/2,w:3,h:5,nm:"בית אבטינס"});{const sa=I("המדרגות לבית אבטינס","מידות א, א; תמיד א, א; יומא יט ע״א","📜 \"בית אבטינס ובית הניצוץ עליות היו, והרובים שומרים שם\" (מידות א, א). 💡 המשנה לא אומרת איך עולים לעלייה. כאן מדרגות לאורך כותל העזרה, בין שער הבכורות לשער המים, עד ראש החומה, ומשם הולכים על החומה אל הפתח.");const n=Math.round(TH/0.5),u0=155,u1=184,tr=(u1-u0)/n;for(let k=0;k<n;k++)box(u0+k*tr,AZ.v1-3,u0+(k+1)*tr,AZ.v1,yA,yA+(k+1)*0.5,k%2?(M.stepD||M.stone2):M.stone2,k?null:sa);box(u1,AZ.v1-3,185,AZ.v1,yA,yA+TH,M.stone2,sa)}box(196.7,AZ.v1-1.3,215.3,AZ.v1+WT+1.3,yA+TH+9,yA+TH+9.6,M.stone2,null);box(205,AZ.v1+WT+1,207,AZ.v1+WT+1.08,yA+TH+1,yA+TH+5,M.win2,null,{cast:false,noCol:true});CL("בית אבטינס",206,AZ.v1+2,yA+TH+13,ba)}
     {const bm2=I("לשכות בית המוקד","מידות א, ו","⚖️ \"ארבע לשכות היו לבית המוקד\": לשכת הטלאים (בדרום־מערב), לשכת עושי לחם הפנים (בדרום־מזרח), לשכה שגנזו בה בני חשמונאי את אבני המזבח (בצפון־מזרח), ולשכה שיורדים ממנה לבית הטבילה (בצפון־מערב).");
       CL("לשכת הטלאים",181,AZ.v0-WT-4,yA+5,bm2);CL("לשכת עושי לחם הפנים",199,AZ.v0-WT-4,yA+5,bm2)}
     {const sf=I("שלושה עשר שופרות","שקלים ו, א; ו, ה; רמב״ם, הלכות שקלים ב, ב","⚖️ \"שלשה עשר שופרות היו במקדש\" — תיבות צרות מלמעלה ורחבות מלמטה. על כל אחת כתוב למה התרומה: תקלין חדתין, תקלין עתיקין, קינין, גוזלי עולה, עצים, לבונה, זהב לכפורת, ושש לנדבה. 💡 המקום כאן בעזרת נשים — הצעה.");
@@ -780,7 +786,7 @@ await __Y(86);function build(){
       const pal=[0x6b5b4a,0x3e4a5c,0x8a7a62,0x5c3f3a,0xa89a84,0x2f3a2e,0x7b6c8a],bm=new THREE.InstancedMesh(bodyG,M.people,P.length),hm=new THREE.InstancedMesh(headG,M.people,P.length),d=new THREE.Object3D(),c=new THREE.Color();
       P.forEach((p,i)=>{const w=W(p[0],p[1]);d.position.set(w[0],p[2]*A+0.72,w[1]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xf6f4ee:pal[i%pal.length]);bm.setColorAt(i,c);d.position.y=p[2]*A+1.52;d.updateMatrix();hm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xf6f4ee:0xb38b6d);hm.setColorAt(i,c)});group.add(bm,hm)}
     {const am=I("האמה — הניקוז לנחל קדרון","מידות ג, ב; ג, ו; יומא נח ע״ב; מעילה ג, ג","⚖️ הדם והנסכים יורדים בשיתין אל מתחת למזבח, ומשם \"מתערבין באמה ויוצאין לנחל קדרון\", ונמכרים לגננים לזבל. אמת מים עוברת בעזרה ויוצאת תחת שער המים. 💡 כאן התעלה מכוסה באבנים ויש בה סבכות קטנות — ניקוז נסתר כמו היום. המסלול המדויק בהערכה.");const run=(u0,v0,u1,v1)=>{box(u0,v0,u1,v1,yA,yA+0.03,M.stone2,am,{cast:false,noCol:true,tile:2});const L=Math.max(u1-u0,v1-v0);for(let k=3;k<L;k+=6){const a=u1-u0>v1-v0?[u0+k-0.4,v0+0.1,u0+k+0.4,v1-0.1]:[u0+0.1,v0+k-0.4,u1-0.1,v0+k+0.4];box(a[0],a[1],a[2],a[3],yA+0.03,yA+0.05,M.iron,am,{cast:false,noCol:true})}};
-      run(222.4,276,223.6,306);run(190,305,223.6,306.2);run(189.4,306.2,190.6,AZ.v1);CL("האמה",206,305.6,yA+2,am)}
+      run(222.4,274.6,223.6,306);run(190,305,223.6,306.2);run(189.4,306.2,190.6,AZ.v1);CL("האמה",206,305.6,yA+2,am)}
     // gates of the Middot plan for the gate tour
     {const P=(cu,cv,axis,outward,L,n,y0,floor,nm)=>GLIST.push({axis,cu,cv,floor,outward,n,y0,L,pass:10,nm,hw:5});
       azG.n.forEach((u,k)=>k===2?P(u,AZ.v0-15.5,"n",-1,31,32,0,yA,GN[k]+" (דרך בית המוקד)"):P(u,AZ.v0-WT/2,"n",-1,WT,32,0,yA,GN[k]));azG.s.forEach((u,k)=>P(u,AZ.v1+WT/2,"n",1,WT,32,0,yA,GS[k]));
