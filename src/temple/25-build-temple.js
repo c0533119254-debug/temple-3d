@@ -641,7 +641,14 @@ await __Y(86);function build(){
     // three small steps down the edge of the inner court, south of the inner east gate
     for(let k=0;k<3;k++){const u0=300+k*0.9,top=6.5-k;box(u0,267.1,u0+0.9,268.9,3.5,top,M.stone2,null,{noCol:true,tile:2});box(u0,267.3,u0+0.9,268.7,top,top+0.04,M.water,rv,{cast:false,noCol:true});box(u0-0.05,267.3,u0+0.01,268.7,top,top+1,M.water,rv,{cast:false,noCol:true})}
     box(302.65,267.3,302.71,268.7,3.5,4.5,M.water,rv,{cast:false,noCol:true});
-    chan(302.7,494,268,3.5,1.4);
+    // #30 (Grok): where a paved walk crosses the channel, the water goes under it.
+    // the chel (10-amot walk, 300–310) covers it: the water falls into a slot at the foot of the steps and comes out on the east side of the chel
+    if(COMB){box(302.7,267.3,303.4,268.7,3.75,3.77,M.dark,rv,{cast:false,noCol:true});box(310,267.1,310.06,268.9,3.5,3.75,M.dark,rv,{cast:false,noCol:true});}else chan(302.7,310,268,3.5,1.4);
+    chan(310,488,268,3.5,1.4);
+    // stone slabs across the open channel in the outer court, so people walking north–south step over it (💡 suggestion)
+    [345,385,425,465].forEach(u=>box(u-1.5,266.4,u+1.5,269.6,3.5,3.72,M.stone2,rv,{noCol:true,tile:2}));
+    // the raised pavement along the east wall (488–494) covers the channel up to the wall culvert
+    box(487.94,267.1,488,268.9,3.5,4,M.dark,rv,{cast:false,noCol:true});box(488,266.9,494,269.1,3.5,4,M.pave,null,{noCol:true,tile:9});
     // through the outer wall in a covered culvert
     box(493.92,267.1,494,268.9,3.5,4.9,M.dark,rv,{cast:false,noCol:true});box(493.85,266.8,494,269.2,4.9,5.3,M.stoneL,null,{cast:false,noCol:true});
     // east-gate cleanup: no outlet high on the outside of the wall any more; the water stays in a covered channel and comes out at the foot of the Mount (see the spring below)
@@ -697,18 +704,40 @@ await __Y(86);function build(){
     for(let k=0;k<pts.length-1;k++){if(FLAG[k]===FLAG[k+1])continue;const i=FLAG[k]?k+1:k,j=FLAG[k]?k:k+1,p=pts[i],q=pts[j],dx=q[0]-p[0],dz=q[2]-p[2],an=Math.atan2(dx,dz),w=wid[i]+3;
       const hw=new THREE.Mesh(wbox(w,2.6,0.9,2.6),M.stone2);hw.position.set(p[0]+dx*0.3,p[1]+1.1,p[2]+dz*0.3);hw.rotation.y=an;hw.castShadow=true;hw.userData=rv;cPick.push(hw);group.add(hw);
       const op=new THREE.Mesh(new THREE.CircleGeometry(Math.min(wid[i]*0.42,5),20,0,Math.PI),M.dark);op.position.set(p[0]+dx*0.3-Math.sin(an)*0.46,p[1]+1.15,p[2]+dz*0.3-Math.cos(an)*0.46);op.rotation.y=an+Math.PI;group.add(op)}
+    // #30 (Grok): a stone footbridge wherever a footpath crosses the stream. Roads (c<4) already go over it on a culvert (FLAG above);
+    // footpaths (c===4) used to run straight through the water. Found automatically: every path segment is intersected with the stream line R.
+    const BRS=[];{const bi=I("גשר אבן להולכי רגל","💡 הצעה; יחזקאל מ״ז, ה","📜 ככל שהנחל מתרחק מהמקדש הוא גדל, עד \"נחל אשר לא אוכל לעבר\" (יחזקאל מ״ז, ה). 💡 לכן במקום שבו שביל של הולכי רגל חוצה את הנחל בנוי גשר אבן קטן בגובה השביל, עם מעקה נמוך. ⚖️ לא כתוב שהיו כאן גשרים, וזו הצעה. במקום שבו כביש חוצה את הנחל, המים עוברים מתחתיו בצינור מקורה.");
+      const segX=(a,b,c,d)=>{const r0=b[0]-a[0],r1=b[1]-a[1],s0=d[0]-c[0],s1=d[1]-c[1],den=r0*s1-r1*s0;if(Math.abs(den)<1e-9)return null;const ex=c[0]-a[0],en=c[1]-a[1],t=(ex*s1-en*s0)/den,u=(ex*r1-en*r0)/den;return(t>=0&&t<=1&&u>=0&&u<=1)?[t,u]:null};
+      const PTH=ROADS.filter(rd=>rd.c===4&&rd.p.some(q=>q[0]>bx0-20&&q[0]<bx1+20&&q[1]>bn0-20&&q[1]<bn1+20)),X=[];
+      PTH.forEach(rd=>{for(let i=0;i<rd.p.length-1;i++){const a=rd.p[i],b=rd.p[i+1];if(Math.max(a[0],b[0])<bx0||Math.min(a[0],b[0])>bx1||Math.max(a[1],b[1])<bn0||Math.min(a[1],b[1])>bn1)continue;
+        for(let k=0;k<R.length-1;k++){const h=segX(a,b,R[k],R[k+1]);if(!h)continue;const x=a[0]+(b[0]-a[0])*h[0],n=a[1]+(b[1]-a[1])*h[0];if(FLAG[k]||FLAG[k+1]||inPoly(x,n,MOUNT_BIG))continue;
+          if(X.some(o=>Math.hypot(o.x-x,o.n-n)<o.w+wid[k]*0.6+6))continue;X.push({x,n,k,w:rd.w,dx:b[0]-a[0],dn:b[1]-a[1]})}}});
+      const gs=[],o3=new THREE.Object3D(),put=(w,h,d,x,y,z,an,pit)=>{const g=wbox(w,h,d,2.6);o3.position.set(x,y,z);o3.rotation.set(pit||0,an,0,"YXZ");o3.updateMatrix();g.applyMatrix4(o3.matrix);gs.push(g.index?g.toNonIndexed():g)};
+      X.forEach(c=>{const k=c.k,L0=Math.hypot(c.dx,c.dn),ux=c.dx/L0,un=c.dn/L0,sx=R[k+1][0]-R[k][0],sn=R[k+1][1]-R[k][1],sl=Math.hypot(sx,sn)||1,sin=Math.abs(ux*sn/sl-un*sx/sl);
+        const half=Math.min((wid[k]/2+3.5)/Math.max(sin,0.4),40),E=half+2.5,P=t=>[c.x+ux*t,c.n+un*t],gy=t=>{const q=P(t);return H(q[0],q[1])+0.14},yw=pts[k][1]+1.15,y0=gy(-E),y1=gy(E);
+        const top=t=>{const b=y0+(y1-y0)*(t+E)/(2*E),f=Math.cos(Math.PI*t/(2*E));return Math.max(b,b+(yw+0.85-(y0+y1)/2)*f*f)};
+        const sd=G2S(ux,un),an=Math.atan2(sd[0],-sd[1]),pw=c.w+0.6,N=Math.max(8,Math.ceil(2*E/2.5));
+        for(let j=0;j<N;j++){const t0=-E+2*E*j/N,t1=-E+2*E*(j+1)/N,a=top(t0),b=top(t1),sl2=Math.hypot(t1-t0,b-a),pit=-Math.atan2(b-a,t1-t0),q=P((t0+t1)/2),s=G2S(q[0],q[1]),ym=(a+b)/2;
+          put(pw,0.45,sl2+0.05,s[0],ym-0.22,-s[1],an,pit);
+          if(Math.abs((t0+t1)/2)<half+0.5)[-1,1].forEach(sg=>put(0.3,0.6,sl2+0.05,s[0]+Math.cos(an)*sg*(pw/2-0.15),ym+0.3,-s[1]-Math.sin(an)*sg*(pw/2-0.15),an,pit))}
+        // abutments on both banks, down to the stream bed
+        [-1,1].forEach(sg=>{const t=sg*(wid[k]/2+0.6)/Math.max(sin,0.4),q=P(t),s=G2S(q[0],q[1]),yt=top(t)-0.4;put(pw+0.4,yt-(yw-1.2),1.4,s[0],(yt+yw-1.2)/2,-s[1],an,0)});
+        const s=G2S(c.x,c.n);BRS.push([s[0],-s[1],E+1.5]);c.sx=+s[0].toFixed(1);c.sz=+(-s[1]).toFixed(1);c.len=+(2*E).toFixed(1);c.y=+top(0).toFixed(2)});
+      if(gs.length){const BU=THREE.BufferGeometryUtils,mg=BU&&BU.mergeBufferGeometries(gs);if(mg){const m=new THREE.Mesh(mg,M.stone2);m.castShadow=true;m.receiveShadow=true;m.userData=bi;cPick.push(m);group.add(m)}}
+      window.__BRIDGES=X.map(c=>({x:+c.x.toFixed(1),n:+c.n.toFixed(1),sx:c.sx,sz:c.sz,len:c.len,y:c.y,w:c.w}))}
+    const nearBr=(x,z)=>BRS.some(b=>Math.hypot(x-b[0],z-b[1])<b[2]);
     // the four measures of Ezekiel 47:3-5
     {const MS=[[1000,"מי אפסים","\"ויעברני במים, מי אפסים\" — המים מגיעים עד הקרסוליים."],[2000,"מים ברכים","\"ויעברני במים, מים ברכים\" — עד הברכיים."],[3000,"מי מתנים","\"ויעברני, מי מתנים\" — עד המותניים."],[4000,"נחל שלא עוברים","\"נחל אשר לא אוכל לעבר, כי גאו המים, מי שחו\" — צריך לשחות."]];
       MS.forEach(([am,t,tx])=>{const d=am*A;let k=AC.findIndex(a=>a>=d);if(k<1)return;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1,off=wid[k]/2+3,x=p[0]-dz/l*off,z=p[2]+dx/l*off,g=S2G(x,-z),hy=H(g[0],g[1]);
         const inf=I(am+" אמה: "+t,"יחזקאל מ״ז, ג-ה","📜 "+tx+" 💡 המרחק נמדד כאן מהמעיין שלמרגלות החומה.");const m=new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.3,1.4,8),M.stoneL);m.position.set(x,hy+0.7,z);m.userData=inf;cPick.push(m);group.add(m);const Lb=label(am+" אמה · "+t,x,hy+3.5,z,"c",inf);Lb.m=true;cLabels.push(Lb)})}
     // "and by the river ... shall grow all trees for food" (47:12): trees on both banks
-    {const r=rng(707),T=[];for(let k=2;k<pts.length;k+=1){if(r()<0.55)continue;[-1,1].forEach(sd=>{if(r()<0.35)return;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1,off=wid[k]/2+1.8+r()*6.5;const x=p[0]-dz/l*off*sd,z=p[2]+dx/l*off*sd;const g=S2G(x,-z);if(inPoly(g[0],g[1],MOUNT_BIG)||onRoad(g[0],g[1],2))return;T.push([x,H(g[0],g[1]),z,1.6+r()*1.8])})}
+    {const r=rng(707),T=[];for(let k=2;k<pts.length;k+=1){if(r()<0.55)continue;[-1,1].forEach(sd=>{if(r()<0.35)return;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1,off=wid[k]/2+1.8+r()*6.5;const x=p[0]-dz/l*off*sd,z=p[2]+dx/l*off*sd;const g=S2G(x,-z);if(inPoly(g[0],g[1],MOUNT_BIG)||onRoad(g[0],g[1],2)||nearBr(x,z))return;T.push([x,H(g[0],g[1]),z,1.6+r()*1.8])})}
       // stage 5: date palms and figs among the olives ("כל עץ מאכל", 47:12), reeds and oleanders at the water, rocks in the bed
       // topic 5: each species from the tree library (TREES5 in core/02), carobs added among the fruit trees
       const PL=[],FG=[],CB=[];for(let i=T.length-1;i>=0;i--){if(i%4===1)PL.push(T.splice(i,1)[0]);else if(i%4===3)FG.push(T.splice(i,1)[0]);else if(i%8===0)CB.push(T.splice(i,1)[0])}
       const TP=(k,a,sc)=>TREES5.plant(group,k,a.map((t,i)=>[t[0],t[1],t[2],sc(t),i*2.39]),{n:TREES5.NAMES[k]+" על גדות הנחל",r:"יחזקאל מ״ז, ז, יב",t:"📜 \"ועל הנחל יעלה על שפתו מזה ומזה כל עץ מאכל... לחדשיו יבכר\" (יחזקאל מ״ז, יב). 💡 המינים כאן: זית, תמר, תאנה וחרוב, עצי מאכל של ארץ ישראל."});
       TP("palm",PL,t=>0.75+t[3]*0.14);TP("fig",FG,t=>0.55+t[3]*0.22);TP("carob",CB,t=>0.6+t[3]*0.2);
-      {const RD=[],SH=[];for(let k=1;k<pts.length;k++){if(FLAG[k])continue;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1;[-1,1].forEach(sd=>{
+      {const RD=[],SH=[];for(let k=1;k<pts.length;k++){if(FLAG[k]||nearBr(pts[k][0],pts[k][2]))continue;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1;[-1,1].forEach(sd=>{
           if(r()<0.75){const off=wid[k]/2+0.2+r()*1.4,cx=p[0]-dz/l*off*sd,cz=p[2]+dx/l*off*sd;for(let j=0;j<6;j++)RD.push([cx+(r()-0.5)*1.6,p[1]+1.0,cz+(r()-0.5)*1.6,1.2+r()*1.6,(r()-0.5)*0.25,(r()-0.5)*0.25])}
           if(r()<0.35){const off=wid[k]/2+1.5+r()*3,x=p[0]-dz/l*off*sd,z=p[2]+dx/l*off*sd;const g=S2G(x,-z);if(!onRoad(g[0],g[1],1.5)&&!inPoly(g[0],g[1],MOUNT_BIG))SH.push([x,H(g[0],g[1]),z,0.7+r()*0.6,r()<0.4])}
           if(r()<0.4){const off=wid[k]/2-0.4+r()*1.2;ROCKS.push([p[0]-dz/l*off*sd,p[1]+0.9,p[2]+dx/l*off*sd,0.25+r()*0.6])}})}
