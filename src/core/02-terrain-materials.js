@@ -11,7 +11,9 @@ function TUNS(){if(TUNS_)return TUNS_;TUNS_=[];
     TUNS_.push({nm,k,w,fx:Math.cos(w.a),fn:Math.sin(w.a),i:best[4],t:best[5],thr,tw,N,h,tread,FL,LAND,run,tot,D:tot+0.6,OPEN:k==="K"?11:14})});
   return TUNS_}
 function tunAt(x,n,m){for(const T of TUNS()){const dx=x-T.w.x,dn=n-T.w.n,al=dx*T.fx+dn*T.fn,nn=dx*T.w.ox+dn*T.w.on;if(Math.abs(al)<T.tw/2+m&&nn<2&&nn>-(T.D+m))return T}return null}
-function mountNotched(){const P=MOUNT.map(p=>[p[0],p[1]]);TUNS().slice().sort((a,b)=>b.i-a.i||b.t-a.t).forEach(T=>{const w=T.w,h=T.tw/2,q=(al,nn)=>[w.x+T.fx*al+w.ox*nn,w.n+T.fn*al+w.on*nn];P.splice(T.i+1,0,q(-h,0),q(-h,-T.D),q(h,-T.D),q(h,0))});return P}
+function mountNotched(){const P=MOUNT.map(p=>[p[0],p[1]]);TUNS().slice().sort((a,b)=>b.i-a.i||b.t-a.t).forEach(T=>{const w=T.w,h=T.tw/2,q=(al,nn)=>{const r=[w.x+T.fx*al+w.ox*nn,w.n+T.fn*al+w.on*nn];r.nt=1;return r};P.splice(T.i+1,0,q(-h,0),q(-h,-T.D),q(h,-T.D),q(h,0))});
+  // #25: a gate close to a corner of the wall (Kiponus) put a wall vertex inside its notch, and the mount body closed half the opening. Drop such vertices.
+  return P.filter(p=>p.nt||!TUNS().some(T=>{const dx=p[0]-T.w.x,dn=p[1]-T.w.n,al=dx*T.fx+dn*T.fn,nn=dx*T.w.ox+dn*T.w.on;return Math.abs(al)<T.tw/2+0.01&&nn>-T.D-0.01&&nn<1.5}))}
 function underMount(x,n,h){if(!inPoly(x,n,MOUNT_BIG))return h;if(!inPoly(x,n,MOUNT))return Math.min(h,-1);if(tunAt(x,n,14))return Math.min(h,-46);const e=nearEdge(x,n,MOUNT);if(e[0]>14)return Math.min(h,-4);const dx=e[1]-x,dn=e[2]-n,l=Math.hypot(dx,dn)||1,o=H(e[1]+dx/l*4,e[2]+dn/l*4);return Math.min(h,o-1,-4)}
 function nearEdge(x,n,P){let best=1e9,bx=0,bn=0;for(let i=0;i<P.length;i++){const a=P[i],c=P[(i+1)%P.length],vx=c[0]-a[0],vn=c[1]-a[1],L2=vx*vx+vn*vn||1;let t=((x-a[0])*vx+(n-a[1])*vn)/L2;t=Math.max(0,Math.min(1,t));const px=a[0]+vx*t,pn=a[1]+vn*t,dd=Math.hypot(x-px,n-pn);if(dd<best){best=dd;bx=px;bn=pn}}return[best,bx,bn]}
 function Hsyn(x,n){
