@@ -26,11 +26,11 @@ instBlocks({count:260,seed:19,area:[720,1450,-700,1100],test:(x,n)=>x>750,size:[
 instBlocks({count:280,seed:23,area:[-860,-420,-920,-590],test:(x,n)=>segDist(x,n,HINNOM)[0]>55&&!inPoly(x,n,OLD),size:[10,22],ht:[6,12],tint:tints,domes:0.2});
 (function(){
   const r=rng(31),cnt=SMALL?1100:2600,can=new THREE.InstancedMesh(new THREE.SphereGeometry(1,7,5),M.leaf,cnt),trk=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.25,0.35,1,5),M.trunk,cnt),d=new THREE.Object3D();let k=0,tries=0;
-  while(k<cnt&&tries<cnt*10){tries++;const x=215+r()*600,n=-1000+r()*2200;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n))continue;if(segDist(x,n,KIDRON)[0]<8)continue;if(x>760&&r()<0.6)continue;
-    if(x>430&&x<720&&Math.abs(n-10)<170)continue;const y=H(x,n),s=1.8+r()*1.6;d.position.set(x,y+s*0.9,-n);d.scale.set(s,s*0.7,s);d.updateMatrix();can.setMatrixAt(k,d.matrix);d.position.set(x,y+s*0.35,-n);d.scale.set(1,s*0.7,1);d.updateMatrix();trk.setMatrixAt(k,d.matrix);k++}
+  while(k<cnt&&tries<cnt*10){tries++;const x=215+r()*600,n=-1000+r()*2200;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n)||!clearAt(x,n,2))continue;if(segDist(x,n,KIDRON)[0]<8)continue;if(x>760&&r()<0.6)continue;
+    if(x>430&&x<720&&Math.abs(n-10)<170)continue;const y=TY(x,n),s=1.8+r()*1.6;d.position.set(x,y+s*0.9,-n);d.scale.set(s,s*0.7,s);d.updateMatrix();can.setMatrixAt(k,d.matrix);d.position.set(x,y+s*0.35,-n);d.scale.set(1,s*0.7,1);d.updateMatrix();trk.setMatrixAt(k,d.matrix);k++}
   can.count=trk.count=k;can.castShadow=true;TGRP().add(can);TGRP().add(trk);
   const cy=new THREE.InstancedMesh(new THREE.ConeGeometry(1,1,6),M.cypress,500);k=0;tries=0;
-  while(k<500&&tries<6000){tries++;const x=-1500+r()*2700,n=-1100+r()*2600;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n))continue;const y=H(x,n),s=1.6+r()*1.2,hh=9+r()*7;d.position.set(x,y+hh/2,-n);d.scale.set(s,hh,s);d.updateMatrix();cy.setMatrixAt(k++,d.matrix)}
+  while(k<500&&tries<6000){tries++;const x=-1500+r()*2700,n=-1100+r()*2600;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n)||!clearAt(x,n,2))continue;const y=TY(x,n),s=1.6+r()*1.2,hh=9+r()*7;d.position.set(x,y+hh/2,-n);d.scale.set(s,hh,s);d.updateMatrix();cy.setMatrixAt(k++,d.matrix)}
   cy.count=k;cy.castShadow=true;TGRP().add(cy);
 })();
 }
