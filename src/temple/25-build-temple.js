@@ -1,7 +1,7 @@
 await __Y(86);function build(){
   if(group){scene.remove(group);group.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
   cLabels.forEach(L=>{L.el.remove();labels.splice(labels.indexOf(L),1)});cLabels=[];cPick=[];flames=[];
-  COL=[];GLIST=[];ACTS=null;CROWDT=null;ksm=null;PFX=[];MENL=null;
+  COL=[];GLIST=[];EGATE=null;ACTS=null;CROWDT=null;ksm=null;PFX=[];MENL=null;
   group=new THREE.Group();scene.add(group);
   const RB=PLAN==="middot"||PLAN==="rambam",COMB=PLAN==="rambam",ROOT=group;
   const ref=LOC==="kodesh"?[125,250]:(RB?[238,259]:[250,250]);
@@ -94,6 +94,10 @@ await __Y(86);function build(){
   gate("n",250,175,7.5,-1,I("השער הפנימי הצפוני","יחזקאל מ׳, לה-מג","שער לחצר הפנימית, עם 8 מדרגות. לידו שולחנות השחיטה."));
   gate("n",250,325,7.5,1,I("השער הפנימי הדרומי","יחזקאל מ׳, כח-לא","שער לחצר הפנימית, עם 8 מדרגות."));
   gate("e",325,250,7.5,1,I("השער הפנימי המזרחי","יחזקאל מ״ו, א-ב","סגור בששת ימי המעשה, ונפתח בשבת ובראש חודש. הנשיא משתחווה על מפתן השער."));
+  // topic 6 stage 7: the doors of the inner east gate. 📜 "יהיה סגור ששת ימי המעשה, וביום השבת יפתח, וביום החדש יפתח... והשער לא יסגר עד הערב" (Ezek 46:1-2).
+  // 💡 two bronze leaves at the inner-court end of the passage (the threshold where the Nasi bows, 46:2); their height and material are not given. Shown by gateDoors() in core/30.
+  {const di=I("דלתות השער הפנימי המזרחי","יחזקאל מ״ו, א-ב","📜 \"שער החצר הפנימית הפנה קדים יהיה סגור ששת ימי המעשה, וביום השבת יפתח, וביום החדש יפתח\", \"והשער לא יסגר עד הערב\". 💡 מקום הדלתות בקצה המעבר, וגובהן וחומרן לא מפורשים.");
+    EGATE=[box(300,245,300.4,250,7.5,7.5+(GATE==="high"?37:17),M.bronze,di,{noCol:true}),box(300,250,300.4,255,7.5,7.5+(GATE==="high"?37:17),M.bronze,di,{noCol:true})];EGATE.forEach(m=>m.visible=false)}
   box(499.7,245,500.3,255,3.5,23.5,M.bronze,I("השער הסגור","יחזקאל מ״ד, ב","דלתות השער המזרחי סגורות לעולם."),{cast:false});
   // 30 chambers
   const pi=I("לשכה בחצר החיצונה","יחזקאל מ׳, יז; מ״ו, כד","אחת מ־30 הלשכות שעל הרצפה — 10 בצפון, 10 בדרום ו־10 במזרח (מלבי״ם). עומק 4 אמות. כאן העם אוכל את בשר השלמים. הגובה בהערכה.");

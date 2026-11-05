@@ -51,7 +51,11 @@ const INL={1:{hemi:0.5,sun:0.3,glow:0.6,exp:1.5,men:2.6},2:{hemi:0.15,sun:0.08,g
 function insideLight(){const q=INL[INSIDE];if(!M.panel.userData.g0){M.panel.userData.g0=M.panel.emissiveIntensity;M.goldFloor.userData.g0=M.goldFloor.emissiveIntensity}
   const g=q?q.glow:1;M.panel.emissiveIntensity=M.panel.userData.g0*g;M.goldFloor.emissiveIntensity=M.goldFloor.userData.g0*g;if(!q)return;
   hemi.intensity*=q.hemi;sun.intensity*=q.sun;renderer.toneMappingExposure*=q.exp;scene.environment=null} // no sky reflections on the gold inside: it shines only from the menorah and the door
-function applyTime(){applyTime0();insideLight()}
+// topic 6 stage 7: the inner east gate is open only on Shabbat and Rosh Chodesh, by day (Ezek 46:1-2). DAY = "chol" (a weekday) / "shabbat" / "rosh" (Rosh Chodesh).
+// 💡 the model opens on Shabbat so that the gate looks as it did before; on a weekday, or after sunset, the doors are closed.
+function gateDoors(){if(!EGATE)return;const sp=sunAt(HOUR!=null?HOUR:TIMES[TIME].h),open=DAY!=="chol"&&sp.el>-0.833;EGATE.forEach(m=>m.visible=!open)}
+function setDay(d){DAY=d;gateDoors();renderer.shadowMap.needsUpdate=true}
+function applyTime(){applyTime0();insideLight();gateDoors()}
 function applyTime0(){renderer.shadowMap.needsUpdate=true;
   const t=TIMES[TIME],night=TIME==="night",sp=sunAt(HOUR!=null?HOUR:t.h),tw=!night&&sp.el<4;
   const d2=skyVec(Math.max(sp.el,-2),sp.az);
