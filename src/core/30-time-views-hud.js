@@ -137,9 +137,14 @@ window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
 let look=null;renderer.domElement.addEventListener("pointerdown",e=>{if(WALK||DRONE){look=[e.clientX,e.clientY,yaw,pitch,e.pointerId]}});
 renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
 window.addEventListener("pointerup",e=>{if(look&&e.pointerId===look[4])look=null});
-function camAt(p,t){camSaved=false;camLim=1e9;camera.position.copy(p);controls.target.copy(t);controls.update()}
+// #18 B1: OrbitControls holds the camera at most 80° from straight up when far (over 160 m) and just under level when near (core/31).
+// A pose past that limit was pulled up by the controls the moment a flight ended (olives 34 m, city 56 m). Here the pose itself is moved to the limit, keeping its distance.
+function fixPhi(p,t){const o=p.clone().sub(t),L=o.length();if(L<1e-6)return[p,t];const lim=L>160?THREE.MathUtils.degToRad(79.5):Math.PI*0.495,phi=Math.acos(Math.max(-1,Math.min(1,o.y/L)));
+  if(phi>lim){const hz=Math.hypot(o.x,o.z)||1,k=L*Math.sin(lim)/hz;p.set(t.x+o.x*k,t.y+L*Math.cos(lim),t.z+o.z*k)}return[p,t]}
+function camAt(p,t){fixPhi(p,t);camSaved=false;camLim=1e9;camera.position.copy(p);controls.target.copy(t);controls.update()}
 const PG=(x,n,dy)=>{const q=G2S(x,n);return new THREE.Vector3(q[0],H(x,n)+dy,-q[1])};
-function viewPose(v){
+function viewPose(v){const r=viewPose0(v);return r?fixPhi(r[0],r[1]):r}
+function viewPose0(v){
   const t=C.clone(),s=500*A;
   if(v==="top")return[new THREE.Vector3(t.x+1,t.y+720,t.z+40),t];
   if(v==="olives")return[PG(640,-20,64),new THREE.Vector3(t.x+20,22,t.z)];
@@ -188,7 +193,7 @@ const TOUR_STEPS=[
   {v:"olives",cap:"מהר הזיתים, משם הכהן השורף את הפרה \"מכוין ורואה כנגד פתחו של היכל\" (מידות ב, ד). מכאן רואים שהשער המזרחי והבית על ציר אחד.",d:9000},
   {v:"top",cap:"מלמעלה: 500 × 500 אמה, הבית במערב, והמזבח באמצע החצר הפנימית. \"וישמרו את כל צורתו... ועשו אותם\" (מ״ג, יא).",d:9000}
 ];
-function stPose(s){const Wq=(u,w,y)=>new THREE.Vector3(COMP.X0+u*A,y*A,-(COMP.N0-w*A));return[Wq(...s.p),Wq(...s.t)]}
+function stPose(s){const yr=COMP.rb?8.5:0,Wq=(u,w,y)=>new THREE.Vector3(COMP.X0+u*A,(y+yr)*A,-(COMP.N0-w*A));return fixPhi(Wq(...s.p),Wq(...s.t))} // #18 B3: in the Rambam plan the courts stand 8.5 amot higher (as in groundAt and routeTo)
 function stopTour(){TOUR=null;tween=null;document.getElementById("tourBtn").textContent="▶ סיור מודרך";document.getElementById("cap").hidden=true}
 document.getElementById("ykBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("yk")});
 document.getElementById("tmBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("tamid")});

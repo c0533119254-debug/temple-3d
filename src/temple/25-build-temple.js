@@ -654,7 +654,7 @@ await __Y(86);function build(){
       M.palmLeaf=new THREE.MeshStandardMaterial({color:0x557232,roughness:0.9,side:THREE.DoubleSide});M.reed=new THREE.MeshStandardMaterial({color:0x8e9a52,roughness:0.95})}
     // a stone spout at the lip, and two curved sheets of water that bend away from the wall as they fall
     {const sp=new THREE.Mesh(wbox(2.4,0.6,3.6,2.6),M.stone2);sp.position.set(xe+1,-0.05,-n0);sp.castShadow=true;group.add(sp)}
-    const fallG=(w,out)=>{const g=new THREE.PlaneGeometry(w,fh,1,14),p=g.attributes.position;for(let i=0;i<p.count;i++){const t=(fh/2-p.getY(i))/fh;p.setZ(i,out*fo0*Math.sqrt(t))}g.computeVertexNormals();return g};
+    const fallG=(w,out)=>{const g=new THREE.PlaneGeometry(w,fh,1,14),p=g.attributes.position;for(let i=0;i<p.count;i++){const t=(fh/2-p.getY(i))/fh;p.setZ(i,out*fo0*Math.sqrt(Math.max(0,t)))}g.computeVertexNormals();return g};
     [[2.6,1,M.water2],[3.6,1.2,M.fallMist]].forEach(([w,o,m])=>{const f=new THREE.Mesh(fallG(w,o),m);f.position.set(xe+2,hb+fh/2,-n0);f.rotation.y=Math.PI/2;f.userData=rv;cPick.push(f);group.add(f)});
     const px=xe+2+fo0*1.1;
     const pool=new THREE.Mesh(new THREE.CircleGeometry(5.5,28),M.river);pool.rotation.x=-Math.PI/2;pool.position.set(px,hb+0.35,-n0);pool.userData=rv;cPick.push(pool);group.add(pool);
