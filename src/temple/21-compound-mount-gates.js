@@ -63,6 +63,10 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     [-1,1].forEach(sd=>{const p=P(R0-T.OPEN/2,sd*(hw+0.3));stoneG.push([p[0],0.55,p[1],w.a,0.6,1.1,T.OPEN])});{const p=P(R0+0.3,0);stoneG.push([p[0],0.55,p[1],w.a,T.tw+1.2,1.1,0.6])}
     [-1,1].forEach(sd=>{const a=P(-0.4,sd*(hw-0.25)),b=P(-T.tot,sd*(hw-0.25));RAILS.push([a[0],T.thr+1,a[1],b[0],1,b[1]])});
     const q=G2S(...P(R0-T.OPEN/2,0));label(lab,q[0],8,-q[1],null,info).m=true};
+  // #25: the height of the ground as it is drawn (terrain, satellite tiles and streets are coarse meshes, so the formula TY can be off by a metre or more)
+  const GND=(()=>{const L=[],rc=new THREE.Raycaster(),o=new THREE.Vector3(),dn=new THREE.Vector3(0,-1,0),C=new Map();scene.updateMatrixWorld(true);
+    scene.traverse(m=>{if(!m.isMesh||m.isInstancedMesh||!m.geometry)return;let a=m;while(a){if(a===GATEG)return;a=a.parent}if(!m.geometry.boundingSphere)m.geometry.computeBoundingSphere();if(m.geometry.boundingSphere.radius>40)L.push(m)});
+    return(x,n)=>{const k=Math.round(x*4)+","+Math.round(n*4);if(C.has(k))return C.get(k);o.set(x,120,-n);WG.localToWorld(o);rc.set(o,dn);const h=rc.intersectObjects(L,false);const y=h.length?WG.worldToLocal(h[0].point.clone()).y:TY(x,n);C.set(k,y);return y}})();
   G.forEach(g=>{const w=wallAt(g.x,g.n2),yo=H(w.x+w.ox*9,w.n+w.on*9),fx=Math.cos(w.a),fn=Math.sin(w.a);g.w_=w;const T=g.five?TUNS().find(t=>g.n.includes(t.nm)):null;g.T_=T;
     const P=(nn,al)=>[w.x+w.ox*nn+fx*al,w.n+w.on*nn+fn*al],seg=(a0,a1,y0,y1,n0,n1)=>{const p=P((n0+n1)/2,(a0+a1)/2);stoneG.push([p[0],(y0+y1)/2,p[1],w.a,a1-a0,y1-y0,n1-n0])};
     const low=yo<-3.5&&g.k==="S",today=g.k==="W"||g.k==="N",cwy=g.k==="W"&&yo<-4.5;
@@ -76,30 +80,46 @@ const GATEG=new THREE.Group();WG.add(GATEG);
       if(T){seg(-W2,-o1,bot,top,-0.4,2.8);seg(-o0,o0,bot,top,-0.4,2.8);seg(o1,W2,bot,top,-0.4,2.8);seg(-o1,o1,ot,top,-0.4,2.8);seg(-o1,o1,bot,thr,-0.4,2.8)}else stoneG.push([w.x+w.ox*1.2,(top+bot)/2,w.n+w.on*1.2,w.a,g.w+4,top-bot,3.2]);
       [-1,1].forEach(s=>{const px=w.x+w.ox*2.85+fx*s*g.w*0.24,pn=w.n+w.on*2.85+fn*s*g.w*0.24;PORT.push([px,pn,w,face,base,thr+oh*0.8,g.w*0.15]);if(!T){darkB.push([px,thr+oh*0.4,pn,w.a,g.w*0.3,oh*0.8,0.2]);darkA.push([px,thr+oh*0.8,pn,w.a,g.w*0.15])}})}
     else if(g.k==="K"){seg(-ow/2-0.8,ow/2+0.8,thr+4.2,1.04,-0.6,0.6)}
-    else if(TOW){stoneG.push([w.x+w.ox*1.2,(top+bot)/2,w.n+w.on*1.2,w.a,g.w+4,top-bot,3.2]);const px=w.x+w.ox*2.85,pn=w.n+w.on*2.85;PORT.push([px,pn,w,face,base,thr+oh*0.7,ow/2]);darkB.push([px,thr+oh*0.35,pn,w.a,ow,oh*0.7,0.2]);darkA.push([px,thr+oh*0.7,pn,w.a,ow/2])}
+    else if(TOW){stoneG.push([w.x+w.ox*1.2,(top+bot)/2,w.n+w.on*1.2,w.a,g.w+4,top-bot,3.2]);const px=w.x+w.ox*2.85,pn=w.n+w.on*2.85;PORT.push([px,pn,w,face,base,thr+oh*0.7,ow/2]);if(g.n!=="שער טדי"){darkB.push([px,thr+oh*0.35,pn,w.a,ow,oh*0.7,0.2]);darkA.push([px,thr+oh*0.7,pn,w.a,ow/2])}}
     else{// v80 (item 20): a real gateway: two piers, a lintel and a cornice, open between them
       const o=g.w*0.6/2;seg(-o-1.4,-o,thr,thr+6,-1.5,1.5);seg(o,o+1.4,thr,thr+6,-1.5,1.5);seg(-o,o,thr+4.2,thr+6,-1.5,1.5);seg(-o-1.6,o+1.6,thr+6,thr+6.4,-1.7,1.7);
       seg(-o-1.4,o+1.4,Math.min(gb,0)-0.8,thr,0,1.5);if(thr>0.05)seg(-o-1.4,o+1.4,-0.5,thr,-1.5,0)}
     // steps between the gate and the ground outside it (items 10, 21, 22)
-    if(today&&gb<thr-0.1){const rise=thr-gb,N=Math.ceil(rise/0.17),h=rise/N,tread=0.32,FL=12,LAND=1.5,s0=TOW?2.8:1.5,wid=TOW?3:g.w*0.6+2.8,run=i=>s0+i*tread+Math.floor(i/FL)*LAND;
+    // #25: the stairs end on a flat landing. The ground is sampled over the whole landing (not at one point), the landing sits at its highest point, and a stone pad fills down to the lowest, so nothing floats and nothing is buried.
+    // Where the street outside is already at the threshold, there are no stairs: a flat stone apron fills the dip by the wall instead
+    if(today&&!cwy){const tread=0.32,FL=12,LAND=1.5,LP=3.2,s0=TOW?2.8:1.5,wid=TOW?3:g.w*0.6+2.8,run=i=>s0+i*tread+Math.floor(i/FL)*LAND;
+      const gAt=(nn,al)=>{const y=GND(...P(nn,al));return y>thr+1.5?TY(...P(nn,al)):y},span=(n0,n1,a)=>{let lo=1e9,hi=-1e9;const st=Math.max((n1-n0)/4,0.01);for(let nn=n0;nn<=n1+0.001;nn+=st)for(let k=-2;k<=2;k++){const y=gAt(nn,k*a/2);lo=Math.min(lo,y);hi=Math.max(hi,y)}return[lo,hi]};
+      let gS=Math.min(gb,thr-0.17),N=2;for(let it=0;it<6;it++){N=Math.max(2,Math.ceil((thr-gS)/0.17));const e=run(N-2)+tread;gS=Math.max(gS,span(e,e+LP,wid/2+0.6)[1])}
+      if(gS>thr-0.25){// no stairs: an apron at the threshold out to where the ground meets it
+        let d=s0;while(d<9&&span(d,d,wid/2)[1]<thr-0.1)d+=0.5;const lo=Math.min(thr-0.6,span(0,d,wid/2+0.6)[0]-0.4),p=P(d/2+0.2,0);
+        stoneG.push([p[0],(thr+lo)/2-0.02,p[1],w.a,wid+1.2,thr-lo-0.04,d]);paves.push([p[0],thr+0.04,p[1],w.a,wid+1,0.08,d-0.2]);g.st_={s0,end:0,LP:d,wid,gS:thr,thr,N:0}}
+      else{N=Math.max(2,Math.ceil((thr-gS)/0.17));const h=(thr-gS)/N,end=run(N-2)+tread;
+        for(let i=0;i<N-1;i++){const y=thr-(i+1)*h,dd=tread+((i%FL===FL-1)?LAND:0),p=P(run(i)+dd/2,0),lo=Math.min(gS-0.8,span(run(i),run(i)+dd,wid/2)[0]-0.4);steps.push([p[0],y,p[1],w.a,wid,y-lo,dd+0.02])}
+        {const lo=Math.min(gS-0.6,span(end,end+LP,wid/2+0.6)[0]-0.5),p=P(end+LP/2,0);stoneG.push([p[0],(gS+lo)/2-0.02,p[1],w.a,wid+1.2,gS-lo-0.04,LP]);paves.push([p[0],gS+0.04,p[1],w.a,wid+1,0.08,LP-0.2])}
+        g.st_={s0,end,LP,wid,gS,thr,N};
+        [-1,1].forEach(sd=>{const a=P(s0,sd*(wid/2-0.2)),b=P(end,sd*(wid/2-0.2));RAILS.push([a[0],thr+1,a[1],b[0],gS+h+1,b[1]])})}}
+    else if(today&&gb<thr-0.1){const rise=thr-gb,N=Math.ceil(rise/0.17),h=rise/N,tread=0.32,FL=12,LAND=1.5,s0=TOW?2.8:1.5,wid=TOW?3:g.w*0.6+2.8,run=i=>s0+i*tread+Math.floor(i/FL)*LAND;
       for(let i=0;i<N-1;i++){const y=thr-(i+1)*h,dd=tread+((i%FL===FL-1)?LAND:0),p=P(run(i)+dd/2,0);steps.push([p[0],y,p[1],w.a,wid,y-gb+0.8,dd+0.02])}
-      if(!TOW)[-1,1].forEach(sd=>{const a=P(s0,sd*(wid/2-0.2)),b=P(run(N-2)+tread,sd*(wid/2-0.2));RAILS.push([a[0],thr+1,a[1],b[0],gb+h+1,b[1]])})}
+      [-1,1].forEach(sd=>{const a=P(s0,sd*(wid/2-0.2)),b=P(run(N-2)+tread,sd*(wid/2-0.2));RAILS.push([a[0],thr+1,a[1],b[0],gb+h+1,b[1]])})}
     if(today&&thr>0.05){const N=Math.ceil(thr/0.17),h=thr/N,wid=g.w*0.6+2.8;for(let i=0;i<N-1;i++){const y=thr-(i+1)*h,p=P(-1.5-(i+0.5)*0.32,0);steps.push([p[0],y,p[1],w.a,wid,y+0.5,0.34])}}
     if(low){const rise=thr-yo,N=Math.ceil(rise/0.17),tread=0.36,wid=g.w*2.5,FL=10,LAND=2.6;const run=i=>3+i*tread+Math.floor(i/FL)*LAND;const tot=run(N);
       for(let i=0;i<N;i++){const y=thr-i*rise/N,dist=run(i)+tread/2;steps.push([w.x+w.ox*dist,y,w.n+w.on*dist,w.a,wid,y-yo+0.6,tread+(i%FL===FL-1?LAND:0)+0.02])}
       paves.push([w.x+w.ox*1.6,thr+0.05,w.n+w.on*1.6,w.a,wid,0.3,3.2]);
       const ex=w.x+w.ox*(tot*0.35)+fx*(wid/2+2.6),en=w.n+w.on*(tot*0.35)+fn*(wid/2+2.6);lifts.push([ex,yo,en,w.a,thr-yo+3.2])}
     else if(!today)paves.push([w.x+w.ox*6,thr+0.05,w.n+w.on*6,w.a,g.w+4,0.1,7]);
-    else if(gb>=thr-0.1)paves.push([w.x+w.ox*4,thr+0.05,w.n+w.on*4,w.a,g.w+4,0.1,5]);
+    else if(gb>=thr-0.1&&!g.st_)paves.push([w.x+w.ox*4,thr+0.05,w.n+w.on*4,w.a,g.w+4,0.1,5]);
     // a gate whose street is far above the ground below it stands on a stone causeway, like Wilson's Arch under the Street of the Chain
     if(cwy){const thr=-1.5;let D=12;while(D<130&&H(w.x+w.ox*D,w.n+w.on*D)<thr-0.6)D+=2;D+=2;const yb=Math.min(yo,(PLZ+0.25))-1,cw=g.w+2,cx=w.x+w.ox*(D/2+2),cn=w.n+w.on*(D/2+2);
-      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);const arcs=[];
+      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);[-1,1].forEach(sd=>{const a=P(2.5,sd*(cw/2-0.25)),b=P(D+2,sd*(cw/2-0.25));RAILS.push([a[0],thr+1.1,a[1],b[0],thr+1.1,b[1]])});const arcs=[];
       for(let d=8;d<D-4;d+=13){const ay=H(w.x+w.ox*(d+2),w.n+w.on*(d+2));if(ay>thr-6)continue;const gq=[w.x+w.ox*(d+2),w.n+w.on*(d+2)],fl=inPoly(gq[0],gq[1],GEO.PLAZA)||inPoly(gq[0],gq[1],KZ)?(PLZ+0.45):TY(gq[0],gq[1]);arcs.push([d+2-3.5,d+2+3.5,fl,Math.min(fl+Math.min(thr-ay-3,11),thr-2.2)])}
       const piece=(a0,a1,y0,y1)=>{if(a1-a0<0.05||y1-y0<0.05)return;const c=(a0+a1)/2;stoneG.push([w.x+w.ox*c,(y0+y1)/2,w.n+w.on*c,w.a,cw,y1-y0,a1-a0])};let s0=2;
       arcs.forEach(r=>{piece(s0,r[0],yb,thr);piece(r[0],r[1],r[3],thr);piece(r[0],r[1],yb,r[2]);[-1,1].forEach(sd=>{const c=(r[0]+r[1])/2,px=w.x+w.ox*c+fx*sd*(cw/2+0.15),pn=w.n+w.on*c+fn*sd*(cw/2+0.15);stoneG.push([px,r[3]+0.35,pn,w.a,0.3,0.7,r[1]-r[0]+1.2])});s0=r[1]});piece(s0,D+2,yb,thr);
       const q=G2S(w.x+w.ox*(D*0.6),w.n+w.on*(D*0.6));label(g.n==="שער השלשלת"?"קשת וילסון":"גשר אבן",q[0],thr+4,-q[1],null,{n:"קשת וילסון והגשר לשער",r:"הצעה של התוכנית",t:"📜 רחוב השלשלת עולה לשער על גשר אבן עתיק, \"קשת וילסון\", שנבנה בימי בית שני מעל הגיא. 💡 בתוכנית הגשר בנוי מחדש באבן, כך שהשער לא תלוי באוויר מעל רחבת הכותל. מתחת לקשתות אפשר להתפלל בצל."}).m=true}
     // v80 (item 11): the Kiponus label sits on the gate itself, just over the opening
     const q=g.k==="K"?G2S(w.x+w.ox*1,w.n+w.on*1):G2S(w.x+w.ox*4,w.n+w.on*4);const L=label(g.n==="שער טדי"?"שער טדי (לא משמש)":g.n,q[0],g.k==="K"?thr+5.6:top+6,-q[1],g.five?"c":null,{n:g.n,r:SRC,t:g.t});L.m=!g.five;if(g.five)L.pr=1});
+  // #25: no wall plants on the gates themselves
+  {const mm=new THREE.Matrix4(),pp=new THREE.Vector3(),qq=new THREE.Quaternion(),ss=new THREE.Vector3();WG.children.forEach(m=>{if(!m.isInstancedMesh||!m.userData||(m.userData.n!=="צלף בחומה"&&m.userData.n!=="אזוב בקיר"))return;let ch=false;
+    for(let i=0;i<m.count;i++){m.getMatrixAt(i,mm);mm.decompose(pp,qq,ss);if(G.some(g=>g.w_&&Math.hypot(pp.x-g.w_.x,-pp.z-g.w_.n)<(g.k==="S"?16:g.k==="K"?12:9))){ss.set(0,0,0);mm.compose(pp,qq,ss);m.setMatrixAt(i,mm);ch=true}}if(ch)m.instanceMatrix.needsUpdate=true})}
   // topic 2, stage 5: the Kiponus gatehouse — a low stone terrace before the gate, a broad stair from the plaza, the rest of the climb inside the mount
   {const g=G.find(q=>q.k==="K"),w=g.w_,fx=Math.cos(w.a),fn=Math.sin(w.a),P=(nn,al)=>[w.x+w.ox*nn+fx*al,w.n+w.on*nn+fn*al],yb=(PLZ+0.25),yt=(PLZ+4.3),TW=30,TD=10;
     const ki={n:"בית שער קיפונוס",r:"מידות א, ג; ב, ב; הצעה של התוכנית",t:"💡 העלייה מרחבת הכותל להר, בנויה כבית שער אחד: מדרגות רחבות ונמוכות, מרפסת אבן לפני השער, והשער עצמו בחומה. משם עולים בתוך ההר, במדרגות או במדרגות נעות ובמעליות, ויוצאים לרחבת ההר. ⚖️ עולים בצד ימין ויורדים בצד שמאל (מידות ב, ב). אין כאן מגדלים או מבנים גבוהים: הרחבה נשארת פתוחה, והכותל נשאר כמו שהוא."};
@@ -165,7 +185,13 @@ const GATEG=new THREE.Group();WG.add(GATEG);
   const im=(geo,mat,arr,fn,info)=>{if(!arr.length)return;const m=new THREE.InstancedMesh(geo,mat,arr.length);arr.forEach((p,i)=>{fn(p);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;PICK.push(m)}GATEG.add(m)};
   const box=new THREE.BoxGeometry(1,1,1),half=(()=>{const g=new THREE.CylinderGeometry(1,1,0.2,16,1,false,0,Math.PI);g.rotateX(Math.PI/2);g.rotateZ(Math.PI/2);g.rotateY(Math.PI/2);return g})();
   const gInfo={n:"שערי הר הבית",r:SRC,t:"השערים בחומות ההר, כל אחד במקום של שער אמיתי ובקצה של רחוב אמיתי. בדרום — שני שערי חולדה עם מדרגות רחבות; במערב — שער קיפונוס מעל רחבת הכותל ושערי העיר העתיקה; בצפון — שער טדי ועוד. שער המזרח (שער הרחמים) נשאר סגור: \"השער הזה סגור יהיה\" (יחזקאל מד, ב)."};
-  im(box,gateM,stoneG,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])},gInfo);
+  // #25: the gate masses use the same Herodian stone as the mount wall skin (topic 25), measured in metres, so a gate no longer reads as a dark block stuck on the wall
+  {if(!M.mgate)M.mgate=T.mwC?new THREE.MeshStandardMaterial({map:T.mwC,normalMap:T.mwN,roughness:0.92}):gateM;const gs=[];
+    stoneG.forEach(p=>{const [x,y,n,a,sx,sy,sz]=p,ax=Math.abs(sx),ay=Math.abs(sy),az=Math.abs(sz);if(ax<1e-3||ay<1e-3||az<1e-3)return;const g=new THREE.BoxGeometry(ax,ay,az),uv=g.attributes.uv,y0=y-ay/2;
+      const dims=[[az,1],[az,1],[ax,az],[ax,az],[ax,1],[ax,1]];for(let f=0;f<6;f++)for(let k=0;k<4;k++){const i=f*4+k,u=uv.getX(i),v=uv.getY(i);if(f===2||f===3)uv.setXY(i,u*ax/16,v*az/16);else uv.setXY(i,u*dims[f][0]/16,(y0+v*ay+30)/32)}
+      g.rotateY(a);g.translate(x,y,-n);gs.push(g)});
+    if(gs.length){const U=THREE.BufferGeometryUtils,mg=U&&U.mergeBufferGeometries?U.mergeBufferGeometries(gs):null;
+      if(mg){const m=new THREE.Mesh(mg,M.mgate);m.castShadow=true;m.receiveShadow=true;m.userData=gInfo;PICK.push(m);GATEG.add(m)}else im(box,gateM,stoneG,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])},gInfo)}}
   im(box,dark,darkB,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])});
   im(box,M.wood||M.stone2,woodB,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])},{n:"ארונות לנעליים ולתיקים",r:"ברכות ט, ה",t:"💡 ארונות עץ לנעליים, למקלות ולתיקים, לפני העלייה להר (ברכות ט, ה: \"לא יכנס אדם להר הבית במקלו ובמנעלו ובפונדתו\")."});
   im(half,dark,darkA,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[4],1);d.position.set(p[0],p[1],-p[2])});
