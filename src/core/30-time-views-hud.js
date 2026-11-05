@@ -137,9 +137,14 @@ window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
 let look=null;renderer.domElement.addEventListener("pointerdown",e=>{if(WALK||DRONE){look=[e.clientX,e.clientY,yaw,pitch,e.pointerId]}});
 renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
 window.addEventListener("pointerup",e=>{if(look&&e.pointerId===look[4])look=null});
-function camAt(p,t){camSaved=false;camLim=1e9;camera.position.copy(p);controls.target.copy(t);controls.update()}
+// #18 B1: OrbitControls holds the camera at most 80° from straight up when far (over 160 m) and just under level when near (core/31).
+// A pose past that limit was pulled up by the controls the moment a flight ended (olives 34 m, city 56 m). Here the pose itself is moved to the limit, keeping its distance.
+function fixPhi(p,t){const o=p.clone().sub(t),L=o.length();if(L<1e-6)return[p,t];const lim=L>160?THREE.MathUtils.degToRad(79.5):Math.PI*0.495,phi=Math.acos(Math.max(-1,Math.min(1,o.y/L)));
+  if(phi>lim){const hz=Math.hypot(o.x,o.z)||1,k=L*Math.sin(lim)/hz;p.set(t.x+o.x*k,t.y+L*Math.cos(lim),t.z+o.z*k)}return[p,t]}
+function camAt(p,t){fixPhi(p,t);camSaved=false;camLim=1e9;camera.position.copy(p);controls.target.copy(t);controls.update()}
 const PG=(x,n,dy)=>{const q=G2S(x,n);return new THREE.Vector3(q[0],H(x,n)+dy,-q[1])};
-function viewPose(v){
+function viewPose(v){const r=viewPose0(v);return r?fixPhi(r[0],r[1]):r}
+function viewPose0(v){
   const t=C.clone(),s=500*A;
   if(v==="top")return[new THREE.Vector3(t.x+1,t.y+720,t.z+40),t];
   if(v==="olives")return[PG(640,-20,64),new THREE.Vector3(t.x+20,22,t.z)];
@@ -170,29 +175,12 @@ function segHit(a,b){const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;let best=1;for(const
 function floorAt(x,z){let g=groundAt(x,z);const q=S2G(x,-z),b=bldTop(q[0],q[1]);return Math.max(g,b)}
 let camLim=1e9,camSaved=false;const camDesired=new THREE.Vector3();
 function fadeJump(fn){const f=document.getElementById("fade");f.classList.add("on");setTimeout(()=>{fn();const t0=performance.now();let n=0;const wait=()=>{if(++n<12&&performance.now()-t0<700)requestAnimationFrame(wait);else f.classList.remove("on")};requestAnimationFrame(wait)},reduce?0:320)}
-const TOUR_STEPS=[
-  {v:"far",cap:"ירושלים מהמערב. העיר העתיקה, ובפינה הדרומית־מזרחית שלה — הר הבית, מקום המקדש (רמב״ם, הלכות בית הבחירה א, ג).",d:8000},
-  {v:"kotel",cap:"רחבת הכותל נשארת מקום תפילה. הכותל — הקיר המערבי של הר הבית — לא משתנה.",d:8000},
-  {p:[250,-45,6],t:[250,30,10],cap:"השער החיצוני הצפוני (יחזקאל מ׳, כ-כג): 50 × 25 אמה, שבע מעלות. כאן נכנסים העולים לרגל — \"הבא דרך שער צפון... יצא דרך שער נגב\" (מ״ו, ט).",d:10000},
-  {p:[250,12,5.4],t:[250,48,6],cap:"בתוך השער: שלושה תאים מכל צד, 6 × 6 אמה, ובין התאים 5 אמות (מ׳, ז). לפניהם \"גבול אמה\", ועל האילים תמרים. כאן עמדו השומרים.",d:10000},
-  {p:[150,70,14],t:[150,8,5],cap:"הרצפה והלשכות (מ׳, יז-יח): לפי המלבי״ם רצפה ברוחב 6 אמות לאורך החומה, ועליה 30 לשכות בעומק 4. כאן העם אוכל את בשר השלמים.",d:10000},
-  {p:[85,80,42],t:[26,21,4],cap:"חצרות המבשלות בארבע הפינות (מ״ו, כא-כד): 40 × 30, בלי גג. מסכת מידות (ב, ה) אומרת על לשכות עזרת נשים \"וכן הן עתידות להיות\".",d:10000},
-  {p:[300,115,30],t:[250,192,8],cap:"השער הפנימי הצפוני ושולחנות השחיטה (מ׳, לה-מג): שמונה מעלות, ארבעה שולחנות באולם השער ושמונה מצדדיו, וארבעה של אבני גזית לכלים.",d:10000},
-  {p:[150,92,48],t:[150,175,12],cap:"לשכות הכהנים (מ״ב, א-יד): שתי שורות בשלוש קומות, \"כי יוכלו אתיקים מהנה\". כאן הכהנים אוכלים קודשי קודשים ומחליפים את בגדיהם.",d:10000},
-  {p:[285,320,24],t:[250,258,10],cap:"המזבח לפי המלבי״ם (מ״ג, יג-יז): 32 × 32 וגובה 10 אמות, ארבע קרנות, והאריאל 24 × 24. עולים בכבש מדרום, בלי מדרגות — \"ולא תעלה במעלות על מזבחי\".",d:11000},
-  {p:[236,282,10.5],t:[222,263,8.5],cap:"הכיור והמוכני, בין האולם למזבח ומשוך לדרום (מידות ג, ו). שנים עשר דדים, שעשה בן קטין, כדי ש־12 כהנים יקדשו ידיהם ורגליהם בבת אחת (יומא לז ע״א).",d:10000},
-  {p:[292,198,13],t:[255,216,7],cap:"בית המטבחיים בצפון המזבח (מידות ג, ה): 24 טבעות ברצפה, שמונה ננסין עם ווים, ושמונה שולחנות שיש. הצפון הוא מקום שחיטת קודשי קודשים.",d:10000},
-  {p:[228,250,10],t:[200,250,22],cap:"האולם (מ׳, מח-מט): 20 אמה רוחב, ולפניו שני עמודים — כמו יכין ובועז. מעל פתח ההיכל גפן של זהב שכל מתנדב תולה בה עלה או אשכול (מידות ג, ח).",d:10000},
-  {v:"inside",cap:"ההיכל: 40 × 20 אמה (מ״א, ב). המנורה בדרום, השולחן בצפון, ומזבח הזהב ביניהם קרוב לפתח (רמב״ם, הלכות בית הבחירה ג, יז). על הקירות כרובים ותמרים, לכל כרוב שני פנים (מ״א, יח-יט).",d:11000},
-  {v:"kodesh",cap:"קודש הקודשים: 20 × 20 אמה (מ״א, ד). בבית שני היה ריק, ורק \"אבן היתה שם... ושתייה היתה נקראת\" (יומא ה, ב). רק הכהן הגדול נכנס, ביום הכיפורים.",d:11000},
-  {v:"olives",cap:"מהר הזיתים, משם הכהן השורף את הפרה \"מכוין ורואה כנגד פתחו של היכל\" (מידות ב, ד). מכאן רואים שהשער המזרחי והבית על ציר אחד.",d:9000},
-  {v:"top",cap:"מלמעלה: 500 × 500 אמה, הבית במערב, והמזבח באמצע החצר הפנימית. \"וישמרו את כל צורתו... ועשו אותם\" (מ״ג, יא).",d:9000}
-];
-function stPose(s){const Wq=(u,w,y)=>new THREE.Vector3(COMP.X0+u*A,y*A,-(COMP.N0-w*A));return[Wq(...s.p),Wq(...s.t)]}
+// #12: the old tour (TOUR_STEPS) never ran (the tour button starts STORIES.pilgrim); removed
+function stPose(s){const yr=COMP.rb?8.5:0,Wq=(u,w,y)=>new THREE.Vector3(COMP.X0+u*A,(y+yr)*A,-(COMP.N0-w*A));return fixPhi(Wq(...s.p),Wq(...s.t))} // #18 B3: in the Rambam plan the courts stand 8.5 amot higher (as in groundAt and routeTo)
 function stopTour(){TOUR=null;tween=null;document.getElementById("tourBtn").textContent="▶ סיור מודרך";document.getElementById("cap").hidden=true}
 document.getElementById("ykBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("yk")});
 document.getElementById("tmBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("tamid")});
-document.getElementById("tourBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("pilgrim");return;if(TOUR){stopTour();return}closeInfo();stopWalk();stopDrone();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));TOUR={i:-1,next:0};document.getElementById("tourBtn").textContent="■ עצירה"});
+document.getElementById("tourBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("pilgrim")});
 renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();if(TOUR)stopTour();if(STORY&&STORY.pause)STORY.pause();if(DRONE){D.h=Math.max(8,Math.min(60,D.h+e.deltaY*0.02))}},{passive:false});
 stage.addEventListener("pointerdown",e=>{if(false){controls.mouseButtons.LEFT=THREE.MOUSE.PAN;const up=()=>{controls.mouseButtons.LEFT=THREE.MOUSE.ROTATE;window.removeEventListener("pointerup",up)};window.addEventListener("pointerup",up)}},true);
 

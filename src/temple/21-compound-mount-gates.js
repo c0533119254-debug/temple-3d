@@ -57,7 +57,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     // the roof: the same paving as the plaza on top, plain stone under it
     {const q=(nn,al)=>P(nn,al),c=[q(0,-hw),q(R0,-hw),q(R0,hw),q(0,hw)],sh=new THREE.Shape();c.forEach((p,i)=>i?sh.lineTo(p[0],p[1]):sh.moveTo(p[0],p[1]));sh.closePath();
       const gg=new THREE.ShapeGeometry(sh),uv=gg.attributes.uv,pp=gg.attributes.position;for(let i=0;i<pp.count;i++)uv.setXY(i,pp.getX(i)/9,pp.getY(i)/9);gg.rotateX(-Math.PI/2);
-      const rf=new THREE.Mesh(gg,PLATTOP||M.pave);rf.position.y=0.002;rf.receiveShadow=true;rf.userData=info;PICK.push(rf);GATEG.add(rf);
+      const rf=new THREE.Mesh(gg,PLATTOP||M.pave);rf.position.y=0.05;rf.receiveShadow=true;rf.userData=info;PICK.push(rf);GATEG.add(rf);
       const p=P(R0/2,0);stoneG.push([p[0],-0.235,p[1],w.a,T.tw,0.43,-R0])}
     // parapets round the open stair-head; the exit at the top end stays open
     [-1,1].forEach(sd=>{const p=P(R0-T.OPEN/2,sd*(hw+0.3));stoneG.push([p[0],0.55,p[1],w.a,0.6,1.1,T.OPEN])});{const p=P(R0+0.3,0);stoneG.push([p[0],0.55,p[1],w.a,T.tw+1.2,1.1,0.6])}
