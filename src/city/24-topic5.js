@@ -10,9 +10,10 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
   const st=SMALL?7:5;
   for(let n=-1300;n<520&&R.length<cap;n+=st)for(let x=-1000;x<1150&&R.length<cap;x+=st){const xx=x+(r()-0.5)*st,nn=n+(r()-0.5)*st;
     const kd=segDist(xx,nn,KIDRON)[0],hd=segDist(xx,nn,HINNOM)[0],olv=xx>480&&xx<1100&&nn>-700&&nn<450;if(kd>240&&hd>170&&!olv)continue;if(kd<9)continue;
-    const sl=Math.hypot(H(xx+3,nn)-H(xx-3,nn),H(xx,nn+3)-H(xx,nn-3))/6;if(sl<0.16)continue;
+    const sl=Math.hypot(H(xx+3,nn)-H(xx-3,nn),H(xx,nn+3)-H(xx,nn-3))/6;if(sl<0.16||sl>1)continue;
     if(noise(xx,nn)*0.8+sl*1.2<0.86||r()<0.6)continue;
     if(inPoly(xx,nn,MOUNT_BIG)||inPoly(xx,nn,OLD)||GR.has(gk(xx,nn))||!clearAt(xx,nn,2.5))continue;
+    if(nearEdge(xx,nn,MOUNT)[0]<4)continue;{let wd=1e9;for(let k=0;k<WALL_LINE.length-1;k++){const r=segDist(xx,nn,[WALL_LINE[k],WALL_LINE[k+1]]);if(r[0]<wd)wd=r[0]}if(wd<3.5)continue}
     const s=0.7+Math.pow(r(),2)*2.2;R.push([xx,TY(xx,nn),nn,s,r()*6.28,r()<0.35])}
   if(!R.length)return;
   // two shapes: a round boulder and a flat ledge (nari crust), half buried
@@ -50,3 +51,9 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
     const OL=[];for(let t=0;t<400&&OL.length<8;t++){const x=xa+3+r()*(xb-xa-6),n=na+3+r()*(nb-na-6);if(inPoly(x,n,G)&&OL.every(q=>Math.hypot(q[0]-x,-q[2]-n)>8))OL.push([x,TY(x,n),-n,1.35+r()*0.25,r()*6.28])}
     const m=TREES5.plant(WG,"olive",OL,{n:"הזיתים העתיקים בגת שמנים",r:"OpenStreetMap (גת שמנים); Bernabei et al., 2012",t:"💡 בגן גת שמנים, למרגלות הר הזיתים, יש שמונה עצי זית עתיקים מאוד. מחקר משנת 2012 (המועצה הלאומית למחקר באיטליה) מצא שהם בני כ־900 שנה לפחות, ושכולם צמחו מאותו עץ אם. כאן הם גדולים מהזיתים שסביבם."});if(m)PICK.push(m)}
 })();
+// plants that were set from H() on the Mount wall can sit under the visible ground. Lift those onto it once groundAt knows the Mount.
+(function liftWallPlants(n){if(n>80)return;let c;try{c=COMP}catch(e){setTimeout(()=>liftWallPlants(n+1),80);return}if(!c){setTimeout(()=>liftWallPlants(n+1),80);return}
+  WG.updateMatrixWorld(true);const M=new THREE.Matrix4(),p=new THREE.Vector3(),q=new THREE.Quaternion(),s=new THREE.Vector3(),w=new THREE.Vector3();
+  WG.children.forEach(m=>{if(!m.isInstancedMesh||!m.userData||(m.userData.n!=="אזוב בקיר"&&m.userData.n!=="צלף בחומה"))return;let ch=false;
+    for(let i=0;i<m.count;i++){m.getMatrixAt(i,M);M.decompose(p,q,s);w.copy(p).applyMatrix4(m.matrixWorld);const gy=groundAt(w.x,w.z);if(w.y<gy-0.35){p.y=gy+0.3;M.compose(p,q,s);m.setMatrixAt(i,M);ch=true}}
+    if(ch)m.instanceMatrix.needsUpdate=true})})(0);
