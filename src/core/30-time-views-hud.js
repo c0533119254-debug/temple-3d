@@ -235,11 +235,41 @@ function showInfo(d){if(!d)return;const h="<h2>"+d.n+"</h2>"+(d.r?"<div class='r
 const closeInfo=()=>{document.getElementById("infocard").hidden=true};["click","pointerdown"].forEach(ev=>document.getElementById("infoX").addEventListener(ev,e=>{e.stopPropagation();e.preventDefault();closeInfo()}));window.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfo()});
 // ---- labels fly to their place ----
 function goLabel(L){if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(TOUR)stopTour();if(DRONE){droneFly(L.v.clone());showInfo(L.info);return}if(WALK)stopWalk();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
+  showInfo(L.info);
+  // the object behind the label, whole and in the middle of the free part of the screen
+  try{if(!L.inh){const b=lblBox(L);let c,r;if(b){c=b.getCenter(new THREE.Vector3());const z=b.getSize(new THREE.Vector3());r=Math.max(3,0.5*Math.hypot(z.x,z.y*0.7,z.z))}
+    else{c=L.v.clone();const g=floorAt(c.x,c.z);if(isFinite(g)&&g<c.y&&c.y-g<45){r=Math.max(L.c?5:20,(c.y-g)*0.8);c.y=(c.y+g)/2}else r=L.c?8:40}
+    let od=null;if(/^(שער|פשפש)/.test(L.txt||"")){r=Math.max(r,24);if(COMP){od=new THREE.Vector3(c.x-(COMP.X0+250*A),0,c.z+(COMP.N0-250*A));if(od.length()<5)od=null}}r=Math.max(r,L.c?10:20);const [p,t]=frameView(c,r,L.c?10:30,b,od);if(needFade(camera.position,p))routeTo(p,t,1600);else tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:reduce?1:1600,arc:true};return}}catch(e){console.warn(e)}
   const t=L.v.clone(),cp=camera.position.clone(),dir=cp.sub(t);dir.y=0;if(dir.length()<1)dir.set(1,0,1);dir.normalize();const dist=L.c?85:200;
   const tg=t.clone();tg.y=t.y-(L.c?1:10);for(const c of COL){if(tg.x>c.x0&&tg.x<c.x1&&tg.z>c.z0&&tg.z<c.z1&&tg.y<c.y1+1&&tg.y>c.y0)tg.y=c.y1+1.5}let p=null;
   for(let k=0;k<16&&!p;k++){const an=(k%2?1:-1)*Math.ceil(k/2)*Math.PI/8,d=dir.clone().applyAxisAngle(new THREE.Vector3(0,1,0),an);for(const hf of[0.45,0.8]){const q=t.clone().addScaledVector(d,dist);q.y=t.y+dist*hf;if(segHit(tg,q)>=1&&q.y>floorAt(q.x,q.z)+3){p=q;break}}}
   if(!p){p=t.clone().addScaledVector(dir,dist);p.y=t.y+dist*1.2}
-  if(needFade(camera.position,p))routeTo(p,tg,1600);else tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:tg,start:performance.now(),dur:reduce?1:1600,arc:true};showInfo(L.info)}
+  if(needFade(camera.position,p))routeTo(p,tg,1600);else tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:tg,start:performance.now(),dur:reduce?1:1600,arc:true}}
+// meshes that carry the label's info, near the label (one kitchen of four, not all of them)
+function lblBox(L){const I=L.info;if(!I)return null;const b=new THREE.Box3(),tb=new THREE.Box3(),m4=new THREE.Matrix4(),c=new THREE.Vector3();let n=0;
+  const near=q=>Math.hypot(q.x-L.v.x,q.z-L.v.z)<45;const shown=o=>{for(let q=o;q;q=q.parent)if(!q.visible&&!(q.userData&&q.userData.hid))return false;return true};
+  const add=()=>{tb.getCenter(c);if(near(c)){b.union(tb);n++}};
+  cPick.concat(PICK).forEach(o=>{if(o.userData!==I||!o.geometry||!shown(o))return;if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();o.updateWorldMatrix(true,false);
+    if(o.isInstancedMesh){for(let i=0;i<Math.min(o.count,500);i++){o.getMatrixAt(i,m4);m4.premultiply(o.matrixWorld);tb.copy(o.geometry.boundingBox).applyMatrix4(m4);add()}}
+    else{tb.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld);add()}});
+  if(!n)return null;const z=b.getSize(c);return Math.max(z.x,z.z)>500?null:b}
+// the camera must not aim at a point inside a wall (the wall guard then pulls the camera into it): aim at the spot where the line of sight first meets the object; the picture stays the same
+function outTarget(p,c,box){const t=c.clone(),ray=new THREE.Ray(),v=new THREE.Vector3(),bx=new THREE.Box3();
+  for(let k=0;k<4;k++){let B=null;if(box&&box.containsPoint(t))B=bx.copy(box).expandByScalar(0.4);else for(const q of COL)if(t.x>q.x0&&t.x<q.x1&&t.z>q.z0&&t.z<q.z1&&t.y>q.y0&&t.y<q.y1){B=bx.set(v.set(q.x0-0.4,q.y0-0.4,q.z0-0.4),new THREE.Vector3(q.x1+0.4,q.y1+0.4,q.z1+0.4));break}
+    if(!B)break;ray.set(p,t.clone().sub(p).normalize());if(B.containsPoint(p)||!ray.intersectBox(B,v))break;t.copy(v);box=null}
+  return t}
+// gates are seen from outside, from the side people come to them (od = that direction)
+// a camera pose that shows a ball (centre c, radius r) whole, from above at an angle, centred in the screen part that the info card and search bar leave free
+function frameView(c,r,dmin,box,od){const sr=stage.getBoundingClientRect(),W=sr.width,H=sr.height;let x0=0,x1=W,y0=0,y1=H;
+  const card=document.getElementById("infocard");if(card&&!card.hidden){const k=card.getBoundingClientRect();if(k.width>2&&k.height>2){if(k.height>H*0.8){if(k.left-sr.left<W/2)x0=Math.min(W*0.6,k.right-sr.left);else x1=Math.max(W*0.4,k.left-sr.left)}else y1=Math.max(H*0.45,H-k.height)}}
+  const sb=document.getElementById("sbox");if(sb&&!sb.hidden){const k=sb.getBoundingClientRect();if(k.width>W*0.6)y0=Math.min(H*0.3,k.bottom-sr.top)}
+  const tanV=Math.tan(camera.fov*Math.PI/360),fr=Math.min(x1-x0,y1-y0)/H,d=Math.max(dmin||12,Math.min(700,r*1.2/(tanV*fr)));
+  const el=r>60?0.8:0.62,dir=od?od.clone():camera.position.clone().sub(c);dir.y=0;if(dir.length()<1)dir.set(1,0,1);dir.normalize();
+  const p=c.clone().addScaledVector(dir,d*Math.cos(el));p.y+=d*Math.sin(el);const t=outTarget(p,c,box);try{safeCam(p,t)}catch(e){}
+  {const g=floorAt(p.x,p.z);if(isFinite(g)&&p.y<g+2)p.y=g+2}
+  const f=t.clone().sub(p),dd=f.length();f.normalize();const rt=new THREE.Vector3().crossVectors(f,new THREE.Vector3(0,1,0)).normalize(),up=new THREE.Vector3().crossVectors(rt,f);
+  const wpp=2*dd*tanV/H,ox=(x0+x1)/2-W/2,oy=(y0+y1)/2-H/2,sh=rt.multiplyScalar(-ox*wpp).addScaledVector(up,oy*wpp);
+  return [p.add(sh),t.add(sh)]}
 // ---- picking ----
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();let down=null;
 renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];if(TOUR)stopTour();if(STORY&&STORY.pause)STORY.pause()});

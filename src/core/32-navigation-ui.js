@@ -177,12 +177,11 @@ function hl(el){document.querySelectorAll(".lbl.hl").forEach(x=>{if(!labels.find
 function pickLabel(L){goLabel(L);hl(L.el);L.pin=performance.now()}
 const _goLabel=goLabel;goLabel=function(L){UIPT=L.v.clone();UIPT._L=L;_goLabel(L);UIPT=null};
 function flyToPoint(c,r){if(STORY)STORY.stop();if(TOUR)stopTour();if(WALK)stopWalk();if(DRONE){droneFly(c.clone());return}
-  const cp=camera.position.clone(),dir=cp.sub(c);dir.y=0;if(dir.length()<1)dir.set(1,0,1);dir.normalize();const dist=Math.max(28,Math.min(260,r*3));
-  const p=c.clone().addScaledVector(dir,dist);p.y=c.y+Math.max(10,dist*0.55);const t=c.clone();try{safeCam(p,t)}catch(e){}
+  const [p,t]=frameView(c,Math.min(r,220),16);
   document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   if(reduce){camAt(p,t);return}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:1600,arc:true}}
-function objCenter(o){const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return null;const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return[c,Math.max(4,s.length()/2)]}
-function pickObj(o){const cr=objCenter(o);if(!cr)return;flyToPoint(cr[0],cr[1]);UIPT=cr[0].clone();showInfo(o.userData)}
+function objCenter(o){const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return null;const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return[c,Math.max(3,0.5*Math.hypot(s.x,s.y*0.7,s.z))]}
+function pickObj(o){const cr=objCenter(o);if(!cr)return;UIPT=cr[0].clone();showInfo(o.userData);flyToPoint(cr[0],cr[1])}
 function startTour(key){closeInfo();closeDr();if(STORY)STORY.stop();if(TOUR)stopTour();if(WALK)stopWalk();try{stopDrone()}catch(e){}if(/^(pesach|sukkot|hakhel)$/.test(key)&&PLAN!=="ez")$("plEz").click();STORY_API.start(key)}
 // --- icon rail + drawers ---
 const rail=mk("nav","gl ui dim");rail.id="rail";rail.setAttribute("aria-label","תפריט");stage.appendChild(rail);
