@@ -236,14 +236,11 @@ body.touring .infocard{display:none!important}
 .ic-row .ico,.plist button .ico{color:var(--green2)}
 .dr h3{color:var(--green2)!important}
 #stStrip button.on,#rail button[aria-pressed="true"],#chips button[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold2),var(--gold))!important;color:#140f04!important}
-.loading{background:radial-gradient(circle at 50% 45%,#1c3324 0%,#0a100c 55%,#050705 100%)!important}
-.ldt{color:var(--gold2)!important;font-family:var(--f-display)!important}.ldbar i{background:linear-gradient(90deg,var(--green),var(--gold2))!important}
 .dr.open~#sbox,body.drawer #sbox{display:none}
 .dr,.infocard .ic-body{scrollbar-width:thin;scrollbar-color:rgba(212,175,87,.5) transparent}.dr::-webkit-scrollbar{width:6px}.dr::-webkit-scrollbar-thumb{background:rgba(212,175,87,.5);border-radius:3px}
 #sbox input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
 
 
-.loading{background:radial-gradient(circle at 50% 40%,#22314d,#0b1222)!important;z-index:50}.ldbox{text-align:center;color:#F5EFE0;font-family:var(--f-body)}.ldt{font:700 20px var(--f-display);margin-bottom:12px}.ldbar{width:min(320px,70vw);height:6px;border-radius:3px;background:rgba(245,239,224,.15);overflow:hidden;margin:0 auto}.ldbar i{display:block;height:100%;width:var(--p,2%);background:#C9A24B;transition:width .25s}.lds{margin-top:10px;font-size:13px;color:rgba(245,239,224,.7)}
 
 /* topic 7, phone stage: every tap target at least 44×44 px (Apple HIG / WCAG 2.5.5). Small round icons keep their look and get a larger invisible hit area */
 @media (max-width:700px),(pointer:coarse){
