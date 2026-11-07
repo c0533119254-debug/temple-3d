@@ -3,7 +3,7 @@
 const __Q=[];let __DONE=false;const __AFTER=f=>__DONE?f():__Q.push(f);const __Y=p=>new Promise(r=>{const l=document.getElementById("loading");if(l){l.style.setProperty("--p",p+"%");const t=l.querySelector("b");if(t)t.textContent=p+"%"}requestAnimationFrame(()=>setTimeout(r,0))});
 const stage=document.getElementById("stage");
 if(!window.THREE||!THREE.OrbitControls||!THREE.Sky){document.getElementById("loading").textContent="לא הצלחתי לטעון את ספריית התלת־ממד.";return;}
-const REVIEW=(()=>{try{const f=sessionStorage.getItem("tm_review");if(f==="0")return false;if(f==="1")return true}catch(e){}try{return /[?&#]review=1/.test(location.search+location.hash)||/[?&]review=1/.test(document.referrer)}catch(e){return false}})();
+const REVIEW=(()=>{try{if(/[?&#]review=1/.test(location.search+location.hash))return true}catch(e){} /* מכונות מצב: קישור עם review=1 תמיד נכנס, גם אחרי יציאה קודמת */try{const f=sessionStorage.getItem("tm_review");if(f==="0")return false;if(f==="1")return true}catch(e){}try{return /[?&]review=1/.test(document.referrer)}catch(e){return false}})();
 const reduce=REVIEW||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 const PLZ=-13,HUL=-18.6;let A=0.525, FMODE="ez", LOC="kodesh", GATE="low", TIME="morning", SHOW_PEOPLE=!REVIEW, SHOW_LABELS=true;

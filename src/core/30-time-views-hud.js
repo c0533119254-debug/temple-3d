@@ -52,9 +52,12 @@ function insideLight(){const q=INL[INSIDE];if(!M.panel.userData.g0){M.panel.user
   const g=q?q.glow:1;M.panel.emissiveIntensity=M.panel.userData.g0*g;M.goldFloor.emissiveIntensity=M.goldFloor.userData.g0*g;if(!q)return;
   hemi.intensity*=q.hemi;sun.intensity*=q.sun;renderer.toneMappingExposure*=q.exp;scene.environment=null} // no sky reflections on the gold inside: it shines only from the menorah and the door
 // topic 6 stage 7: the inner east gate is open only on Shabbat and Rosh Chodesh, by day (Ezek 46:1-2). DAY = "chol" (a weekday) / "shabbat" / "rosh" (Rosh Chodesh).
-// 💡 the model opens on Shabbat so that the gate looks as it did before; on a weekday, or after sunset, the doors are closed.
+// ⚖️ the model opens on a weekday (7.11.2026), so the gate is closed ("יהיה סגור ששת ימי המעשה") and the buses and trains run; choosing Shabbat also stops the traffic (one state, core/31 shabSeg).
 function gateDoors(){if(!EGATE)return;const sp=sunAt(HOUR!=null?HOUR:TIMES[TIME].h),open=DAY!=="chol"&&sp.el>-0.833;EGATE.forEach(m=>m.visible=!open)}
-function setDay(d){DAY=d;gateDoors();renderer.shadowMap.needsUpdate=true}
+function setDay(d){DAY=d;gateDoors();renderer.shadowMap.needsUpdate=true;
+  // מכונות מצב: "שבת" בסוג היום ו"שבת / יום טוב" בתחבורה הם אותו מצב. כל אחד מעדכן את השני
+  const sb=document.querySelector('#shabSeg button[data-sh="'+(d==="shabbat"?"1":"0")+'"]');if(sb&&sb.getAttribute("aria-pressed")!=="true")sb.click();
+  document.querySelectorAll("#daySeg button[data-day]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.day===d?"true":"false"))}
 function applyTime(){applyTime0();insideLight();gateDoors()}
 function applyTime0(){renderer.shadowMap.needsUpdate=true;
   const t=TIMES[TIME],night=TIME==="night",sp=sunAt(HOUR!=null?HOUR:t.h),tw=!night&&sp.el<4;
@@ -104,12 +107,14 @@ function groundAt(x,z){const n=-z;
   if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n),dl=DUNG.lotY(g[0],g[1]);return dl!=null?dl:surfY(g[0],g[1])}}
 function blocked(x,z,feet){const r=0.6;for(const c of COL){if(x>c.x0-r&&x<c.x1+r&&z>c.z0-r&&z<c.z1+r&&c.y1>feet+0.55&&c.y0<feet+1.7)return true}return false}
 const JOY={x:0,y:0};
+// מכונות מצב (7.11.2026): יציאה אחת מכל מצבי המצלמה — סיור מסופר, רכיבה ברכבת, הליכה, רחפן וטיסה. כל כניסה למצב חדש עוברת כאן, כדי ששני מצבים לא יפעלו יחד
+function endModes(keepStory){if(STORY&&!keepStory)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(WALK)stopWalk();if(DRONE)stopDrone();tween=null}
 let DRONE=false,WALK=false,yaw=0,pitch=0;const keys={};
-function startWalk(){camSaved=false;if(DRONE)stopDrone();if(TOUR)stopTour();tween=null;WALK=true;controls.enabled=false;const p=COMP?(COMP.rb?[COMP.X0+250*A,-(COMP.N0-130*A)]:[COMP.X0+250*A,-(COMP.N0+30*A)]):[100,-300];
+function startWalk(){camSaved=false;endModes(true);WALK=true;controls.enabled=false;const p=COMP?(COMP.rb?[COMP.X0+250*A,-(COMP.N0-130*A)]:[COMP.X0+250*A,-(COMP.N0+30*A)]):[100,-300];
   camera.position.set(p[0],groundAt(p[0],p[1])+1.65,p[1]);yaw=Math.PI;pitch=0.02;camera.rotation.order="YXZ";camera.rotation.set(pitch,yaw,0);
   document.getElementById("pad").hidden=false;const wh=document.getElementById("walkhint");wh.textContent="גוררים כדי להסתכל מסביב · העיגול (או W A S D / החצים) כדי ללכת · Shift או דחיפה עד הסוף — ריצה";wh.hidden=false}
 const D={h:20,vx:0,vz:0,fast:false,tw:null,pinch:0};
-function startDrone(){camSaved=false;if(TOUR)stopTour();if(WALK)stopWalk();tween=null;DRONE=true;controls.enabled=false;const fw=new THREE.Vector3();camera.getWorldDirection(fw);yaw=Math.atan2(-fw.x,-fw.z);pitch=-0.5;D.vx=D.vz=0;D.h=20;
+function startDrone(){camSaved=false;endModes(true);DRONE=true;controls.enabled=false;const fw=new THREE.Vector3();camera.getWorldDirection(fw);yaw=Math.atan2(-fw.x,-fw.z);pitch=-0.5;D.vx=D.vz=0;D.h=20;
   const cp=camera.position,lim=380;cp.x=Math.max(C.x-lim,Math.min(C.x+lim,cp.x));cp.z=Math.max(C.z-lim,Math.min(C.z+lim,cp.z));if(camera.position.distanceTo(C)>300||!COMP){if(COMP){const W2=(u,v)=>[COMP.X0+u*A,-(COMP.N0-v*A)],q=W2(300,470),h=W2(200,250);cp.set(q[0],0,q[1]);yaw=Math.atan2(-(h[0]-q[0]),-(h[1]-q[1]))}else{cp.set(C.x+170,0,C.z+210);yaw=Math.atan2(170,210)}}cp.y=floorAt(cp.x,cp.z)+D.h;
   document.getElementById("pad").hidden=false;document.getElementById("fastB").hidden=false;const wh=document.getElementById("walkhint");wh.textContent="רחפן: W/S או העיגול — קדימה ואחורה · A/D — פנייה · גרירה — מבט · גלגלת או צביטה — גובה · לחיצה על מבנה — טיסה אליו";wh.hidden=false}
 function stopDrone(){if(TRN&&TRN.riding)TRN.stopRide();if(!DRONE)return;DRONE=false;D.tw=null;controls.enabled=true;const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,40);controls.target.y=camera.position.y-25;controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;document.getElementById("walkhint").hidden=true}
@@ -169,7 +174,7 @@ function routeTo(p,t,dur){if(!COMP){camAt(p,t);return}const Wq=(u,w,y)=>new THRE
   pts.push(p);tgs.push(t);tween={path:pts,tpath:tgs,start:performance.now(),dur:Math.max(1600,(dur||1200)*1.6),p0:pts[0],t0:tgs[0],p1:p,t1:t}}
 function needFade(p0,p1){const inH=q=>INTBOX&&q.x>INTBOX.x0-2&&q.x<INTBOX.x1+2&&q.z>INTBOX.z0-2&&q.z<INTBOX.z1+2&&q.y<INTBOX.y1;return inH(p0)||inH(p1)}
 function flyTo(v,dur){const [p,t]=viewPose(v);if(reduce||!dur){camAt(p,t);return}if(needFade(camera.position,p)){routeTo(p,t,dur);return}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:dur}}
-let TOUR=null,OCCF=0,HUDF=0;
+let OCCF=0,HUDF=0; // מכונות מצב: TOUR הישן לא קיבל ערך אף פעם (סיור ישן שהוסר), ולכן הוסר
 function segHit(a,b){const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;let best=1;for(const c of COL){if(c.y1-c.y0<2.6||(c.x1-c.x0<1.6&&c.z1-c.z0<1.6))continue;if(a.x>c.x0-0.3&&a.x<c.x1+0.3&&a.z>c.z0-0.3&&a.z<c.z1+0.3&&a.y>c.y0-0.3&&a.y<c.y1+0.3)continue;let t0=0,t1=1;const sl=(o,d,lo,hi)=>{if(Math.abs(d)<1e-9)return o>=lo&&o<=hi;let u=(lo-o)/d,v=(hi-o)/d;if(u>v){const q=u;u=v;v=q}t0=Math.max(t0,u);t1=Math.min(t1,v);return t0<=t1};
   if(sl(a.x,dx,c.x0-0.25,c.x1+0.25)&&sl(a.y,dy,c.y0-0.25,c.y1+0.25)&&sl(a.z,dz,c.z0-0.25,c.z1+0.25)&&t0<best)best=t0}return best}
 function floorAt(x,z){let g=groundAt(x,z);const q=S2G(x,-z),b=bldTop(q[0],q[1]);return Math.max(g,b)}
@@ -177,11 +182,10 @@ let camLim=1e9,camSaved=false;const camDesired=new THREE.Vector3();
 function fadeJump(fn){const f=document.getElementById("fade");f.classList.add("on");setTimeout(()=>{fn();const t0=performance.now();let n=0;const wait=()=>{if(++n<12&&performance.now()-t0<700)requestAnimationFrame(wait);else f.classList.remove("on")};requestAnimationFrame(wait)},reduce?0:320)}
 // #12: the old tour (TOUR_STEPS) never ran (the tour button starts STORIES.pilgrim); removed
 function stPose(s){const yr=COMP.rb?8.5:0,Wq=(u,w,y)=>new THREE.Vector3(COMP.X0+u*A,(y+yr)*A,-(COMP.N0-w*A));return fixPhi(Wq(...s.p),Wq(...s.t))} // #18 B3: in the Rambam plan the courts stand 8.5 amot higher (as in groundAt and routeTo)
-function stopTour(){TOUR=null;tween=null;document.getElementById("tourBtn").textContent="▶ סיור מודרך";document.getElementById("cap").hidden=true}
 document.getElementById("ykBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("yk")});
 document.getElementById("tmBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("tamid")});
 document.getElementById("tourBtn").addEventListener("click",()=>{if(STORY){STORY.stop();return}STORY_API.start("pilgrim")});
-renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();if(TOUR)stopTour();if(STORY&&STORY.pause)STORY.pause();if(DRONE){D.h=Math.max(8,Math.min(60,D.h+e.deltaY*0.02))}},{passive:false});
+renderer.domElement.addEventListener("wheel",e=>{e.preventDefault();if(STORY&&STORY.pause)STORY.pause();if(DRONE){D.h=Math.max(8,Math.min(60,D.h+e.deltaY*0.02))}},{passive:false});
 stage.addEventListener("pointerdown",e=>{if(false){controls.mouseButtons.LEFT=THREE.MOUSE.PAN;const up=()=>{controls.mouseButtons.LEFT=THREE.MOUSE.ROTATE;window.removeEventListener("pointerup",up)};window.addEventListener("pointerup",up)}},true);
 
 // ---- help for the method buttons ----
@@ -227,14 +231,15 @@ function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);con
     x.beginPath();co.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath();x.fillStyle="rgba(201,162,74,.55)";x.fill();x.strokeStyle="#8a6a1f";x.lineWidth=1.5;x.stroke();
     const hp=WG.worldToLocal(new THREE.Vector3(COMP.X0+150*A,0,-(COMP.N0-250*A))),h=M2([(hp.x+MAPR)*MAPK,(MAPR+hp.z)*MAPK]);x.fillStyle="#7a5a12";x.fillRect(h[0]-2.5,h[1]-1.5,5,3)}
   const p=M2([px0,py0]),hd=ang;x.translate(p[0],p[1]);x.rotate(hd);x.fillStyle="rgba(232,88,74,.35)";x.beginPath();x.moveTo(0,0);x.arc(0,0,20,-Math.PI/2-0.5,-Math.PI/2+0.5);x.closePath();x.fill();x.fillStyle="#e8584a";x.strokeStyle="#fff";x.lineWidth=2;x.beginPath();x.arc(0,0,4.5,0,7);x.fill();x.stroke();x.restore()}
-document.getElementById("homeB").addEventListener("click",()=>{if(STORY)STORY.stop();if(TOUR)stopTour();if(WALK)stopWalk();stopDrone();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="home"?"true":"false"));flyTo("home",1600)});
-document.getElementById("exitB").addEventListener("click",()=>{if(WALK)stopWalk();stopDrone();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="court"?"true":"false"));flyTo("court",1600)});
+document.getElementById("homeB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="home"?"true":"false"));flyTo("home",1600)});
+document.getElementById("exitB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="court"?"true":"false"));flyTo("court",1600)});
 document.getElementById("compass").addEventListener("click",()=>{if(WALK)return;const t=controls.target,d=camera.position.distanceTo(t),nW=new THREE.Vector3(0,0,1).applyAxisAngle(new THREE.Vector3(0,1,0),-THETA);const h=Math.max(20,camera.position.y-t.y);const p=t.clone().addScaledVector(nW,Math.sqrt(Math.max(1,d*d-h*h)));p.y=t.y+h;tween={p0:camera.position.clone(),t0:t.clone(),p1:p,t1:t.clone(),start:performance.now(),dur:900}});
 // ---- info card ----
 function showInfo(d){if(!d)return;const h="<h2>"+d.n+"</h2>"+(d.r?"<div class='ref'>"+d.r+"</div>":"")+(d.t?"<p class='note'>"+d.t+"</p>":"");document.getElementById("info").innerHTML=h;document.getElementById("infobody").innerHTML=h;document.getElementById("infocard").hidden=false}
-const closeInfo=()=>{document.getElementById("infocard").hidden=true};["click","pointerdown"].forEach(ev=>document.getElementById("infoX").addEventListener(ev,e=>{e.stopPropagation();e.preventDefault();closeInfo()}));window.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfo()});
+let closeInfo=()=>{ // let: core/32 עוטף אותה (כש־const העטיפה נכשלה בשקט)
+  document.getElementById("infocard").hidden=true};["click","pointerdown"].forEach(ev=>document.getElementById("infoX").addEventListener(ev,e=>{e.stopPropagation();e.preventDefault();closeInfo()}));window.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfo()});
 // ---- labels fly to their place ----
-function goLabel(L){if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(TOUR)stopTour();if(DRONE){droneFly(L.v.clone());showInfo(L.info);return}if(WALK)stopWalk();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
+function goLabel(L){if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(DRONE){droneFly(L.v.clone());showInfo(L.info);return}if(WALK)stopWalk();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   showInfo(L.info);
   // the object behind the label, whole and in the middle of the free part of the screen
   try{if(!L.inh){const b=lblBox(L);let c,r;if(b){c=b.getCenter(new THREE.Vector3());const z=b.getSize(new THREE.Vector3());r=Math.max(3,0.5*Math.hypot(z.x,z.y*0.7,z.z))}
@@ -272,8 +277,8 @@ function frameView(c,r,dmin,box,od){const sr=stage.getBoundingClientRect(),W=sr.
   return [p.add(sh),t.add(sh)]}
 // ---- picking ----
 const ray=new THREE.Raycaster(),mv=new THREE.Vector2();let down=null;
-renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];if(TOUR)stopTour();if(STORY&&STORY.pause)STORY.pause()});
-document.addEventListener("click",e=>{if(STORY&&e.target.closest&&e.target.closest("#planSeg button,#facSeg button,#locSeg button,#amahSeg button,#gateSeg button,#floorSeg button"))STORY.stop()},true);
+renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];if(STORY&&STORY.pause)STORY.pause()});
+document.addEventListener("click",e=>{if(STORY&&e.target.closest&&e.target.closest("#planSeg button,#facSeg button,#locSeg button,#amahSeg button,#gateSeg button,#floorSeg button,#optSeg button[data-o=people]"))STORY.stop()},true);
 renderer.domElement.addEventListener("pointerup",e=>{
   if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;down=null;{const el=document.elementFromPoint(e.clientX,e.clientY);if(el&&el.closest&&el.closest(".lbl,.story,.infocard,.hud,#sbox,#rail,.dr,#intro"))return}
   const r=renderer.domElement.getBoundingClientRect();mv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);

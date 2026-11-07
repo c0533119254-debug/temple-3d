@@ -16,7 +16,7 @@ function sceneHit(ray){try{rc.ray.copy(ray);rc.near=0;rc.far=8000;const objs=[];
 const busy=()=>WALK||DRONE||(TRN&&TRN.riding);
 // zoom toward the cursor
 let zAcc=0,zPt=null,zT=0;
-stage.addEventListener("wheel",e=>{if(e.target!==el||busy())return;e.preventDefault();e.stopPropagation();tween=null;if(TOUR)stopTour();if(STORY&&STORY.pause)STORY.pause();const now=performance.now();
+stage.addEventListener("wheel",e=>{if(e.target!==el||busy())return;e.preventDefault();e.stopPropagation();tween=null;if(STORY&&STORY.pause)STORY.pause();const now=performance.now();
   if(!zPt||now-zT>250){const g=groundHit(rayAt(e.clientX,e.clientY));zPt=g||controls.target.clone()}zT=now;
   const dy=e.deltaMode===1?e.deltaY*33:e.deltaY;zAcc+=Math.max(-400,Math.min(400,dy))},{passive:false,capture:true});
 function zoomTick(dt){if(Math.abs(zAcc)<0.5||!zPt){zAcc=0;return}const step=zAcc*Math.min(1,dt*14);zAcc-=step;
@@ -32,7 +32,7 @@ function zoomTick(dt){if(Math.abs(zAcc)<0.5||!zPt){zAcc=0;return}const step=zAcc
 // keyboard: WASD/arrows move, Q/E turn, R/F tilt, +/- zoom, Shift fast
 const K={};
 const typing=()=>{const a=document.activeElement;return a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)};
-window.addEventListener("keydown",e=>{if(busy()||typing()||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();if(["w","a","s","d","q","e","r","f","arrowup","arrowdown","arrowleft","arrowright","+","=","-","shift"].includes(k)){K[k]=true;if(k.startsWith("arrow"))e.preventDefault();if(STORY&&STORY.pause&&k!=="shift")STORY.pause();if(TOUR)stopTour()}});
+window.addEventListener("keydown",e=>{if(busy()||typing()||e.ctrlKey||e.metaKey||e.altKey)return;const k=e.key.toLowerCase();if(["w","a","s","d","q","e","r","f","arrowup","arrowdown","arrowleft","arrowright","+","=","-","shift"].includes(k)){K[k]=true;if(k.startsWith("arrow"))e.preventDefault();if(STORY&&STORY.pause&&k!=="shift")STORY.pause()}});
 window.addEventListener("keyup",e=>{K[e.key.toLowerCase()]=false});window.addEventListener("blur",()=>{for(const k in K)K[k]=false});
 const VJ={lx:0,ly:0,rx:0,ry:0};
 function keyTick(dt){if(busy()||typing())return;const f=Math.max(-1,Math.min(1,(K.w||K.arrowup?1:0)-(K.s||K.arrowdown?1:0)-VJ.ly)),r=Math.max(-1,Math.min(1,(K.d||K.arrowright?1:0)-(K.a||K.arrowleft?1:0)+VJ.lx)),up=(K.e?1:0)-(K.q?1:0),turn=VJ.rx,tilt=(K.r?1:0)-(K.f?1:0)-VJ.ry,zm=(K["+"]||K["="]?1:0)-(K["-"]?1:0);
@@ -52,7 +52,7 @@ function keyTick(dt){if(busy()||typing())return;const f=Math.max(-1,Math.min(1,(
     d.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();id=e.pointerId;d.setPointerCapture(id);set(e)});d.addEventListener("pointermove",e=>{if(e.pointerId===id)set(e)});d.addEventListener("pointerup",end);d.addEventListener("pointercancel",end);return d};
   const jl=mkJ("l"),jr=mkJ("r");jb.onclick=()=>{const on=jl.hidden;jl.hidden=jr.hidden=!on;jb.setAttribute("aria-pressed",on?"true":"false")}}}
 // double click: fly there
-el.addEventListener("dblclick",e=>{if(busy())return;e.preventDefault();const p=sceneHit(rayAt(e.clientX,e.clientY));if(!p)return;if(STORY)STORY.stop();if(TOUR)stopTour();
+el.addEventListener("dblclick",e=>{if(busy())return;e.preventDefault();const p=sceneHit(rayAt(e.clientX,e.clientY));if(!p)return;if(STORY)STORY.stop();
   const cp=camera.position,d0=cp.distanceTo(p),nd=Math.max(14,Math.min(d0*0.45,400));const dir=cp.clone().sub(p).normalize();if(dir.y<0.25){dir.y=0.25;dir.normalize()}
   const np=p.clone().addScaledVector(dir,nd);const g=floorAt(np.x,np.z);if(np.y<g+2)np.y=g+2;try{safeCam(np,p)}catch(err){}
   document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
@@ -72,10 +72,12 @@ const press=id=>{const b=$(id);if(b&&b.getAttribute("aria-pressed")!=="true")b.c
 const unpress=id=>{const b=$(id);if(b&&b.getAttribute("aria-pressed")==="true")b.click()};
 const TID={morning:"tM",noon:"tN",evening:"tE",night:"tL"};
 // remember what a tour changed, and put it back when it ends
-const keep=()=>({fest:$("oF").getAttribute("aria-pressed")==="true",time:TIME,plan:PLAN});
-const back=k=>{if(!k)return;if(!k.fest)unpress("oF");if(TIME!==k.time)$(TID[k.time]).click()};
-let KP=null;const festOpen=()=>{KP=keep();press("oF");closeInfo()};const festClose=()=>{back(KP);KP=null};
-STORIES.pesach={title:"קרבן פסח",open(){KP=keep();if(TIME!=="noon")$("tN").click();SND.crowd(0.05)},close(){back(KP);KP=null},steps:[
+const keep=()=>({fest:$("oF").getAttribute("aria-pressed")==="true",time:TIME,hour:HOUR,doy:DOY,plan:PLAN});
+// מכונות מצב: בסוף סיור מחזירים בדיוק את השעה שהייתה בסרגל ואת החג, לא רק "בוקר/צהריים"
+const festB=k=>document.querySelector('#festSeg button[data-fest="'+k+'"]'),setFestUI=k=>{const b=festB(k);if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
+const back=k=>{if(!k)return;if(!k.fest)unpress("oF");if(DOY!==k.doy){const f=Object.keys(FEST).find(q=>FEST[q].doy===k.doy);if(f)setFestUI(f)}if(k.hour!=null){const s=$("hslider");if(s){s.value=String(k.hour);s.dispatchEvent(new Event("change"))}}else if(TIME!==k.time||HOUR!=null)$(TID[k.time]).click()};
+let KP=null;const festOpen=()=>{KP=keep();setFestUI("sukkot");press("oF");closeInfo()}; /* סוכות והקהל (דברים לא, י: "בחג הסוכות"): השמש והירח של תשרי */const festClose=()=>{back(KP);KP=null};
+STORIES.pesach={title:"קרבן פסח",open(){KP=keep();setFestUI("pesach");if(TIME!=="noon")$("tN").click();SND.crowd(0.05)},close(){back(KP);KP=null},steps:[
  {title:"ערב פסח",pose:AP(520,250,70,300,250,10),cap:"בארבעה עשר בניסן, אחר הצהריים, התמיד נשחט מוקדם: בשבע ומחצה וקרב בשמונה ומחצה. כך נותר זמן לשחיטת הפסחים. כל חבורה מביאה כבש אחד.",src:"פסחים ה, א; יחזקאל מ״ה, כא",full:"📜 \"בראשון בארבעה עשר יום לחדש יהיה לכם הפסח, חג שבעות ימים, מצות יאכל\" (יחזקאל מ״ה, כא). ⚖️ \"תמיד נשחט בשמונה וחצי וקרב בתשעה וחצי. ערב פסח נשחט בשבע וחצי וקרב בשמונה וחצי\" (פסחים ה, א)."},
  {title:"שלוש כיתות",pose:AP(345,236,16,300,250,13),cap:"הפסח נשחט בשלוש כיתות. נכנסת הכת הראשונה, נתמלאת העזרה, נועלים את הדלתות, ותוקעים מריעים ותוקעים.",src:"פסחים ה, ה",full:"📜 \"הפסח נשחט בשלש כתות... נכנסה כת הראשונה, נתמלאה העזרה, נעלו דלתות העזרה. תקעו, הריעו ותקעו\" (פסחים ה, ה)."},
  {title:"שורות של כהנים",pose:AP(298,212,13,262,240,8),cap:"הכהנים עומדים שורות שורות, בזיכי כסף ובזיכי זהב. שורה כולה כסף ושורה כולה זהב, ולא מעורבין. לבזיכים אין שוליים, שמא יניחום ויקרש הדם.",src:"פסחים ה, ה",full:"📜 \"הכהנים עומדים שורות שורות, ובידיהם בזיכי כסף ובזיכי זהב. שורה שכולה כסף כסף, ושורה שכולה זהב זהב, לא היו מעורבין. ולא היו לבזיכין שולים, שמא יניחום ויקרש הדם\" (פסחים ה, ה). 💡 במודל אין דמויות מיוחדות לפסח."},
@@ -84,6 +86,7 @@ STORIES.pesach={title:"קרבן פסח",open(){KP=keep();if(TIME!=="noon")$("tN"
  {title:"תולין ומפשיטין",pose:AP(262,196,12,274,214,8),cap:"אנקליות של ברזל קבועות בכתלים ובעמודים לתלייה ולהפשטה. מי שאין לו מקום מניח מקל דק על כתפו ועל כתף חברו, ותולה ומפשיט.",src:"פסחים ה, ט",full:"📜 \"כיצד תולין ומפשיטין? אנקליות של ברזל היו קבועין בכתלים ובעמודים, שבהן תולין ומפשיטין. וכל מי שאין לו מקום לתלות ולהפשיט, מקלות דקים חלקים היו שם, ומניח על כתפו ועל כתף חברו, ותולה ומפשיט\" (פסחים ה, ט). ⚖️ במודל: בית המטבחיים בצפון המזבח (מידות ג, ה)."},
  {title:"יוצאים",pose:AP(400,305,34,300,250,8),cap:"יצאה הכת הראשונה וישבה בהר הבית, השנייה בחיל, והשלישית במקומה. כשחשכה יצאו וצלו את פסחיהם. במודל יחזקאל אין חיל, ולכן רואים את החצר החיצונה.",src:"פסחים ה, י",full:"📜 \"יצאו וישבו להן, כת ראשונה בהר הבית, שניה בחיל, והשלישית במקומה עומדת. חשכה, יצאו וצלו את פסחיהן\" (פסחים ה, י). 💡 ביחזקאל אין חיל; כאן החצר החיצונה."},
  {title:"בכל הבתים",pose:VP("city"),cap:"בלילה אוכלים את הבשר צלי אש, עם מצות ומרורים. ירושלים מלאה חבורות, וההלל עולה מן הבתים.",verse:"וְאָכְלוּ אֶת־הַבָּשָׂר בַּלַּיְלָה הַזֶּה צְלִי־אֵשׁ וּמַצּוֹת עַל־מְרֹרִים יֹאכְלֻהוּ׃",verseRef:"שמות יב, ח",src:"שמות יב, ח; פסחים ז, יג",full:"📜 \"ואכלו את הבשר בלילה הזה, צלי אש ומצות, על מררים יאכלהו\" (שמות יב, ח)."}]};
+{const T=STORIES.tamid;if(T){const o=T.open,c=T.close;T.open=function(){KP=keep();o.call(this)};T.close=function(){c.call(this);back(KP);KP=null}}} // סדר התמיד משנה שעה; בסוף חוזרים לשעה של המשתמש
 STORIES.sukkot={title:"חג הסוכות במקדש",open(){festOpen();SND.crowd(0.05)},close(){festClose()},steps:[
  {title:"ערבות ממוצא",pose:AP(284,300,32,250,252,17.5),cap:"בכל יום בחג יורדים למוצא ומביאים מורביות של ערבה. זוקפים אותן בצדי המזבח, וראשיהן כפופים על גביו, ותוקעים מריעים ותוקעים.",src:"סוכה ד, ה",full:"📜 \"מקום היה למטה מירושלים ונקרא מוצא. יורדין לשם ומלקטין משם מורביות של ערבה, ובאין וזוקפין אותן בצדי המזבח, וראשיהן כפופין על גבי המזבח. תקעו והריעו ותקעו\" (סוכה ד, ה). 💡 הערבות עצמן לא מוצגות במודל."},
  {title:"הקפת המזבח",pose:AP(292,212,30,250,252,18),cap:"בכל יום מקיפים את המזבח פעם אחת ואומרים אנא ה׳ הושיעה נא. ביום השביעי מקיפים שבע פעמים.",verse:"אָנָּא ה׳ הוֹשִׁיעָה נָּא אָנָּא ה׳ הַצְלִיחָה נָּא׃",verseRef:"תהלים קיח, כה",src:"סוכה ד, ה",full:"📜 \"בכל יום מקיפין את המזבח פעם אחת ואומרים: אנא ה' הושיעה נא, אנא ה' הצליחה נא... ואותו היום מקיפין את המזבח שבעה פעמים\" (סוכה ד, ה)."},
@@ -176,13 +179,13 @@ window.addEventListener("keydown",e=>{if(e.key==="/"&&document.activeElement!==s
 function hl(el){document.querySelectorAll(".lbl.hl").forEach(x=>{if(!labels.find(L=>L.el===x&&L.force))x.classList.remove("hl")});if(!el)return;el.classList.add("hl");clearTimeout(hl._t);hl._t=setTimeout(()=>{if(!labels.find(L=>L.el===el&&L.force))el.classList.remove("hl")},8000)}
 function pickLabel(L){goLabel(L);hl(L.el);L.pin=performance.now()}
 const _goLabel=goLabel;goLabel=function(L){UIPT=L.v.clone();UIPT._L=L;_goLabel(L);UIPT=null};
-function flyToPoint(c,r){if(STORY)STORY.stop();if(TOUR)stopTour();if(WALK)stopWalk();if(DRONE){droneFly(c.clone());return}
+function flyToPoint(c,r){if(STORY)STORY.stop();if(WALK)stopWalk();if(DRONE){droneFly(c.clone());return}
   const [p,t]=frameView(c,Math.min(r,220),16);
   document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   if(reduce){camAt(p,t);return}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:1600,arc:true}}
 function objCenter(o){const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return null;const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return[c,Math.max(3,0.5*Math.hypot(s.x,s.y*0.7,s.z))]}
 function pickObj(o){const cr=objCenter(o);if(!cr)return;UIPT=cr[0].clone();showInfo(o.userData);flyToPoint(cr[0],cr[1])}
-function startTour(key){closeInfo();closeDr();if(STORY)STORY.stop();if(TOUR)stopTour();if(WALK)stopWalk();try{stopDrone()}catch(e){}if(/^(pesach|sukkot|hakhel)$/.test(key)&&PLAN!=="ez")$("plEz").click();STORY_API.start(key)}
+function startTour(key){closeInfo();closeDr();if(STORY)STORY.stop();if(WALK)stopWalk();try{stopDrone()}catch(e){}if(/^(pesach|sukkot|hakhel)$/.test(key)&&PLAN!=="ez")$("plEz").click();STORY_API.start(key)}
 // --- icon rail + drawers ---
 const rail=mk("nav","gl ui dim");rail.id="rail";rail.setAttribute("aria-label","תפריט");stage.appendChild(rail);
 const DR={};
@@ -313,11 +316,16 @@ function cardTick(){requestAnimationFrame(cardTick);
   svg.style.display="";const ln=svg.firstChild,ci=svg.lastChild;ln.setAttribute("x1",cx);ln.setAttribute("y1",cy);ln.setAttribute("x2",x);ln.setAttribute("y2",y);ci.setAttribute("cx",x);ci.setAttribute("cy",y)}
 requestAnimationFrame(cardTick);
 // --- share link ---
-function shareURL(){const p=camera.position,t=controls.target,f=v=>v.toFixed(1);const q=["v="+[p.x,p.y,p.z,t.x,t.y,t.z].map(f).join(","),"pl="+PLAN,"a="+A,"f="+FMODE,"l="+LOC];if(CUR.d&&!card.hidden)q.push("o="+encodeURIComponent(CUR.d.n));return location.href.split("#")[0]+"#"+q.join("&")}
+function shareURL(){const p=camera.position,t=controls.target,f=v=>v.toFixed(1);const q=["v="+[p.x,p.y,p.z,t.x,t.y,t.z].map(f).join(","),"pl="+PLAN,"a="+A,"f="+FMODE,"l="+LOC,"g="+GATE,"t="+TIME,"d="+DAY,"s="+FLOOR,"y="+DOY];if(HOUR!=null)q.push("h="+HOUR.toFixed(2));if(CUR.d&&!card.hidden)q.push("o="+encodeURIComponent(CUR.d.n));return location.href.split("#")[0]+"#"+q.join("&")}
 function share(){const u=shareURL();try{history.replaceState(null,"",u)}catch(e){}const done=()=>toast("הקישור הועתק. מי שיפתח אותו יראה בדיוק את המבט הזה.");if(navigator.share&&window.innerWidth<=700){navigator.share({title:"הדמיית המקדש",url:u}).catch(()=>{})}else if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>toast(u));else toast(u)}
 function restore(){const h=location.hash.slice(1);if(!h||!/v=/.test(h))return false;const Q={};h.split("&").forEach(kv=>{const i=kv.indexOf("=");if(i>0)Q[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});
   const click=id=>{const b=$(id);if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
-  if(Q.pl==="rambam")click("plRb");if(Q.a){const m={"0.48":"a48","0.525":"a525","0.576":"a576"}[Q.a];if(m)click(m)}if(Q.f==="mid")click("fMid");if(Q.l==="altar")click("lA");closeInfo();
+  if(Q.pl==="rambam")click("plRb");if(Q.a){const m={"0.48":"a48","0.525":"a525","0.576":"a576"}[Q.a];if(m)click(m)}if(Q.f==="mid")click("fMid");if(Q.g==="high")click("gH");if(Q.l==="altar")click("lA");
+  // מכונות מצב: הקישור שומר גם שיטה, שעה, סוג יום, חג ורצפה
+  if(Q.y){const f=Object.keys(FEST).find(k=>String(FEST[k].doy)===Q.y);if(f){const b=document.querySelector('#festSeg button[data-fest="'+f+'"]');if(b)b.click()}}
+  if(Q.h&&isFinite(+Q.h)){const s=$("hslider");if(s){s.value=Q.h;s.dispatchEvent(new Event("change"))}}else if(Q.t){const id={morning:"tM",noon:"tN",evening:"tE",night:"tL"}[Q.t];if(id)click(id)}
+  if(Q.d){const b=document.querySelector('#daySeg button[data-day="'+Q.d+'"]');if(b)b.click()}
+  if(Q.s){const id={sat:"sS",satm:"sM",model:"sD"}[Q.s];if(id)click(id)}closeInfo();
   const v=(Q.v||"").split(",").map(Number);if(v.length===6&&v.every(isFinite)){tween=null;camAt(new THREE.Vector3(v[0],v[1],v[2]),new THREE.Vector3(v[3],v[4],v[5]));document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"))}
   if(Q.o){const L=labels.find(L=>L.txt===Q.o);if(L){UIPT=L.v.clone();UIPT._L=L;showInfo(L.info||{n:L.txt})}else{const o=cPick.concat(PICK).find(o=>o.userData&&o.userData.n===Q.o);if(o){const cr=objCenter(o);UIPT=cr?cr[0]:null;showInfo(o.userData)}}}
   return true}

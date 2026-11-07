@@ -45,7 +45,7 @@ const STORIES={};
     speak(st);if(st.snd)st.snd();if(window.__storyLearnShow)window.__storyLearnShow()};
   const api={start(key){const d=STORIES[key];if(!d)return;
       // #12: the temple tours are posed on the Ezekiel (Malbim) plan; in the Rambam plan their cameras stood inside walls or under the floor. Switch to it first, and say so.
-      if(key!=="oldcity"&&PLAN!=="ez"&&$("plEz")){$("plEz").click();toast("הסיור בנוי על תוכנית יחזקאל לפי המלבי״ם, ולכן עברנו אליה. אפשר לחזור לרמב״ם אחרי הסיור.")}if(TOUR)stopTour();if(WALK)stopWalk();if(DRONE)stopDrone();if(TRN&&TRN.riding)TRN.stopRide();closeInfo();
+      if(key!=="oldcity"&&PLAN!=="ez"&&$("plEz")){$("plEz").click();toast("הסיור בנוי על תוכנית יחזקאל לפי המלבי״ם, ולכן עברנו אליה. אפשר לחזור לרמב״ם אחרי הסיור.")}if(WALK)stopWalk();if(DRONE)stopDrone();if(TRN&&TRN.riding)TRN.stopRide();closeInfo();
       document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));S.def=d;S.paused=false;$("stTitle").textContent=d.title;$("stLearn").hidden=!d.learn;box.hidden=false;STORY=api;SND.init();if(d.open)d.open();go(0)},
     pause(){if(!STORY||S.paused)return;S.paused=true;S.user=true;S.move=null;clearTimeout(S.timer);if("speechSynthesis" in window)speechSynthesis.pause();$("stPlay").textContent="▶ המשך סיור"},
     stop(){if(!STORY)return;STORY=null;S.token++;clearTimeout(S.timer);if("speechSynthesis" in window)speechSynthesis.cancel();box.hidden=true;closeInfo();LEARN=false;S.user=false;$("stLearn").setAttribute("aria-pressed","false");$("stPlay").textContent="⏸";SND.stopAll();if(S.def&&S.def.close)S.def.close();S.move=null;controls.update()},
