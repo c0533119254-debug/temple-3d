@@ -867,7 +867,7 @@ await __Y(86);function build(){
     const mat=M.pave;
     const tiles=[];const add=(u0,v0,u1,v1)=>{for(let u=u0;u<u1;u+=10)for(let v=v0;v<v1;v+=10){const q=W(u+5,v+5);if(inPoly(q[0],-q[1],MOUNT_S))tiles.push(q)}};
     add(-50,-50,550,0);add(-50,500,550,550);add(-50,0,0,500);add(500,0,550,500);
-    const tm=new THREE.InstancedMesh(new THREE.BoxGeometry(10*A,0.06,10*A),mat,Math.max(1,tiles.length)),dd=new THREE.Object3D();tiles.forEach((q,i)=>{dd.position.set(q[0],0.03,q[1]);dd.updateMatrix();tm.setMatrixAt(i,dd.matrix)});tm.count=tiles.length;tm.receiveShadow=true;tm.userData=mg;cPick.push(tm);group.add(tm)})();
+    const tm=new THREE.InstancedMesh(new THREE.BoxGeometry(10*A,0.06,10*A),mat,Math.max(1,tiles.length)),dd=new THREE.Object3D();tiles.forEach((q,i)=>{dd.position.set(q[0],0.03,q[1]);dd.updateMatrix();tm.setMatrixAt(i,dd.matrix)});tm.count=tiles.length;tm.receiveShadow=true;mg.noLOD=true;tm.userData=mg;cPick.push(tm);group.add(tm)})();
   (function(){const si=I("סטווים — אכסדראות לאורך החומה","הצעה של התוכנית; יוספוס, קדמוניות ט״ו","שורות עמודים מקורות לאורך חומות ההר, לצל ולהמתנה לפי משמרות. בימי בית שני היו סטווים כאלה סביב ההר, והסטיו המלכותי בדרום. הם נמצאים מחוץ למתחם ומחוץ למגרש של 50 אמה.");
     const colG=new THREE.CylinderGeometry(0.55,0.65,9,12),cols=[],d=new THREE.Object3D();
     const stoa=(a,b,inward,depth,h)=>{const dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn),ux=dx/L,un=dn/L,nx=-un*inward,nn=ux*inward,ang=Math.atan2(dn,dx);
@@ -886,9 +886,10 @@ await __Y(86);function build(){
     [[205,-75],[295,-75],[205,575],[295,575]].forEach(c=>{const p=W(c[0],c[1]);const n=-p[1];if(!inPoly(p[0],n,MOUNT_S))return;const m=new THREE.Mesh(wbox(16,6,12,4),M.stoneL);m.position.set(p[0],3,p[1]);m.castShadow=true;m.receiveShadow=true;m.userData=mi;cPick.push(m);group.add(m);COL.push({x0:p[0]-8,x1:p[0]+8,z0:p[1]-6,z1:p[1]+6,y0:0,y1:6});
       const dm=new THREE.Mesh(new THREE.SphereGeometry(3.2,16,8,0,Math.PI*2,0,Math.PI/2),M.white);dm.position.set(p[0],6,p[1]);dm.userData=mi;cPick.push(dm);group.add(dm)})})();
   }
+  // קירות שחורים (7.11.2026): מערכת ההרחקה (core/33) העלימה מרחוק את גושי המילוי, את קיר השפה ואת המגרש (קופסאות פשוטות בלי תחליף רחוק), ונראה החלל השחור שמתחתם. noLOD משאיר אותם תמיד.
   {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
     const S=500*A,st=4,cells=[];for(let x=X0+st/2;x<X0+S;x+=st)for(let n=N0-S+st/2;n<N0;n+=st){if(inPoly(x,n,MOUNT_S))continue;const h=HS(x,n);if(h<-0.5)cells.push([x,n,h])}
-    if(cells.length){const im=new THREE.InstancedMesh(new THREE.BoxGeometry(st,1,st),M.wall,cells.length),d=new THREE.Object3D();cells.forEach((c,i)=>{const hh=-c[2]+1;d.position.set(c[0],c[2]+hh/2-1,-c[1]);d.scale.set(1,hh,1);d.updateMatrix();im.setMatrixAt(i,d.matrix)});im.castShadow=true;im.receiveShadow=true;im.userData=fi;cPick.push(im);group.add(im)}}
+    if(cells.length){const im=new THREE.InstancedMesh(new THREE.BoxGeometry(st,1,st),M.wall,cells.length),d=new THREE.Object3D();cells.forEach((c,i)=>{const hh=-c[2]+1;d.position.set(c[0],c[2]+hh/2-1,-c[1]);d.scale.set(1,hh,1);d.updateMatrix();im.setMatrixAt(i,d.matrix)});im.castShadow=true;im.receiveShadow=true;fi.noLOD=true;im.userData=fi;cPick.push(im);group.add(im)}}
   // the edge of the mount: a retaining wall and a stone parapet all round, so nobody can walk off the edge
   {const pi=I("שפת ההר — קיר ומעקה","💡 הצעה","💡 מסביב לרחבת ההר יש קיר תומך, ומעליו מעקה אבן בגובה של כמטר, כדי שאי אפשר ליפול מהשפה. איפה שהמתחם יוצא מעבר להר של היום, ההר מורחב במילוי ובקיר תומך, כמו שעשה הורדוס.");
     const S=500*A,inC=(x,n)=>x>X0-4&&x<X0+S+4&&n<N0+4&&n>N0-S-4,P=MOUNT_S,L=[];const GOP=(window.__MG||[]).filter(g=>g.w_).map(g=>{const w=g.w_,p=G2S(w.x,w.n),f=G2S(Math.cos(w.a),Math.sin(w.a)),o=G2S(w.ox,w.on);return{x:p[0],n:p[1],fx:f[0],fn:f[1],ox:o[0],on:o[1],h:g.k==="S"?(g.w+4)/2:g.k==="K"?4:(g.k==="N"&&g.five)?(g.w+4)/2:g.w*0.3+1.4}});
@@ -898,7 +899,7 @@ await __Y(86);function build(){
         COL.push({x0:cx-Math.abs(ux)*(t1-t0)/2-0.45,x1:cx+Math.abs(ux)*(t1-t0)/2+0.45,z0:-cn-Math.abs(un)*(t1-t0)/2-0.45,z1:-cn+Math.abs(un)*(t1-t0)/2+0.45,y0:y0,y1:y1+0.6})}}
     if(L.length){const d=new THREE.Object3D(),wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,0.9),M.stoneL,L.length),cm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,0.18,1.15),M.stone2,L.length);
       L.forEach((q,i)=>{d.rotation.set(0,q[5],0);d.position.set(q[0],(q[3]+q[4])/2,-q[1]);d.scale.set(q[2],q[4]-q[3],1);d.updateMatrix();wm.setMatrixAt(i,d.matrix);d.position.y=q[4]+0.09;d.scale.set(q[2],1,1);d.updateMatrix();cm.setMatrixAt(i,d.matrix)});
-      [wm,cm].forEach(m=>{m.castShadow=true;m.receiveShadow=true;m.userData=pi;cPick.push(m);group.add(m)})}
+      pi.noLOD=true;[wm,cm].forEach(m=>{m.castShadow=true;m.receiveShadow=true;m.userData=pi;cPick.push(m);group.add(m)})}
     // topic 2, stage 2: the outer face of the mount, one continuous stone skin whose courses follow the real height
     {const wi=I("חומות הר הבית מבחוץ","💡 לפי הכותל והחפירות","💡 החומות של ההר נראות כמו הכותל היום: למטה אבנים גדולות מימי בית שני, עם שוליים מסותתים ובליטה באמצע; מעליהן שורות בינוניות; ובראש אבנים קטנות מתקופות מאוחרות. כך גם החומה הדרומית והמזרחית.");
       const pos=[],uv=[],idx=[];let acc=0;

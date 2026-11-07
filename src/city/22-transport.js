@@ -204,7 +204,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
       pgB.instanceMatrix.needsUpdate=pgH.instanceMatrix.needsUpdate=shp.instanceMatrix.needsUpdate=true},
     camTick(cam){if(!RIDE)return;const t=RIDE,p=segPos(t,0),fa=at(t.q,t.s+t.dir*40),o=-t.dir*1.75;const tx=fa[0]-Math.sin(fa[2])*o,tn=fa[1]+Math.cos(fa[2])*o;
       const fx=Math.cos(p[2]),fn=Math.sin(p[2]);cam.position.set(p[0]+fx*3.6,p[3]+2.7,-(p[1]+fn*3.6));cam.lookAt(tx,fa[3]+2.2,-tn)},
-    ride(i){const t=TRAINS[Math.floor(i/SEG)];if(!t)return;if(TOUR)stopTour();if(WALK)stopWalk();if(DRONE)stopDrone();tween=null;RIDE=t;controls.enabled=false;rideB.hidden=false;showInfo(INFO.lrt(t.q.n))},
+    ride(i){const t=TRAINS[Math.floor(i/SEG)];if(!t)return;if(STORY)STORY.stop();if(WALK)stopWalk();if(DRONE)stopDrone();tween=null;RIDE=t;controls.enabled=false;rideB.hidden=false;showInfo(INFO.lrt(t.q.n))},
     stopRide(){if(!RIDE)return;const p=segPos(RIDE,0);RIDE=null;rideB.hidden=true;controls.enabled=true;camera.position.set(p[0]-Math.cos(p[2])*60,p[3]+45,-(p[1]-Math.sin(p[2])*60));controls.target.set(p[0],p[3],-p[1]);controls.update()},
     shab(on){[typeof tb!=="undefined"&&tb,typeof tc!=="undefined"&&tc,typeof tw!=="undefined"&&tw,typeof tn!=="undefined"&&tn,typeof tpn!=="undefined"&&tpn,typeof bb!=="undefined"&&bb,typeof bw!=="undefined"&&bw,typeof bd!=="undefined"&&bd,cb].forEach(m=>{if(m)m.visible=!on});if(on)this.stopRide()},
     night(on){[winM,entM].forEach(m=>{m.emissive.setHex(on?0xffd9a0:0);m.emissiveIntensity=on?0.9:0});canM.emissive.setHex(on?0x8899aa:0);if(cb)cb.material.emissive.setHex(on?0x552222:0)},
