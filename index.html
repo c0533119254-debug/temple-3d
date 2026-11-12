@@ -10708,6 +10708,16 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     const q1=G2S(...P(12,13*north)),q2=G2S(...P(12,-13*north)),q3=G2S(...P(31,0));
     label("תפילה — גברים",q1[0],Y+4,-q1[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, ומעקה אבן נמוך עם שני פתחים שמפריד בינו לבין הרחבה."}).m=true;
     label("תפילה — נשים",q2[0],Y+4,-q2[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, ומעקה אבן נמוך עם שני פתחים שמפריד בינו לבין הרחבה."}).m=true}
+  /* גרסה 122.2: ירידה מסודרת אל רחבת הכותל, מהרובע היהודי במערב: גרם מדרגות רחב אחד עם רחבות מנוחה, מעקות ורחבה למעלה, במקום שביל קטן על מדרון. 💡 המיקום והמידות הצעה שלי */
+  {const yb=PLZ+0.25,E0=[-175.5,-169],o=[-0.983,-0.185],t=[0.185,-0.983],aa=Math.atan2(t[1],t[0]),W=14,tread=0.4,FL=13,LAND=2.6,Q=(dd,al)=>[E0[0]+o[0]*dd+t[0]*al,E0[1]+o[1]*dd+t[1]*al];
+    let top=yb+3;for(let k=-1;k<=1;k++){const q=Q(24,k*W/2);top=Math.max(top,Math.min(TY(q[0],q[1])+0.2,yb+9))}
+    const rise=top-yb,N=Math.ceil(rise/0.16),h=rise/N,run=i=>i*tread+Math.floor(i/FL)*LAND,tot=run(N-1)+tread,D0=3;
+    for(let i=0;i<N;i++){const y=yb+(i+1)*h,p=Q(D0+run(i)+tread/2,0);steps.push([p[0],y,p[1],aa,W,y-yb+0.4,tread+((i%FL===FL-1)&&i<N-1?LAND:0)+0.02])}
+    {const c=Q(D0+tot+3,0);stoneG.push([c[0],(yb+top)/2-0.3,c[1],aa,W+1,top-yb+0.6,6]);paves.push([c[0],top+0.03,c[1],aa,W+0.6,0.08,5.8]);
+     const c2=Q(D0/2,0);stoneG.push([c2[0],yb-0.1,c2[1],aa,W+1,0.5,D0+0.6]);paves.push([c2[0],yb+0.04,c2[1],aa,W+0.6,0.08,D0])}
+    [-1,1].forEach(sd=>{const a0=Q(D0,sd*(W/2+0.3)),a1=Q(D0+tot,sd*(W/2+0.3));RAILS.push([a0[0],yb+1,a0[1],a1[0],top+1,a1[1]]);const w0=Q(D0+tot/2,sd*(W/2+0.6));stoneG.push([w0[0],yb+(top-yb)/2+0.3,w0[1],aa+Math.PI/2,tot+1,top-yb+0.9,0.6])});
+    try{const A=Q(D0,-W/2-1),B=Q(D0,W/2+1),C=Q(D0+tot,W/2+1),D=Q(D0+tot,-W/2-1),yy=[yb+0.1,yb+0.1,top+0.1,top+0.1],T=[[A,yy[0]],[B,yy[1]],[C,yy[2]],[A,yy[0]],[C,yy[2]],[D,yy[3]]].flatMap(([q,y])=>[q[0],y,-q[1]]);TMESH.conform(T,{lo:0.15,hi:99})}catch(e){console.warn("kdesc",e)}
+    const qd=G2S(...Q(D0+tot*0.5,0));label("ירידה אל רחבת הכותל",qd[0],top+4,-qd[1],null,{n:"הירידה אל רחבת הכותל",r:"הצעה של התוכנית",t:"💡 גרם מדרגות רחב אחד, עם רחבות מנוחה ומעקות, מהרובע היהודי אל רחבת התפילה. במציאות היום הירידה בשבילים ובמדרגות צרות."}).m=true}
   const im=(geo,mat,arr,fn,info)=>{if(!arr.length)return;const m=new THREE.InstancedMesh(geo,mat,arr.length);arr.forEach((p,i)=>{fn(p);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;PICK.push(m)}GATEG.add(m)};
   const box=new THREE.BoxGeometry(1,1,1),half=(()=>{const g=new THREE.CylinderGeometry(1,1,0.2,16,1,false,0,Math.PI);g.rotateX(Math.PI/2);g.rotateZ(Math.PI/2);g.rotateY(Math.PI/2);return g})();
   const gInfo={n:"שערי הר הבית",r:SRC,t:"השערים בחומות ההר, כל אחד במקום של שער אמיתי ובקצה של רחוב אמיתי. בדרום — שני שערי חולדה עם מדרגות רחבות; במערב — שער קיפונוס מעל רחבת הכותל ושערי העיר העתיקה; בצפון — שער טדי ועוד. שער המזרח (שער הרחמים) נשאר סגור: \"השער הזה סגור יהיה\" (יחזקאל מד, ב)."};
@@ -10723,6 +10733,8 @@ const GATEG=new THREE.Group();WG.add(GATEG);
   im(box,dark,darkB,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])});
   im(box,M.wood||M.stone2,woodB,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])},{n:"ארונות לנעליים ולתיקים",r:"ברכות ט, ה",t:"💡 ארונות עץ לנעליים, למקלות ולתיקים, לפני העלייה להר (ברכות ט, ה: \"לא יכנס אדם להר הבית במקלו ובמנעלו ובפונדתו\")."});
   im(half,dark,darkA,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[4],1);d.position.set(p[0],p[1],-p[2])});
+  /* גרסה 122.2: המדרגות הן משטח הליכה: האנשים עולים עליהן ולא עוברים דרכן בגובה הרחבה */
+  try{if(WALKG&&WALKG.h)steps.forEach(p=>{const c=Math.cos(p[3]),sn=Math.sin(p[3]),hw=p[4]/2,hd=p[6]/2,A=(u,v)=>[p[0]+c*u-sn*v,-(p[2]+sn*u+c*v)],q=[A(-hw,-hd),A(hw,-hd),A(hw,hd),A(-hw,hd)];WALKG.tri(q[0][0],p[1],q[0][1],q[1][0],p[1],q[1][1],q[2][0],p[1],q[2][1]);WALKG.tri(q[0][0],p[1],q[0][1],q[2][0],p[1],q[2][1],q[3][0],p[1],q[3][1])})}catch(e){console.warn("walkg steps",e)}
   im(box,M.stone2,steps,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1]-p[5]/2,-p[2])},{n:"מדרגות העלייה להר",r:"בהשראת המדרגות הדרומיות מימי בית שני",t:"גרמי מדרגות רחבים מאבן, בקטעים קצרים עם רחבות ביניים — כמו המדרגות הדרומיות מימי בית שני. בשערי חולדה עולים במדרגות עד השער, ומשם במעבר מקורה שעולה בתוך ההר עד הרחבה, כמו שהיה אז. ליד כל גרם מדרגות יש מעלית."});
   im(box,M.stone2,lifts,p=>{d.rotation.set(0,p[3],0);d.scale.set(3.8,p[4],3.8);d.position.set(p[0],p[1]+p[4]/2,-p[2])},{n:"מעלית",r:"הצעה של התוכנית",t:"מעלית לכל מי שקשה לו לעלות במדרגות — זקנים, אנשים עם מוגבלות, עגלות. היא עולה מהרחוב עד מפלס השער."});
   im(box,new THREE.MeshStandardMaterial({color:0x2a3a48,roughness:0.15,metalness:0.6}),lifts,p=>{d.rotation.set(0,p[3],0);d.scale.set(4.0,p[4]-1.5,1.6);d.position.set(p[0],p[1]+p[4]/2-0.2,-p[2])});
