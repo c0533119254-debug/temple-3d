@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 122.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 122.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9981,7 +9981,7 @@ for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],L=Math.hypot(b[0]-a
 const ph=tower(-671,-166,20,17,24,0.2);   // Phasael — "Tower of David" of the archaeologists
 tower(-727,-179,11,11,15,0.35);tower(-730,-222,9,9,14,1.48);tower(-683,-247,12,10,14,0.9);tower(-664,-205,9,8,14,1.53);
 // the Ottoman minaret on the south-west (the tower people call "Tower of David"); no crescent, by request
-{const x=-723,n=-252,g=lg(x,n),vm=Math.max(0.35,Math.min(1,(LCAP-g)/38.5)),y0=g+12*vm,Z=(geo)=>{geo.scale(1,vm,1);return geo};
+{const x=-723,n=-252,g=lg(x,n),vm=1,y0=g+12*vm,Z=(geo)=>{geo.scale(1,vm,1);return geo};
   add("wall",Z(wbox(6,4,6,6)),x,y0+2*vm,n,0.3);
   add("light",Z(new THREE.CylinderGeometry(2.0,2.2,13,16)),x,y0+10.5*vm,n,0);
   add("light",Z(new THREE.CylinderGeometry(3.0,2.2,1.0,16)),x,y0+17.5*vm,n,0);
