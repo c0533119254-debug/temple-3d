@@ -15,7 +15,7 @@
   var YT_CREDIT = "לחן: שלמה יהודה רכניץ · וידאו: Project Productions (YouTube)";
   var FALLBACK_CREDIT = "ניגון הבעל שם טוב · ביצוע: ניצן צבי כהן · CC BY 4.0";
   var API_TIMEOUT_MS = 8000;
-  var PLAYING_GRACE_MS = 3500;
+  var PLAYING_GRACE_MS = 1500; /* אם הפזמון ביוטיוב לא מנגן בפועל תוך זמן קצר מהלחיצה, עוברים לניגון הגיבוי */
 
   var cfg = {
     root: null,
@@ -28,6 +28,13 @@
   var ytFailed = false;
   var ytWrap = null;
   var audioEl = null;
+  /* ביום ששמע צריך מחווה (iOS/Android): נפתחים בתוך הלחיצה על «כניסה» */
+  var actx = null;          /* AudioContext שנוצר ושוחרר בתוך המחווה (מאפשר דעיכה גם ב־iOS, שם audio.volume לקריאה בלבד) */
+  var fbEl = null;          /* אלמנט הניגון הגיבוי, מנוגן בשקט בתוך המחווה ולכן מותר לו להתחיל מאוחר יותר */
+  var narrPool = [];        /* אלמנטי audio ששוחררו בתוך המחווה, לקריינות (iOS משחרר כל אלמנט בנפרד) */
+  var narrIdx = 0;
+  var unlocked = false;
+  var SILENT_WAV = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
   var muteBtn = null;
   var creditEl = null;
   var styleEl = null;
@@ -160,7 +167,28 @@
         else ytPlayer.unMute();
       } catch (e) {}
     }
-    if (audioEl) audioEl.muted = muted;
+    if (audioEl) {
+      if (audioEl._gain) setAudioLevel(audioEl._lvl || 0);
+      else audioEl.muted = muted;
+    }
+  }
+
+  /* עוצמת ניגון הקובץ: דרך GainNode כשאפשר (עובד גם ב־iOS), אחרת audio.volume */
+  function setAudioLevel(v) {
+    if (!audioEl) return;
+    v = Math.max(0, Math.min(1, v));
+    audioEl._lvl = v;
+    if (audioEl._gain) {
+      try { audioEl._gain.gain.value = muted ? 0 : v; } catch (e) {}
+    } else {
+      try { audioEl.volume = v; } catch (e2) {}
+    }
+  }
+
+  function getAudioLevel() {
+    if (!audioEl) return AUDIO_VOL;
+    if (audioEl._gain) return audioEl._lvl == null ? AUDIO_VOL : audioEl._lvl;
+    return audioEl.volume;
   }
 
   function toggleMute() {
@@ -307,7 +335,7 @@
     function step(now) {
       if (token !== gen) return;
       var p = Math.min(1, (now - t0) / ms);
-      try { audioEl.volume = Math.max(0, Math.min(1, from + (to - from) * p)); } catch (e) {}
+      setAudioLevel(from + (to - from) * p);
       if (p < 1) fadeTimer = requestAnimationFrame(step);
       else if (done) done();
     }
@@ -364,9 +392,10 @@
       try {
         var st = ytPlayer.getPlayerState();
         var t = ytPlayer.getCurrentTime();
-        ok = (st === YT.PlayerState.PLAYING || st === YT.PlayerState.BUFFERING) && t >= START - 1;
+        ok = (st === YT.PlayerState.PLAYING) && t >= START - 1;
       } catch (e) {}
       if (!ok) startFallback();
+      else if (fbEl && audioEl !== fbEl) { try { fbEl.pause(); } catch (e) {} }
     }, PLAYING_GRACE_MS);
     return true;
   }
@@ -374,6 +403,11 @@
   function killAudio() {
     if (!audioEl) return;
     try { audioEl.pause(); } catch (e) {}
+    if (audioEl === fbEl) { /* משאירים את האלמנט ששוחרר במחווה, לשימוש חוזר */
+      try { audioEl._lvl = 0; if (audioEl._gain) audioEl._gain.gain.value = 0; } catch (e1) {}
+      audioEl = null;
+      return;
+    }
     try { audioEl.removeAttribute("src"); audioEl.load(); } catch (e2) {}
     audioEl = null;
   }
@@ -392,16 +426,23 @@
     phase = "loading";
     source = "fallback";
     silenced = false;
-    audioEl = new Audio(defaultFallback());
-    audioEl.preload = "auto";
-    audioEl.loop = true;
-    audioEl.muted = muted;
-    audioEl.volume = 0;
-    showChrome(FALLBACK_CREDIT);
+    if (ytPlayer) { try { ytPlayer.mute(); ytPlayer.pauseVideo(); } catch (e) {} }
+    resumeCtx();
+    if (fbEl) {
+      audioEl = fbEl;
+      try { audioEl.currentTime = 0; } catch (e) {}
+    } else {
+      audioEl = new Audio(defaultFallback());
+      audioEl.preload = "auto";
+      audioEl.loop = true;
+    }
+    if (audioEl._gain) audioEl.muted = false; else audioEl.muted = muted;
+    setAudioLevel(0);
+    showChrome(FALLBACK_CREDIT + (/\.m4a(\?|#|$)/.test(audioEl.src || "") ? " · הומר ל־AAC" : ""));
     var p = audioEl.play();
     if (p && typeof p.then === "function") {
       p.catch(function () {
-        /* נפילה שקטה: בלי הודעת שגיאה על המסך */
+        /* נפילה שקטה: בלי הודעת שגיאה על המסך (הכניסה לא תלויה בשמע) */
         phase = "idle";
         source = null;
         hideChromeIfIdle();
@@ -414,6 +455,7 @@
     if (muted) {
       pendingLoading = true;
       phase = "idle";
+      if (fbEl) { try { fbEl.pause(); } catch (e) {} }
       ensureUi();
       muteBtn.hidden = false;
       return;
@@ -447,7 +489,7 @@
       try { from = ytPlayer.getVolume(); } catch (e) {}
       fadeYt(from, 0, FADE_OUT_MS, token, after);
     } else {
-      var aFrom = audioEl ? audioEl.volume : AUDIO_VOL;
+      var aFrom = audioEl ? getAudioLevel() : AUDIO_VOL;
       fadeAudio(aFrom, 0, FADE_OUT_MS, token, after);
     }
   }
@@ -469,6 +511,104 @@
     if (phase === "loading") return;
     pendingLoading = true;
     beginLoadingPlayback();
+  }
+
+  function resumeCtx() {
+    try { if (actx && actx.state === "suspended") actx.resume(); } catch (e) {}
+  }
+
+  function fallbackUrl() {
+    var u = defaultFallback();
+    if (cfg.fallbackSrc) return u;
+    try {
+      var a = document.createElement("audio");
+      var ogg = a.canPlayType && a.canPlayType('audio/ogg; codecs="vorbis"');
+      /* ב־Safari ישן (iOS לפני 18.4) אין Ogg: אותו ניגון מומר ל־AAC (CC BY 4.0, ראו ASSETS_LICENSES.md) */
+      if (!ogg) return u.replace(/\.ogg(\?|#|$)/, ".m4a$1");
+    } catch (e) {}
+    return u;
+  }
+
+  /* שחרור כל מה ששמע צריך מחווה בשבילו. לקרוא באופן סינכרוני מתוך הלחיצה. לעולם לא זורק. */
+  function unlockAudio() {
+    if (unlocked) { resumeCtx(); return; }
+    unlocked = true;
+    var AC = global.AudioContext || global.webkitAudioContext;
+    try {
+      if (AC) {
+        actx = new AC();
+        resumeCtx();
+        var b = actx.createBuffer(1, 1, 22050), n = actx.createBufferSource();
+        n.buffer = b; n.connect(actx.destination); n.start(0);
+      }
+    } catch (e) { actx = null; }
+    /* ניגון גיבוי: מתחיל בשקט כבר עכשיו (בתוך המחווה), עוצמה 0 */
+    try {
+      fbEl = new Audio();
+      fbEl.preload = "auto";
+      fbEl.loop = true;
+      fbEl.setAttribute("playsinline", "");
+      fbEl.src = fallbackUrl();
+      if (actx) {
+        try {
+          var src = actx.createMediaElementSource(fbEl), g = actx.createGain();
+          g.gain.value = 0;
+          src.connect(g); g.connect(actx.destination);
+          fbEl._gain = g; fbEl._lvl = 0;
+        } catch (e1) { fbEl._gain = null; }
+      }
+      if (!fbEl._gain) { fbEl.volume = 0; fbEl.muted = muted; }
+      var pf = fbEl.play();
+      if (pf && pf.catch) pf.catch(function () {});
+    } catch (e2) { fbEl = null; }
+    /* קריינות: כמה אלמנטים משוחררים לשימוש חוזר */
+    try {
+      for (var i = 0; i < 3; i++) {
+        var el = new Audio();
+        el.preload = "auto";
+        el.setAttribute("playsinline", "");
+        el.src = SILENT_WAV;
+        var pp = el.play();
+        if (pp && pp.catch) pp.catch(function () {});
+        narrPool.push(el);
+      }
+    } catch (e3) {}
+    /* קול המכשיר (חלופה לקריינות) */
+    try {
+      if (global.speechSynthesis && global.SpeechSynthesisUtterance) {
+        var u = new SpeechSynthesisUtterance(" ");
+        u.volume = 0;
+        global.speechSynthesis.speak(u);
+      }
+    } catch (e4) {}
+  }
+
+  /* אלמנט audio משוחרר לקריינות. null אם לא שוחרר במחווה: ואז הקורא משתמש ב־new Audio כרגיל */
+  function narrEl(src) {
+    if (!narrPool.length) return null;
+    var el = narrPool[narrIdx++ % narrPool.length];
+    try {
+      el.pause();
+      el.onended = null; el.onerror = null;
+      el.loop = false;
+      el.src = src;
+    } catch (e) { return null; }
+    return el;
+  }
+
+  /* הכניסה: לקרוא סינכרונית מתוך הלחיצה. משחרר שמע ומתחיל את מקהלת הכניסה. לעולם לא זורק. */
+  function enter() {
+    try { unlockAudio(); } catch (e) {}
+    try { startLoading(); } catch (e2) {}
+  }
+
+  function status() {
+    var st = -9;
+    try { st = ytPlayer.getPlayerState(); } catch (e) {}
+    return { phase: phase, source: source, muted: muted, ytReady: ytReady, ytFailed: ytFailed, ytState: st,
+             unlocked: unlocked, ctx: actx ? actx.state : null,
+             fbPlaying: !!(fbEl && !fbEl.paused), fbLevel: fbEl ? (fbEl._lvl == null ? fbEl.volume : fbEl._lvl) : null,
+             fbSrc: fbEl ? fbEl.src.split("/").pop() : null, narrPool: narrPool.length };
   }
 
   function endLoading() {
@@ -544,7 +684,7 @@
       try { from = ytPlayer.getVolume(); } catch (e) {}
       fadeYt(from, 0, FADE_OUT_MS, token, after);
     } else {
-      var aFrom = audioEl ? audioEl.volume : AUDIO_VOL;
+      var aFrom = audioEl ? getAudioLevel() : AUDIO_VOL;
       fadeAudio(aFrom, 0, FADE_OUT_MS, token, after);
     }
   }
@@ -914,6 +1054,10 @@
   global.TempleMusic = {
     init: init,
     startLoading: startLoading,
+    enter: enter,
+    unlockAudio: unlockAudio,
+    narrEl: narrEl,
+    status: status,
     endLoading: endLoading,
     play: play,
     stop: stop,

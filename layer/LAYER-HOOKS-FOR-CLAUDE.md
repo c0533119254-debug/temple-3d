@@ -13,12 +13,14 @@
    - `try{fetch("audio/index.json")...NARR=j}...` והמבנה `NARR[key][S.i]` (קובץ לפי סיור ומספר תחנה)
    - `a.onended=()=>{clearInterval(iv);if(tok===S.token)S.narrDone=true};`
    - `a.play().catch(()=>{});return}}`
+   - `const a=new Audio("audio/"+f);window.__narrA=a;` (מ־120.2 השכבה מחליפה את `new Audio` באלמנט ששוחרר בלחיצה על «כניסה», כי ב־iOS כל אלמנט שמע צריך להשתחרר במחווה)
    - `S.narrDone=true;return}` (פעמיים)
    - `say(0)};`
    - שורת סנכרון הכתוביות `if(a.duration>0){let acc=0,k=0;const at=a.currentTime/a.duration*tot;...showText(arr,k)}`
    - `#stVerse{`/`#stVerse cite{` ב־CSS, ו־`$("stVerse")`
 3. **הכתוביות:** כל `cap:"…"` ב־`STORIES` מוחלף לנוסח המפוסק של הקריינות. **אל תשנה טקסט של כתובית** (לא מילה, לא פיסוק). אם צריך שינוי, תכתוב לי איזה ומדוע, ואני אפיק מחדש את התחנה.
 4. **מסך הטעינה:** `<div class="ldt">העיר נבנית <b>0%</b></div>`, `.ldt{font:600 12px` (CSS), והבלוק `{let gone=false;const hide=()=>{…}…poll()}` (פונקציית `hide` שמסירה את `#loading`). השכבה מוסיפה כפתור «כניסה» ומחכה ללחיצה לפני `hide`.
+   - מ־120.2: הכפתור מוסתר עד שהסצנה מוכנה (סרגל ההתקדמות מוחלף בו), והמאזין שלו נקשר מוקדם, בזמן פענוח ה־HTML, בתוך `<script>` שהשכבה מוסיפה אחרי `.ldt`. אל תעביר את `#loading` מחוץ ל־`#stage`/`body`, ואל תשים עליו שכבה עם `pointer-events` מעל הכפתור.
 5. **תווית הגרסה:** `v.textContent="גרסה NNN"` (בדיוק פעם אחת). השכבה מוסיפה לה `.1`.
 6. `</body>` פעם אחת בלבד.
 
