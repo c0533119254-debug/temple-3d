@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <style>
-    path{fill:none;stroke:#a67c22;stroke-width:2.75;stroke-linejoin:miter;stroke-linecap:butt}
-    .door{stroke-linejoin:round;stroke-linecap:butt}
-    @media (prefers-color-scheme:light){path{stroke:#8a6418}}
-    @media (prefers-color-scheme:dark){path{stroke:#d4a63a}}
-  </style>
-  <path d="M16 4.2 26.8 12.4V28.1H5.2V12.4Z"/>
-  <path class="door" d="M11.8 28.1 L11.8 19.2 L12.12 17.59 L13.03 16.23 L14.39 15.32 L16 15 L17.61 15.32 L18.97 16.23 L19.88 17.59 L20.2 19.2 L20.2 28.1"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="הדמיית המקדש">
+  <rect width="32" height="32" rx="7" fill="#0E1524"/>
+  <polygon points="6,13 16,6 26,13" fill="#F0D58C"/>
+  <rect x="7" y="13" width="18" height="2.2" fill="#C99A3E"/>
+  <rect x="8.2" y="15" width="3" height="11" fill="#F0D58C"/>
+  <rect x="20.8" y="15" width="3" height="11" fill="#F0D58C"/>
+  <rect x="13.4" y="18" width="5.2" height="8" fill="#F0D58C"/>
+  <rect x="6.5" y="25.5" width="19" height="1.7" fill="#C99A3E"/>
 </svg>
