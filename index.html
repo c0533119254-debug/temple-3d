@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 122.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 122.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9728,7 +9728,7 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
     G.forEach((g,i)=>{const y=TY(g[0],g[1]),w=0.75+r()*0.2,l=1.7+r()*0.3,h=g[2]==="j"?0.45+r()*0.35:0.7+r()*0.5;d.rotation.set(0,(r()-0.5)*0.08,0);d.position.set(g[0],y+h/2-0.15,-g[1]);d.scale.set(l,h,w);d.updateMatrix();gm.setMatrixAt(i,d.matrix);c.setRGB(0.93+r()*0.06,0.9+r()*0.06,0.84+r()*0.06);gm.setColorAt(i,c)});
     gm.castShadow=true;gm.receiveShadow=true;gm.userData={n:"בתי קברות",r:"OpenStreetMap",t:"בית הקברות היהודי בהר הזיתים — העתיק והחשוב בעולם — ובתי קברות נוספים סביב העיר. הקברים פונים אל הר הבית."};WG.add(gm);PICK.push(gm)}
   // terrace and garden walls
-  const WS=[];F.walls.forEach(w=>{for(let i=0;i<w.length-1;i++){const a=w[i],b=w[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;if(inPoly(mx,mn,MOUNT_BIG)||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0])])}});
+  const WS=[];F.walls.forEach(w=>{for(let i=0;i<w.length-1;i++){const a=w[i],b=w[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)/* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0])])}});
   if(WS.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,2.5,0.6),M.wall,WS.length);WS.forEach((w,i)=>{d.rotation.set(0,w[3],0);d.position.set(w[0],TY(w[0],w[1])+1.05,-w[1]);d.scale.set(w[2]+0.3,1,1);d.updateMatrix();wm.setMatrixAt(i,d.matrix)});wm.castShadow=true;wm.receiveShadow=true;WG.add(wm)}
 })();
 
@@ -10353,7 +10353,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
 }catch(e){console.warn("area8",e)}})();
 
 // ---- topic 3: the Southern Steps before the Double (Huldah) Gate, 64 m wide, rising 6.8 m ----
-(function(){try{const GS=[];const ox=0.1743,on=-0.9847,R=0.1752;
+(function(){return;try{const GS=[];const ox=0.1743,on=-0.9847,R=0.1752;
   for(let k=0;k<30;k++){const tc=6+0.7*k+0.35,top=HUL-(k+1)*6.8/30,bot=HUL-8.2,g=wbox(64,top-bot,0.74,4),m=new THREE.Matrix4().makeRotationY(R);m.setPosition(45+ox*tc,(top+bot)/2,-(-237.15+on*tc));g.applyMatrix4(m);if(g.attributes.uv2)g.deleteAttribute("uv2");GS.push(g.index?g.toNonIndexed():g)}
   const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS,false);if(!mg)return;const me=new THREE.Mesh(mg,M.pave||M.stone2||M.wall);me.receiveShadow=true;me.castShadow=true;
   me.userData={n:"המדרגות הדרומיות",r:"חפירות העופל; מדידות וורן וכספי",t:"📜 מדרגות רחבות, כ־64 מטר, שעולות מהרחוב שמדרום להר אל שערי חולדה. 📜 מפתן השערים בגובה 725.4 מטר, והמדרגות עולות אליו כ־6.8 מטר. 💡 במודל יש 30 מדרגות שוות. במציאות המדרגות לא שוות: מדרגה צרה ומדרגה רחבה לסירוגין."};WG.add(me);PICK.push(me)}catch(e){console.warn("ssteps",e)}})();
@@ -10612,10 +10612,23 @@ const GATEG=new THREE.Group();WG.add(GATEG);
       for(let i=0;i<N-1;i++){const y=thr-(i+1)*h,dd=tread+((i%FL===FL-1)?LAND:0),p=P(run(i)+dd/2,0);steps.push([p[0],y,p[1],w.a,wid,y-gb+0.8,dd+0.02])}
       [-1,1].forEach(sd=>{const a=P(s0,sd*(wid/2-0.2)),b=P(run(N-2)+tread,sd*(wid/2-0.2));RAILS.push([a[0],thr+1,a[1],b[0],gb+h+1,b[1]])})}
     if(today&&thr>0.05){const N=Math.ceil(thr/0.17),h=thr/N,wid=g.w*0.6+2.8;for(let i=0;i<N-1;i++){const y=thr-(i+1)*h,p=P(-1.5-(i+0.5)*0.32,0);steps.push([p[0],y,p[1],w.a,wid,y+0.5,0.34])}}
-    if(low){/* גרסה 117: מידות הרחבה והמדרגות לפי החפירות. השער המשולש: "narrow paved piazza" לפני השער, והקמרונות שנשאו את המדרגות מתחילים 7.2–7.5 מ׳ דרומית לשער (Baruch & Reich, 'Atiqot 85, 2016), ולכן הרחבה העליונה 7.2 מ׳ (💡 בתוך הטווח 5.2–7.2). השער הכפול: רחוב ברוחב 6.4 מ׳ לאורך החומה בראש המדרגות (מקור משני, לפי Ritmeyer), ומדרגות ברוחב 64 מ׳ (Ritmeyer, BAR 15:6, 1989; שחזור לפי סימטריה). 💡 רוחב המדרגות בשער המשולש והרחבה התחתונה בהערכה */const TRI=g.n.includes("המזרחי"),TOP=TRI?7.2:6.4;const rise=thr-yo,N=Math.ceil(rise/0.17),tread=0.36,wid=TRI?g.w*2.5:64,FL=10,LAND=2.6;const run=i=>TOP+i*tread+Math.floor(i/FL)*LAND;const tot=run(N);
-      for(let i=0;i<N;i++){const y=thr-i*rise/N,dist=run(i)+tread/2;steps.push([w.x+w.ox*dist,y,w.n+w.on*dist,w.a,wid,y-yo+4,tread+(i%FL===FL-1?LAND:0)+0.02])}
-      stoneG.push([w.x+w.ox*(TOP/2),thr-2.1,w.n+w.on*(TOP/2),w.a,wid+0.4,4.2,TOP]);paves.push([w.x+w.ox*(TOP/2),thr+0.05,w.n+w.on*(TOP/2),w.a,wid,0.3,TOP]);g.top_={TOP,wid};
-      const ex=w.x+w.ox*(tot*0.35)+fx*(wid/2+2.6),en=w.n+w.on*(tot*0.35)+fn*(wid/2+2.6);lifts.push([ex,yo,en,w.a,thr-yo+3.2]);/* גרסה 116: 💡 רחבת כניסה מרוצפת בתחתית המדרגות, כדי שהן לא יגמרו על מדרון סלעי. עומק 14 מ׳ ורוחב המדרגות ועוד 8 מ׳ הם הערכה, לא מידה ממקור */{const PD=14,PW=wid+8,pc=[w.x+w.ox*(tot+PD/2),w.n+w.on*(tot+PD/2)];stoneG.push([pc[0],yo-1.6,pc[1],w.a,PW+0.6,3.2,PD+0.4]);paves.push([pc[0],yo+0.05,pc[1],w.a,PW,0.1,PD]);g.plz_={pc,PD,PW,yo};try{const c=[P(tot,-PW/2),P(tot+PD,-PW/2),P(tot+PD,PW/2),P(tot,PW/2)].map(q=>[q[0],yo+0.1,-q[1]]),T=[...c[0],...c[1],...c[2],...c[0],...c[2],...c[3]];g.plz_.cf=TMESH.conform(T,{lo:0.15,hi:99})}catch(e){}}}
+    if(low){/* גרסה 122.2: גרם מדרגות אחד גדול לשני שערי חולדה (במקום שלושה גרמים שחופפים ובזוויות שונות). ישר, מקביל לחומה, מדרגות אחידות עם רחבת מנוחה כל 10, וצלעות סגורות. 💡 הרוחב מכסה את שני השערים; בחפירות נמצא גרם ברוחב 64 מ׳ מול השער הכפול (Ritmeyer, BAR 15:6, 1989) והמשכו מזרחה לא נחשף, לכן ההשלמה שלי. עומק הרחבה העליונה 7.2 מ׳ (Baruch & Reich, Atiqot 85, 2016) */
+      if(g.n.includes("המזרחי")){g.top_=window.__HG.top;g.plz_=window.__HG.plz}
+      else{const E=G.find(q=>q.n.includes("המזרחי")),wE=wallAt(E.x,E.n2),Cx=(w.x+wE.x)/2,Cn=(w.n+wE.n)/2,P2=(nn,al)=>[Cx+w.ox*nn+fx*al,Cn+w.on*nn+fn*al];
+        const dxs=Math.hypot(wE.x-w.x,wE.n-w.n),wid=Math.round(dxs+g.w/2+E.w/2+16),TOP=7.2,tread=0.36,FL=10,LAND=2.6,run=i=>TOP+i*tread+Math.floor(i/FL)*LAND;
+        let yoL=Math.min(yo,H(wE.x+wE.ox*9,wE.n+wE.on*9));const rise0=thr-yoL,N=Math.ceil(rise0/0.17),tot=run(N);for(let k=-2;k<=2;k++){const q=P2(tot,k*wid/4);yoL=Math.min(yoL,H(q[0],q[1]))}
+        const rise=thr-yoL,N2=Math.ceil(rise/0.17),tot2=run(N2),h=rise/N2;
+        for(let i=0;i<N2;i++){const y=thr-i*h,dist=run(i)+tread/2,p=P2(dist,0);steps.push([p[0],y,p[1],w.a,wid,y-yoL+4,tread+(i%FL===FL-1?LAND:0)+0.02])}
+        {const p=P2(TOP/2,0);stoneG.push([p[0],thr-2.1,p[1],w.a,wid+0.4,4.2,TOP]);paves.push([p[0],thr+0.05,p[1],w.a,wid,0.3,TOP])}
+        // stone balustrade along both sides of the stair, and at the head
+        [-1,1].forEach(sd=>{const a=P2(TOP,sd*(wid/2-0.3)),b=P2(tot2-LAND,sd*(wid/2-0.3));RAILS.push([a[0],thr+1,a[1],b[0],yoL+1.4,b[1]])});
+        const lf=P2(tot2*0.35,wid/2+2.6);lifts.push([lf[0],yoL,lf[1],w.a,thr-yoL+3.2]);
+        const PD=14,PW=wid+8,pc=P2(tot2+PD/2,0);stoneG.push([pc[0],yoL-1.6,pc[1],w.a,PW+0.6,3.2,PD+0.4]);paves.push([pc[0],yoL+0.05,pc[1],w.a,PW,0.1,PD]);
+        const plz={pc,PD,PW,yo:yoL};try{const c=[P2(tot2,-PW/2),P2(tot2+PD,-PW/2),P2(tot2+PD,PW/2),P2(tot2,PW/2)].map(q=>[q[0],yoL+0.1,-q[1]]),T=[...c[0],...c[1],...c[2],...c[0],...c[2],...c[3]];plz.cf=TMESH.conform(T,{lo:0.15,hi:99})}catch(e){}
+        // a room for staff, shoes and bags inside each end of the stair (a door in the end wall, under the mount's approach), 💡
+        const doors=[];[-1,1].forEach(sd=>{const i=Math.floor(N2*0.42),dist=run(i)+tread/2,p=P2(dist,sd*(wid/2+0.06)),gy=H(p[0],p[1]);doors.push([p[0],gy,p[1]]);
+          darkB.push([p[0],gy+1.4,p[1],w.a+Math.PI/2,3.0,2.8,0.2]);stoneG.push([p[0]+fx*sd*0.12,gy+3.0,p[1]+fn*sd*0.12,w.a+Math.PI/2,3.8,0.45,0.5]);[-1,1].forEach(s2=>{const q=P2(dist+s2*1.75,sd*(wid/2+0.12));stoneG.push([q[0],gy+1.5,q[1],w.a+Math.PI/2,0.4,3.0,0.5])})});
+        window.__HG={top:{TOP,wid},plz,C:[Cx,Cn],tot:tot2,wid,yo:yoL,thr,w,doors,P2};g.top_=window.__HG.top;g.plz_=plz}}
     else if(!today)paves.push([w.x+w.ox*6,thr+0.05,w.n+w.on*6,w.a,g.w+4,0.1,7]);
     else if(gb>=thr-0.1&&!g.st_)paves.push([w.x+w.ox*4,thr+0.05,w.n+w.on*4,w.a,g.w+4,0.1,5]);
     // a gate whose street is far above the ground below it stands on a stone causeway, like Wilson's Arch under the Street of the Chain
@@ -10663,20 +10676,23 @@ const GATEG=new THREE.Group();WG.add(GATEG);
       {const pc=cv(512,128,(x,Wc,Hh)=>{x.fillStyle="#2a2117";x.fillRect(0,0,Wc,Hh);x.strokeStyle="#c9a24b";x.lineWidth=6;x.strokeRect(6,6,Wc-12,Hh-12);x.fillStyle="#f0d58c";x.font="bold 64px serif";x.textAlign="center";x.textBaseline="middle";x.direction="rtl";x.fillText(ent?"כניסה":"יציאה",Wc/2,Hh/2+4)});
         const pt=new THREE.CanvasTexture(pc);pt.encoding=THREE.sRGBEncoding;const pl=new THREE.Mesh(new THREE.PlaneGeometry(6,1.5),new THREE.MeshStandardMaterial({map:pt,roughness:0.6}));const pp=P(4.6,0);
         pl.position.set(pp[0],HUL+7.6,-pp[1]);pl.rotation.y=Math.atan2(w.ox,-w.on);pl.userData={n:ent?"שער הכניסה":"שער היציאה",r:"מידות ב, ב",t:"⚖️ \"כל הנכנסין להר הבית נכנסין דרך ימין, ומקיפין ויוצאין דרך שמאל\" (מידות ב, ב). 💡 לכן יש שער אחד לכניסה ושער אחד ליציאה, והקהל זורם בכיוון אחד. גם בקיפונוס עולים בצד ימין ויורדים בצד שמאל. ♿ ליד המדרגות יש מעלית מהרחוב, ובתוך המעבר יש מדרגות נעות ומעליות עד רחבת ההר."};PICK.push(pl);GATEG.add(pl)}
-      // mikvaot at the foot of the steps
-      const yo=H(...P(14,0));const rise=HUL-yo;if(rise>0.5&&ent){const N=Math.ceil(rise/0.17),tot=3+N*0.36+Math.floor(N/10)*2.6,wid=g.w*2.5;
-        const mi={n:"מקוואות",r:"רמב״ם הלכות ביאת המקדש ג; ממצאי העופל",t:"⚖️ לפני העלייה להר טובלים. בעופל נמצאו יותר מ־50 מקוואות מימי בית שני. 💡 כאן שני בתי מקוואות, אחד לגברים ואחד לנשים, משני צדי המדרגות."};
-        [-1,1].forEach(sd=>{const p=P(tot+8,sd*(wid/2+9)),gy=H(p[0],p[1]);stoneG.push([p[0],gy+2,p[1],w.a,14,4,10]);stoneG.push([p[0],gy+4.15,p[1],w.a,14.6,0.3,10.6]);
-          const d1=P(tot+3,sd*(wid/2+9));darkB.push([d1[0],gy+1.1,d1[1],w.a,1.6,2.2,0.2]);const q=G2S(p[0],p[1]);label(sd<0?"מקוואות — גברים":"מקוואות — נשים",q[0],gy+7,-q[1],null,mi).m=true})}})}
+      // mikvaot: two identical bathhouses, one at each end of the foot of the grand stair (built once, with the east gate)
+      if(ent&&window.__HG){const HG=window.__HG,w2=HG.w,f2=[Math.cos(w2.a),Math.sin(w2.a)];
+        const mi={n:"מקוואות",r:"רמב״ם הלכות ביאת המקדש ג; ממצאי העופל",t:"⚖️ לפני העלייה להר טובלים. בעופל נמצאו יותר מ־50 מקוואות מימי בית שני. 💡 כאן שני בתי מקוואות זהים, אחד לגברים ואחד לנשים, משני קצות רחבת הכניסה בתחתית המדרגות. ההצבה והמידות הן הצעה שלי."};
+        [-1,1].forEach(sd=>{const c=HG.P2(HG.tot+12,sd*(HG.wid/2+14)),ys=[];for(const dx of[-7,7])for(const dn of[-5,5])ys.push(H(c[0]+f2[0]*dx+w2.ox*dn,c[1]+f2[1]*dx+w2.on*dn));const lo=Math.min(...ys),hi=Math.max(...ys),top=hi+3.6;
+          stoneG.push([c[0],(lo-0.6+top)/2,c[1],w2.a,14,top-lo+0.6,10]);stoneG.push([c[0],top+0.15,c[1],w2.a,14.6,0.3,10.6]);
+          const dpt=[c[0]-sd*f2[0]*7.05,c[1]-sd*f2[1]*7.05];darkB.push([dpt[0],hi+1.3,dpt[1],w2.a+Math.PI/2,2.2,2.6,0.2]);stoneG.push([dpt[0]-sd*f2[0]*0.1,hi+2.8,dpt[1]-sd*f2[1]*0.1,w2.a+Math.PI/2,3.0,0.4,0.5]);
+          const q=G2S(c[0],c[1]);label(sd<0?"מקוואות — גברים":"מקוואות — נשים",q[0],top+3,-q[1],null,mi).m=true})}})}
   // topic 2, stage 7: a sign at each Mishnah gate, a place to leave staff, shoes and bags before entering, and the mourners' path
   {const si={n:"שלט בשער ההר",r:"ברכות ט, ה; כלים א, ח; רמב״ם בית הבחירה ז",t:"⚖️ \"לא יכנס אדם להר הבית במקלו, ובמנעלו, ובפונדתו (ארנק), ובאבק שעל רגליו, ולא יעשנו קפנדריא\" (ברכות ט, ה). ⚖️ \"הר הבית מקודש ממנו, שאין זבים וזבות, נדות ויולדות נכנסים לשם\" (כלים א, ח). 💡 השלט עומד בכניסה לכל אחד מחמשת שערי המשנה."};
-    G.filter(g=>g.five).forEach(g=>{const w=g.w_,fx=Math.cos(w.a),fn=Math.sin(w.a),p=[w.x+w.ox*(g.k==="K"?16:g.k==="S"?20:9)+fx*(g.k==="K"?18:g.w*(g.k==="S"?1.35:0.5)+3),w.n+w.on*(g.k==="K"?16:g.k==="S"?20:9)+fn*(g.k==="K"?18:g.w*(g.k==="S"?1.35:0.5)+3)],gy=g.k==="K"?(PLZ+0.25):H(p[0],p[1]);
+    G.filter(g=>g.five).forEach(g=>{const w=g.w_,fx=Math.cos(w.a),fn=Math.sin(w.a),p=[w.x+w.ox*(g.k==="K"?16:g.k==="S"?4:9)+fx*(g.k==="K"?18:g.w*(g.k==="S"?0.5:0.5)+3.5),w.n+w.on*(g.k==="K"?16:g.k==="S"?4:9)+fn*(g.k==="K"?18:g.w*(g.k==="S"?0.5:0.5)+3.5)],gy=g.k==="K"?(PLZ+0.25):g.k==="S"?g.thr_:H(p[0],p[1]);
       stoneG.push([p[0],gy+1.1,p[1],w.a,1.5,2.2,0.35]);const q=G2S(p[0],p[1]);label("שלט: מי נכנס להר",q[0],gy+3.2,-q[1],null,si).m=true});
     const li={n:"מקום למקל, לנעליים ולתיקים",r:"ברכות ט, ה; פסחים פו ע״א",t:"⚖️ אסור להיכנס להר הבית עם מקל, נעליים, ארנק ואבק על הרגליים (ברכות ט, ה). 💡 לכן לפני הכניסה, עוד מחוץ לשטח המקודש, יש ארונות לתיקים ולמקלות, מדפים לנעליים וברזים לשטיפת רגליים. נעלי בד או סנדלים בלי עור אפשר לקבל כאן."};
     const kG=G.find(q=>q.k==="K"),kw=kG.w_,kf=[Math.cos(kw.a),Math.sin(kw.a)];
-    [[kw,kf,12,-21,(PLZ+0.25)],[G.find(q=>q.n.includes("המזרחי")).w_,null,30,-34,null]].forEach(([w,f,nn,al,y0])=>{f=f||[Math.cos(w.a),Math.sin(w.a)];const p=[w.x+w.ox*nn+f[0]*al,w.n+w.on*nn+f[1]*al],gy=y0===null?H(p[0],p[1]):y0;
-      stoneG.push([p[0],gy+1.4,p[1],w.a,10,2.8,4]);stoneG.push([p[0],gy+2.95,p[1],w.a,11,0.3,5]);woodB.push([p[0]+w.ox*2.05,gy+1.1,p[1]+w.on*2.05,w.a,7,1.6,0.1]);
-      const q=G2S(p[0],p[1]);label("מקום לנעליים ולתיקים",q[0],gy+5,-q[1],null,li).m=true});
+    /* גרסה 122.2: מקום המקל, הנעליים והתיקים הוא חדר, לא קופסה באמצע הרחבה. בקיפונוס: חדר מתחת למרפסת האבן שלפני השער. בחולדה: חדר בכל קצה של גרם המדרגות. 💡 המיקום והעיצוב הצעה שלי; מקור: ברכות ט, ה */
+    const shoeRoom=(x,y,n,a,lab)=>{darkB.push([x,y+1.3,n,a+Math.PI/2,3.0,2.6,0.2]);const q=G2S(x,n);if(lab)label("מקום לנעליים ולתיקים",q[0],y+5,-q[1],null,li).m=true};
+    {const g=kG,w=kw,P=(nn,al)=>[w.x+w.ox*nn+kf[0]*al,w.n+w.on*nn+kf[1]*al],yb=PLZ+0.25;[-1,1].forEach(sd=>{const p=P(5,sd*15.06);shoeRoom(p[0],yb,p[1],w.a,sd>0);stoneG.push([p[0]+kf[0]*sd*0.12,yb+3.0,p[1]+kf[1]*sd*0.12,w.a+Math.PI/2,3.8,0.45,0.5]);[-1,1].forEach(s2=>{const q=P(5+s2*1.75,sd*15.12);stoneG.push([q[0],yb+1.5,q[1],w.a+Math.PI/2,0.4,3.0,0.5])})})}
+    if(window.__HG)window.__HG.doors.forEach((d,i)=>{const q=G2S(d[0],d[2]);if(i===0)label("מקום לנעליים ולתיקים",q[0],d[1]+5,-q[1],null,li).m=true});
     {const g=G.find(q=>q.n.includes("המערבי")),w=g.w_,p=[w.x-w.ox*58,w.n-w.on*58],q=G2S(p[0],p[1]);
       label("מסלול האבלים",q[0],4,-q[1],null,{n:"מסלול האבלים — מקיפים לשמאל",r:"מידות ב, ב",t:"⚖️ \"כל הנכנסין להר הבית נכנסין דרך ימין ומקיפין ויוצאין דרך שמאל, חוץ ממי שאירע לו דבר שהוא מקיף לשמאל. מה לך מקיף לשמאל? שאני אבל — השוכן בבית הזה ינחמך.\" 💡 בתוכנית אין צריך לסמן את האבלים. רק השלט מזכיר שמי שהולך נגד הזרם הוא אבל, וכל מי שפוגש אותו מנחם אותו."}).m=true}}
   // topic 2, stage 2: the remains of Robinson's Arch near the SW corner, left as a ruin (as today)
@@ -10688,7 +10704,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
   // Kotel prayer area: a low partition (mechitza) and a low stone railing with two openings
   {const w=wallAt(-93,-147),fx=Math.cos(w.a),fn=Math.sin(w.a),P=(nn,al)=>[w.x+w.ox*nn+fx*al,w.n+w.on*nn+fn*al],Y=(PLZ+0.25);const north=fn>0?1:-1;
     {const p=P(14,0);SCR.push([p[0],Y+0.9,p[1],w.a+Math.PI/2,22,1.8,0.12,0])}
-    [[-24,-11],[-5,5],[11,24]].forEach(([a0,a1])=>{const p=P(26,(a0+a1)/2);SCR.push([p[0],Y+0.5,p[1],w.a,a1-a0,1.0,0.5,1])});
+    /* גרסה 122.2: ברחבה מחיצה אחת בלבד בין הגברים לנשים. המעקה הנמוך עם הפתחים הוסר */
     const q1=G2S(...P(12,13*north)),q2=G2S(...P(12,-13*north)),q3=G2S(...P(31,0));
     label("תפילה — גברים",q1[0],Y+4,-q1[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, ומעקה אבן נמוך עם שני פתחים שמפריד בינו לבין הרחבה."}).m=true;
     label("תפילה — נשים",q2[0],Y+4,-q2[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, ומעקה אבן נמוך עם שני פתחים שמפריד בינו לבין הרחבה."}).m=true}
@@ -11095,7 +11111,7 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
   Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],Object.assign({n:TREES5.NAMES[k]},card)));
   // 3. terrace and retaining walls of dry stone (barrier=retaining_wall / barrier=wall)
   const WS=[];D.walls.forEach(w=>{const P=w.p;for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;
-    if(inPoly(mx,mn,MOUNT_BIG)||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0]),w.r?1.3:1.8])}});
+    if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)||(mx>-80&&mx<75&&mn>-305&&mn<-225)/* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל ובמדרגות שערי חולדה */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0]),w.r?1.3:1.8])}});
   if(WS.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,0.6),M.wall,WS.length);WS.forEach((w,i)=>{d.rotation.set(0,w[3],0);d.position.set(w[0],TY(w[0],w[1])+w[4]/2-0.3,-w[1]);d.scale.set(w[2]+0.3,w[4],1);d.updateMatrix();wm.setMatrixAt(i,d.matrix)});
     wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"קירות טרסה ותמך",r:"OpenStreetMap (barrier=retaining_wall / wall)",t:"קירות אבן של טרסות וקירות תמך במקום שלהם לפי OpenStreetMap. 💡 הגובה (1.3 מ׳ לקיר תמך, 1.8 מ׳ לקיר) משוער, כי ב־OSM אין גובה."};WG.add(wm);PICK.push(wm)}
   // 4. Gethsemane: eight ancient olives instead of the young orchard trees there
