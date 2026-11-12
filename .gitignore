@@ -1,2 +1,11 @@
 dist/
 __pycache__/
+.DS_Store
+.env
+.env.*
+*.pem
+*.p12
+*.key
+.gcp-tts-key
+*service-account*.json
+credentials.json

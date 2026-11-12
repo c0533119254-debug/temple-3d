@@ -1,0 +1,85 @@
+{
+ "yk": [
+  "yk_01.mp3",
+  "yk_02.mp3",
+  "yk_03.mp3",
+  "yk_04.mp3",
+  "yk_05.mp3",
+  "yk_06.mp3",
+  "yk_07.mp3",
+  "yk_08.mp3",
+  "yk_09.mp3",
+  "yk_10.mp3",
+  "yk_11.mp3",
+  "yk_12.mp3"
+ ],
+ "tamid": [
+  "tamid_01.mp3",
+  "tamid_02.mp3",
+  "tamid_03.mp3",
+  "tamid_04.mp3",
+  "tamid_05.mp3",
+  "tamid_06.mp3",
+  "tamid_07.mp3",
+  "tamid_08.mp3",
+  "tamid_09.mp3",
+  "tamid_10.mp3",
+  "tamid_11.mp3",
+  "tamid_12.mp3",
+  "tamid_13.mp3"
+ ],
+ "oldcity": [
+  "oldcity_01.mp3",
+  "oldcity_02.mp3",
+  "oldcity_03.mp3",
+  "oldcity_04.mp3",
+  "oldcity_05.mp3",
+  "oldcity_06.mp3",
+  "oldcity_07.mp3",
+  "oldcity_08.mp3",
+  "oldcity_09.mp3"
+ ],
+ "pilgrim": [
+  "pilgrim_01.mp3",
+  "pilgrim_02.mp3",
+  "pilgrim_03.mp3",
+  "pilgrim_04.mp3",
+  "pilgrim_05.mp3",
+  "pilgrim_06.mp3",
+  "pilgrim_07.mp3",
+  "pilgrim_08.mp3",
+  "pilgrim_09.mp3",
+  "pilgrim_10.mp3",
+  "pilgrim_11.mp3",
+  "pilgrim_12.mp3",
+  "pilgrim_13.mp3"
+ ],
+ "pesach": [
+  "pesach_01.mp3",
+  "pesach_02.mp3",
+  "pesach_03.mp3",
+  "pesach_04.mp3",
+  "pesach_05.mp3",
+  "pesach_06.mp3",
+  "pesach_07.mp3",
+  "pesach_08.mp3"
+ ],
+ "sukkot": [
+  "sukkot_01.mp3",
+  "sukkot_02.mp3",
+  "sukkot_03.mp3",
+  "sukkot_04.mp3",
+  "sukkot_05.mp3",
+  "sukkot_06.mp3",
+  "sukkot_07.mp3"
+ ],
+ "hakhel": [
+  "hakhel_01.mp3",
+  "hakhel_02.mp3",
+  "hakhel_03.mp3",
+  "hakhel_04.mp3",
+  "hakhel_05.mp3",
+  "hakhel_06.mp3",
+  "hakhel_07.mp3"
+ ]
+}
