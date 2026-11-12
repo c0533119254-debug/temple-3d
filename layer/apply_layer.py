@@ -34,7 +34,7 @@ def finish(html,patched):
         os.makedirs(A)
         for f in sorted(os.listdir(TC+'/audio-v117')):
             if f.endswith('.mp3') or f in('manifest.json','index.json'): shutil.copy(TC+'/audio-v117/'+f,A)
-        open(A+'/README.txt','w',encoding='utf-8').write('קריינות WaveNet-D (he-IL-Wavenet-D), 69 תחנות. manifest.json: חותמות זמן לכל משפט. index.json: מיפוי סיור->קבצים.\n')
+        open(A+'/README.txt','w',encoding='utf-8').write('קריינות WaveNet-D (he-IL-Wavenet-D), 68 תחנות. manifest.json: חותמות זמן לכל משפט. index.json: מיפוי סיור->קבצים.\n')
         os.makedirs(out+'/music-module',exist_ok=True)
         shutil.copy(TC+'/music-module/music.js',out+'/music-module/');shutil.copy(TC+'/music-module/niggun-baal-shem-tov.ogg',out+'/music-module/');shutil.copy(TC+'/music-module/niggun-baal-shem-tov.m4a',out+'/music-module/')
 caps=json.load(open(TC+'/audio-v117/captions-v117.json',encoding='utf-8'))
