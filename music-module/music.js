@@ -702,7 +702,7 @@
   "oldcity": {
     "credit": "«בשערייך ירושלים» · יהורם גאון (YouTube)",
     "segs": {"main": {"v": "xql0wVmZ-ks", "at": 0.4, "vol": 70, "fadeIn": 4000}},
-    "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
+    "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
            {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main", "lv": 0.7}]
   },
   "tamid": {
