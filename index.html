@@ -487,6 +487,7 @@ body.touring #revBtn,body.touring #mplate,body.touring #cta,body.pane #mplate,bo
 #sbox .row1{border-radius:14px}
 #chips button{border-radius:10px;height:34px;box-shadow:0 2px 8px rgba(46,34,10,.14)}
 #chips button:hover{border-color:var(--gold)}
+@media (max-width:420px){#chips{gap:5px}#chips button{padding:0 8px;gap:4px}} /* v122.6: על מסך צר כל חמשת הכפתורים נכנסים, כך ש"הבית" לא נחתך בקצה */
 #sres{border-radius:14px}
 
 /* ---- לוח הזהות והשיטה: שמאל למעלה ---- */
@@ -9500,7 +9501,7 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
 const RING=new THREE.Mesh(new THREE.RingGeometry(1750,55000,96,1),new THREE.MeshBasicMaterial({color:0x8a8a80}));RING.rotation.x=-Math.PI/2;RING.position.set(100,6,-200);scene.add(RING);
 // ---- satellite floor (Esri World Imagery, georeferenced corners) ----
 const satTex={};
-function loadSat(b){if(satTex[b.img])return satTex[b.img];const t=new THREE.TextureLoader().load(b.img);t.encoding=THREE.sRGBEncoding;t.anisotropy=renderer.capabilities.getMaxAnisotropy();t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;satTex[b.img]=t;return t}
+function loadSat(b){if(satTex[b.img])return satTex[b.img];const t=new THREE.TextureLoader().load(b.img,undefined,undefined,function(){/* v122.6: ניסיון חוזר לאריח לוויין אחרי תקלת רשת רגעית (502), כדי שהקרקע לא תישאר שחורה */[2500,8000].forEach(function(w){setTimeout(function(){if(t.image&&t.image.width)return;new THREE.ImageLoader().load(b.img,function(img){t.image=img;t.needsUpdate=true})},w)})});t.encoding=THREE.sRGBEncoding;t.anisotropy=renderer.capabilities.getMaxAnisotropy();t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;satTex[b.img]=t;return t}
 if(!SMALL){T19.forEach((t,i)=>{SATB["t"+i]=Object.assign({st:8},t)});Object.assign(SATB.old,{w:T19[0].w,e:T19[3].e,nn:T19[0].nn,s:T19[15].s})}
 
 // ---- the ground: painted from map data (no satellite photo) ----
