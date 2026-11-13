@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 123.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 123.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -14583,7 +14583,7 @@ window.__UI={buildIndex,run,toggleDr,showIntro,share,shareURL,restore,closeDr,ch
 // ==== v60: distance LOD for big instanced crowds (trees, people, graves, lamps): near = full, far = a box, small parts (heads, trunks) hidden far ====
 (function(){
 const E=[],done=new WeakSet(),cam=new THREE.Vector3(),last=new THREE.Vector3(1e9,0,0),wp=new THREE.Vector3(),mw=new THREE.Matrix4();
-const KQ=QL==="low"?0.6:1;let lastT=0,changed=false,shT=0;
+const KQ=QL==="low"?0.6:SMALL?0.7:1;let lastT=0,changed=false,shT=0;
 const tris=g=>(g.index?g.index.count:g.attributes.position.count)/3;
 const inScene=o=>{for(let q=o;q;q=q.parent)if(q===scene)return true;return false};
 function scan(){const c=[];scene.traverse(o=>{if(o.isInstancedMesh&&!done.has(o)&&o.count>=60&&!o.userData.train&&!o.userData.noLOD&&!o.__lodFar)c.push(o)});if(!c.length)return;
