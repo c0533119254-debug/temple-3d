@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 122.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 123"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -10491,7 +10491,7 @@ Object.values(GATES).forEach(g=>LG(g[2],g[0],g[1],24));
 
 // ---- compound ----
 let PALMF=null,SSAO=false,ssaoC=null,PLAN="ez",RIVG=null,WALLG=null,SHOW_RIVER=true,SHOW_WALL=false,KDS=null,INT=null,INTBOX=null,KBOX=null,INSIDE=0,EGATE=null,DAY="chol",COMP=null,COL=[],GLIST=[];let AMZR=null;function interiorPose(){return[INT.p.clone(),INT.t.clone()]}
-let FESTG=null,SHOW_FEST=false,BIMAHG=null,SUK=null,SUKDAY=15,PES=null,PESDAY="15",PESPICK=false,SHV=null,SHVDAY="6",SHVPICK=false;const HELP_FEST={n:"מצב חג",r:"סוכה ה; ביכורים ג; סוטה ז, ח",t:"⚖️ מראה את ההר בחג: ארבע המנורות של שמחת בית השואבה והרוקדים באבוקות, בימת ההקהל של המלך, ותהלוכת הביכורים עם השור. לחצו על כל אחד מהם כדי לקרוא עליו. 💡 המקומות בחצר החיצונה הם הצעה."};
+let FESTG=null,SHOW_FEST=false,BIMAHG=null,SUK=null,SUKDAY=15,PES=null,PESDAY="15",PESPICK=false,SHV=null,SHVDAY="6",SHVPICK=false,DRIFT=null,PTD=null,STD=null,SUKTD=null;const HELP_FEST={n:"מצב חג",r:"סוכה ה; ביכורים ג; סוטה ז, ח",t:"⚖️ מראה את ההר בחג: ארבע המנורות של שמחת בית השואבה והרוקדים באבוקות, בימת ההקהל של המלך, ותהלוכת הביכורים עם השור. לחצו על כל אחד מהם כדי לקרוא עליו. 💡 המקומות בחצר החיצונה הם הצעה."};
 let group=null,cPick=[],cLabels=[],C=new THREE.Vector3(),flames=[],smoke=null,smokeData=[],fireLight=null,ksm=null,PFX=[],MENL=null;
 // stage 5b: natural fire and smoke (the page uses a logarithmic depth buffer, so the shaders include the logdepth chunks). Each particle is a soft, rotated puff that rises, changes colour and fades.
 const PUFF=(()=>{const c=cv(128,128,(x,w,h)=>{const r=rng(321);x.fillStyle="#000";x.fillRect(0,0,w,h);x.globalCompositeOperation="lighter";
@@ -11903,7 +11903,7 @@ function build(){
         box(u+2.6,v-0.5,u+3.1,v+0.5,3.5,46,M.wood,sb,nc)});
       FESTG.add(makePFX(EM.length*(SMALL?6:10),true,EM,{seed:81}));
       const TE=[];around(415,250,7,12,3.5,sb,FSTAND,k=>[0xf1ece0,0xd9cdb2,0xe8e2cf][k%3],0,Math.PI*2);for(let k=0;k<12;k++){const th=Math.PI*2*(k+0.5)/12,q=W(415+7.6*Math.cos(th),250+7.6*Math.sin(th));TE.push({x:q[0],y:(3.5+3.4)*A,z:q[1],rx:0.08*A,s:0.35})}
-      FESTG.add(makePFX(TE.length*(SMALL?3:5),true,TE,{seed:82}));
+      {const _tp=makePFX(TE.length*(SMALL?3:5),true,TE,{seed:82});_tp.userData=Object.assign({},_tp.userData,{sbTorch:true});FESTG.add(_tp)}
       BIMAHG=new THREE.Group();BIMAHG.name="BIMAHG";FESTG.add(BIMAHG);
       {const g1=group;group=BIMAHG;
       const hk=I("הקהל — בימת המלך","סוטה ז, ח; דברים לא, י-יג","📜 במוצאי שנת השמיטה, בחג הסוכות, \"עושין לו בימה של עץ בעזרה, והוא יושב עליה\", והמלך קורא בתורה לפני כל העם — אנשים, נשים וטף. 📜 אגריפס המלך עמד וקרא, ושבחוהו חכמים. 💡 המקום בחצר החיצונה הוא הצעה.");
@@ -11950,7 +11950,7 @@ function build(){
         hak:I("הקפת המזבח בלולבים","סוכה ד, ה; רמב״ם, הלכות שופר וסוכה ולולב ז, כג","📜 \"בכל יום מקיפין את המזבח פעם אחת, ואומרים: אנא ה׳ הושיעה נא, אנא ה׳ הצליחה נא... ואותו היום מקיפין את המזבח שבע פעמים\". ⚖️ הרמב״ם: \"בכל יום ויום היו מקיפין את המזבח בלולביהן בידיהן פעם אחת... וביום השביעי מקיפין את המזבח שבע פעמים\". מוצג: הקפה אחת בימים ט״ו עד כ׳, ושבע הקפות בכ״א, הושענא רבה. 💡 מספר המקיפים ומסלול ההליכה סביב הכבש הם הצעה לתצוגה. 💡 ההקפה מוצגת מהר פי שלושה מקצב הליכה, כדי לקצר: הקפה אחת בכחצי דקה."),
         lulav:I("לולב במקדש כל שבעה","סוכה ג, יב; רמב״ם, הלכות שופר וסוכה ולולב ז, יג","📜 \"בראשונה היה לולב ניטל במקדש שבעה, ובמדינה יום אחד\". ⚖️ הרמב״ם: \"ובמקדש לבדו נוטלין אותו בכל יום ויום משבעת ימי החג\". מוצג בימים ט״ו עד כ״א. 💡 צפיפות הקהל היא ערך תצוגה ולא נתון: בתוכנית 1.2 איש למ״ר ביום ו־2 בלילות השואבה, וכאן מוצגות פחות דמויות, לפי תקציב הדמויות. הדמויות הרחוקות מן המצלמה מצוירות בצורה פשוטה."),
         street:I("לולב ביד ברחובות העיר","רמב״ם, הלכות שופר וסוכה ולולב ז, כד","⚖️ \"כך היה המנהג בירושלים: יוצא אדם מביתו שחרית ולולבו בידו, ונכנס לבית הכנסת ומתפלל, והוא בידו, ויוצא לבקר חולים ולנחם אבלים והוא בידו\". מוצג בימים ט״ו עד כ״א."),
-        gez:I("הגזוזטרא — נשים למעלה ואנשים למטה","סוכה נא ע״ב; רמב״ם, הלכות שופר וסוכה ולולב ח, יב","📜 \"תיקון גדול\": הקיפו את עזרת הנשים גזוזטרא, \"והתקינו שיהו נשים יושבות מלמעלה ואנשים מלמטה\". ⚖️ הרמב״ם: \"ערב יום טוב הראשון היו מתקנין במקדש מקום לנשים מלמעלה ולאנשים מלמטה, כדי שלא יתערבו אלו עם אלו\". ⚖️ לפי המלבי״ם (יחזקאל מ, יז) החצר החיצונה היא עזרת הנשים. 💡 הצורה, הגובה והמקום של הגזוזטרא בחצר החיצונה הם הצעה לתצוגה."),
+        gez:I("הגזוזטרא — נשים למעלה ואנשים למטה","סוכה נא ע״ב; רמב״ם, הלכות שופר וסוכה ולולב ח, יב","📜 \"תיקון גדול\": הקיפו את עזרת הנשים גזוזטרא, \"והתקינו שיהו נשים יושבות מלמעלה ואנשים מלמטה\". ⚖️ הרמב״ם: \"ערב יום טוב הראשון היו מתקנין במקדש מקום לנשים מלמעלה ולאנשים מלמטה, כדי שלא יתערבו אלו עם אלו\". ⚖️ לפי המלבי״ם (יחזקאל מ, יז) החצר החיצונה היא עזרת הנשים, ולכן הגזוזטרא מקיפה אותה כולה, עם פתח בכל שער. 💡 במודל של יחזקאל אין עזרת נשים נפרדת. הצורה, הגובה, המקום והנשים שעליה הם הצעה לתצוגה, והן מוצגות בכל ימי החג."),
         lev:I("הלוויים בכלי שיר","סוכה ה, ד; רמב״ם, הלכות שופר וסוכה ולולב ח, יג","📜 \"והלוים בכנורות ובנבלים ובמצלתים ובחצוצרות ובכלי שיר בלא מספר, על חמש עשרה מעלות היורדות מעזרת ישראל לעזרת נשים\". 💡 ביחזקאל אין חמש עשרה מעלות, ולכן הלוויים עומדים כאן על מעלות השער הפנימי המזרחי, מול המנורות. מוצג בלילות ט״ז עד כ״א, חוץ משבת."),
         city:Object.assign({noLOD:true},I("כל חצרות העיר מוארות","סוכה ה, ג","📜 \"ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה\". מוצג בלילות ט״ז עד כ״א, חוץ משבת. 💡 מספר האורות ומקומם הם הצעה לתצוגה.")),
         water:I("תהלוכת המים מן השילוח","סוכה ד, ט; מידות א, ד","📜 \"צלוחית של זהב מחזקת שלשת לוגים היה ממלא מן השילוח. הגיעו לשער המים, תקעו והריעו ותקעו\". המשנה אינה אומרת באיזה כלי תקעו, ולכן לא מוצג כאן שופר. 📜 שער המים נמנה במשנה בין שערי הדרום (מידות א, ד). 💡 ביחזקאל אין שער בשם הזה. במודל נבחר השער הפנימי הדרומי, כי השילוח מדרום למקדש. מוצג בבוקר, ט״ו עד כ״א. 💡 מספר המלווים הוא הצעה לתצוגה. 💡 הדרך מן השילוח: התהלוכה עולה ברחוב של עיר דוד, נכנסת בשער חולדה המזרחי, יוצאת אל רחבת ההר והולכת בדרך העולים אל השער. המסלול הזה הוא הצעה לתצוגה, בלי מקור."),
@@ -12015,15 +12015,17 @@ function build(){
       const BGEO=mkBooth(),boothM=std(0xffffff,{map:wallT,roughness:0.95,side:THREE.DoubleSide}),skM=std(0xffffff,{map:skT,alphaTest:0.45,roughness:1,side:THREE.DoubleSide});
       const BCOL=[0xffffff,0xd9c3a0,0xb9a27c,0xc7d0d6,0xe8ddc8,0xa98f6a,0xd7b9a0],SCOL=[0xffffff,0xdfe6b8,0xcdbd8e,0xeaf0c8];
       /* ---- 7. הגזוזטרא 💡 ---- */
-      const gGez=sub("gez"),gWom=sub("women");const GZ={u0:356,u1:449.5,v0:196,v1:304,dp:5.5,y:13};
+      const gGez=sub("gez"),gWom=sub("women");let WMF=null;const GZ={dp:5.5,y:13,a:52,b:448,g:22,ge:38};
+      /* גרסה 123: הגזוזטרא מקיפה את כל העזרה (סוכה נא ע״ב: "הקיפו עזרת הנשים גזוזטרא"), עם פתח בכל שער, ונשים עליה. 💡 הצורה, הגובה והמקום */
       {const wd=M.wood,bx=(u0,v0,u1,v1,y0,y1)=>{const a=P3(u0,v0,y0),b=P3(u1,v1,y1),m=new THREE.Mesh(new THREE.BoxGeometry(Math.abs(b.x-a.x),Math.abs(b.y-a.y),Math.abs(b.z-a.z)),wd);m.position.copy(a).add(b).multiplyScalar(0.5);m.castShadow=true;gGez.add(pick(m,C.gez))};
-        const decks=[[GZ.u0,GZ.v0,GZ.u1,GZ.v0+GZ.dp],[GZ.u0,GZ.v1-GZ.dp,GZ.u1,GZ.v1],[GZ.u1-GZ.dp,GZ.v0+GZ.dp,GZ.u1,GZ.v1-GZ.dp]];
+        const q0=GZ.a,q1=GZ.b,dp=GZ.dp,c=250,g=GZ.g,ge=GZ.ge,decks=[[q0,q0,c-g,q0+dp],[c+g,q0,q1,q0+dp],[q0,q1-dp,c-g,q1],[c+g,q1-dp,q1,q1],[q0,q0+dp,q0+dp,c-g],[q0,c+g,q0+dp,q1-dp],[q1-dp,q0+dp,q1,c-ge],[q1-dp,c+ge,q1,q1-dp]];
         decks.forEach(d=>{bx(d[0],d[1],d[2],d[3],GZ.y-0.5,GZ.y);KEEP.push([d[0]-0.5,d[1]-0.5,d[2]+0.5,d[3]+0.5])});
-        bx(GZ.u0,GZ.v0+GZ.dp-0.25,GZ.u1-GZ.dp,GZ.v0+GZ.dp,GZ.y,GZ.y+1.9);bx(GZ.u0,GZ.v1-GZ.dp,GZ.u1-GZ.dp,GZ.v1-GZ.dp+0.25,GZ.y,GZ.y+1.9);bx(GZ.u1-GZ.dp,GZ.v0+GZ.dp,GZ.u1-GZ.dp+0.25,GZ.v1-GZ.dp,GZ.y,GZ.y+1.9);
-        const posts=[];for(let u=GZ.u0+0.5;u<=GZ.u1;u+=9.3){[GZ.v0+0.4,GZ.v0+GZ.dp-0.4,GZ.v1-GZ.dp+0.4,GZ.v1-0.4].forEach(v=>posts.push([u,v]))}for(let v=GZ.v0+GZ.dp+8;v<GZ.v1-GZ.dp-4;v+=9.3){posts.push([GZ.u1-0.4,v],[GZ.u1-GZ.dp+0.4,v])}
+        /* מעקה בצד הפונה אל העזרה */bx(q0,q0+dp-0.25,c-g,q0+dp,GZ.y,GZ.y+1.9);bx(c+g,q0+dp-0.25,q1,q0+dp,GZ.y,GZ.y+1.9);bx(q0,q1-dp,c-g,q1-dp+0.25,GZ.y,GZ.y+1.9);bx(c+g,q1-dp,q1,q1-dp+0.25,GZ.y,GZ.y+1.9);
+        bx(q0+dp-0.25,q0+dp,q0+dp,c-g,GZ.y,GZ.y+1.9);bx(q0+dp-0.25,c+g,q0+dp,q1-dp,GZ.y,GZ.y+1.9);bx(q1-dp,q0+dp,q1-dp+0.25,c-ge,GZ.y,GZ.y+1.9);bx(q1-dp,c+ge,q1-dp+0.25,q1-dp,GZ.y,GZ.y+1.9);
+        const posts=[];decks.forEach(d=>{if(d[2]-d[0]>d[3]-d[1]){for(let u=d[0]+0.5;u<=d[2];u+=9.3)posts.push([u,d[1]+0.4],[u,d[3]-0.4])}else{for(let v=d[1]+0.5;v<=d[3];v+=9.3)posts.push([d[0]+0.4,v],[d[2]-0.4,v])}});
         const pm=new THREE.InstancedMesh(new THREE.BoxGeometry(0.45*A,(GZ.y-4)*A,0.45*A),wd,posts.length);posts.forEach((q,i)=>{const p=P3(q[0],q[1],3.5+(GZ.y-4)/2);setI(pm,i,p.x,p.y,p.z,0,1)});pm.castShadow=true;gGez.add(pick(pm,C.gez));
-        const NW=SMALL?70:200,wcol=[0x7a3b52,0x3e5c7a,0x8a6f3a,0x4b6b4f,0x6b4a7a,0xb59a6a,0x9a4a3a,0x2f4a66],wm=figset(gWom,NW,C.gez,i=>wcol[i%wcol.length]);
-        for(let i=0;i<NW;i++){const d=decks[i%3],u=d[0]+0.8+rs()*(d[2]-d[0]-1.6),v=d[1]+0.8+rs()*(d[3]-d[1]-1.6),p=P3(u,v,GZ.y);wm.set(i,p.x,p.y,p.z,Math.atan2(-(250-v),415-u),0.9+rs()*0.08)}wm.done()}
+        const NW=SMALL?90:260,wcol=[0x7a3b52,0x3e5c7a,0x8a6f3a,0x4b6b4f,0x6b4a7a,0xb59a6a,0x9a4a3a,0x2f4a66],wm=figset(gWom,NW,C.gez,i=>wcol[i%wcol.length]),ar=decks.map(d=>(d[2]-d[0])*(d[3]-d[1])),AT=ar.reduce((x,y)=>x+y,0);
+        for(let i=0;i<NW;i++){let r=rs()*AT,k=0;while(k<decks.length-1&&r>ar[k]){r-=ar[k];k++}const d=decks[k],u=d[0]+0.8+rs()*(d[2]-d[0]-1.6),v=d[1]+0.8+rs()*(d[3]-d[1]-1.6),p=P3(u,v,GZ.y);wm.set(i,p.x,p.y,p.z,Math.atan2(-(250-v),250-u),0.9+rs()*0.08)}wm.done();WMF=wm}
       /* ---- 8. הלוויים על מעלות השער הפנימי המזרחי ---- */
       const gLev=sub("levites"),LVN=18,lv=figset(gLev,LVN,C.lev),LVP=[];for(let i=0;i<LVN;i++)LVP.push([351.2+(i%3)*2.2,241.5+Math.floor(i/3)*3.4]);
       const harp=new THREE.InstancedMesh(new THREE.BoxGeometry(0.06,0.42,0.3),M.wood,LVN);harp.frustumCulled=false;gLev.add(pick(harp,C.lev));
@@ -12058,22 +12060,61 @@ function build(){
         [[245.6,352.5],[254.4,352.5]].forEach((q,i)=>{const p=P3(q[0],q[1],3.5);gk.set(i,p.x,yAt(p.x,p.z,7.5),p.z,-Math.PI/2)});gk.done();
         LVP.forEach((q,i)=>{const p=P3(q[0],q[1],3.5),y=yAt(p.x,p.z,7.5);lv.set(i,p.x,y,p.z,0);setI(harp,i,p.x+0.26,y+1.08,p.z,0,1)});lv.done();harp.instanceMatrix.needsUpdate=true;RT=null};
       const watAt=s=>{s=Math.max(0,Math.min(WS.len,s));const L=WS.l;let i=0,j=L.length-1;while(j-i>1){const m=(i+j)>>1;if(L[m]<=s)i=m;else j=m}const a=WS.pts[i],b=WS.pts[j],f=(s-L[i])/((L[j]-L[i])||1);return[a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f,a.z+(b.z-a.z)*f,Math.atan2(-(b.z-a.z),b.x-a.x)]};
+      /* ===== גרסה 123 · משימה 4: שמחת בית השואבה חיה. ריקוד באבוקות, אור חזק, פרחי כהונה על סולמות, נשים בגזוזטרא.
+         האנימציה רצה רק כשהמצלמה קרובה ורק בלילות השואבה. כל מה שאין לו מקור מסומן 💡 ===== */
+      const gDnc=sub("dance");gDnc.visible=false;
+      C.dance=I("חסידים ואנשי מעשה מרקדים באבוקות","סוכה ה, ד; סוכה נ״ג ע״א","📜 \"חסידים ואנשי מעשה היו מרקדין לפניהם באבוקות של אור שבידיהן, ואומרים לפניהם דברי שירות ותשבחות\" (סוכה ה, ד). 📜 רבן שמעון בן גמליאל היה נוטל שמונה אבוקות של אור, זורק אחת ונוטל אחת, והן אינן נוגעות זו בזו (סוכה נ״ג ע״א; הנוסח לא נבדק מול נוסח נקי). 💡 מספר המרקדים, מעגלי הריקוד, הקצב ותנועת הידיים הם הצעה לתצוגה.");
+      C.light=I("אור בית השואבה","סוכה ה, ב-ג","📜 ארבע מנורות של זהב, ובראש כל אחת ארבעה ספלים, ומבלאי מכנסי כהנים ואבנטיהם היו מפקיעין ובהם היו מדליקין, \"ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה\" (סוכה ה, ב-ג; הנוסח לא נבדק מול נוסח נקי). 💡 עוצמת האור, הריצוד וכתם האור על הרצפה הם הצעה לתצוגה.");
+      C.ladder=I("פרחי כהונה על הסולמות","סוכה ה, ב","📜 \"ארבעה סולמות לכל אחת ואחת, וארבעה ילדים מפרחי כהונה, ובידיהם כדים של מאה ועשרים לוג, שהן מטילין לכל ספל וספל\" (סוכה ה, ב; הנוסח לא נבדק מול נוסח נקי). 💡 תנועת העלייה והשפיכה היא הצעה לתצוגה.");
+      const GT=cvs(64,64,(x,w,h)=>{const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,244,214,1)");gr.addColorStop(0.2,"rgba(255,205,115,.85)");gr.addColorStop(0.55,"rgba(255,150,50,.22)");gr.addColorStop(1,"rgba(255,140,40,0)");x.fillStyle=gr;x.fillRect(0,0,w,h)});
+      const ND=SMALL?10:24,NJ=8,NT=ND+NJ,C0=P3(415,250,3.5),MEN=[[390,222],[390,278],[440,222],[440,278]];
+      const dn=figset(gDnc,ND,C.dance,i=>[0xfbfaf4,0xe6dcc6,0xd8cdb2,0xf1ece0][i%4]),jg=figset(gDnc,1,C.dance,()=>0xc9b27a),lk=figset(gDnc,4,C.ladder,()=>0xe9e4d0);
+      const flM=new THREE.MeshBasicMaterial({color:0xffb040,transparent:true,opacity:0.95,depthWrite:false,fog:false,toneMapped:false});
+      const tks=new THREE.InstancedMesh(new THREE.BoxGeometry(0.035,0.5,0.035),M.wood,NT),fls=new THREE.InstancedMesh(new THREE.SphereGeometry(0.1,8,6),flM,NT),jugs=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.11,0.09,0.32,8),M.gold,4);
+      [tks,fls,jugs].forEach(m=>{m.frustumCulled=false;m.castShadow=false;pick(m,m===jugs?C.ladder:C.dance);gDnc.add(m)});
+      const gpA=new Float32Array(NT*3),gpG=new THREE.BufferGeometry();gpG.setAttribute("position",new THREE.BufferAttribute(gpA,3));
+      const gpP=new THREE.Points(gpG,new THREE.PointsMaterial({map:GT,size:SMALL?2.6:3.4,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));gpP.frustumCulled=false;gpP.userData=C.light;gDnc.add(gpP);
+      /* האור: זוהר גדול על כל מנורה, וכתם אור על הרצפה מתחתיה. 💡 עוצמה וריצוד */
+      const mps=MEN.map(([u,v])=>{const pa=new Float32Array(12);let k=0;[[2.3,0],[-2.3,0],[0,2.3],[0,-2.3]].forEach(([du,dv])=>{const p=P3(u+du,v+dv,51.6);pa[k++]=p.x;pa[k++]=p.y;pa[k++]=p.z});
+        const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.BufferAttribute(pa,3));const pt=new THREE.Points(gg,new THREE.PointsMaterial({map:GT,size:12,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));pt.frustumCulled=false;pt.userData=C.light;gDnc.add(pt);return pt});
+      const plG=new THREE.PlaneGeometry(1,1);plG.rotateX(-Math.PI/2);const plM=new THREE.MeshBasicMaterial({map:GT,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,toneMapped:false});
+      MEN.forEach(([u,v])=>{const m=new THREE.Mesh(plG,plM),p=P3(u,v,3.62);m.position.copy(p);m.scale.setScalar(80*A);m.renderOrder=2;gDnc.add(m)});
+      const SUKX=(()=>{let t=0,sh=false,ST=null;const stat=()=>{if(ST||!FESTG)return ST||[];ST=[];FESTG.traverse(o=>{if(o.isInstancedMesh&&o.userData&&o.userData.n==="שמחת בית השואבה")ST.push(o);if(o.userData&&o.userData.sbTorch)ST.push(o)});return ST};
+        const torch=(k,x,y,z,fl)=>{setI(tks,k,x,y,z,0,1);setI(fls,k,x,y+0.34,z,0,[1,1.5+fl*0.5,1]);gpA[k*3]=x;gpA[k*3+1]=y+0.34;gpA[k*3+2]=z};
+        const place=t=>{
+          for(let i=0;i<ND;i++){const ring=i%2,r=ring?17:11,half=ND/2,idx=(i-ring)/2,dir=ring?-1:1,th=dir*t*(ring?0.22:0.3)+idx*Math.PI*2/half+ring*0.4,du=-dir*Math.sin(th),dv=dir*Math.cos(th),p=P3(415+r*Math.cos(th),250+r*Math.sin(th),3.5),ry=Math.atan2(-dv,du),hop=Math.abs(Math.sin(t*3.2+i*0.7))*0.26;
+            dn.set(i,p.x,p.y+hop,p.z,ry);dn.fig.setAmp(i,1);dn.fig.setSp(i,2.6);
+            const fx=Math.cos(ry),fz=-Math.sin(ry),lift=1.85+0.35*Math.sin(t*3.2+i);torch(i,p.x+fz*0.3+fx*0.1,p.y+hop+lift,p.z-fx*0.3+fz*0.1,Math.sin(t*17+i*2.1))}
+          dn.done();
+          /* רבן שמעון בן גמליאל: שמונה אבוקות בקשת, אחת בכל פעם. 💡 הגובה והקצב */
+          const hop=Math.abs(Math.sin(t*2.4))*0.1;jg.set(0,C0.x,C0.y+hop,C0.z,0);jg.fig.setAmp(0,0.5);jg.fig.setSp(0,1.6);jg.done();
+          for(let j=0;j<NJ;j++){const ph=((t/2.2)+j/NJ)%1,c=ph*2,f=c%1,fw=c<1,lat=(fw?-0.4+0.8*f:0.4-0.8*f),h=1.15+4*f*(1-f)*(fw?2.0:1.7);torch(ND+j,C0.x,C0.y+h+hop,C0.z+lat,Math.sin(t*19+j*1.7))}
+          tks.instanceMatrix.needsUpdate=fls.instanceMatrix.needsUpdate=true;gpG.attributes.position.needsUpdate=true;
+          /* פרחי כהונה: עולים בסולם, ממלאים את הספלים, ויורדים. 💡 */
+          for(let k=0;k<4;k++){const c=((t+k*9)%36)/36;let h,pour=false,mv=true;if(c<0.6)h=5+39*(c/0.6);else if(c<0.78){h=44;pour=true;mv=false}else h=44-39*((c-0.78)/0.22);
+            const p=P3(MEN[k][0]+3.35,MEN[k][1],h);lk.set(k,p.x,p.y,p.z,Math.PI);lk.fig.setAmp(k,mv?0.6:0);lk.fig.setSp(k,1.2);setI(jugs,k,p.x-0.3,p.y+(pour?1.95:1.2),p.z,0,1)}
+          lk.done();jugs.instanceMatrix.needsUpdate=true};
+        const flick=t=>{plM.opacity=0.46+0.1*Math.sin(t*11)+0.05*Math.sin(t*23.7);mps.forEach((p,i)=>{p.material.size=(SMALL?10:12)*(1+0.1*Math.sin(t*9+i*1.9)+0.06*Math.sin(t*21+i))});flM.opacity=0.85+0.1*Math.sin(t*31)};
+        return{apply(s){sh=!!s.shoeva;stat().forEach(o=>{o.visible=!sh});if(sh){t=0;place(0);flick(0)}},
+          tick(dt,tt,still,s){if(!s.shoeva)return;const cp=camera.position.clone();g0.worldToLocal(cp);const near=cp.distanceTo(C0)<(SMALL?90:140);
+            if(near&&!still){t+=dt;place(t);flick(tt);lv.fig.setAmp(0,0.3);for(let i=0;i<LVN;i++)lv.fig.setAmp(i,0.3);if(WMF)for(let i=0;i<WMF.n;i++)WMF.fig.setAmp(i,0.25)}
+            else{for(let i=0;i<LVN;i++)lv.fig.setAmp(i,0);if(WMF)for(let i=0;i<WMF.n;i++)WMF.fig.setAmp(i,0);if(still)flick(0)}}}})();
       /* ---- מצב: מה מוצג בכל יום ובכל שעה ---- */
       const BULLS={15:13,16:12,17:11,18:10,19:9,20:8,21:7,22:1},DN_={15:"ט״ו בתשרי · יום טוב ראשון",16:"ט״ז בתשרי · חול המועד",17:"י״ז בתשרי · חול המועד",18:"י״ח בתשרי · חול המועד",19:"י״ט בתשרי · חול המועד",20:"כ׳ בתשרי · חול המועד",21:"כ״א בתשרי · הושענא רבה",22:"כ״ב בתשרי · שמיני עצרת"};
       let sig="",hud=document.getElementById("sukHud");if(!hud){hud=document.createElement("div");hud.id="sukHud";hud.hidden=true;hud.setAttribute("dir","rtl");hud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(hud)}
       let hudT="";const setHud=t=>{if(t!==hudT){hudT=t;hud.textContent=t}};
       const st={on:false,day:15,night:false,shoeva:false,week:false,morn:false};
       SUK={g:SG,st,cards:C,BULLS,DN:DN_,WS,HS,
-        state(){const story=STORY&&typeof STORY_API!=="undefined"?STORY_API.S.key:null,on=DOY===FEST.sukkot.doy&&(!STORY||story==="sukkot"),day=story?16:SUKDAY,night=TIME==="night",week=on&&day<=21;
+        state(){const story=STORY&&typeof STORY_API!=="undefined"?STORY_API.S.key:null,on=DOY===FEST.sukkot.doy&&(!STORY||story==="sukkot"),day=story?(SUKTD||16):SUKDAY,night=TIME==="night",week=on&&day<=21;
           return{on,day,night,week,morn:TIME==="morning",shoeva:week&&night&&day>=16&&DAY!=="shabbat"}},
         apply(s){Object.assign(st,s);if(s.on&&!ready)prep();SG.visible=s.on;hud.hidden=!s.on||!!STORY;
           gWil.visible=gGez.visible=gNis.visible=s.week;gLul.visible=s.week&&!s.shoeva;gCrowd.visible=s.on&&!s.shoeva;gHak.visible=s.week&&!s.night;gWat.visible=gNisK.visible=s.week&&s.morn;gPen.visible=s.on;
-          gWom.visible=gLev.visible=gNight.visible=s.shoeva;
+          gWom.visible=s.week;gLev.visible=gNight.visible=gDnc.visible=s.shoeva;SUKX.apply(s);
           const n=BULLS[s.day]||0;bulls.count=n;rams.count=s.day===22?1:2;lambs.count=s.day===22?7:14;goat.count=1;
           HS.need=s.day===21?7:1;HS.s=0;HS.k=1;HS.rest=0;WS.s=WS0;WS.wait=0;WS.ph=1;WS.c=0;if(SUKC.asc)SUKC.asc.show(false);if(gCrowd.visible)dayT.update(camera.position,true);if(gNight.visible)nightT.update(camera.position,true);
           if(FESTG){if(s.shoeva)FESTG.visible=true;else if(!SHOW_FEST)FESTG.visible=false;const hide=s.shoeva&&!SHOW_FEST;if(BIMAHG){const ud=BIMAHG.userData;if(hide&&!ud.sukHid){ud.sukPrev=BIMAHG.visible;BIMAHG.visible=false;ud.sukHid=true}else if(!hide&&ud.sukHid){BIMAHG.visible=ud.sukPrev;ud.sukHid=false}}BIK.forEach(o=>{o.visible=!hide})}
           if(SUKC.apply)SUKC.apply(s)},
-        tick(dt,tt,still){const s=this.state(),k=[s.on,s.day,s.night,s.morn,s.shoeva,SHOW_FEST,!!STORY].join();if(k!==sig){sig=k;this.apply(s)}if(SUKC.sync)SUKC.sync();if(!s.on)return;
+        tick(dt,tt,still){const s=this.state(),k=[s.on,s.day,s.night,s.morn,s.shoeva,SHOW_FEST,!!STORY].join();if(k!==sig){sig=k;this.apply(s)}if(SUKC.sync)SUKC.sync();if(SUK.tour)SUK.tour.tick(dt,tt,still);SUKX.tick(dt,tt,still,s);if(!s.on)return;
           let h="סוכות · "+(SMALL?DN_[s.day].split(" · ")[0]:DN_[s.day])+" · "+(s.day===22?"מוסף: פר אחד, איל ו־7 כבשים":"פרים היום: "+BULLS[s.day]);
           if(gHak.visible){if(!still){if(HS.rest>0){HS.rest-=dt;if(HS.rest<=0){HS.k=1;HS.s=0}}else{HS.s+=dt*4.05;/* גרסה 120: 💡 ההקפה מוצגת מהר פי שלושה מקצב הליכה, כדי לקצר */if(HS.s>=HLEN){HS.s-=HLEN;HS.k++;if(HS.k>HS.need){HS.rest=10;HS.k=HS.need}}}}
             const mv=HS.rest<=0;for(let i=0;i<HN;i++){const q=hakAt(HS.s-i*HLEN/HN);hk.set(i,q[0],q[1],q[2],q[3]);hk.fig.setAmp(i,mv?1:0);hk.fig.setSp(i,2)}hk.done();
@@ -12085,6 +12126,25 @@ function build(){
             const tv=!(WS.ph===0&&AS);if(AS){AS.show(!tv);if(!tv)AS.pose(WS.c)}wt.fig.count=wt.head.count=tv?WN:0;flask.visible=tv;if(!tv)h+=" · תהלוכת המים עולה מן השילוח";
             if(tv){for(let i=0;i<WN;i++){const si=i?Math.min(WS.s-i*1.25,WS.stop-(i-1)*1.1):WS.s,q=watAt(si),mv=WS.wait<=0&&si>0&&(i===0||WS.s-i*1.25<WS.stop-(i-1)*1.1);wt.set(i,q[0],q[1],q[2],q[3]);wt.fig.setAmp(i,mv?1:0);if(!i)flask.position.set(q[0]+Math.cos(q[3])*0.3,q[1]+1.12,q[2]-Math.sin(q[3])*0.3)}wt.done()}}
           setHud(h)}};
+      /* ===== גרסה 123 · משימה 4: סיור סוכות קולנועי. יום ושעה לכל תחנה, ותנועות המצלמה. אין קריינות ואין מוזיקה ===== */
+      SUK.tour=(()=>{const T={n:-1,k:-1,last:null,set:false},DY=[16,16,16,16,16,21,16,16,21],TM=["morning","morning","morning","morning","morning","morning","night","night","morning"],TB={morning:"tM",night:"tL"};
+        const WGp=(u,v,y)=>{const p=P3(u,v,y);g0.localToWorld(p);return WG.worldToLocal(p)};
+        const walker=()=>{const ih=SUKC.heads&&SUKC.heads[0];if(!ih||!ih.count)return -1;const r=WGp(-45,250,3.5),e=ih.instanceMatrix.array;let best=-1,bd=1e9;for(let k=0;k<ih.count;k++){const x=e[k*16+12],z=e[k*16+14],d=Math.hypot(x-r.x,z-r.z);if(d>20&&d<bd){bd=d;best=k}}return best};
+        const o={get active(){return T.n>=0},
+          go(n){T.n=n;T.set=false;T.k=-1;T.last=null;SUKTD=DY[n];if(TIME!==TM[n])document.getElementById(TB[TM[n]]).click();SUK.tick(0,performance.now()/1000,true)},
+          end(){T.n=-1;SUKTD=null},
+          /* 💡 כל זוויות המצלמה והתנועות הן הצעה לתצוגה */
+          roofPose(){const R=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<700),r0=WGp(-90,250,3.5);let b=null,bd=1e9;R.forEach(q=>{const d=Math.hypot(q[0]-r0.x,q[2]-r0.z);if(d<bd){bd=d;b=q}});if(!b)return VP("city")();const h=b[1]-surfY(b[0],b[2]);return GP(b[0]-22,b[2]-26,h+13,b[0]+2,b[2],h+1)()},
+          roofEnd(){const R=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<700),r0=WGp(-90,250,3.5);let b=null,bd=1e9;R.forEach(q=>{const d=Math.hypot(q[0]-r0.x,q[2]-r0.z);if(d<bd){bd=d;b=q}});if(!b)return VP("city")();const h=b[1]-surfY(b[0],b[2]);return GP(b[0]+24,b[2]+18,h+12,b[0]+44,b[2]+30,h+2)()},
+          walkPose(){const k=walker();if(k<0)return VP("city")();const e=SUKC.heads[0].instanceMatrix.array,x=e[k*16+12],y=e[k*16+13],z=e[k*16+14];return GP(x-3,-z-3,y+3.6-surfY(x,-z),x,-z,y-surfY(x,-z)-0.4)()},
+          poolPose(){const pc=SUKC.pool;if(!pc)return GP(160,-430,80,40,-600,10)();const y0=surfY(pc[0],pc[1]);return GP(pc[0]-9,pc[1]-12,6.5,pc[0],pc[1],0.6)()},
+          tick(dt,tt,still){if(T.n<0)return;
+            if(TIME!==TM[T.n]&&performance.now()-(T.ck||0)>2500){T.ck=performance.now();document.getElementById(TB[TM[T.n]]).click()}
+            if(T.n===2&&!T.set&&WS&&SUKC.asc){WS.ph=0;WS.c=0;WS.wait=0;T.set=true}
+            if(T.n===3&&!T.set&&WS&&WS.pts){WS.ph=1;WS.wait=0;WS.s=WS.stop*0.55;T.set=true}
+            if(T.n===1&&typeof STORY_API!=="undefined"){const S=STORY_API.S;if(S&&!S.move&&(typeof tween==="undefined"||!tween)&&!S.paused){const ih=SUKC.heads&&SUKC.heads[0];if(ih){if(T.k<0)T.k=walker();if(T.k>=0){const e=ih.instanceMatrix.array,i=T.k*16,wp=new THREE.Vector3(e[i+12],e[i+13],e[i+14]);let fx=e[i],fz=e[i+2];const fl=Math.hypot(fx,fz)||1;fx/=fl;fz/=fl;
+              const cp=wp.clone().add(new THREE.Vector3(-fx*3.4-fz*1.0,1.9,-fz*3.4+fx*1.0)),tg=wp.clone().add(new THREE.Vector3(fx*0.8,1.15,fz*0.8)),k=Math.min(1,dt*3);WG.localToWorld(cp);WG.localToWorld(tg);camera.position.lerp(cp,k);controls.target.lerp(tg,k);camera.lookAt(controls.target)}}}}}};
+        return o})();
       /* ---- העיר: סוכות על הגגות, אורות בלילות השואבה, ולולב ביד ברחובות. נבנה פעם אחת, בפעם הראשונה שבוחרים סוכות ---- */
       if(!SUKC.apply){SUKC.apply=s=>{if(s.week&&!SUKC.g){const R0=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<1150),cap=SMALL?450:2200,sd=Math.max(1,Math.ceil(R0.length/cap)),GS=[];let R=R0.filter((q,i)=>i%sd===0);const g=new THREE.Group();
             /* גרסה 121: סוכות גם בחצרות הבתים ובשתי רחבות (נחמיה ח, טז: "ובחצרתיהם... וברחוב שער המים וברחוב שער אפרים"). 💡 המקומות והכמות הם הצעה לתצוגה */
@@ -12142,7 +12202,7 @@ function build(){
           oven:I("תנורי הפסח בחצרות","תענית ג, ח","📜 \"צאו והכניסו תנורי פסחים, בשביל שלא יימוקו\". מכאן שתנורי הפסח עמדו בחוץ, בחצרות. מוצג מי״ד בניסן עד ליל ט״ו. 💡 כמות התנורים, צורתם ומקומם ליד הבתים הם הצעה לתצוגה, בלי מקור."),
           hav:I("חבורה על שה אחד","פסחים סד ע״ב","📜 \"אין לך כל פסח ופסח שלא נמנו עליו יותר מעשרה בני אדם\". מוצג בי״ד בניסן ובליל ט״ו. 💡 כאן אחד עשר איש בכל חבורה. מספר החבורות ומקומן הם הצעה לתצוגה."),
           smoke:I("עשן ביעור החמץ","💡 הצעה לתצוגה, בלי מקור","💡 עשן ביעור החמץ בבוקר י״ד בניסן. זו הצעה לתצוגה בלבד: אין לה מקור בטבלת המשימה."),
-          kat:I("כת אחת מתוך שלוש","פסחים ה, א; ה, ה; אבות ה, ה; רמב״ם, הלכות קרבן פסח א, ד; א, יא","כת אחת מתוך שלוש. 📜 \"עומדים צפופים ומשתחווים רווחים\" (אבות ה, ה). 📜 הפסח נשחט בשלוש כתות. נכנסה הכת, נתמלאה העזרה, נועלים את הדלתות, ותקיעה, תרועה ותקיעה (פסחים ה, ה). ⚖️ הרמב״ם: \"אחר שמקטירין קטורת של בין הערביים, ואחר שמטיבין את הנרות, מתחילין לשחוט את הפסחים\". מוצג בי״ד בניסן אחר הצהריים, אחרי תמיד של בין הערביים. המשנה אינה אומרת באיזה כלי תקעו, ולכן לא מוצג כלי. 💡 הצפיפות, 2 עד 3 איש למ״ר, היא ערך תצוגה ולא נתון בטיחות. נשאר פתוח: האם מותר יותר משלוש כתות (פסחים ה, ה; רמב״ם א, יא). כאן מוצגת כת אחת."),
+          kat:I("כת אחת מתוך שלוש","פסחים ה, א; ה, ה; אבות ה, ה; רמב״ם, הלכות קרבן פסח א, ד; א, יא","כת אחת מתוך שלוש. 📜 \"עומדים צפופים ומשתחוים רווחים\" (אבות ה, ה). 📜 הפסח נשחט בשלוש כתות. נכנסה הכת, נתמלאה העזרה, נועלים את הדלתות, ותקיעה, תרועה ותקיעה (פסחים ה, ה). ⚖️ הרמב״ם: \"אחר שמקטירין קטורת של בין הערביים, ואחר שמטיבין את הנרות, מתחילין לשחוט את הפסחים\". מוצג בי״ד בניסן אחר הצהריים, אחרי תמיד של בין הערביים. המשנה אינה אומרת באיזה כלי תקעו, ולכן לא מוצג כלי. 💡 הצפיפות, 2 עד 3 איש למ״ר, היא ערך תצוגה ולא נתון בטיחות. נשאר פתוח: האם מותר יותר משלוש כתות (פסחים ה, ה; רמב״ם א, יא). כאן מוצגת כת אחת."),
           door:I("דלתות השער הפנימי נעולות","פסחים ה, ה; רמב״ם, הלכות קרבן פסח א, יא","📜 כשנתמלאה העזרה נועלים את דלתותיה, ואז שוחטים. מוצג בי״ד בניסן אחר הצהריים. 💡 ביחזקאל מפורשות דלתות רק לשער הפנימי המזרחי (מו, א). הדלתות שבשער הצפוני ובשער הדרומי, מקומן בקצה המעבר, גובהן וחומרן הם הצעה לתצוגה."),
           rows:I("שורות הכוהנים: בזיכי כסף ובזיכי זהב","פסחים ה, ה-ו; רמב״ם, הלכות קרבן פסח א, יג-יד","📜 הכוהנים עומדים שורות שורות, ובידיהם בזיכי כסף ובזיכי זהב. שורה שכולה כסף ושורה שכולה זהב, לא מעורבים, לשם נוי. ⚖️ בלשון הרמב״ם: \"מזרקי כסף ומזרקי זהב\". 📜 לבזיכים אין שוליים, כדי שלא יניחו אותם והדם יקרוש. 📜 הדם עובר מיד ליד, והכוהן הקרוב למזבח \"שופכו שפיכה אחת כנגד היסוד\". מוצג בי״ד בניסן אחר הצהריים. 💡 מספר השורות ומספר הכוהנים בכל שורה הם הצעה לתצוגה."),
           sl:I("מי שוחט את הפסח","פסחים ה, ו; פסחים סד ע״ב; זבחים ג, א; יחזקאל מד, יא; מלבי״ם מד, ט; דברי הימים ב ל, יז; לה, יא","📜 \"שחט ישראל וקיבל הכוהן, נתנו לחברו וחברו לחברו\" (פסחים ה, ו). 📜 הגמרא: \"דשחיטה בזר כשירה... מקבלה ואילך מצות כהונה\" (פסחים סד ע״ב). 📜 יחזקאל על הלוויים: \"המה ישחטו את העולה ואת הזבח לעם, והמה יעמדו לפניהם לשרתם\" (מד, יא). ⚖️ המלבי״ם (מד, ט): הלוויים משרתים את העם \"בדברים שהם צורך מביאי הקרבן, כמו שחיטה והפשט ונתוח\". 📜 \"והלויים על שחיטת הפסחים, לכל לא טהור\" (דברי הימים ב ל, יז). 📜 \"והלויים מפשיטים\" (שם לה, יא). במודל: ישראל, הבעלים, שוחטים. ביניהם לוויים, ששוחטים בשביל מי שצריך ומפשיטים. הכוהנים בלבד מקבלים את הדם וזורקים. 💡 היחס, כ־70% ישראלים וכ־30% לוויים, ולבוש הלוויים (כאן בתכלת בהירה) הם הצעה לתצוגה בלבד."),
@@ -12156,7 +12216,7 @@ function build(){
           omer:I("העומר בעזרה","מנחות י, ד","📜 מביאים את העומר לעזרה, חובטים אותו, נותנים אותו ב\"אבוב\" מנוקב על האש, ושוטחים אותו בעזרה, \"והרוח מנשבת בו\". מוצג בט״ז בניסן. 💡 המקום בחצר הפנימית וגודל המשטח הם הצעה לתצוגה."),
           cook:I("שלמי החגיגה בבית המבשלים","יחזקאל מו, כא-כד; מלבי״ם מו, כד; רמב״ם, הלכות קרבן פסח ח, ד","📜 \"יבשלו שם משרתי הבית את זבח העם\" (יחזקאל מו, כד). ⚖️ המלבי״ם: מבשלים שם \"שלמים ותודה והחזה ושוק\". במועד מתבשלים כאן שלמי החגיגה. ⚖️ הפסח עצמו אינו מתבשל, הוא נצלה (רמב״ם, קרבן פסח ח, ד). מוצג מט״ו עד כ״א בניסן. 💡 מספר המשרתים והסירים הוא הצעה לתצוגה.")};
         const PDN={"14am":"י״ד בניסן, בבוקר","14pm":"י״ד בניסן, אחר הצהריים","15n":"ליל ט״ו בניסן","15":"ט״ו בניסן, יום טוב ראשון","16n":"ליל ט״ז בניסן","16":"ט״ז בניסן","chm":"חול המועד","21":"כ״א בניסן, שביעי של פסח"};
-        const PHUD={"14am":"תנורים בחצרות העיר וחבורות עם שה","14pm":"כת אחת מתוך שלוש. \"עומדים צפופים ומשתחווים רווחים\"","15n":"צולים את הפסח בכל העיר","15":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך","16n":"קצירת העומר: \"בא השמש? הן. מגל זו? הן. אקצור? קצור\"","16":"העומר נחבט, נקלה באבוב ונשטח בעזרה","chm":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך","21":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך"};
+        const PHUD={"14am":"תנורים בחצרות העיר וחבורות עם שה","14pm":"כת אחת מתוך שלוש. \"עומדים צפופים ומשתחוים רווחים\"","15n":"צולים את הפסח בכל העיר","15":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך","16n":"קצירת העומר: \"בא השמש? הן. מגל זו? הן. אקצור? קצור\"","16":"העומר נחבט, נקלה באבוב ונשטח בעזרה","chm":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך","21":"נכנסים בשער הצפון ויוצאים בשער הדרום, או להפך"};
         const PNIGHT={"15n":1,"16n":1},LEVC=0x9fb4c8,silM=std(0xd9dde2,{metalness:0.9,roughness:0.25});
         let phud=document.getElementById("pesHud");if(!phud){phud=document.createElement("div");phud.id="pesHud";phud.hidden=true;phud.setAttribute("dir","rtl");phud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(phud)}
         let phT="";const setP=t=>{if(t!==phT){phT=t;phud.textContent=t}};
@@ -12175,7 +12235,10 @@ function build(){
         const buildP=()=>{const g={};["Door","Kat","Rows","Sl","Hang","Hal","Out","Flow","Cook","Omer","Exit","Shab"].forEach(k=>g["g"+k]=psub("pes"+k));
           const mesh=(grp,geo,mat,u,v,y,info,ry)=>{const m=new THREE.Mesh(geo,mat);m.position.copy(P3(u,v,y));if(ry)m.rotation.y=ry;m.castShadow=true;grp.add(pick(m,info));return m};
           /* ---- הדלתות הנעולות: שער צפוני ושער דרומי של החצר הפנימית. 💡 מקום, גובה (15 אמה) וחומר ---- */
-          [150.25,349.75].forEach(v=>{mesh(g.gDoor,new THREE.BoxGeometry(10*A,15*A,0.3*A),M.bronze,250,v,15,PC.door);mesh(g.gDoor,new THREE.BoxGeometry(0.12*A,15*A,0.36*A),M.dark,250,v,15,PC.door);[0.25,0.5,0.75].forEach(f=>mesh(g.gDoor,new THREE.BoxGeometry(9.6*A,0.3*A,0.38*A),M.gold,250,v,7.5+15*f,PC.door))});
+          g.leaves=[];[150.25,349.75].forEach(v=>{[-1,1].forEach(sg=>{const lf=new THREE.Group();lf.position.copy(P3(250+sg*5,v,0));g.gDoor.add(lf);
+            const add=(geo,mat,x,y)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,0);m.castShadow=true;lf.add(pick(m,PC.door))};
+            add(new THREE.BoxGeometry(5*A,15*A,0.3*A),M.bronze,-sg*2.5*A,15*A);[0.25,0.5,0.75].forEach(f=>add(new THREE.BoxGeometry(4.8*A,0.3*A,0.38*A),M.gold,-sg*2.5*A,(7.5+15*f)*A));add(new THREE.BoxGeometry(0.12*A,15*A,0.36*A),M.dark,-sg*0.06*A,15*A);g.leaves.push({lf,sg})})});
+          g.setDoor=t=>{g.leaves.forEach(o=>{o.lf.rotation.y=-o.sg*(1-t)*(Math.PI/2)})};
           /* ---- הכת בעזרה ---- */
           const RU=SMALL?[242,246,254,258]:[238,242,246,254,258,262];
           KEEP.push([229,229,271,299.5],[RU[0]-2.2,203,RU[RU.length-1]+2.2,232],[243,196,257,206]);
@@ -12223,7 +12286,7 @@ function build(){
             "16n":["מנחות י, ג; רמב״ם, הלכות תמידין ומוספין ז, יא","📜 קצירת העומר בשדה מחוץ לעיר: \"בא השמש? הן... מגל זו? הן... אקצור? קצור\". העיירות הסמוכות מתכנסות לשם. 💡 מקום השדה, הלפידים ומספר האנשים הם הצעה לתצוגה."],
             "16":["מנחות י, ד; יחזקאל מו, ט","📜 העומר נחבט, נקלה ב\"אבוב\" מנוקב, ונשטח בעזרה. 📜 זרם הקהל ממשיך: מצפון לדרום ומדרום לצפון. 💡 המקום בחצר הפנימית הוא הצעה לתצוגה."]};
             T.chm=T["21"]=T["15"];const q=T[k];if(q)showInfo({n:"פסח · "+PDN[k],r:q[0],t:q[1]});if(k==="16n")setTimeout(()=>{if(PESC.fp&&PESDAY==="16n"){try{flyToPoint(new THREE.Vector3(PESC.fp[0],PESC.fp[2]+1,-PESC.fp[1]).applyMatrix4(WG.matrixWorld),70)}catch(e){}}},900)},
-          state(){const on=PESPICK&&DOY===FEST.pesach.doy&&!STORY,d=PESDAY,ng=TIME==="night";return{on,ok:on&&(!!PNIGHT[d]===ng),d,shab:DAY==="shabbat"}},
+          state(){const tk=STORY&&typeof STORY_API!=="undefined"?STORY_API.S.key:null,on=(tk?tk==="pesach":PESPICK)&&DOY===FEST.pesach.doy,d=tk==="pesach"&&PTD?PTD:PESDAY,ng=TIME==="night";return{on,ok:on&&(!!PNIGHT[d]===ng),d,shab:DAY==="shabbat"}},
           apply(s){Object.assign(pst,s);PG.visible=s.ok;phud.hidden=!s.on;if(s.ok&&!B)buildP();
             if(B){const d=s.d,pm=d==="14pm",fl=d==="15"||d==="16"||d==="chm"||d==="21";B.gKat.visible=B.gDoor.visible=B.gRows.visible=B.gSl.visible=B.gHang.visible=B.gHal.visible=pm;B.gOut.visible=pm||fl;B.gFlow.visible=B.gCook.visible=fl;B.gOmer.visible=d==="16";B.gExit.visible=pm&&!s.shab;B.gShab.visible=pm&&s.shab;
               if(s.ok){const cp=camera.position;if(pm)B.katT.update(cp,true);if(pm||fl)B.outT.update(cp,true);if(pm&&s.shab){B.shA.update(cp,true);B.shB.update(cp,true)}}}
@@ -12232,6 +12295,30 @@ function build(){
             setP("פסח · "+PDN[s.d]+" · "+(s.ok?PHUD[s.d]:(PNIGHT[s.d]?"בחרו «לילה» כדי לראות":"בחרו שעת יום כדי לראות")));
             if(s.ok&&B){const cp=camera.position;if(B.gKat.visible)B.katT.update(cp);if(B.gOut.visible)B.outT.update(cp);if(B.gShab.visible){B.shA.update(cp);B.shB.update(cp)}
               if(!still){if(B.gRows.visible)B.rowsTick(tt);if(B.gFlow.visible)B.flow.tick(dt);if(B.gExit.visible)B.exit.tick(dt)}}}};
+        /* ===== גרסה 123 · משימה 4: סיור פסח קולנועי. כלי העזר של התחנות. אין קריינות ואין מוזיקה ===== */
+        PES.tour=(()=>{let H=null;const TM={"14am":"tM","14pm":"tE","15":"tM","15n":"tL"},T={n:-1,door:1};
+          const hero=()=>{if(H||!B)return H;const g=new THREE.Group();g.name="PESTOUR";g.visible=false;PG.add(g);
+            const bl=new THREE.InstancedMesh(new THREE.BoxGeometry(0.34,0.03,0.025),silM,3);bl.frustumCulled=false;bl.castShadow=false;bl.userData=NL(PC.sl);cPick.push(bl);g.add(bl);
+            /* לוי מפשיט ליד זוג הישראלים עם המקל. 💡 מקום */const lv=figset(g,1,PC.hang,()=>LEVC),p=P3(290,213.9,7.5);lv.set(0,p.x,p.y,p.z,Math.PI/2);lv.done();
+            H={g,bl,lv,p0:P3(242,205.4,7.5),p1:P3(246,205.4,7.5),p2:p,city:null};return H};
+          const cityHero=()=>{if(!PESC.S||!PESC.S.length)return null;if(PESC.hero)return PESC.hero;const gp=P3(250,-4,3.5);g0.localToWorld(gp);WG.worldToLocal(gp);const gx=gp.x,gn=-gp.z;
+            const Bd=PESC.b||[],inB=(x,n)=>{for(const q of Bd){if(x<q[0]||x>q[1]||n<q[2]||n>q[3])continue;if(inPoly(x,n,q[4]))return true}return false},clr=(x,n)=>!inB(x,n)&&!inB(x+1.6,n)&&!inB(x-1.6,n)&&!inB(x,n+1.6)&&!inB(x,n-1.6);
+            /* מחפשים תנור שיש מולו מקום פנוי למצלמה, בלי בניין באמצע. 💡 מקום החצר הוא הצעה לתצוגה */
+            const cand=[];for(let k=0;k<(PESC.GN||0);k++){const q=PESC.S[k*(PESC.gs||1)];if(!q)continue;const d=Math.hypot(q[0]-gx,q[1]-gn);if(d<650&&clr(q[0]+1.9,q[1]))cand.push({d,q,sc:0})}
+            cand.forEach(c=>{cand.forEach(o=>{if(o!==c&&Math.hypot(o.q[0]-c.q[0],o.q[1]-c.q[1])<30)c.sc++})});let best=null;cand.forEach(c=>{if(!best||c.sc>best.sc||(c.sc===best.sc&&c.d<best.d))best=c});if(best){best.cx=best.q[0]+5;best.cn=best.q[1]-6}
+            if(!best)return null;const q=best.q,gr=new THREE.Group();gr.name="PESHERO";
+            const st=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.045,0.7,6),M.wood);st.position.set(q[0]+1.9,q[2]+0.35,-q[1]-0.2);gr.add(st);
+            const rp=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.02,0.02),std(0xb89a62,{roughness:1}));rp.position.set(q[0]+1.42,q[2]+0.62,-q[1]-0.28);rp.rotation.y=0.25;gr.add(rp);
+            gr.traverse(m=>{m.userData=NL(PC.hav);if(m.isMesh)PICK.push(m)});WG.add(gr);PESC.hero={q,g:gr,cx:best.cx,cn:best.cn};return PESC.hero};
+          const o={get active(){return T.n>=0},
+            pose1(){const h=cityHero();if(!h)return AP(250,-60,14,250,40,6)();const q=h.q;return GP(h.cx,h.cn,19,q[0]+1.1,q[1]-0.1,0.4)()},
+            go(n){T.n=n;PTD=["14am","15","14pm","14pm","14pm","14pm","14pm","15n"][n];const t=TM[PTD];if(t&&TIME!==({tM:"morning",tN:"noon",tE:"evening",tL:"night"})[t])document.getElementById(t).click();
+              PES.tick(0.016,performance.now()/1000,true);const h=hero();if(h)h.g.visible=n===4||n===6;if(B&&B.leaves)T.door=n===2?0:1;if(B&&B.setDoor)B.setDoor(T.door);if(n===0)cityHero()},
+            end(){T.n=-1;PTD=null;if(H)H.g.visible=false;if(B&&B.setDoor)B.setDoor(1)},
+            tick(dt,tt,still){if(T.n<0||!B)return;if(T.n===2&&T.door<1&&!still&&STORY_API&&STORY_API.S&&!STORY_API.S.move){T.door=Math.min(1,T.door+dt/3.2);B.setDoor(T.door)}
+              if(H&&H.g.visible){const sw=Math.sin(tt*7)*0.2,m=new THREE.Matrix4(),q=new THREE.Quaternion(),s=new THREE.Vector3(1,1,1),v=new THREE.Vector3();
+                [[H.p0,0.45,1],[H.p1,0.45,1],[H.p2,-0.4,-1]].forEach((a,i)=>{v.set(a[0].x+sw*(i%2?1:-1),a[0].y+1.1,a[0].z+a[1]);m.compose(v,q.setFromEuler(new THREE.Euler(0,0,sw)),s);H.bl.setMatrixAt(i,m)});H.bl.instanceMatrix.needsUpdate=true}}};
+          return o})();
         /* ---- העיר: תנורים וחבורות (י״ד), צלייה בלילה (ליל ט״ו), ושדה העומר (ליל ט״ז). נבנה פעם אחת ---- */
         if(!PESC.apply){PESC.apply=s=>{const d=s.ok?s.d:"",ov=d==="14am"||d==="14pm"||d==="15n";
             const Bd=PESC.b,inB=(x,n)=>{for(const q of Bd){if(x<q[0]||x>q[1]||n<q[2]||n>q[3])continue;if(inPoly(x,n,q[4]))return true}return false};
@@ -12255,7 +12342,7 @@ function build(){
               const halo=new THREE.Points(pts(3.2,1),new THREE.PointsMaterial({map:fireT,size:46,sizeAttenuation:true,transparent:true,opacity:0.36,depthWrite:false,depthTest:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));
               const smk=new THREE.Points(pts(7,3),new THREE.PointsMaterial({map:smT,size:22,sizeAttenuation:true,transparent:true,opacity:0.55,depthWrite:false}));
               core.userData=NL(PC.roast);halo.userData={noLOD:true};smk.userData=NL(PC.smoke);[core,halo,smk].forEach(m=>{m.frustumCulled=false;g.add(m)});PICK.push(core,smk);
-              PESC.g=g;(o=>{o.traverse(m=>{if(m.isInstancedMesh&&!m.userData.noLOD)m.userData=Object.assign({},m.userData,{noLOD:true})})})(g);PESC.n=N;PESC.S=S;PESC.groups=gl;PESC.core=core;PESC.halo=halo;PESC.smk=smk;PESC.sp=sp;PESC.lm=lm;PESC.em=em;WG.add(g)}
+              PESC.g=g;(o=>{o.traverse(m=>{if(m.isInstancedMesh&&!m.userData.noLOD)m.userData=Object.assign({},m.userData,{noLOD:true})})})(g);PESC.n=N;PESC.S=S;PESC.groups=gl;PESC.gs=gs;PESC.GN=GN;PESC.core=core;PESC.halo=halo;PESC.smk=smk;PESC.sp=sp;PESC.lm=lm;PESC.em=em;WG.add(g)}
             /* שדה העומר 💡: מחפשים מחוץ לעיר העתיקה מקום פתוח וישר, בלי בניין ובלי כביש */
             if(d==="16n"&&!PESC.f){let best=null;const FW=44,FD=30,off=[[0,0],[FW/2,FD/2],[FW/2,-FD/2],[-FW/2,FD/2],[-FW/2,-FD/2],[FW/2,0],[-FW/2,0],[0,FD/2],[0,-FD/2]];
               for(let r=520;r<=1100;r+=58)for(let a=0;a<6.283;a+=0.16){const x=Math.cos(a)*r,n=Math.sin(a)*r;if(inPoly(x,n,OLD))continue;if(Bd.some(q=>x>q[0]-48&&x<q[1]+48&&n>q[2]-42&&n<q[3]+42))continue;if(off.some(o=>inB(x+o[0],n+o[1])||PESC.rd(x+o[0],n+o[1])))continue;const hs=off.map(o=>surfY(x+o[0],n+o[1])),sp_=Math.max(...hs)-Math.min(...hs),sc=sp_+r*0.001;if(!best||sc<best.sc)best={x,n,sc,sp:sp_}}
@@ -12296,6 +12383,7 @@ function build(){
           bake:I("אפיית שתי הלחם","רמב״ם, הלכות תמידין ומוספין ח, ז","⚖️ הרמב״ם: אין עשייתן דוחה יום טוב, \"אלא אופין אותן מערב יום טוב\". לכן בערב שבועות אופים את שתי הלחם. 💡 מקום האפייה, התנור והכוהנים הם הצעה לתצוגה, בלי מקור."),
           crowd:I("הקהל בחצר החיצונה","יחזקאל מו, ט","📜 העם בא \"לפני ה׳ במועדים\" ועומד בחצר החיצונה. 💡 הצפיפות, 1.2 איש למ״ר, היא ערך תצוגה ולא נתון בטיחות, וכאן מוצגות פחות דמויות, לפי תקציב הדמויות. הרחוקים מן המצלמה מצוירים בצורה פשוטה. בימי התשלומין הקהל פוחת אט אט: 💡 הערכים הם הצעה."),
           flow:I("זרם הקהל במועד","יחזקאל מו, ט; מלבי״ם מו, ט-י","📜 \"הבא דרך שער צפון להשתחות יצא דרך שער נגב... לא ישוב דרך השער אשר בא בו\". ⚖️ המלבי״ם: כך נעשה \"לכבוד העם\". במודל שני זרמים, מצפון לדרום ומדרום לצפון. השער המזרחי סגור. 💡 מסלול ההליכה ומספר ההולכים הם הצעה לתצוגה."),
+          sleep:I("עיר המעמד: לנים ברחוב","ביכורים ג, ב","📜 מביאי הביכורים מתכנסים לעיר המעמד, לנים ברחובה של עיר, והממונה אומר להם: קומו ונעלה ציון אל בית ה׳ אלהינו. "+NV+"💡 מקום עיר המעמד, מספר הישנים והממונה הם הצעה לתצוגה."),
           green:I("ירק ופרחים בשערים החיצוניים","💡 הצעה, ללא מקור","💡 הצעה, ללא מקור. עיטור ירק ופרחים מוצג רק בשערים החיצוניים של החצר החיצונה, ולא על המזבח ולא בהיכל. מוצג בערב שבועות, בו׳ בסיוון ובימי התשלומין."),
           olim:I("עולות ראייה בחצר הפנימית","חגיגה א, א; חגיגה יז ע״א; רמב״ם, הלכות חגיגה א, ז","📜 עולות הראייה ושלמי החגיגה מוקרבים ברגל, וימי התשלומין נמשכים שבעה ימים לשבועות. הציטוט המדויק של הרמב״ם (חגיגה א, ז) והדף בגמרא לא נבדקו מול נוסח נקי. מוצג בו׳ בסיוון ובימי התשלומין. 💡 מספר המביאים ומקומם הם הצעה לתצוגה."),
           cook:I("שלמי החגיגה בבית המבשלים","יחזקאל מו, כא-כד; מלבי״ם מו, כד; חגיגה יז ע״א","📜 \"יבשלו שם משרתי הבית את זבח העם\" (יחזקאל מו, כד). ⚖️ המלבי״ם: מבשלים שם שלמים ותודה. בימי התשלומין ממשיכים להביא שלמי חגיגה. 💡 מספר המשרתים והסירים הוא הצעה לתצוגה.")};
@@ -12347,7 +12435,7 @@ function build(){
             for(let i=0;i<nf;i++){ff.fig.setAmp(i,1);ff.fig.setSp(i,1.1)}for(let i=0;i<nb;i++){bf.fig.setAmp(i,1);bf.fig.setSp(i,1.1)}
             const hd=[];for(let c=0;c<K;c++)hd.push(c*path.len/K);
             const md=s=>((s%path.len)+path.len)%path.len;
-            g.proc={path,tick(dt){for(let c=0;c<K;c++){hd[c]=md(hd[c]+V*dt);const h=hd[c],q=pAt(path,h,0);setI(om,c,q[0],q[1],q[2],q[3],1);setI(hm,c,q[0],q[1],q[2],q[3],1);setI(wm,c,q[0],q[1],q[2],q[3],1);
+            g.proc={path,hd,md,tick(dt){for(let c=0;c<K;c++){hd[c]=md(hd[c]+V*dt);const h=hd[c],q=pAt(path,h,0);setI(om,c,q[0],q[1],q[2],q[3],1);setI(hm,c,q[0],q[1],q[2],q[3],1);setI(wm,c,q[0],q[1],q[2],q[3],1);
                 for(let j=0;j<FL;j++){const s=md(h+3.4+j*1.5),p=pAt(path,s,(j?0.55:-0.55)),i=c*FL+j;ff.set(i,p[0],p[1],p[2],p[3],0.95);setI(fl,i,p[0]+Math.cos(p[3])*0.32,p[1]+1.38,p[2]-Math.sin(p[3])*0.32,p[3],1)}
                 for(let b=0;b<BN;b++){const s=md(h-3.6-Math.floor(b/2)*1.7),side=b%2?1:-1,p=pAt(path,s,side*(0.9+((b*7)%5)*0.08)),i=c*BN+b,sh=s>=path.sG?1.48:0.95,t=tp(i);bf.set(i,p[0],p[1],p[2],p[3],0.95);
                   const lx=Math.sin(p[3])*0.18,lz=Math.cos(p[3])*0.18;setI(bm[t],slot[i],p[0]+lx,p[1]+sh,p[2]+lz,p[3],1);setI(dm,i,p[0]+lx,p[1]+sh+0.13,p[2]+lz,p[3],1)}}
@@ -12363,8 +12451,10 @@ function build(){
             P.forEach((q,i)=>{const p=P3(q[0],q[1],7.5),m=ms[q[3]];setI(m,c[q[3]]++,p.x,p.y+0.14+q[2],p.z,i*0.7,1);setI(dm,i,p.x,p.y+0.3+q[2],p.z,i*1.9,1)});ms.forEach(m=>m.instanceMatrix.needsUpdate=true);dm.instanceMatrix.needsUpdate=true;
             const kf=figset(g.gAlt,3,SC.pile,()=>KOH);[[243.5,226,0],[256.5,226,Math.PI],[250,219.5,-Math.PI/2]].forEach((q,i)=>{const p=P3(q[0],q[1],7.5);kf.set(i,p.x,p.y,p.z,q[2])});kf.done();
             const qf=figset(g.gAlt,5,SC.shoulder,i=>ccol[(i*3+2)%ccol.length]),qb=inst(g.gAlt,bg,wickM,5,SC.shoulder);for(let i=0;i<5;i++){const p=P3(250+(i%2?1.2:-1.2),196+i*4.2,7.5);qf.set(i,p.x,p.y,p.z,-Math.PI/2);setI(qb,i,p.x+0.2,p.y+1.48,p.z,0,1)}qf.done();qb.instanceMatrix.needsUpdate=true;
-            const wb=inst(g.gAlt,bg,M.gold,1,SC.pile),wk=figset(g.gAlt,2,SC.pile,i=>i?ccol[2]:KOH),w0=P3(250,222,7.5);wk.set(0,w0.x-0.55,w0.y,w0.z+0.9,-Math.PI/2+0.4);wk.set(1,w0.x+0.55,w0.y,w0.z+0.9,-Math.PI/2-0.4);wk.done();
-            g.wave=tt=>{const f=Math.sin(tt*1.5);setI(wb,0,w0.x+f*0.35,w0.y+1.55+Math.abs(Math.sin(tt*0.75))*0.3,w0.z+0.9,0,1);wb.instanceMatrix.needsUpdate=true};g.wave(0);
+            const wb=inst(g.gAlt,bg,M.gold,1,SC.pile),hd2=inst(g.gAlt,new THREE.SphereGeometry(0.075,8,6),skinM,1,SC.pile),wk=figset(g.gAlt,2,SC.pile,i=>i?ccol[2]:KOH),w0=P3(250,221.5,7.5),PX=P3(250,226,7.5);wk.set(0,w0.x-0.62,w0.y,w0.z,0);wk.set(1,w0.x+0.62,w0.y,w0.z,Math.PI);wk.done();
+            /* הכוהן מניח ידו תחתיו ומניף (מוליך ומביא, מעלה ומוריד), ואחר כך מניח את הסל בצד המזבח */
+            g.wave=tt=>{const c=(tt%9)/9;let x=w0.x,y=w0.y+1.18,z=w0.z;if(c<0.45){const f=c/0.45;x+=Math.sin(f*Math.PI*3)*0.26;y+=Math.abs(Math.sin(f*Math.PI*1.5))*0.2}else if(c<0.75){const f=(c-0.45)/0.3,e=f*f*(3-2*f);x=w0.x+(PX.x-w0.x)*e;z=w0.z+(PX.z-w0.z)*e;y=w0.y+1.18+(PX.y+0.95-(w0.y+1.18))*e}else{x=PX.x;z=PX.z;y=PX.y+0.95}
+              setI(wb,0,x,y,z,0,1);setI(hd2,0,x-0.04,y-0.2,z,0,1);wb.instanceMatrix.needsUpdate=hd2.instanceMatrix.needsUpdate=true};g.wave(0);
             /* הלוויים על המעלות כבר עומדים שם במודל הרגיל: לא מכפילים אותם, רק מחליפים להם את כרטיס המקור בזמן שבועות */}
           /* ---- התנופה: שני כבשים חיים ושתי חלות, במזרח החצר הפנימית. 💡 מקום וצבע ---- */
           {const tb=P3(284.5,250,7.5),loafG=(()=>{const a=[],bx=(w,h,d,x,y,z)=>{const b=new THREE.BoxGeometry(w,h,d);b.translate(x,y,z);return b};a.push(bx(0.61,0.05,0.35,0,0.025,0));[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>a.push(bx(0.05,0.0875,0.05,i*0.28,0.044,j*0.15)));return mrg(a)})(),loafM=std(0x9a5f26,{roughness:0.9});
@@ -12403,8 +12493,8 @@ function build(){
             "6":["ביכורים ג, ג-ח; מנחות יא, ד; ה, ו; רמב״ם, הלכות תמידין ומוספין ח, ז-י","📜 מצעד הביכורים מן העיר אל השער הצפוני: שור בקרני זהב ועטרת זית, חליל, סלי כסף וזהב וסלי נצרים, ותורים על הסלים. בהר הבית נושאים את הסל על הכתף, הלוויים שרים, והכוהן מניף ומניח את הסלים בצד המזבח. 📜 בחצר הפנימית מניפים את שתי הלחם על שני כבשים חיים: \"מוליך ומביא, מעלה ומוריד\". 💡 ירק ופרחים בשערים החיצוניים הם הצעה, בלי מקור. לחצו על כל רכיב כדי לראות את המקור שלו."],
             t:["חגיגה יז ע״א; רמב״ם, הלכות חגיגה א, ז; ביכורים ג","📜 ימי התשלומין, ז׳ עד י״ב בסיוון: עולות הראייה ושלמי החגיגה ממשיכים, ועדיין מביאים ביכורים. הקהל פוחת אט אט. 💡 הערכים בכל יום הם הצעה לתצוגה. הציטוט המדויק של הרמב״ם והדף בגמרא לא נבדקו."]};
             const q=k[0]==="t"?T.t:T[k];if(q)showInfo({n:"שבועות · "+SDN[k],r:q[0],t:q[1]})},
-          state(){const on=SHVPICK&&DOY===FEST.shavuot.doy&&!STORY;return{on,ok:on,d:SHVDAY}},
-          apply(s){Object.assign(sst,s);SG.visible=s.ok;shud.hidden=!s.on;if(s.ok&&!B)buildS();
+          state(){const tk=STORY&&typeof STORY_API!=="undefined"?STORY_API.S.key:null,on=(tk?tk==="shavuot":SHVPICK)&&DOY===FEST.shavuot.doy;return{on,ok:on,d:tk==="shavuot"&&STD?STD:SHVDAY}},
+          apply(s){Object.assign(sst,s);SG.visible=s.ok;if(FESTG){if(!SHV.bik){const rf=P3(250,127,7);SHV.bik=FESTG.children.filter(o=>(o.userData&&o.userData.n==="הבאת הביכורים")||(o.isMesh&&Math.abs(o.position.x-rf.x)<0.8&&Math.abs(o.position.z-rf.z)<3.2))}SHV.bik.forEach(o=>{if(o.userData._sv===undefined)o.userData._sv=o.visible;o.visible=s.ok?false:o.userData._sv})}shud.hidden=!s.on;if(s.ok&&!B)buildS();
             if(B){const d=s.d,eve=d==="eve",six=d==="6",tash=d[0]==="t",fr=FR[d]||1;B.gEve.visible=eve;B.gProc.visible=B.gMeet.visible=B.gAlt.visible=B.gOlim.visible=B.gCook.visible=six||tash;B.gTnuf.visible=six;lv.fig.userData=(s.ok&&(six||tash))?Object.assign({noLOD:true},SC.lev):lv0;B.gGreen.visible=true;B.gOut.visible=B.gFlow.visible=true;
               B.lay.forEach(l=>l.grp.visible=l.thr<=fr+1e-6);B.flow.setAct(Math.round(B.flow.n*fr*(eve?0.6:1)));
               if(s.ok){const cp=camera.position;B.lay.forEach(l=>{if(l.grp.visible)l.t.update(cp,true)})}}},
@@ -12412,6 +12502,34 @@ function build(){
             setS("שבועות · "+SDN[s.d]+" · "+(s.d==="eve"?SHUD.eve:s.d==="6"?SHUD["6"]:SHUD.t));
             if(s.ok&&B){const cp=camera.position;B.lay.forEach(l=>{if(l.grp.visible)l.t.update(cp)});
               if(!still){if(B.gProc.visible)B.proc.tick(dt);if(B.gFlow.visible)B.flow.tick(dt);if(B.gAlt.visible)B.wave(tt);if(B.gTnuf.visible)B.tnuf(tt)}}}};
+        /* ===== גרסה 123 · משימה 4: סיור שבועות קולנועי. כלי העזר של התחנות ===== */
+        SHV.tour=(()=>{let H=null;const T={n:-1};const tm={morning:"tM",noon:"tN",evening:"tE",night:"tL"};
+          const at=(s,off,h)=>{const q=pAt(B.proc.path,B.proc.md(s),off),v=new THREE.Vector3(q[0],q[1]+h,q[2]);return g0.localToWorld(v)};
+          const hero=()=>{if(H||!B)return H;const g=new THREE.Group();g.name="SHVTOUR";g.visible=false;SG.add(g);const path=B.proc.path,sR=path.sR;
+            /* ישנים ברחוב עיר המעמד (ביכורים ג, ב), והממונה קורא להם. 💡 מספר ומקום */
+            const NS=SMALL?12:26,sl=FIG.mesh(NS,FIG.mat(0xffffff)),sh=new THREE.InstancedMesh(FIG.head(),skinM,NS),m4=new THREE.Matrix4(),E=new THREE.Euler(),Q=new THREE.Quaternion(),V=new THREE.Vector3(),Sc=new THREE.Vector3(1,1,1);
+            sl.frustumCulled=sh.frustumCulled=false;sl.castShadow=sh.castShadow=false;sl.userData=NL(SC.sleep);cPick.push(sl);sh.userData={noLOD:true};g.add(sl,sh);
+            for(let i=0;i<NS;i++){const s=sR-70+Math.floor(i/2)*(44/Math.ceil(NS/2)),side=i%2?1:-1,q=pAt(path,s,side*(0.95+(i%3)*0.08)),yaw=q[3]+(rs()-0.5)*0.5+(i%2?0.25:-0.25);
+              sl.setAmp(i,0);sl.setColorAt(i,CC.setHex(ccol[(i*3+1)%ccol.length]));
+              [[sl,0],[sh,1.56]].forEach(([m,hh])=>{E.set(-Math.PI/2,yaw,0,"YXZ");Q.setFromEuler(E);V.set(q[0],q[1]+0.16,q[2]);const up=new THREE.Vector3(0,hh,0).applyQuaternion(Q);V.add(up);m4.compose(V,Q,Sc);m.setMatrixAt(i,m4)})}
+            sl.instanceMatrix.needsUpdate=sh.instanceMatrix.needsUpdate=true;if(sl.instanceColor)sl.instanceColor.needsUpdate=true;
+            const cf=figset(g,1,SC.sleep,()=>0x7a3f6a),cq=pAt(path,sR-24,0);cf.set(0,cq[0],cq[1],cq[2],cq[3]+Math.PI);cf.done();
+            /* האיש שמרים סל על כתפו בשער הצפוני: סל, יונה, ידיים. 💡 קצב */
+            const lf=figset(g,1,SC.shoulder,()=>ccol[2]),bg=new THREE.CylinderGeometry(0.24,0.19,0.26,10),bk=new THREE.InstancedMesh(bg,wickM,1),dg=(()=>{const a=[(()=>{const s=new THREE.SphereGeometry(0.1,6,4);s.scale(1.5,1,0.9);s.translate(0,0.09,0);return s})(),(()=>{const s=new THREE.SphereGeometry(0.045,5,4);s.translate(0.16,0.17,0);return s})()];return mrg(a)})(),dv=new THREE.InstancedMesh(dg,std(0xf3f1ec,{roughness:0.8}),1);
+            [bk,dv].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=NL(SC.shoulder);cPick.push(m);g.add(m)});
+            const lq=pAt(path,path.sG+3,0);lf.set(0,lq[0],lq[1],lq[2],lq[3]);lf.done();
+            H={g,lq,bk,dv,sl,sh};return H};
+          const o={get active(){return T.n>=0},
+            sR(){return B?B.proc.path.sR:0},sG(){return B?B.proc.path.sG:0},
+            pos(k){return[at(k[0],k[1],k[2]),at(k[3],k[4],k[5])]},
+            go(n){T.n=n;STD="6";if(n===4){try{if(!ready)prep();gLev.visible=true}catch(e){console.warn(e)}}else{try{if(gLev.visible&&!(SUK&&SUK.st&&SUK.st.shoeva))gLev.visible=false}catch(e){}}if(TIME!=="morning")document.getElementById("tM").click();SHV.tick(0.016,performance.now()/1000,true);const h=hero();if(h)h.g.visible=n===0||n===3;const p=B.proc,sR=p.path.sR;
+              const H0=[290,115,122,200,200,200,200][n];p.hd.forEach((_,c)=>p.hd[c]=p.md(H0+c*p.path.len/p.hd.length));p.tick(0)},
+            end(){T.n=-1;STD=null;if(H)H.g.visible=false;try{if(!(SUK&&SUK.st&&SUK.st.shoeva))gLev.visible=false}catch(e){}},
+            tick(dt,tt,still){if(T.n<0||!B)return;const S=STORY&&STORY_API.S;
+              if(T.n===1&&S&&!S.move&&!tween&&!S.paused){const p=B.proc,q=pAt(p.path,p.md(p.hd[0]),0),ox=g0.localToWorld(new THREE.Vector3(q[0],q[1],q[2])),cp=at(p.hd[0]+4.6,0.4,4.4),k=Math.min(1,dt*3);camera.position.lerp(cp,k);controls.target.lerp(ox.clone().add(new THREE.Vector3(0,1.2,0)),k);camera.lookAt(controls.target)}
+              if(H&&H.g.visible&&T.n===3){const c=(tt%7)/7,e=x=>x*x*(3-2*x),h=c<0.35?e(c/0.35):c<0.8?1:1-e((c-0.8)/0.2),q=H.lq,fw=0.45*(1-h),yy=q[1]+0.25+1.23*h,la=0.2*h,m4=new THREE.Matrix4(),D2=new THREE.Object3D();
+                D2.rotation.set(0,q[3],0);D2.position.set(q[0]+Math.cos(q[3])*fw+Math.sin(q[3])*la,yy,q[2]-Math.sin(q[3])*fw+Math.cos(q[3])*la);D2.updateMatrix();H.bk.setMatrixAt(0,D2.matrix);D2.position.y+=0.13;D2.updateMatrix();H.dv.setMatrixAt(0,D2.matrix);H.bk.instanceMatrix.needsUpdate=H.dv.instanceMatrix.needsUpdate=true}}};
+          return o})();
       }
       KEEP.length=0}
     }
@@ -13028,7 +13146,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   if(STORY&&rawdt<0.5){window.__sT=(window.__sT||0)+rawdt;window.__sN=(window.__sN||0)+1}if(STORY||tween){frN=0;frT=0} /* v113: דגימות מלפני הסיור לא מפעילות שינוי רזולוציה בתוכו */else if(performance.now()-lastMove<1500){frT+=rawdt;frN++;}if(!STORY&&!tween&&frN>=45&&performance.now()-(window.__prC||0)>10000){window.__prC=performance.now(); /* v112: לא משנים רזולוציה בזמן סיור/מעוף, ולכל היותר פעם ב־10 ש׳ — כל שינוי שינה את גודל הקנבס והבהב */const av=frT/frN;let np=PR;if(performance.now()-(window.__prT||0)>120000)window.__prD=0; /* מכונות מצב: אחרי 2 דקות בלי ירידה, הרזולוציה יכולה לעלות שוב */if(av>1/33&&PR>0.7){np=Math.max(0.7,PR-0.15);window.__prD=(window.__prD||0)+1;window.__prT=performance.now()}else if(av<1/56&&PR<PRMAX&&(window.__prD||0)<2&&performance.now()-(window.__prT||0)>20000)np=Math.min(PRMAX,PR+0.1);if(np!==PR){PR=np;renderer.setPixelRatio(PR);if(composer.setPixelRatio)composer.setPixelRatio(PR);lastW=0;resize()}frN=0;frT=0}
   if(!reduce&&LIFE)LIFE.tick(dt,tt);
   if(TRN&&SHOW_TR&&(!reduce||TRN.riding))TRN.tick(rawdt||dt,tt);
-  FIG.U.uT.value=tt;if(PES){try{PES.tick(dt,tt,reduce)}catch(e){if(!PES.err){PES.err=1;console.error(e);(window.__ERRS||[]).push("PES "+e.message)}}}if(SHV){try{SHV.tick(dt,tt,reduce)}catch(e){if(!SHV.err){SHV.err=1;console.error(e);(window.__ERRS||[]).push("SHV "+e.message)}}}if(SUK){try{SUK.tick(dt,tt,reduce)}catch(e){if(!SUK.err){SUK.err=1;console.error(e);(window.__ERRS||[]).push("SUK "+e.message)}}}if(!reduce){if(ACTS)ACTS.tick(dt,tt);if(CROWDT)CROWDT(dt,tt)}
+  FIG.U.uT.value=tt;if(window.__driftTick)window.__driftTick(dt);if(PES){try{PES.tick(dt,tt,reduce);if(PES.tour)PES.tour.tick(dt,tt,reduce)}catch(e){if(!PES.err){PES.err=1;console.error(e);(window.__ERRS||[]).push("PES "+e.message)}}}if(SHV){try{SHV.tick(dt,tt,reduce);if(SHV.tour)SHV.tour.tick(dt,tt,reduce)}catch(e){if(!SHV.err){SHV.err=1;console.error(e);(window.__ERRS||[]).push("SHV "+e.message)}}}if(SUK){try{SUK.tick(dt,tt,reduce)}catch(e){if(!SUK.err){SUK.err=1;console.error(e);(window.__ERRS||[]).push("SUK "+e.message)}}}if(!reduce){if(ACTS)ACTS.tick(dt,tt);if(CROWDT)CROWDT(dt,tt)}
   if(STORY)STORY.tick(now);if(ART)ART.tick(dt,tt);
   if(NIGHT.moon&&NIGHT.moon.visible){NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position);NIGHT.moon.lookAt(camera.position)} // the moon stays at its place in the sky when the camera moves (note from Grok on #20)
   {const cp=camera.position,hh=cp.y-floorAt(cp.x,cp.z),dd=cp.distanceTo(controls.target),nn=WALK?0.35:(DRONE||INSIDE||SSAO||REVIEW)?1:Math.max(1,Math.min(40,hh*0.15,dd*0.02));if(Math.abs(nn-camera.near)>camera.near*0.03){camera.near=nn;camera.updateProjectionMatrix()}} // ריצודים במבט מרחוק: מישור הקרוב (near) מתרחק כשהמצלמה גבוהה, כדי שיהיה דיוק עומק לכבישים, לרחבות ולקרקע. ליד הקרקע ובפנים נשאר מטר אחד כמו קודם. v100 · משימה 08: בהליכה 0.35 מ׳ — פחות מרדיוס הגוף 0.6, כדי שקיר שהגוף נעצר לפניו לא ייחתך ויעלם
@@ -13205,24 +13323,38 @@ const keep=()=>({fest:$("oF").getAttribute("aria-pressed")==="true",time:TIME,ho
 const festB=k=>document.querySelector('#festSeg button[data-fest="'+k+'"]'),setFestUI=k=>{const b=festB(k);if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
 const back=k=>{if(!k)return;if(!k.fest)unpress("oF");if(DOY!==k.doy){const f=Object.keys(FEST).find(q=>FEST[q].doy===k.doy);if(f)setFestUI(f)}if(k.hour!=null){const s=$("hslider");if(s){s.value=String(k.hour);s.dispatchEvent(new Event("change"))}}else if(TIME!==k.time||HOUR!=null)$(TID[k.time]).click();PESPICK=!!k.pp;if(window.__pesUI)window.__pesUI();SHVPICK=!!k.sp;if(window.__shvUI)window.__shvUI()};
 let KP=null;const festOpen=()=>{KP=keep();setFestUI("sukkot");press("oF");closeInfo()}; /* סוכות והקהל (דברים לא, י: "בחג הסוכות"): השמש והירח של תשרי */const festClose=()=>{back(KP);KP=null};
-STORIES.pesach={title:"קרבן פסח",open(){KP=keep();setFestUI("pesach");if(TIME!=="noon")$("tN").click();SND.crowd(0.05)},close(){back(KP);KP=null},steps:[
- {title:"ערב פסח",pose:AP(520,250,70,300,250,10),cap:"בארבעה עשר בניסן, אחר הצהריים, התמיד נשחט מוקדם: בשבע ומחצה, וקרב בשמונה ומחצה. כך נותר זמן לשחיטת הפסחים. כל חבורה מביאה כבש אחד.",src:"פסחים ה, א; יחזקאל מ״ה, כא",full:"📜 \"בראשון בארבעה עשר יום לחדש יהיה לכם הפסח, חג שבעות ימים, מצות יאכל\" (יחזקאל מ״ה, כא). ⚖️ \"תמיד נשחט בשמונה וחצי וקרב בתשעה וחצי. ערב פסח נשחט בשבע וחצי וקרב בשמונה וחצי\" (פסחים ה, א)."},
- {title:"שלוש כיתות",pose:AP(345,236,16,300,250,13),cap:"הפסח נשחט בשלוש כיתות. נכנסת הכת הראשונה, נתמלאת העזרה, נועלים את הדלתות, ותוקעים, מריעים, ותוקעים.",src:"פסחים ה, ה",full:"📜 \"הפסח נשחט בשלש כתות... נכנסה כת הראשונה, נתמלאה העזרה, נעלו דלתות העזרה. תקעו, הריעו ותקעו\" (פסחים ה, ה)."},
- {title:"שורות של כהנים",pose:AP(298,212,13,262,240,8),cap:"הכהנים עומדים שורות שורות, בזיכי כסף ובזיכי זהב. שורה כולה כסף, ושורה כולה זהב, ולא מעורבין. לבזיכים אין שוליים, שמא יניחום, ויקרש הדם.",src:"פסחים ה, ה",full:"📜 \"הכהנים עומדים שורות שורות, ובידיהם בזיכי כסף ובזיכי זהב. שורה שכולה כסף כסף, ושורה שכולה זהב זהב, לא היו מעורבין. ולא היו לבזיכין שולים, שמא יניחום ויקרש הדם\" (פסחים ה, ה). 💡 במודל אין דמויות מיוחדות לפסח."},
- {title:"מעבירים מיד ליד",pose:AP(272,220,10,252,238,8.5),cap:"ישראל שוחט, והכהן מקבל. נותן לחברו, וחברו לחברו, והקרוב למזבח זורק זריקה אחת, כנגד היסוד. מחזירים את הריקן, ומקבלים את המלא.",src:"פסחים ה, ו",full:"📜 \"שחט ישראל וקבל הכהן, נותנו לחברו וחברו לחברו, ומקבל את המלא ומחזיר את הריקן. כהן הקרוב אצל המזבח זורקו זריקה אחת כנגד היסוד\" (פסחים ה, ו)."},
- {title:"הלל",pose:AP(270,232,11,285.5,240,10),cap:"בזמן השחיטה, הלוויים קוראים את ההלל. אם גמרו, שונים; אם שונו, משלשים. אך מעולם לא שלשו.",src:"פסחים ה, ז",full:"📜 \"קראו את ההלל. אם גמרו שנו, ואם שנו שלשו, אף על פי שלא שלשו מימיהם\" (פסחים ה, ז)."},
- {title:"תולין ומפשיטין",pose:AP(262,196,12,274,214,8),cap:"אנקליות של ברזל קבועות בכתלים ובעמודים, לתלייה ולהפשטה. מי שאין לו מקום, מניח מקל דק על כתפו ועל כתף חברו, ותולה ומפשיט.",src:"פסחים ה, ט",full:"📜 \"כיצד תולין ומפשיטין? אנקליות של ברזל היו קבועין בכתלים ובעמודים, שבהן תולין ומפשיטין. וכל מי שאין לו מקום לתלות ולהפשיט, מקלות דקים חלקים היו שם, ומניח על כתפו ועל כתף חברו, ותולה ומפשיט\" (פסחים ה, ט). ⚖️ במודל: בית המטבחיים בצפון המזבח (מידות ג, ה)."},
- {title:"יוצאים",pose:AP(400,305,34,300,250,8),cap:"יצאה הכת הראשונה וישבה בהר הבית, השנייה בחיל, והשלישית במקומה. כשחשכה, יצאו וצלו את פסחיהם. במודל יחזקאל אין חיל, ולכן רואים את החצר החיצונה.",src:"פסחים ה, י",full:"📜 \"יצאו וישבו להן, כת ראשונה בהר הבית, שניה בחיל, והשלישית במקומה עומדת. חשכה, יצאו וצלו את פסחיהן\" (פסחים ה, י). 💡 ביחזקאל אין חיל; כאן החצר החיצונה."},
- {title:"בכל הבתים",pose:VP("city"),cap:"בלילה אוכלים את הבשר צלי אש, עם מצות ומרורים. ירושלים מלאה חבורות, וההלל עולה מן הבתים.",verse:"וְאָכְלוּ אֶת־הַבָּשָׂר בַּלַּיְלָה הַזֶּה צְלִי־אֵשׁ וּמַצּוֹת עַל־מְרֹרִים יֹאכְלֻהוּ׃",verseRef:"שמות יב, ח",src:"שמות יב, ח; פסחים ז, יג",full:"📜 \"ואכלו את הבשר בלילה הזה, צלי אש ומצות, על מררים יאכלהו\" (שמות יב, ח)."}]};
+/* גרסה 123: תנועת מצלמה איטית בתוך תחנה (דולי, טיסה): מן המסגור של התחנה אל המסגור השני */
+const tourDrift=(b,dur)=>{DRIFT={i:STORY_API.S.i,b:b(),dur:dur||14000,t0:0,a:null}};
+const driftTick=dt=>{if(!DRIFT||!STORY)return;const S=STORY_API.S;if(DRIFT.i!==S.i){DRIFT=null;return}if(S.move||tween)return;const now=performance.now();if(!DRIFT.a){DRIFT.a=[camera.position.clone(),controls.target.clone()];DRIFT.t0=now}
+  if(S.paused){DRIFT.t0+=dt*1000;return}const k=Math.min(1,(now-DRIFT.t0)/DRIFT.dur),e=k*k*(3-2*k);camera.position.lerpVectors(DRIFT.a[0],DRIFT.b[0],e);controls.target.lerpVectors(DRIFT.a[1],DRIFT.b[1],e);camera.lookAt(controls.target)};window.__driftTick=driftTick;
+STORIES.pesach={title:"קרבן פסח",open(){KP=keep();setFestUI("pesach");PESPICK=false;if(window.__pesUI)window.__pesUI();SND.crowd(0.05)},close(){DRIFT=null;try{PES.tour.end()}catch(e){}back(KP);KP=null},steps:[
+ {title:"ערב פסח",enter(){PES.tour.go(0)},pose:()=>PES.tour.pose1(),fov:38,nofc:true,cap:"ערב פסח. בכל חצר תנור, ובכל חבורה שה אחד – יותר מעשרה איש על כל פסח.",src:"תענית ג, ח; פסחים סד ע״ב",full:"📜 \"צאו והכניסו תנורי פסחים, בשביל שלא יימוקו\" (תענית ג, ח). 📜 \"אין לך כל פסח ופסח שלא נמנו עליו יותר מעשרה בני אדם\" (פסחים סד ע״ב; הנוסח לא נבדק מול נוסח נקי). 💡 כאן אחד עשר איש בכל חבורה, ומקום החצר והתנור הוא הצעה לתצוגה."},
+ {title:"שערי החצר החיצונה",enter(){PES.tour.go(1)},pose:AP(60,30,40,300,250,9),fov:50,nofc:true,cap:"הבא דרך שער צפון יוצא דרך שער נגב – אין חוזרים בשער שבו באו.",src:"יחזקאל מו, ט",full:"📜 \"והבא דרך שער צפון להשתחות יצא דרך שער נגב, והבא דרך שער נגב יצא דרך שער צפון, לא ישוב דרך השער אשר בא בו, כי נכחו יצא\" (יחזקאל מו, ט). ⚖️ המלבי״ם (מו, י): כך נעשה לכבוד העם. השער המזרחי סגור. 💡 מסלול ההליכה ומספר ההולכים הם הצעה לתצוגה."},
+ {title:"כת אחת מתוך שלוש",enter(){PES.tour.go(2)},pose:AP(250,192,10.6,250,150.3,10.0),fov:44,nofc:true,cap:"נכנסה כת ראשונה, נתמלאה העזרה, נעלו דלתות העזרה. תקעו, הריעו ותקעו.",src:"פסחים ה, ה; אבות ה, ה",full:"📜 \"הפסח נשחט בשלש כתות... נכנסה כת ראשונה, נתמלאה העזרה, נעלו דלתות העזרה. תקעו, הריעו ותקעו\" (פסחים ה, ה). 📜 \"עומדים צפופים ומשתחוים רווחים\" (אבות ה, ה). 💡 ביחזקאל מפורשות דלתות רק לשער הפנימי המזרחי; הדלתות בשער הצפוני והדרומי הן הצעה לתצוגה. נשאר פתוח: האם מותר יותר משלוש כתות."},
+ {title:"שורות כסף וזהב",enter(){PES.tour.go(3);tourDrift(AP(250,224,9.9,250,236,8.6),16000)},pose:AP(250,188,17,250,214,8.4),fov:46,nofc:true,cap:"שורה שכולה כסף, ושורה שכולה זהב, ולא היו מעורבין – כדי שיהיה להם נוי.",src:"פסחים ה, ה; רמב״ם, הלכות קרבן פסח א, יג",full:"📜 \"הכהנים עומדים שורות שורות, ובידיהם בזיכי כסף ובזיכי זהב. שורה שכולה כסף, ושורה שכולה זהב, לא היו מעורבין. ולא היו לבזיכין שולים, שמא יניחום ויקרש הדם\" (פסחים ה, ה). ⚖️ בלשון הרמב״ם: \"מזרקי כסף ומזרקי זהב\" (קרבן פסח א, יג). 💡 מספר השורות והכוהנים הוא הצעה לתצוגה."},
+ {title:"השוחט והמקבל",enter(){PES.tour.go(4);tourDrift(AP(251,225,10.2,250,234,8.5),15000)},pose:AP(239.5,198.6,9.7,244,205.4,8.9),fov:36,nofc:true,cap:"שחט ישראל וקיבל הכוהן – השחיטה כשרה בכל אדם, ומן הקבלה ואילך מצוות כהונה. והלוויים עומדים לפני העם לשרתם, ושוחטים בשביל מי שצריך.",src:"פסחים ה, ו; פסחים סד ע״ב; יחזקאל מד, יא; מלבי״ם מד, ט; דברי הימים ב ל, יז",full:"📜 \"שחט ישראל וקבל הכהן, נתנו לחברו וחברו לחברו, ומקבל את המלא ומחזיר את הריקן. כהן הקרוב אצל המזבח זורקו זריקה אחת כנגד היסוד\" (פסחים ה, ו). 📜 \"דשחיטה בזר כשירה... מקבלה ואילך מצות כהונה\" (פסחים סד ע״ב; לא נבדק מול נוסח נקי). 📜 \"המה ישחטו את העולה ואת הזבח לעם, והמה יעמדו לפניהם לשרתם\" (יחזקאל מד, יא). ⚖️ המלבי״ם (מד, ט): הלוויים משרתים את העם בשחיטה והפשט ונתוח. 📜 \"והלויים על שחיטת הפסחים\" (דברי הימים ב ל, יז). 💡 היחס בין ישראלים ללוויים הוא הצעה לתצוגה."},
+ {title:"ההלל",enter(){PES.tour.go(5)},pose:AP(306,264,15.5,354,243,10),fov:42,nofc:true,cap:"קראו את ההלל. אם גמרו – שנו, ואם שנו – שילשו.",src:"פסחים ה, ז (הלוויים: תוספתא פסחים ד)",full:"📜 \"קראו את ההלל. אם גמרו שנו, ואם שנו שלשו, אף על פי שלא שלשו מימיהם\" (פסחים ה, ז). 📜 \"הלוים עומדין על דוכנן וגומרין הלל\" (תוספתא פסחים ד; לא נבדק מול נוסח נקי). 💡 מספר הלוויים ומקומם על המעלות הם הצעה לתצוגה."},
+ {title:"תולין ומפשיטין",enter(){PES.tour.go(6)},pose:AP(279,232,15.5,290,213,8.4),fov:38,nofc:true,cap:"מי שאין לו מקום לתלות – מקלות דקים חלקים, מניח על כתפו ועל כתף חברו, ותולה ומפשיט.",src:"פסחים ה, ט; יחזקאל מ, מג; דברי הימים ב לה, יא",full:"📜 \"וכל מי שאין לו מקום לתלות ולהפשיט, מקלות דקים חלקים היו שם, ומניח על כתפו ועל כתף חברו, ותולה ומפשיט\" (פסחים ה, ט). 📜 \"והשפתים טפח אחד מוכנים בבית סביב סביב\" (יחזקאל מ, מג). 📜 \"והלויים מפשיטים\" (דברי הימים ב לה, יא). 💡 מקום המקלות ומספר העוסקים הוא הצעה לתצוגה."},
+ {title:"ליל הסדר",enter(){PES.tour.go(7);tourDrift(()=>{const q=viewPose("city");return[q[0].clone().add(new THREE.Vector3(70,-25,-45)),q[1].clone()]},20000)},pose:VP("city"),fov:46,nofc:true,cap:"בלילה הזה צלי אש, מצות ומרורים. כזית פסח – והלל שובר את הגגות.",verse:"וְאָכְלוּ אֶת־הַבָּשָׂר בַּלַּיְלָה הַזֶּה צְלִי־אֵשׁ וּמַצּוֹת עַל־מְרֹרִים יֹאכְלֻהוּ׃",verseRef:"שמות יב, ח",src:"שמות יב, ח; פסחים פה ע״ב",full:"📜 \"ואכלו את הבשר בלילה הזה, צלי אש ומצות, על מררים יאכלהו\" (שמות יב, ח). 📜 \"כזיתא פסחא והלילא פקע איגרא\" (פסחים פה ע״ב; לא נבדק מול נוסח נקי). 💡 מספר התנורים והזוהר שלהם הם הצעה לתצוגה."}]};
 {const T=STORIES.tamid;if(T){const o=T.open,c=T.close;T.open=function(){KP=keep();o.call(this)};T.close=function(){c.call(this);back(KP);KP=null}}} // סדר התמיד משנה שעה; בסוף חוזרים לשעה של המשתמש
-STORIES.sukkot={title:"חג הסוכות במקדש",open(){festOpen();SND.crowd(0.05)},close(){festClose()},steps:[
- {title:"ערבות ממוצא",pose:AP(284,300,32,250,252,17.5),cap:"בכל יום בחג, יורדים למוצא, ומביאים מורביות של ערבה. זוקפים אותן בצדי המזבח, וראשיהן כפופים על גביו, ותוקעים, מריעים, ותוקעים.",src:"סוכה ד, ה",full:"📜 \"מקום היה למטה מירושלים ונקרא מוצא. יורדין לשם ומלקטין משם מורביות של ערבה, ובאין וזוקפין אותן בצדי המזבח, וראשיהן כפופין על גבי המזבח. תקעו והריעו ותקעו\" (סוכה ד, ה). 💡 הערבות עצמן לא מוצגות במודל."},
- {title:"הקפת המזבח",pose:AP(292,212,30,250,252,18),cap:"בכל יום מקיפים את המזבח פעם אחת, ואומרים: אנא ה׳, הושיעה נא. ביום השביעי, מקיפים שבע פעמים.",verse:"אָנָּא ה׳ הוֹשִׁיעָה נָּא אָנָּא ה׳ הַצְלִיחָה נָּא׃",verseRef:"תהלים קיח, כה",src:"סוכה ד, ה",full:"📜 \"בכל יום מקיפין את המזבח פעם אחת ואומרים: אנא ה' הושיעה נא, אנא ה' הצליחה נא... ואותו היום מקיפין את המזבח שבעה פעמים\" (סוכה ד, ה)."},
- {title:"המים מן השילוח",pose:GP(160,-430,80,40,-600,10),cap:"יורדים לשילוח, וממלאים צלוחית של זהב, מחזקת שלושה לוגין. בהגיעם לשער המים, תוקעים, מריעים, ותוקעים.",src:"סוכה ד, ט",full:"📜 \"ניסוך המים כיצד? צלוחית של זהב מחזקת שלשה לגין היה ממלא מן השילוח. הגיעו לשער המים, תקעו והריעו ותקעו\" (סוכה ד, ט)."},
- {title:"ניסוך המים",pose:AP(268,288,15.6,247,270,12.2),cap:"הכהן עולה בכבש, ופונה לשמאלו. שני ספלים של כסף שם, ליין ולמים, מנוקבים כמין חוטמין. אומרים לו: הגבה ידך.",verse:"וְהִנֵּה־מַיִם יֹצְאִים מִתַּחַת מִפְתַּן הַבַּיִת קָדִימָה׃",verseRef:"יחזקאל מז, א",src:"סוכה ד, ט",full:"📜 \"עלה בכבש ופנה לשמאלו. שני ספלים של כסף היו שם... ומנוקבין כמין שני חוטמין דקין... ולמנסך אומרים לו: הגבה ידך\" (סוכה ד, ט)."},
- {title:"שמחת בית השואבה",enter:()=>{if(TIME!=="night")$("tL").click()},pose:AP(438,228,13.5,415,248,7.5),cap:"במוצאי יום טוב הראשון, מדליקים מנורות של זהב. לא היתה חצר בירושלים שאינה מאירה מאור בית השואבה, וחסידים מרקדים באבוקות.",verse:"וּשְׁאַבְתֶּם־מַיִם בְּשָׂשׂוֹן מִמַּעַיְנֵי הַיְשׁוּעָה׃",verseRef:"ישעיהו יב, ג",src:"סוכה ה, א-ד",full:"📜 \"מי שלא ראה שמחת בית השואבה, לא ראה שמחה מימיו... ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה. חסידים ואנשי מעשה היו מרקדים לפניהם באבוקות של אור שבידיהן\" (סוכה ה, א-ד). 💡 ביחזקאל אין עזרת נשים, ולכן המנורות כאן בחצר החיצונה."},
- {title:"הלוויים במעלות",pose:AP(300,235,18,300,250,9),cap:"הלוויים עומדים על המעלות, בכינורות, בנבלים, ובחצוצרות, ואומרים שירה. שני כהנים בשער העליון, וחצוצרות בידיהם. במודל יחזקאל, הם על מדרגות השער הפנימי.",src:"סוכה ה, ד",full:"📜 \"והלוים בכנורות ובנבלים ובמצלתים ובחצוצרות ובכלי שיר בלא מספר, על חמש עשרה מעלות היורדות מעזרת ישראל לעזרת נשים... ועמדו שני כהנים בשער העליון... ושתי חצוצרות בידיהן\" (סוכה ה, ד). 💡 במודל של יחזקאל הם על מדרגות השער הפנימי."},
- {title:"פנינו אל ההיכל",enter:()=>{if(TIME!=="morning")$("tM").click()},pose:AP(410,250,14,200,250,40),cap:"מגיעים לשער המזרחי, הופכים פנים למערב, ואומרים: אבותינו, אחוריהם אל ההיכל, ופניהם קדמה, ואנו, לה׳ עינינו.",verse:"וְהִנֵּה כְּבוֹד אֱלֹהֵי יִשְׂרָאֵל בָּא מִדֶּרֶךְ הַקָּדִים וְקוֹלוֹ כְּקוֹל מַיִם רַבִּים וְהָאָרֶץ הֵאִירָה מִכְּבֹדוֹ׃",verseRef:"יחזקאל מג, ב",src:"סוכה ה, ד",full:"📜 \"הגיעו לשער היוצא ממזרח, הפכו פניהן למערב ואמרו: אבותינו שהיו במקום הזה, אחוריהם אל ההיכל ופניהם קדמה, והמה משתחוים קדמה לשמש. ואנו ליה עינינו\" (סוכה ה, ד)."}]};
+STORIES.shavuot={title:"הבאת הביכורים ושתי הלחם",open(){KP=keep();setFestUI("shavuot");SHVPICK=false;if(window.__shvUI)window.__shvUI();SND.crowd(0.05)},close(){DRIFT=null;try{SHV.tour.end()}catch(e){}back(KP);KP=null},steps:[
+ {title:"עיר המעמד",enter(){SHV.tour.go(0)},pose:()=>SHV.tour.pos([SHV.tour.sR()-68,0,6.5,SHV.tour.sR()-30,0,0.9]),fov:44,nofc:true,cap:"לנין ברחובה של עיר, ולמשכים הממונה אומר: קומו ונעלה ציון אל בית ה׳ אלוקינו.",src:"ביכורים ג, ב",full:"📜 הכפרים שבמעמד מתכנסים לעיר המעמד, לנים ברחובה של עיר, והממונה אומר: \"קומו ונעלה ציון אל בית ה׳ אלהינו\" (ביכורים ג, ב; הנוסח לא נבדק מול נוסח נקי). 💡 מקום עיר המעמד הוא הצעה לתצוגה, וכך מספר הישנים."},
+ {title:"השור והחליל",enter(){SHV.tour.go(1)},pose:()=>SHV.tour.pos([SHV.tour.sR()-40,0.4,4.4,SHV.tour.sR()-45,0,1.2]),fov:42,nofc:true,cap:"השור הולך לפניהם, וקרניו מצופות זהב ועטרת של זית בראשו, והחליל מכה לפניהם.",src:"ביכורים ג, ג",full:"📜 \"השור הולך לפניהם, וקרניו מצופות זהב ועטרה של זית בראשו, החליל מכה לפניהם עד שמגיעים קרוב לירושלים\" (ביכורים ג, ג; הנוסח לא נבדק מול נוסח נקי). 💡 גודל השור והחליל הם הצעה לתצוגה."},
+ {title:"בעלי אומניות",enter(){SHV.tour.go(2)},pose:()=>SHV.tour.pos([SHV.tour.sR()-2,0,5.0,SHV.tour.sR()-32,0,1.2]),fov:46,nofc:true,cap:"כל בעלי אומניות שבירושלים עומדים לפניהם: אחינו אנשי המקום פלוני, באתם לשלום.",src:"ביכורים ג, ג",full:"📜 \"כל בעלי אומניות שבירושלים עומדים מפניהם ושואלים בשלומם: אחינו אנשי המקום פלוני, באתם לשלום\" (ביכורים ג, ג; הנוסח לא נבדק מול נוסח נקי). 💡 מספר העומדים ולבושם הם הצעה לתצוגה."},
+ {title:"הסל על הכתף",enter(){SHV.tour.go(3)},pose:()=>SHV.tour.pos([SHV.tour.sG()-8,1.3,1.9,SHV.tour.sG()+3,0,1.25]),fov:40,nofc:true,cap:"הגיעו להר הבית – אפילו אגריפס המלך נוטל הסל על כתפו ונכנס.",src:"ביכורים ג, ד",full:"📜 \"הגיעו להר הבית, אפילו אגריפס המלך נוטל הסל על כתפו ונכנס\" (ביכורים ג, ד; הנוסח לא נבדק מול נוסח נקי). 💡 קצב ההרמה הוא הצעה לתצוגה."},
+ {title:"הלוויים בשיר",enter(){SHV.tour.go(4)},pose:AP(384,266,13.5,352,246,10),fov:38,nofc:true,cap:"הגיע לעזרה, ודיברו הלוויים בשיר: ארוממך ה׳ כי דליתני.",verse:"אֲרוֹמִמְךָ ה׳ כִּי דִלִּיתָנִי וְלֹא־שִׂמַּחְתָּ אֹיְבַי לִי׃",verseRef:"תהלים ל, ב",src:"ביכורים ג, ד",full:"📜 \"הגיע לעזרה, ודברו הלוים בשיר: ארוממך ה׳ כי דליתני ולא שמחת אויבי לי\" (ביכורים ג, ד; תהלים ל, ב). 💡 מספר הלוויים ומקומם על המעלות הם הצעה לתצוגה. אין כאן קול."},
+ {title:"הכוהן מניף",enter(){SHV.tour.go(5)},pose:AP(262,238,13.5,250,222,9),fov:34,nofc:true,cap:"וכוהן מניח ידו תחתיו ומניפו… ומניחו בצד המזבח.",src:"ביכורים ג, ו",full:"📜 \"והכהן מניח ידו תחתיו ומניפו, וקורא... ומניחו בצד המזבח\" (ביכורים ג, ו; הנוסח לא נבדק מול נוסח נקי). 💡 מקום הערימה בצד הצפוני של המזבח הוא הצעה לתצוגה."},
+ {title:"תנופת שתי הלחם",enter(){SHV.tour.go(6)},pose:AP(290.5,245.5,12.6,285.6,250,10.4),fov:34,nofc:true,cap:"נותן שתי הלחם על גבי שני כבשים… מוליך ומביא, מעלה ומוריד. תנופה הייתה במזרח.",src:"מנחות ה, ו",full:"📜 \"נותן שתי הלחם על שני כבשים, מניח שתי ידיו מלמטן, מוליך ומביא, מעלה ומוריד\" (מנחות ה, ו). 📜 \"שתי הלחם אורכן שבעה, ורוחבן ארבעה, וקרנותיה ארבע אצבעות\" (מנחות יא, ד). ⚖️ רמב״ם, תמידין ומוספין ח, ט: \"מביא שני הכבשים, ומניף אותם כשהם חיים\". המקום «במזרח» נקבע לפי הטבלה של המשימה, ולא נבדק מול נוסח נקי."}]};
+STORIES.sukkot={title:"חג הסוכות במקדש",open(){festOpen();SND.crowd(0.05)},close(){DRIFT=null;try{SUK.tour.end()}catch(e){}festClose()},steps:[
+ {title:"סוכות על הגגות",enter(){SUK.tour.go(0);tourDrift(()=>SUK.tour.roofEnd(),16000)},pose:()=>SUK.tour.roofPose(),fov:46,nofc:true,cap:"ויעשו להם סוכות איש על גגו ובחצרותיהם, ובחצרות בית האלוקים.",verse:"וַיֵּצְאוּ הָעָם וַיָּבִיאוּ וַיַּעֲשׂוּ לָהֶם סֻכּוֹת אִישׁ עַל גַּגּוֹ וּבְחַצְרֹתֵיהֶם וּבְחַצְרוֹת בֵּית הָאֱלֹהִים׃",verseRef:"נחמיה ח, טז",src:"נחמיה ח, טז",full:"📜 \"ויצאו העם ויביאו ויעשו להם סכות איש על גגו ובחצרתיהם ובחצרות בית האלהים וברחוב שער המים וברחוב שער אפרים\" (נחמיה ח, טז). 💡 מקום הסוכות על הגגות, כמותן וזווית המצלמה הם הצעה לתצוגה."},
+ {title:"לולב ביד",enter(){SUK.tour.go(1)},pose:()=>SUK.tour.walkPose(),fov:44,nofc:true,cap:"יוצא אדם מביתו שחרית ולולבו בידו… ויוצא לבקר חולים והוא בידו.",src:"רמב״ם, הלכות שופר וסוכה ולולב ז, כד",full:"⚖️ \"יוצא אדם מביתו שחרית ולולבו בידו, והולך לבית הכנסת ולולבו בידו... ויוצא לבקר חולים והוא בידו\" (רמב״ם, הלכות שופר וסוכה ולולב ז, כד; הנוסח לא נבדק מול נוסח נקי). 💡 המצלמה עוקבת אחרי אחד מהולכי הרחוב, והבחירה בו היא הצעה לתצוגה."},
+ {title:"השילוח",enter(){SUK.tour.go(2)},pose:()=>SUK.tour.poolPose(),fov:46,nofc:true,cap:"צלוחית של זהב מחזקת שלושה לוגין היה ממלא מן השילוח.",src:"סוכה ד, ט",full:"📜 \"ניסוך המים כיצד? צלוחית של זהב מחזקת שלשה לוגין היה ממלא מן השילוח\" (סוכה ד, ט). 💡 מקום הבריכה והדרך אל שער חולדה הם הצעה לתצוגה. מילוי הצלוחית עצמו עוד לא מוצג, והוא ייבנה אחרי מחקר נפרד."},
+ {title:"שער המים",enter(){SUK.tour.go(3)},pose:AP(252,412,11.5,250,352,6.5),fov:40,nofc:true,cap:"הגיעו לשער המים – תקעו והריעו ותקעו.",src:"סוכה ד, ט; מידות א, ד",full:"📜 \"הגיעו לשער המים, תקעו והריעו ותקעו\" (סוכה ד, ט). 📜 \"ושער המים, שבו מכניסין צלוחית של מים של ניסוך בחג\" (מידות א, ד; הנוסח לא נבדק מול נוסח נקי). 💡 המקום של שער המים בשער הפנימי הדרומי הוא הצעה, והתקיעה מוצגת בלי שופר."},
+ {title:"ספלי הכסף",enter(){SUK.tour.go(4)},pose:AP(249,274,34,238.4,261.5,16.7),fov:34,nofc:true,cap:"שני ספלים של כסף… מערבי של מים, מזרחי של יין. ולמנסך אומרים לו: הגבה ידך.",verse:"וְהִנֵּה־מַיִם יֹצְאִים מִתַּחַת מִפְתַּן הַבַּיִת קָדִימָה׃",verseRef:"יחזקאל מז, א",src:"סוכה ד, ט",full:"📜 \"עלה בכבש ופנה לשמאלו. שני ספלים של כסף היו שם... מערבי של מים ומזרחי של יין... ולמנסך אומרים לו: הגבה ידך\" (סוכה ד, ט; הנוסח לא נבדק מול נוסח נקי). 💡 מקום הספלים ליד הכבש הוא הצעה לתצוגה."},
+ {title:"ערבה והקפה",enter(){SUK.tour.go(5)},pose:AP(292,212,30,250,252,18),fov:44,nofc:true,cap:"זוקפין אותן בצדי המזבח וראשיהן כפופין על גבי המזבח… אנא ה׳ הושיעה נא.",verse:"אָנָּא ה׳ הוֹשִׁיעָה נָּא אָנָּא ה׳ הַצְלִיחָה נָּא׃",verseRef:"תהלים קיח, כה",src:"סוכה ד, ה",full:"📜 \"באין וזוקפין אותן בצדי המזבח וראשיהן כפופין על גבי המזבח... בכל יום מקיפין את המזבח פעם אחת ואומרים: אנא ה' הושיעה נא\" (סוכה ד, ה)."},
+ {title:"פרחי כהונה",enter(){SUK.tour.go(6)},pose:AP(466,250,36,415,250,31),fov:60,nofc:true,cap:"ארבעה ילדים מפרחי כהונה ובידיהם כדים של שמן… מבלאי מכנסי כוהנים… היו מפקיעין.",src:"סוכה ה, ב-ג",full:"📜 \"ארבעה ילדים מפרחי כהונה, ובידיהם כדים של מאה ועשרים לוג, שהן מטילין לכל ספל וספל. מבלאי מכנסי כהנים ואבנטיהן היו מפקיעין, ובהן היו מדליקין\" (סוכה ה, ב-ג; הנוסח לא נבדק מול נוסח נקי). 📜 \"חסידים ואנשי מעשה היו מרקדין לפניהם באבוקות של אור שבידיהן\" (סוכה ה, ד). 💡 מספר המרקדים, הריקוד, האור וריצודו הם הצעה לתצוגה."},
+ {title:"מאור בית השואבה",enter(){SUK.tour.go(7);tourDrift(AP(520,250,125,100,250,0),18000)},pose:AP(458,266,22,415,250,12),fov:50,nofc:true,cap:"לא הייתה חצר בירושלים שאינה מאירה מאור בית השואבה.",verse:"וּשְׁאַבְתֶּם־מַיִם בְּשָׂשׂוֹן מִמַּעַיְנֵי הַיְשׁוּעָה׃",verseRef:"ישעיהו יב, ג",src:"סוכה ה, ג; סוכה נא ע״ב",full:"📜 \"מי שלא ראה שמחת בית השואבה, לא ראה שמחה מימיו. ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה\" (סוכה ה, א-ג). 📜 \"הקיפו עזרת הנשים גזוזטרא... שיהו נשים יושבות מלמעלה ואנשים מלמטה\" (סוכה נא ע״ב). 💡 במודל של יחזקאל אין עזרת נשים. לפי המלבי״ם החצר החיצונה היא העזרה, ולכן הגזוזטרא מקיפה את כולה, והנשים עליה: המקום והגובה הם הצעה לתצוגה."},
+ {title:"הושענא רבה",enter(){SUK.tour.go(8)},pose:AP(292,212,30,250,252,18),fov:44,nofc:true,cap:"ואותו היום מקיפין את המזבח שבע פעמים… יופי לך מזבח.",src:"סוכה ד, ה",full:"📜 \"ואותו היום מקיפין את המזבח שבעה פעמים... בשעת פטירתן מה היו אומרים? יופי לך מזבח\" (סוכה ד, ה; הנוסח לא נבדק מול נוסח נקי)."}]};
 STORIES.hakhel={title:"מצוות הקהל",open(){festOpen();SND.trumpets();SND.crowd(0.06)},close(){festClose()},steps:[
  {title:"מוצאי שנת השמיטה",pose:AP(520,340,60,415,303,8),cap:"מקץ שבע שנים, במועד שנת השמיטה, בחג הסוכות, מקהילים את העם: האנשים, והנשים, והטף, והגר אשר בשעריך.",verse:"הַקְהֵל אֶת־הָעָם הָאֲנָשִׁים וְהַנָּשִׁים וְהַטַּף וְגֵרְךָ אֲשֶׁר בִּשְׁעָרֶיךָ לְמַעַן יִשְׁמְעוּ וּלְמַעַן יִלְמְדוּ׃",verseRef:"דברים לא, יב",src:"דברים לא, י-יב",full:"📜 \"מקץ שבע שנים, במעד שנת השמטה, בחג הסכות... הקהל את העם, האנשים והנשים והטף וגרך אשר בשעריך, למען ישמעו ולמען ילמדו\" (דברים לא, י-יב)."},
  {title:"חצוצרות בכל העיר",pose:VP("olives"),cap:"תוקעים בחצוצרות בכל ירושלים, כדי להקהיל את העם, ומביאים בימה גדולה של עץ.",src:"רמב״ם, הלכות חגיגה ג, ד",full:"⚖️ \"ותוקעין בחצוצרות בכל ירושלים כדי להקהיל את העם, ומביאין בימה גדולה והיתה של עץ, ומעמידין אותה באמצע עזרת הנשים\" (רמב״ם, הלכות חגיגה ג, ד)."},
@@ -13987,30 +14119,7 @@ const TOURFIGS=(function(){
         []
       ][i]||[];
     }
-    if(key==="pesach"){
-      return [
-        [],
-        [{ring:1,n:10,u:300,v:250,y:7.5,r:8,kind:P,clip:"Idle",fu:300,fv:250},{line:1,n:6,u0:262,v0:236,u1:278,v1:236,y:7.5,kind:K,clip:"Idle",fu:262,fv:240}],
-        [{line:1,n:7,u0:258,v0:236,u1:278,v1:236,y:7.5,kind:K,clip:"Idle",fu:252,fv:240,prop:"bowl"},{line:1,n:7,u0:258,v0:232,u1:278,v1:232,y:7.5,kind:K,clip:"Idle",fu:252,fv:240,prop:"bowl"}],
-        [{line:1,n:6,u0:250,v0:234,u1:262,v1:230,y:7.5,kind:K,clip:"Carry",fu:252,fv:238,prop:"bowl"},{kind:P,u:252,v:238,y:7.5,fu:250,fv:234,clip:"Working"}],
-        [{line:1,n:6,u0:285.5,v0:232,u1:285.5,v1:250,y:9,kind:L,clip:"Idle",fu:270,fv:240}],
-        [{kind:P,u:274,v:214,y:7.5,fu:274,fv:216,clip:"Working"},{kind:P2,u:276,v:216,y:7.5,fu:274,fv:214,clip:"Idle"},{kind:P,u:270,v:216,y:7.5,fu:274,fv:214,clip:"Working"}],
-        [{kind:P,u:310,v:200,y:3.5,fu:300,fv:250,clip:"Idle"},{kind:P2,u:290,v:210,y:3.5,fu:300,fv:250,clip:"Idle"}],
-        []
-      ][i]||[];
-    }
-    if(key==="sukkot"){
-      return [
-        [{kind:K,u:246,v:256,y:16.5,fu:250,fv:252,clip:"Idle",prop:"willow"},{kind:K,u:254,v:256,y:16.5,fu:250,fv:252,clip:"Idle",prop:"willow"}],
-        [{path:1,kind:P,clip:"Walk",period:14,path:[[260,240,7.5],[240,260,7.5],[260,270,7.5],[270,250,7.5],[260,240,7.5]],u:260,v:240,y:7.5,fu:250,fv:252},
-         {path:1,kind:K,clip:"Walk",period:16,path:[[240,240,7.5],[230,252,7.5],[250,270,7.5],[270,252,7.5],[240,240,7.5]],u:240,v:240,y:7.5,fu:250,fv:252,prop:"willow"}],
-        [{kind:K,u:null}], // shiloah is far — skip if first item invalid
-        [{kind:K,u:246,v:270,y:ramp(270),fu:250,fv:252,clip:"Carry",prop:"jug"}],
-        [{kind:P,u:415,v:246,y:3.5,fu:415,fv:250,clip:"Idle"},{kind:P2,u:412,v:252,y:3.5,fu:415,fv:250,clip:"Idle"},{kind:K,u:418,v:248,y:3.5,fu:415,fv:250,clip:"Idle"}],
-        [{line:1,n:6,u0:300,v0:244,u1:300,v1:256,y:7.5,kind:L,clip:"Idle",fu:280,fv:250}],
-        [{kind:P,u:300,v:250,y:3.5,fu:200,fv:250,clip:"Idle"},{kind:P2,u:305,v:246,y:3.5,fu:200,fv:250,clip:"Idle"}]
-      ][i]||[];
-    }
+    if(key==="pesach"||key==="sukkot"||key==="shavuot")return [];
     if(key==="hakhel"){
       return [
         [],
@@ -14089,7 +14198,7 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
     STORIES.yk.open=function(){setTime("morning");if(o)o.call(this)};
     STORIES.yk.close=function(){if(c)c.call(this);TOURFIGS.clear()};
   }
-  /* 117: סיורי החגים נשארים בדיוק כמו ב-116, בלי הבמאי האוטומטי */for(const k of ["pesach","sukkot","hakhel"])if(STORIES[k]&&STORIES[k].steps)STORIES[k].steps.forEach(x=>{x.nofc=true});const tm=STORIES.tamid&&STORIES.tamid.steps;if(tm){
+  /* 117: סיורי החגים נשארים בדיוק כמו ב-116, בלי הבמאי האוטומטי */for(const k of ["pesach","shavuot","sukkot","hakhel"])if(STORIES[k]&&STORIES[k].steps)STORIES[k].steps.forEach(x=>{x.nofc=true});const tm=STORIES.tamid&&STORIES.tamid.steps;if(tm){
     tm[7].nofc=tm[10].nofc=true;tm[1].pose=AP(328,306,12.2,310,295.2,8);tm[1].fov=34;
     tm[2].pose=AP(268,292,18.5,250,262,16.5);tm[2].fov=34;
     tm[3].pose=AP(228,292,20,250,252,16.5);tm[3].fov=34;
@@ -14108,26 +14217,6 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
     const c=STORIES.pilgrim.close,o=STORIES.pilgrim.open;
     STORIES.pilgrim.open=function(){setTime("morning");if(o)o.call(this)};
     STORIES.pilgrim.close=function(){if(c)c.call(this);TOURFIGS.clear()};
-  }
-  const ps=STORIES.pesach&&STORIES.pesach.steps;if(ps){
-    wrapEnter(ps[6],()=>setTime("evening"));
-    wrapEnter(ps[7],()=>setTime("night"));
-    ps[2].pose=AP(292,220,12,262,236,8);ps[2].fov=32;
-    ps[3].pose=AP(266,218,10.2,252,236,8.4);ps[3].fov=32;
-    ps[5].pose=AP(256,204,11,274,214,8);ps[5].fov=34;
-    const c=STORIES.pesach.close;
-    STORIES.pesach.close=function(){if(c)c.call(this);TOURFIGS.clear()};
-  }
-  const sk=STORIES.sukkot&&STORIES.sukkot.steps;if(sk){
-    const o=STORIES.sukkot.open,c=STORIES.sukkot.close;
-    STORIES.sukkot.open=function(){setTime("morning");if(o)o.call(this)};
-    wrapEnter(sk[0],()=>setTime("morning"));
-    wrapEnter(sk[1],()=>setTime("morning"));
-    wrapEnter(sk[2],()=>setTime("morning"));
-    wrapEnter(sk[3],()=>setTime("morning"));
-    sk[3].pose=AP(272,300,16,248,274,12);sk[3].fov=32;
-    // 5 already night, 6 stays night, 7 already morning
-    STORIES.sukkot.close=function(){if(c)c.call(this);TOURFIGS.clear()};
   }
   const hk=STORIES.hakhel&&STORIES.hakhel.steps;if(hk){
     const o=STORIES.hakhel.open,c=STORIES.hakhel.close;
@@ -14257,7 +14346,7 @@ window.addEventListener("keydown",e=>{if(e.key==="Escape"){if(closeDr(true))retu
 const grabSwipe=(g,el,close)=>{let y0=null;g.addEventListener("pointerdown",e=>{y0=e.clientY;g.setPointerCapture(e.pointerId)});g.addEventListener("pointerup",e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;if(dy>40){if(el.classList.contains("full"))el.classList.remove("full");else close()}else if(dy<-40)el.classList.add("full");else el.classList.toggle("full")})};
 Object.values(DR).forEach(x=>grabSwipe(x.d.querySelector(".grab"),x.d,closeDr));
 // tours drawer: cards with picture tile, length and stations
-const TICON={oldcity:"🏛",pilgrim:"🚶",yk:"🕯",tamid:"🐑",pesach:"🍷",sukkot:"🌿",hakhel:"📖"};
+const TICON={oldcity:"🏛",pilgrim:"🚶",yk:"🕯",tamid:"🐑",pesach:"🍷",shavuot:"🌾",sukkot:"🌿",hakhel:"📖"};
 DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEach(x=>x.remove());
   Object.keys(STORIES).forEach(k=>{const S=STORIES[k];const min=Math.max(2,Math.round(S.steps.reduce((a,s)=>a+(s.cap||"").length,0)/14/60+S.steps.length*0.15));const b=mk("button","tcard",'<span class="tim">'+(TICON[k]||"🧭")+'</span><span><b>'+esc(S.title)+'</b><small>'+S.steps.length+' תחנות · כ־<bdi class="n">'+min+'</bdi> דקות</small></span>');b.type="button";b.onclick=()=>startTour(k);d.appendChild(b)});
   d.appendChild(mk("p","tnote ch",'נגיעה במודל עוצרת את הסיור לרגע, ו"המשך סיור" מחזיר אותו. Esc יוצא מהסיור.'))};
