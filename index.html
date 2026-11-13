@@ -12953,11 +12953,16 @@ function groundAt(x,z){const n=-z;
       if(d>=0&&d<=g.n)return(g.y0+(g.n-d)*0.5)*A;if(d<0&&d>=-g.L&&g.floor>4&&Math.abs(w)<=g.pass/2)return g.floor*A}
     if(u>=0&&u<=500&&v>=0&&v<=500){
       if(u>=203&&u<=203+COMP.nst&&v>=236&&v<=264)return(13.5-6*(u-203)/COMP.nst)*A;
-      if(u>=242&&u<=258&&v>=264.1&&v<=296.1)return(7.5+9*(296.1-v)/32)*A;
-      if(u>=238&&u<=262&&v>=238&&v<=264)return 16.5*A;
+      if(u>=242&&u<=258&&v>=264&&v<=296.1)return(7.5+Math.min(9,9*(296.1-v)/32))*A;
+      if(u>=236&&u<=264&&v>=236&&v<=264)return 16.5*A;
       if(u>=98&&u<=203&&v>=COMP.vmin&&v<=COMP.vmax)return 13.56*A;if(u<=300&&v>=200&&v<=300)return 7.5*A;return 3.5*A}}
   {const tf=tunFloor(x,n);if(tf!=null)return tf}if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n),dl=DUNG.lotY(g[0],g[1]);return dl!=null?dl:surfY(g[0],g[1])}}
-function blocked(x,z,feet){const r=0.6;for(const c of COL){if(x>c.x0-r&&x<c.x1+r&&z>c.z0-r&&z<c.z1+r&&c.y1>feet+0.55&&c.y0<feet+1.7)return true}
+function blocked(x,z,feet){
+  // Keep walking on the altar/ramp surface, not inside its solid tiers.
+  // The 0.55 m drop limit also protects the ramp sides below altar-top height.
+  if(COMP&&feet>7.5*A+0.55){const u=(x-COMP.X0)/A,v=(COMP.N0+z)/A;
+    if(u>=232&&u<=268&&v>=232&&v<=300&&feet-groundAt(x,z)>0.55)return true}
+  const r=0.6;for(const c of COL){if(x>c.x0-r&&x<c.x1+r&&z>c.z0-r&&z<c.z1+r&&c.y1>feet+0.55&&c.y0<feet+1.7)return true}
   /* v101 · משימה 08: דלתות השער הפנימי המזרחי — אותו מצב (EGATE.visible, לפי gateDoors: יום ושעה) קובע גם נראות וגם חסימה. דלת סגורה עוצרת את הגוף; פתוחה — מעבר חופשי */
   if(EGATE&&EGATE[0]&&EGATE[0].visible){if(!EGATE._c)EGATE._c=EGATE.map(m=>new THREE.Box3().setFromObject(m));for(const b of EGATE._c){if(x>b.min.x-r&&x<b.max.x+r&&z>b.min.z-r&&z<b.max.z+r&&b.max.y>feet+0.55&&b.min.y<feet+1.7)return true}}return false}
 const JOY={x:0,y:0};
