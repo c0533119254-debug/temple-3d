@@ -702,7 +702,7 @@
   "oldcity": {
     "credit": "«בשערייך ירושלים» · יהורם גאון (YouTube)",
     "segs": {"main": {"v": "xql0wVmZ-ks", "at": 0.4, "vol": 70, "fadeIn": 4000}},
-    "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
+    "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
            {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main", "lv": 0.7}]
   },
   "tamid": {
@@ -754,7 +754,7 @@
   "hakhel": {
     "credit": "«הקהל» · שמחה פרידמן ועמי כהן (YouTube)",
     "segs": {
-      "main": {"v": "Yd4Onv0BAtg", "at": 0.4, "vol": 70, "fadeIn": 4000},
+      "main": {"v": "Yd4Onv0BAtg", "at": 20, "vol": 70, "fadeIn": 4000},
       "back": {"v": "Yd4Onv0BAtg", "at": 45, "vol": 70, "fadeIn": 6000}
     },
     "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main", "endFade": 6000},
