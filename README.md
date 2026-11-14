@@ -4,9 +4,11 @@
 
 האתר החי: https://beit-hamikdash-3d.pages.dev
 
-פרסום: Cloudflare Pages, הפרויקט `beit-hamikdash-3d`, בהעלאת zip ידנית (לא פרסום אוטומטי מ־GitHub).
+האתר מ־GitHub (מתעדכן לבד אחרי כל מיזוג ל־`main`): https://c0533119254-debug.github.io/temple-3d/
 
-הענף `main` הוא מקור האמת. זו גרסה 120.1 (סוכות, עם קריינות ומוזיקה). עץ המקור הישן של גרסה 98 (`src/` ושותפיו) נשמר רק בהיסטוריית git.
+פרסום: כל מיזוג ל־`main` מתפרסם אוטומטית ל־GitHub Pages (`.github/workflows/pages.yml`). Cloudflare Pages (`beit-hamikdash-3d`) מתעדכן רק בהעלאה ידנית.
+
+הענף `main` הוא מקור האמת. זו גרסה 123.9. עץ המקור הישן של גרסה 98 (`src/` ושותפיו) נשמר רק בהיסטוריית git.
 
 ## איך פותחים מקומית
 
@@ -36,4 +38,4 @@ python3 layer/apply_layer.py
 2. לפני העבודה מושכים את הגרסה האחרונה מ־`main`.
 3. אין לשבור את העוגנים המפורטים ב־[layer/LAYER-HOOKS-FOR-CLAUDE.md](layer/LAYER-HOOKS-FOR-CLAUDE.md).
 4. אחרי שינוי ב־`index.html` שנוגע לכיתובים או לנקודות העיגון, מריצים שוב את `layer/apply_layer.py`.
-5. פרסום לייצור נעשה בהעלאת zip ל־Cloudflare Pages, עם שמירת גיבוי של הגרסה הקודמת.
+5. אחרי מיזוג ל־`main` האתר ב־GitHub Pages מתעדכן לבד תוך כדקה. Cloudflare Pages מתעדכן רק בהעלאה ידנית.
