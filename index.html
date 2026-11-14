@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 123.5"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 123.6"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9786,12 +9786,48 @@ TMESH.clip=(P,U,M,own,outP,outU,t,R)=>{/* P: 9 מספרים, U: 6 */const go=(p,
   const V=[p.slice(0,3),p.slice(3,6),p.slice(6,9),m(0,1),m(1,2),m(2,0)],W=[u.slice(0,2),u.slice(2,4),u.slice(4,6),mu(0,1),mu(1,2),mu(2,0)];
   for(const [a,b,c2] of [[0,3,5],[3,1,4],[5,4,2],[3,4,5]])go([...V[a],...V[b],...V[c2]],[...W[a],...W[b],...W[c2]],dep+1)};
  go(Array.from(P.slice(t,t+9)),Array.from(U.slice(t/9*6,t/9*6+6)),0)};
-  {const M=new Map(),R=1000*1000,st={},t0=performance.now();const ownOf=(gi,pi)=>{let lo=0,hi=OWN.length-1;while(lo<hi){const md=(lo+hi+1)>>1;if(OWN[md][gi]<=pi)lo=md;else hi=md-1}return lo+1};
+  // Keep the original terrain and walking inputs; repair only the rendered vehicle-road surface.
+  const roadRenderInput={p:geo.a.p,u:geo.a.u};  {const M=new Map(),R=1000*1000,st={},t0=performance.now();const ownOf=(gi,pi)=>{let lo=0,hi=OWN.length-1;while(lo<hi){const md=(lo+hi+1)>>1;if(OWN[md][gi]<=pi)lo=md;else hi=md-1}return lo+1};
    [["a",0],["s",2],["p",1]].forEach(([nm,gi])=>{const G=geo[nm],oP=[],oU=[];for(let t=0;t+8<G.p.length;t+=9){const o=ownOf(gi,t),b0=oP.length;TMESH.clip(G.p,G.u,M,o,oP,oU,t,R);for(let q=b0;q+8<oP.length;q+=9)TMESH.raster(M,oP,q,o)}st[nm]=[G.p.length/9,oP.length/9];G.p=oP;G.u=oU});
    st.cells=M.size;st.ms=Math.round(performance.now()-t0);__v6=Object.assign(__v6||{},{layerClip:st})}
   /* v116: רישום המשטחים שהולכים עליהם, והתאמת הקרקע אל הכבישים */
   {const F=G=>{const P=G.p;for(let t=0;t+8<P.length;t+=9)WALKG.tri(P[t],P[t+1],P[t+2],P[t+3],P[t+4],P[t+5],P[t+6],P[t+7],P[t+8])};F(geo.p);F(geo.s);
    const t0=performance.now();TMESH.roads=geo.a.p.concat(geo.p.p,geo.s.p);/* v116: כל סוגי הכבישים יחד — אחרת הרמת הקרקע מתחת לאחד מכסה את השני */const c1=TMESH.conform(TMESH.roads,{lo:0.1,hi:0.45});TMESH.ready=true;__v6=Object.assign(__v6||{},{conformRoads:c1,conformMs:Math.round(performance.now()-t0)})}
+  // Exact road-surface overlap: the grid finds candidates, not coverage.
+  {const started=performance.now(),M=new Map(),P=[],U=[];
+function raster(M,P,t,own){
+ const ax=P[t],ay=P[t+1],az=P[t+2],bx=P[t+3],by=P[t+4],bz=P[t+5],cx=P[t+6],cy=P[t+7],cz=P[t+8],d=(bz-cz)*(ax-cx)+(cx-bx)*(az-cz);
+ if(Math.abs(d)<1e-9)return;
+ const entry=[own,ax,ay,az,bx,by,bz,cx,cy,cz,d],x0=Math.floor(Math.min(ax,bx,cx)),x1=Math.floor(Math.max(ax,bx,cx)),z0=Math.floor(Math.min(az,bz,cz)),z1=Math.floor(Math.max(az,bz,cz));
+ if((x1-x0+1)*(z1-z0+1)>40000)return;
+ for(let i=x0;i<=x1;i++)for(let j=z0;j<=z1;j++){const k=(i+40000)*80000+j+40000;let a=M.get(k);if(!a)M.set(k,a=[]);a.push(entry)}
+}
+function covAt(M,x,y,z,own){
+ const a=M.get((Math.floor(x)+40000)*80000+Math.floor(z)+40000);if(!a)return false;
+ for(const p of a){if(p[0]===own)continue;const l1=((p[6]-p[9])*(x-p[7])+(p[7]-p[4])*(z-p[9]))/p[10],l2=((p[9]-p[3])*(x-p[7])+(p[1]-p[7])*(z-p[9]))/p[10],l3=1-l1-l2;if(l1< -1e-7||l2< -1e-7||l3< -1e-7)continue;const yy=l1*p[2]+l2*p[5]+l3*p[8];if(Math.abs(yy-y)<.6)return true}
+ return false;
+}
+function clip(P,U,M,own,outP,outU,t,R){
+ const a=Array.from(P.slice(t,t+9)),uv=Array.from(U.slice(t/9*6,t/9*6+6)),cx=(a[0]+a[3]+a[6])/3,cz=(a[2]+a[5]+a[8])/3;
+ if(R&&cx*cx+cz*cz>R){outP.push(...a);outU.push(...uv);return}
+ const x0=Math.floor(Math.min(a[0],a[3],a[6])),x1=Math.floor(Math.max(a[0],a[3],a[6])),z0=Math.floor(Math.min(a[2],a[5],a[8])),z1=Math.floor(Math.max(a[2],a[5],a[8]));
+ if((x1-x0+1)*(z1-z0+1)>40000){outP.push(...a);outU.push(...uv);return}
+ const candidates=new Set();for(let x=x0;x<=x1;x++)for(let z=z0;z<=z1;z++){const C=M.get((x+40000)*80000+z+40000);if(C)for(const p of C)if(p[0]!==own)candidates.add(p)}
+ if(!candidates.size){outP.push(...a);outU.push(...uv);return}
+ let polys=[[0,1,2].map(i=>[...a.slice(i*3,i*3+3),...uv.slice(i*2,i*2+2)])];
+ const split=(poly,f)=>{const inn=[],out=[];for(let i=0;i<poly.length;i++){const A=poly[i],B=poly[(i+1)%poly.length],da=f(A),db=f(B),ia=da>=0,ib=db>=0;(ia?inn:out).push(A);if(ia!==ib){const tt=da/(da-db),v=A.map((x,j)=>x+(B[j]-x)*tt);inn.push(v);out.push(v)}}return[inn,out]};
+ for(const q of candidates){const D=q[10],l1=v=>((q[6]-q[9])*(v[0]-q[7])+(q[7]-q[4])*(v[2]-q[9]))/D,l2=v=>((q[9]-q[3])*(v[0]-q[7])+(q[1]-q[7])*(v[2]-q[9]))/D,dy=v=>l1(v)*q[2]+l2(v)*q[5]+(1-l1(v)-l2(v))*q[8]-v[1],planes=[l1,l2,v=>1-l1(v)-l2(v),v=>.6-dy(v),v=>.6+dy(v)],next=[];
+  for(const poly of polys){let overlap=poly;for(const f of planes){overlap=split(overlap,f)[0];if(overlap.length<3)break}let ar=0;for(let i=0;i<overlap.length;i++){const A=overlap[i],B=overlap[(i+1)%overlap.length];ar+=A[0]*B[2]-A[2]*B[0]}if(Math.abs(ar)<1e-9){next.push(poly);continue}let inside=poly;for(const f of planes){if(inside.length<3)break;const [I,O]=split(inside,f);if(O.length>=3)next.push(O);inside=I}}
+  polys=next;if(!polys.length)break;
+ }
+ const sign=Math.sign((a[3]-a[0])*(a[8]-a[2])-(a[5]-a[2])*(a[6]-a[0]));
+ for(const poly of polys)for(let i=1;i+1<poly.length;i++){const V=[poly[0],poly[i],poly[i+1]].map(v=>[Math.fround(v[0]),Math.fround(v[1]),Math.fround(v[2]),v[3],v[4]]),[A,B,C]=V,area=(B[0]-A[0])*(C[2]-A[2])-(B[2]-A[2])*(C[0]-A[0]);if(Math.abs(area)<1e-10)continue;if(Math.sign(area)!==sign)[V[1],V[2]]=[V[2],V[1]];for(const v of V){outP.push(v[0],v[1],v[2]);outU.push(v[3],v[4])}}
+}
+
+    const owner=pi=>{let lo=0,hi=OWN.length-1;while(lo<hi){const md=(lo+hi+1)>>1;if(OWN[md][0]<=pi)lo=md;else hi=md-1}return lo+1};
+    for(let t=0;t+8<roadRenderInput.p.length;t+=9){const o=owner(t),first=P.length;clip(roadRenderInput.p,roadRenderInput.u,M,o,P,U,t,1e6);for(let q=first;q+8<P.length;q+=9)raster(M,P,q,o)}
+    __v6=Object.assign(__v6||{},{roadRenderClip:{before:geo.a.p.length/9,after:P.length/9,ms:Math.round(performance.now()-started),cells:M.size}});geo.a.p=P;geo.a.u=U;roadRenderInput.p=null;roadRenderInput.u=null;
+  }
   const mk=(G,m,name)=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.computeVertexNormals();const me=new THREE.Mesh(g,m);me.name=G.nm||"road";me.receiveShadow=true;me.renderOrder=1;if(name)me.userData={n:name,r:"OpenStreetMap",t:"הכבישים והמדרכות של היום, לפי OpenStreetMap. בכבישים הראשיים — פסי הפרדה, אבני שפה ותאורה."};WG.add(me);if(name)PICK.push(me)};
   const mkC=(G,m,name,R)=>{const C={};for(let t=0;t<G.p.length;t+=9){const cx=(G.p[t]+G.p[t+3]+G.p[t+6])/3,cz=(G.p[t+2]+G.p[t+5]+G.p[t+8])/3,k=Math.floor(cx/400)+"_"+Math.floor(cz/400);const c=C[k]||(C[k]={p:[],u:[]});for(let j=0;j<9;j++)c.p.push(G.p[t+j]);const tu=t/3*2;for(let j=0;j<6;j++)c.u.push(G.u[tu+j]||0)}Object.values(C).forEach(c=>{c.nm=G.nm;const n0=WG.children.length;mk(c,m,name);const me=WG.children[n0];if(me){me.geometry.computeBoundingSphere();LODS.push({m:me,c:me.geometry.boundingSphere.center.clone(),d:R*(QL==="low"||SMALL?0.7:1)+me.geometry.boundingSphere.radius})}})};geo.a.nm="road_a";geo.p.nm="road_p";geo.s.nm="road_s";mkC(geo.a,mA,"כבישים",1100);mkC(geo.p,mP,"מדרחובות",900);{const swT=tex(cv(256,256,(x,w,h)=>{x.fillStyle="#bdb6a8";x.fillRect(0,0,w,h);noiseFill(x,w,h,14,73);x.strokeStyle="rgba(70,64,54,.38)";x.lineWidth=2;for(let i=0;i<=8;i++){x.beginPath();x.moveTo(0,i*32);x.lineTo(w,i*32);x.stroke();x.beginPath();x.moveTo(i*32,0);x.lineTo(i*32,h);x.stroke()}}),true);
     mkC(geo.s,new THREE.MeshStandardMaterial({map:swT,roughness:0.92,envMapIntensity:0.15}),null,700)}
@@ -10797,7 +10833,8 @@ TRN=(function(){const TR={"lines":[{"k":"lrt","id":"PINK","n":"הקו הוורו
     [-1.75,1.75].forEach(o=>{for(let s=0;s<q.len-8;s+=8){const a=at(q,s),b=at(q,s+8),na=[-Math.sin(a[2]),Math.cos(a[2])],nb=[-Math.sin(b[2]),Math.cos(b[2])];wires.push(a[0]+na[0]*o,a[3]+6.1,-(a[1]+na[1]*o),b[0]+nb[0]*o,b[3]+6.1,-(b[1]+nb[1]*o))}})});
   const bedM=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4});
   {RAILH=new Map();LINES.forEach(q=>{const P=q.geo;for(let i=0;i<P.length-1;i++){const sg=[P[i][0],P[i][1],P[i+1][0],P[i+1][1]];for(let gx=Math.floor(Math.min(sg[0],sg[2])/10);gx<=Math.floor(Math.max(sg[0],sg[2])/10);gx++)for(let gn=Math.floor(Math.min(sg[1],sg[3])/10);gn<=Math.floor(Math.max(sg[1],sg[3])/10);gn++){const k=gx*100003+gn;let L=RAILH.get(k);if(!L)RAILH.set(k,L=[]);L.push(sg)}}});
-   const W=[];for(let t=0;t<bed.p.length;t+=3){const g2=S2G(bed.p[t],-bed.p[t+2]);W.push(g2[0],bed.p[t+1],-g2[1])}const cr=TMESH.conform(W.concat(TMESH.roads||[]),{lo:0.03,hi:0.4});TMESH.roads=null;{/* גרסה 116: כביש לא עולה על רצועת המסילה */const M=new Map(),st=[0,0];for(let t=0;t+8<W.length;t+=9)TMESH.raster(M,W,t,0);WG.children.forEach(me=>{if(!me.isMesh||!/^road_[aps]$/.test(me.name))return;const g=me.geometry,P=g.attributes.position.array,U=g.attributes.uv.array,oP=[],oU=[];for(let t=0;t+8<P.length;t+=9)TMESH.clip(P,U,M,1,oP,oU,t,0);st[0]+=P.length/9;st[1]+=oP.length/9;if(oP.length!==P.length){g.setAttribute("position",new THREE.Float32BufferAttribute(oP,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(oU,2));g.computeVertexNormals();g.computeBoundingSphere()}});__v6=Object.assign(__v6||{},{railClip:st})}
+   const W=[];for(let t=0;t<bed.p.length;t+=3){const g2=S2G(bed.p[t],-bed.p[t+2]);W.push(g2[0],bed.p[t+1],-g2[1])}const cr=TMESH.conform(W.concat(TMESH.roads||[]),{lo:0.03,hi:0.4});TMESH.roads=null;{/* גרסה 116: כביש לא עולה על רצועת המסילה */const M=new Map(),st=[0,0];for(let t=0;t+8<W.length;t+=9)TMESH.raster(M,W,t,0);WG.children.forEach(me=>{if(!me.isMesh||!/^road_[aps]$/.test(me.name))return;const g=me.geometry,P=g.attributes.position.array,U=g.attributes.uv.array,oP=[],oU=[];for(let t=0;t+8<P.length;t+=9)TMESH.clip(P,U,M,1,oP,oU,t,0);st[0]+=P.length/9;st[1]+=oP.length/9;if(me.name==="road_a")for(let t=0;t+8<oP.length;t+=9){const ax=Math.fround(oP[t]),az=Math.fround(oP[t+2]),bx=Math.fround(oP[t+3]),bz=Math.fround(oP[t+5]),cx=Math.fround(oP[t+6]),cz=Math.fround(oP[t+8]);if((bz-az)*(cx-ax)-(bx-ax)*(cz-az)<0){for(let j=0;j<3;j++)[oP[t+3+j],oP[t+6+j]]=[oP[t+6+j],oP[t+3+j]];const u=t/9*6;for(let j=0;j<2;j++)[oU[u+2+j],oU[u+4+j]]=[oU[u+4+j],oU[u+2+j]]}}
+if(oP.length!==P.length){g.setAttribute("position",new THREE.Float32BufferAttribute(oP,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(oU,2));g.deleteAttribute("normal");g.computeVertexNormals();g.computeBoundingSphere()}});__v6=Object.assign(__v6||{},{railClip:st})}
    let av=null;try{av=LIFE.avoid((x,n,ux,un,w)=>{const r=railNear(x,n);return!!r&&r.d<(w?4.5+w/4:3.6)&&Math.abs(ux*r.ux+un*r.un)>0.6})}catch(e){console.warn("avoid",e)}
    __v6=Object.assign(__v6||{},{conformRail:cr,avoid:av})}
   const bm=mesh(bed,bedM);bm.name="railBed";bm.userData={n:"מסילת הרכבת הקלה",r:"תוכנית האב 2050",t:"מסילה כפולה: רכבת לכל כיוון. מעליה חוטי חשמל."};PICK.push(bm);
@@ -12529,7 +12566,7 @@ function build(){
         SHV={g:SG,st:sst,cards:SC,DN:SDN,built:()=>B,
           dayCard(k){const T={eve:["תמידין ומוספין ח, ח-ט","⚖️ שתי הלחם חמץ (ח, ט), ואין עשייתן דוחה יום טוב. \"אלא אופין אותן מערב יום טוב\" (רמב״ם ח, ח). בערב שבועות אופים אותן. 💡 מקום האפייה הוא הצעה לתצוגה."],
             "6":["ביכורים ג, ג-ח; מנחות יא, ד; ה, ו; רמב״ם, הלכות תמידין ומוספין ח, ז-יא","📜 מצעד הביכורים מן העיר אל השער הצפוני: שור בקרני זהב ועטרת זית, חליל, סלי כסף וזהב וסלי נצרים, ותורים על הסלים. בהר הבית נושאים את הסל על הכתף, הלוויים שרים, והכוהן מניף ומניח את הסלים בצד המזבח. 📜 בחצר הפנימית מניפים את שתי הלחם על שני כבשים חיים: \"מוליך ומביא, מעלה ומוריד\" (מנחות ה, ו). ⚖️ הרמב״ם מתאר תנופה בשני שלבים, והמודל מציג את נוסח המשנה (ראו \"שתי הלחם: תנופה\"). 💡 ירק ופרחים בשערים החיצוניים הם הצעה, בלי מקור. לחצו על כל רכיב כדי לראות את המקור שלו."],
-            t:["חגיגה יז ע״א; רמב״ם, הלכות חגיגה א, ז; ביכורים ג","📜 ימי התשלומין, ז׳ עד י״ב בסיוון: עולות הראייה ושלמי החגיגה ממשיכים, ועדיין מביאים ביכורים. הקהל פוחת אט אט. 💡 הערכים בכל יום הם הצעה לתצוגה. הציטוט המדויק של הרמב״ם והדף בגמרא לא נבדקו."]};
+            t:["חגיגה יז ע״א; רמב״ם, הלכות חגיגה א, ד; א, ז-ח; ביכורים א, ו","📜 ימי התשלומין, ז׳ עד י״ב בסיוון: מי שלא הביא עולת ראייה ושלמי חגיגה בחג השבועות יכול להשלימם בששת הימים שאחריו (רמב״ם, חגיגה א, ד; א, ז). קרבנות אלה אינם דוחים שבת (שם, ח). 📜 הבאת ביכורים אינה מוגבלת לימים האלה: «מעצרת ועד החג, מביא וקורא» (ביכורים א, ו). 💡 מיעוט הקהל ומספר המביאים בכל יום הם הצעה לתצוגה."]};
             const q=k[0]==="t"?T.t:T[k];if(q)showInfo({n:"שבועות · "+SDN[k],r:q[0],t:q[1]})},
           state(){const tk=STORY&&typeof STORY_API!=="undefined"?STORY_API.S.key:null,on=(tk?tk==="shavuot":SHVPICK)&&DOY===FEST.shavuot.doy;return{on,ok:on,d:tk==="shavuot"&&STD?STD:SHVDAY}},
           apply(s){Object.assign(sst,s);SG.visible=s.ok;if(FESTG){if(!SHV.bik){const rf=P3(250,127,7);SHV.bik=FESTG.children.filter(o=>(o.userData&&o.userData.n==="הבאת הביכורים")||(o.isMesh&&Math.abs(o.position.x-rf.x)<0.8&&Math.abs(o.position.z-rf.z)<3.2))}SHV.bik.forEach(o=>{if(o.userData._sv===undefined)o.userData._sv=o.visible;o.visible=s.ok?false:o.userData._sv})}shud.hidden=!s.on;if(s.ok&&!B)buildS();
