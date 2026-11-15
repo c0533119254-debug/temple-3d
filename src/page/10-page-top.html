@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.6"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.7"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -244,6 +244,16 @@ body.idle .ui.dim:not(:hover):not(:focus-within){opacity:.45}
 .hlist .dot{color:rgba(212,175,87,.45)}
 .hlist span.on{color:var(--gold2);font-weight:700}
 .dr .seg.tap{gap:6px}
+/* 124.7: «הגדרות מתקדמות» סגורות בתחתית תפריט התצוגה */
+.dr details.adv{margin-top:14px;border-top:1px solid var(--ln);padding-top:10px}
+.dr details.adv>summary{cursor:pointer;list-style:none;font:700 15px var(--f-body);color:var(--gold2);min-height:44px;display:flex;flex-direction:column;justify-content:center;padding-inline-start:22px;position:relative}
+.dr details.adv>summary::-webkit-details-marker{display:none}
+.dr details.adv>summary::before{content:"◂";position:absolute;inset-inline-start:2px;top:50%;transform:translateY(-50%);color:var(--gold);transition:transform .15s}
+.dr details.adv[open]>summary::before{transform:translateY(-50%) rotate(-90deg)}
+.dr details.adv>summary small{font:400 12px var(--f-body);color:var(--cr2);margin-top:2px}
+.dr details.adv>.ctl:first-of-type{margin-top:8px}
+/* 124.7: בטלפון כפתור השעה צף מעל התפריט הפתוח וכיסה את הכותרת. כשתפריט פתוח הוא יורד */
+@media (max-width:700px){body.drawer #mplate{display:none!important}}
 .dr .seg.tap button{min-height:44px;flex:1 1 auto;padding:8px 10px;font-size:15px}
 kbd{background:rgba(255,255,255,.1);border:1px solid var(--ln);border-radius:5px;padding:0 6px;font:12px monospace;direction:ltr;unicode-bidi:isolate}
 bdi.n{direction:ltr;unicode-bidi:isolate}
@@ -536,7 +546,7 @@ body.touring #revBtn,body.touring #mplate,body.touring #cta,body.pane #mplate,bo
   #rail button::after{font-size:10.5px}
   #sbox{right:8px}
   .dr{right:0;left:0;top:auto;bottom:63px;width:auto;border-radius:18px 18px 0 0!important}
-  #mplate{left:auto;right:8px;top:102px;width:auto;padding:4px;border-radius:12px}
+  #mplate{left:auto;right:8px;top:116px;width:auto;padding:4px;border-radius:12px}
   #mplate .bt{display:none}
   #mplate .row{margin:0}
   #mplate .seg2 button{min-height:32px;font-size:12.5px;padding:0 8px}

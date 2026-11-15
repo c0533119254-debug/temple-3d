@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.6"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.7"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -244,6 +244,16 @@ body.idle .ui.dim:not(:hover):not(:focus-within){opacity:.45}
 .hlist .dot{color:rgba(212,175,87,.45)}
 .hlist span.on{color:var(--gold2);font-weight:700}
 .dr .seg.tap{gap:6px}
+/* 124.7: «הגדרות מתקדמות» סגורות בתחתית תפריט התצוגה */
+.dr details.adv{margin-top:14px;border-top:1px solid var(--ln);padding-top:10px}
+.dr details.adv>summary{cursor:pointer;list-style:none;font:700 15px var(--f-body);color:var(--gold2);min-height:44px;display:flex;flex-direction:column;justify-content:center;padding-inline-start:22px;position:relative}
+.dr details.adv>summary::-webkit-details-marker{display:none}
+.dr details.adv>summary::before{content:"◂";position:absolute;inset-inline-start:2px;top:50%;transform:translateY(-50%);color:var(--gold);transition:transform .15s}
+.dr details.adv[open]>summary::before{transform:translateY(-50%) rotate(-90deg)}
+.dr details.adv>summary small{font:400 12px var(--f-body);color:var(--cr2);margin-top:2px}
+.dr details.adv>.ctl:first-of-type{margin-top:8px}
+/* 124.7: בטלפון כפתור השעה צף מעל התפריט הפתוח וכיסה את הכותרת. כשתפריט פתוח הוא יורד */
+@media (max-width:700px){body.drawer #mplate{display:none!important}}
 .dr .seg.tap button{min-height:44px;flex:1 1 auto;padding:8px 10px;font-size:15px}
 kbd{background:rgba(255,255,255,.1);border:1px solid var(--ln);border-radius:5px;padding:0 6px;font:12px monospace;direction:ltr;unicode-bidi:isolate}
 bdi.n{direction:ltr;unicode-bidi:isolate}
@@ -536,7 +546,7 @@ body.touring #revBtn,body.touring #mplate,body.touring #cta,body.pane #mplate,bo
   #rail button::after{font-size:10.5px}
   #sbox{right:8px}
   .dr{right:0;left:0;top:auto;bottom:63px;width:auto;border-radius:18px 18px 0 0!important}
-  #mplate{left:auto;right:8px;top:102px;width:auto;padding:4px;border-radius:12px}
+  #mplate{left:auto;right:8px;top:116px;width:auto;padding:4px;border-radius:12px}
   #mplate .bt{display:none}
   #mplate .row{margin:0}
   #mplate .seg2 button{min-height:32px;font-size:12.5px;padding:0 8px}
@@ -15120,6 +15130,28 @@ try{(function(){
     try{if(window.__OVS&&window.__OVS.parent)window.__OVS.visible=!night;if(typeof ksm!=="undefined"&&ksm)ksm.visible=!night}catch(e){}
     try{renderer.shadowMap.needsUpdate=true;lastMove=performance.now()}catch(e){}};
   setInterval(rule,400)})()}catch(e){console.warn("real",e)}
+
+/* 124.7 · שלב 2 של מסמך חוויית המשתמש: תפריט «תצוגה» מתחיל במה שרוב המבקרים מחפשים (שעה, יום, חג, שכבות).
+   איכות, רקע, חומת ההר היום ושכבות הדרך עוברים ל«הגדרות מתקדמות» סגורות בתחתית. כפתור שיתוף גלוי בעמודת הכפתורים,
+   ובמסך מגע «איך זזים» מסביר מגע ולא מקלדת. 💡 שינוי סידור בלבד: אף אפשרות לא נמחקה */
+try{(function(){const $=id=>document.getElementById(id),d=$("dr-view");if(!d||$("advBox"))return;
+  const ctl=el=>el&&el.closest(".ctl");
+  const adv=document.createElement("details");adv.id="advBox";adv.className="adv";adv.innerHTML='<summary>הגדרות מתקדמות<small>איכות, רקע, חומת ההר היום ושכבות הדרך</small></summary>';
+  /* "חומת ההר היום" נשאר כפתור בתוך שכבות (שם מאזינים לו ושם הקישור קורא אותו). כאן יש כפתור שלוחץ עליו ומראה את מצבו */
+  const w=$("oW");let wc=null;if(w){wc=document.createElement("div");wc.className="ctl";wc.innerHTML='<div class="cl">להשוואה עם היום</div><div class="seg chips" role="group" aria-label="להשוואה עם היום"><button type="button" id="oW2"></button></div>';
+    const b=wc.querySelector("#oW2");b.textContent=w.textContent;const sync=()=>b.setAttribute("aria-pressed",w.getAttribute("aria-pressed")||"false");sync();
+    b.onclick=()=>{w.click();sync()};new MutationObserver(sync).observe(w,{attributes:true,attributeFilter:["aria-pressed"]});w.style.display="none"}
+  [ctl($("qSeg")),ctl($("floorSeg")),wc,ctl($("osmSeg"))].forEach(c=>{if(c)adv.appendChild(c)});
+  d.appendChild(adv);
+  adv.addEventListener("toggle",()=>{if(adv.open)setTimeout(()=>{try{adv.scrollIntoView({block:"nearest",behavior:"smooth"})}catch(e){}},50)});
+  /* שיתוף: עד עכשיו רק בתוך «עזרה» ובכרטיס של מקום */
+  const hud=$("hud"),home=$("homeB");if(hud&&!$("shareB")){const sb=document.createElement("button");sb.type="button";sb.className="hb";sb.id="shareB";sb.setAttribute("aria-label","שיתוף המבט הזה");sb.title="שיתוף המבט הזה";
+    sb.innerHTML='<svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/></svg>';
+    sb.onclick=()=>{try{window.__UI.share()}catch(e){}};if(home&&home.nextSibling)hud.insertBefore(sb,home.nextSibling);else hud.appendChild(sb)}
+  /* מגע: הסבר בלי מקלדת */
+  const touch=matchMedia("(pointer: coarse)").matches&&!matchMedia("(pointer: fine)").matches;
+  if(touch){const h=$("dr-help"),ul=h&&h.querySelector("ul.plain");if(ul)ul.innerHTML="<li>אצבע אחת: הזזת המפה.</li><li>שתי אצבעות: מקרבים ומרחיקים, ומסובבים את המבט.</li><li>נגיעה על חלק במודל: השם, המקור והמידות.</li><li>הכפתור ⌂: חזרה למבט הכללי. המצפן: פנייה צפונה.</li>"}
+})()}catch(e){console.warn("adv",e)}
 
 __DONE=true;__Q.splice(0).forEach(f=>{try{f()}catch(e){console.warn(e)}});
 frame();

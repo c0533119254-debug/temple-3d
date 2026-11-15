@@ -140,6 +140,28 @@ try{(function(){
     try{renderer.shadowMap.needsUpdate=true;lastMove=performance.now()}catch(e){}};
   setInterval(rule,400)})()}catch(e){console.warn("real",e)}
 
+/* 124.7 · שלב 2 של מסמך חוויית המשתמש: תפריט «תצוגה» מתחיל במה שרוב המבקרים מחפשים (שעה, יום, חג, שכבות).
+   איכות, רקע, חומת ההר היום ושכבות הדרך עוברים ל«הגדרות מתקדמות» סגורות בתחתית. כפתור שיתוף גלוי בעמודת הכפתורים,
+   ובמסך מגע «איך זזים» מסביר מגע ולא מקלדת. 💡 שינוי סידור בלבד: אף אפשרות לא נמחקה */
+try{(function(){const $=id=>document.getElementById(id),d=$("dr-view");if(!d||$("advBox"))return;
+  const ctl=el=>el&&el.closest(".ctl");
+  const adv=document.createElement("details");adv.id="advBox";adv.className="adv";adv.innerHTML='<summary>הגדרות מתקדמות<small>איכות, רקע, חומת ההר היום ושכבות הדרך</small></summary>';
+  /* "חומת ההר היום" נשאר כפתור בתוך שכבות (שם מאזינים לו ושם הקישור קורא אותו). כאן יש כפתור שלוחץ עליו ומראה את מצבו */
+  const w=$("oW");let wc=null;if(w){wc=document.createElement("div");wc.className="ctl";wc.innerHTML='<div class="cl">להשוואה עם היום</div><div class="seg chips" role="group" aria-label="להשוואה עם היום"><button type="button" id="oW2"></button></div>';
+    const b=wc.querySelector("#oW2");b.textContent=w.textContent;const sync=()=>b.setAttribute("aria-pressed",w.getAttribute("aria-pressed")||"false");sync();
+    b.onclick=()=>{w.click();sync()};new MutationObserver(sync).observe(w,{attributes:true,attributeFilter:["aria-pressed"]});w.style.display="none"}
+  [ctl($("qSeg")),ctl($("floorSeg")),wc,ctl($("osmSeg"))].forEach(c=>{if(c)adv.appendChild(c)});
+  d.appendChild(adv);
+  adv.addEventListener("toggle",()=>{if(adv.open)setTimeout(()=>{try{adv.scrollIntoView({block:"nearest",behavior:"smooth"})}catch(e){}},50)});
+  /* שיתוף: עד עכשיו רק בתוך «עזרה» ובכרטיס של מקום */
+  const hud=$("hud"),home=$("homeB");if(hud&&!$("shareB")){const sb=document.createElement("button");sb.type="button";sb.className="hb";sb.id="shareB";sb.setAttribute("aria-label","שיתוף המבט הזה");sb.title="שיתוף המבט הזה";
+    sb.innerHTML='<svg class="ico" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.6M8.2 13.2l7.6 4.6"/></svg>';
+    sb.onclick=()=>{try{window.__UI.share()}catch(e){}};if(home&&home.nextSibling)hud.insertBefore(sb,home.nextSibling);else hud.appendChild(sb)}
+  /* מגע: הסבר בלי מקלדת */
+  const touch=matchMedia("(pointer: coarse)").matches&&!matchMedia("(pointer: fine)").matches;
+  if(touch){const h=$("dr-help"),ul=h&&h.querySelector("ul.plain");if(ul)ul.innerHTML="<li>אצבע אחת: הזזת המפה.</li><li>שתי אצבעות: מקרבים ומרחיקים, ומסובבים את המבט.</li><li>נגיעה על חלק במודל: השם, המקור והמידות.</li><li>הכפתור ⌂: חזרה למבט הכללי. המצפן: פנייה צפונה.</li>"}
+})()}catch(e){console.warn("adv",e)}
+
 __DONE=true;__Q.splice(0).forEach(f=>{try{f()}catch(e){console.warn(e)}});
 frame();
 })();
