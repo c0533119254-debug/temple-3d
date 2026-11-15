@@ -89,7 +89,8 @@ function viewPose0(v){
   if(v==="far"){const a=PG(-1500,-150,0),b=PG(-250,-120,0);a.y=260;b.y=40;return[a,b]}
   if(v==="gateN")return[new THREE.Vector3(t.x+40,22,t.z-0.5*s-70),new THREE.Vector3(t.x,18,t.z-0.5*s+20)];
   if(v==="altar")return[new THREE.Vector3(t.x+40,22,t.z+38),new THREE.Vector3(t.x,8,t.z)];
-  return[new THREE.Vector3(t.x+250,145,t.z+320),new THREE.Vector3(t.x-25,12,t.z)];
+  /* 124.6: מבט הפתיחה נמוך וקרוב יותר, מדרום־מזרח, ובית המקדש עם המזבח במרכז התמונה. קודם הבית היה קטן בצד, ורוב התמונה הייתה רחבה ריקה */
+  return[new THREE.Vector3(t.x+0.72*s,84,t.z+0.37*s),new THREE.Vector3(t.x-0.0716*s,14,t.z)];
 }
 let tween=null;
 function inHouseP(q){return INTBOX&&q.x>INTBOX.x0-1&&q.x<INTBOX.x1+1&&q.z>INTBOX.z0-1&&q.z<INTBOX.z1+1&&q.y<INTBOX.y1}
