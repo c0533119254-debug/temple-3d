@@ -893,6 +893,7 @@ const TOURFIGS=(function(){
   let lastTk=0;
   function tick(dt0){ /* v112: זמן משלו, פעם אחת לפריים — נקרא משתי לולאות, ולפני כן הדמויות קודמו פעמיים (מהירות כפולה וקפיצות) */
     const nowT=performance.now();if(nowT-lastTk<8)return;const dt=lastTk?Math.min(0.1,(nowT-lastTk)/1000):0.016;lastTk=nowT;
+    try{const P=window.__PAISF,tm=!!STORY&&STORY_API.S.def===STORIES.tamid;if(P&&P.length&&P[0].visible===tm)P.forEach(m=>m.visible=!tm)}catch(e){}
     if(!g.visible)return;
     /* v115: דמות רחוקה — בלי עיניים וגבות (לא נראות ממרחק), ורחוקה מאוד — בלי חישוב שלד */
     {const cp=camera.position;actors.forEach(o=>{const dd=o.root.position.distanceToSquared(cp),far=dd>18*18;if(o.far!==far){o.far=far;if(!o.face){o.face=[];o.root.traverse(q=>{if(q.isSkinnedMesh&&/eye|brow/i.test(q.name||""))o.face.push(q)})}o.face.forEach(q=>q.visible=!far)}o.skip=dd>140*140||!o.root.visible});actors.forEach(o=>{if(!o.skip)o.mixer.update(dt)})}

@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.5"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -12072,7 +12072,7 @@ function build(){
     const inst=(geo,mat,arr,info,dy,col)=>{const m=new THREE.InstancedMesh(geo,mat,arr.length);arr.forEach((p,i)=>{const q=W(p.u,p.v);d.position.set(q[0],(p.y+dy)*A,q[1]);d.rotation.set(0,p.a,0);d.updateMatrix();m.setMatrixAt(i,d.matrix);if(col)m.setColorAt(i,c.setHex(p.c))});
       if(m.instanceColor)m.instanceColor.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=info;cPick.push(m);group.add(m)};
     const figs=(SEAT,STAND)=>{SEAT.forEach((arr,info)=>{inst(sBody,robeM,arr,info,0,true);inst(stool,stoolM,arr,info,0,false);inst(head,skinM,arr,info,2.3,false);inst(hood,robeM,arr,info,2.33,true)});
-    STAND.forEach((arr,info)=>{inst(tBody,robeM,arr,info,0,true);inst(head,skinM,arr,info,2.88,false);inst(hood,robeM,arr,info,2.91,true)})};figs(SEAT,STAND);{const g0=group;group=FESTG;figs(FSEAT,FSTAND);if(BIMAHG){FESTG.children.slice().forEach(m=>{if(m!==BIMAHG&&m.userData&&m.userData.n&&/הקהל/.test(m.userData.n))BIMAHG.add(m)})}group=g0}
+    STAND.forEach((arr,info)=>{inst(tBody,robeM,arr,info,0,true);inst(head,skinM,arr,info,2.88,false);inst(hood,robeM,arr,info,2.91,true)})};figs(SEAT,STAND);/* 124.5: שלושה עשר הכהנים העומדים במקום הפיס נעלמים בסיור התמיד, כי שם עומדות דמויות הסיור באותו מקום (קודם עמדו שתי קבוצות זו בתוך זו) */window.__PAISF=group.children.filter(m=>m.isInstancedMesh&&m.userData===kd);{const g0=group;group=FESTG;figs(FSEAT,FSTAND);if(BIMAHG){FESTG.children.slice().forEach(m=>{if(m!==BIMAHG&&m.userData&&m.userData.n&&/הקהל/.test(m.userData.n))BIMAHG.add(m)})}group=g0}
     /* ===== גרסה 118 · משימה 1: סוכות במצב רגיל (בלי סיור). גרסה 119: בלי סוכות בחצר, סוכות גג חדשות, אורות עיר, הדרך מן השילוח, קהל בשתי רמות =====
        נבנה לתוך מצב החג הקיים: כפתור «חג ← סוכות» ו־FESTG. אין מנגנון מקביל.
        כל מה שאין לו מקור מסומן 💡 כאן ובכרטיס המידע. */
@@ -14379,6 +14379,7 @@ const TOURFIGS=(function(){
   let lastTk=0;
   function tick(dt0){ /* v112: זמן משלו, פעם אחת לפריים — נקרא משתי לולאות, ולפני כן הדמויות קודמו פעמיים (מהירות כפולה וקפיצות) */
     const nowT=performance.now();if(nowT-lastTk<8)return;const dt=lastTk?Math.min(0.1,(nowT-lastTk)/1000):0.016;lastTk=nowT;
+    try{const P=window.__PAISF,tm=!!STORY&&STORY_API.S.def===STORIES.tamid;if(P&&P.length&&P[0].visible===tm)P.forEach(m=>m.visible=!tm)}catch(e){}
     if(!g.visible)return;
     /* v115: דמות רחוקה — בלי עיניים וגבות (לא נראות ממרחק), ורחוקה מאוד — בלי חישוב שלד */
     {const cp=camera.position;actors.forEach(o=>{const dd=o.root.position.distanceToSquared(cp),far=dd>18*18;if(o.far!==far){o.far=far;if(!o.face){o.face=[];o.root.traverse(q=>{if(q.isSkinnedMesh&&/eye|brow/i.test(q.name||""))o.face.push(q)})}o.face.forEach(q=>q.visible=!far)}o.skip=dd>140*140||!o.root.visible});actors.forEach(o=>{if(!o.skip)o.mixer.update(dt)})}
@@ -14988,7 +14989,7 @@ ART=(function(){
            night:{env:1}};
   let diff=[];
   function collect(){const seen=new Set();diff=[];scene.traverse(o=>{const mm=o.material;if(!mm)return;(Array.isArray(mm)?mm:[mm]).forEach(m=>{if(!m||seen.has(m)||!m.isMeshStandardMaterial)return;seen.add(m);if(m.metalness>=0.5)return;if(m.userData.e0==null)m.userData.e0=m.envMapIntensity;diff.push(m)})})}
-  function grade(){const g=G[TIME]||G.night;diff.forEach(m=>{m.envMapIntensity=m.userData.e0*g.env});if(TIME==="night"){/* 💡 אור ירח רך: בלילה הקירות היו כמעט שחורים */hemi.intensity=Math.max(hemi.intensity,0.36);hemi.color.set(0x93a9dc);hemi.groundColor.set(0x3b3c4c);return}if(!g.sun)return;
+  function grade(){const g=G[TIME]||G.night;diff.forEach(m=>{m.envMapIntensity=m.userData.e0*g.env});if(TIME==="night"){/* 💡 אור ירח רך: בלילה הקירות היו כמעט שחורים. 124.5: אבל 0.36 עם ירח 0.32 נראה כמו יום אפור. עכשיו אור שמיים כחול חלש וירח חלש, כך שרואים את הצורות, והאור החם בא מהחלונות, מהמנורות ומהמזבח */if(!INSIDE){hemi.intensity=0.06;sun.intensity=Math.min(sun.intensity,0.14);hemi.color.set(0x5a6fae);hemi.groundColor.set(0x15171f)}else{hemi.intensity=Math.max(hemi.intensity,0.36);hemi.color.set(0x93a9dc);hemi.groundColor.set(0x3b3c4c)}return}if(!g.sun)return;
     const sp=sunAt(HOUR!=null?HOUR:TIMES[TIME].h);if(sp.el<4)return; // דמדומים: נשארים כמו שהיו
     sun.color.set(g.sun);sun.intensity*=g.k;hemi.intensity=g.hemi;hemi.color.set(g.sky);hemi.groundColor.set(g.gnd);renderer.toneMappingExposure*=g.exp}
   // אבן ירושלמית: גוון דבש חם במקום קרם כמעט לבן (צבע בלבד)
