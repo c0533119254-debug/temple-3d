@@ -1,3 +1,34 @@
+// ---- 124.4: animals with a real shape (body, neck, head, ears, horns, legs, tail) instead of boxes. Head toward +x, like before ----
+function mkBeast(kind,col,L,H){const a=new THREE.Group(),U=THREE.BufferGeometryUtils,G={b:[],d:[]};
+  const put=(k,geo,x,y,z,sx,sy,sz,rx,ry,rz)=>{const m=new THREE.Object3D();m.position.set(x,y,z);m.scale.set(sx||1,sy||1,sz||1);m.rotation.set(rx||0,ry||0,rz||0);m.updateMatrix();const g=(geo.index?geo.toNonIndexed():geo.clone());g.deleteAttribute("uv");g.applyMatrix4(m.matrix);G[k].push(g)};
+  const sph=new THREE.SphereGeometry(1,14,10),cyl=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,n||8),cone=(r,h)=>new THREE.ConeGeometry(r,h,8);
+  const bull=kind==="bull",sheep=kind==="sheep",dep=H*(bull?0.33:0.27),wid=H*(bull?0.26:0.2),by=H*0.66;
+  put("b",sph,0,by,0,L*0.42,dep,wid);                       // barrel
+  put("b",sph,L*0.26,by+dep*0.12,0,L*0.24,dep*1.08,wid*1.05); // chest and shoulders
+  put("b",sph,-L*0.3,by+dep*0.05,0,L*0.2,dep*0.95,wid*0.98);  // rump
+  if(bull)put("b",sph,L*0.3,by+dep*0.95,0,L*0.13,dep*0.35,wid*0.6); // hump over the shoulders
+  const nx=L*0.47,ny=by+dep*0.55,hl=H*(bull?0.32:0.3),hx=L*0.5+hl*0.62,hy=ny+H*(bull?0.06:0.16);
+  put("b",cyl(wid*0.72,wid*0.48,hl,10),nx,ny,0,1,1,1,0,0,-1.05);                 // neck
+  if(bull)put("b",sph,nx+0.02,ny-dep*0.55,0,L*0.08,dep*0.45,wid*0.32);             // dewlap
+  put("b",sph,hx,hy,0,hl*0.36,hl*0.3,wid*0.5);                                     // skull
+  put("b",cyl(wid*0.42,wid*0.3,hl*0.55,10),hx+hl*0.3,hy-hl*0.12,0,1,1,1,0,0,-2.1); // face down to the muzzle
+  put("d",sph,hx+hl*0.52,hy-hl*0.3,0,hl*0.11,hl*0.1,wid*0.3);                      // nose
+  [1,-1].forEach(j=>{
+    put("b",sph,hx-hl*0.12,hy+hl*0.12,j*wid*(sheep?0.55:0.5),hl*0.14,hl*0.06,hl*(sheep?0.22:0.18),j*0.5,0,0); // ears
+    if(bull)put("d",cone(wid*0.1,hl*0.45),hx-hl*0.1,hy+hl*0.26,j*wid*0.52,1,1,1,j*1.1,0,0.15);
+    if(kind==="goat")put("d",cone(wid*0.08,hl*0.6),hx-hl*0.22,hy+hl*0.42,j*wid*0.2,1,1,1,j*0.18,0,0.75);
+    [1,-1].forEach(i=>{const lx=i*L*0.33,lz=j*wid*0.55,lh=by-dep*0.55;
+      put("b",cyl(H*0.075,H*0.04,lh*0.6,8),lx,lh*0.7,lz);   // upper leg
+      put("b",cyl(H*0.04,H*0.034,lh*0.55,8),lx,lh*0.28,lz); // lower leg
+      put("d",cyl(H*0.04,H*0.044,H*0.05,8),lx,H*0.025,lz)}); // hoof
+  });
+  if(kind==="goat")put("d",cone(wid*0.12,hl*0.35),hx+hl*0.32,hy-hl*0.52,0,1,1,1,Math.PI,0,0); // beard
+  put("b",cyl(H*0.025,H*0.012,H*(bull?0.55:0.2),6),-L*0.5,by+dep*(bull?0.1:0.5),0,1,1,1,0,0,bull?-0.15:-0.9); // tail
+  if(bull)put("d",sph,-L*0.53,by-dep*1.0,0,H*0.04,H*0.07,H*0.04);
+  const mb=new THREE.MeshStandardMaterial({color:col,roughness:sheep?1:0.82}),md=new THREE.MeshStandardMaterial({color:0x1d1814,roughness:0.6});
+  [["b",mb],["d",md]].forEach(([k,m])=>{let gs=G[k];if(!gs.length)return;let geo=null;try{geo=U&&U.mergeBufferGeometries(gs,false)}catch(e){}
+    if(geo){const ms=new THREE.Mesh(geo,m);ms.castShadow=true;a.add(ms)}else gs.forEach(g=>{const ms=new THREE.Mesh(g,m);ms.castShadow=true;a.add(ms)})});
+  return a}
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});
@@ -6,8 +37,8 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   const ephod=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.24,0.26),new THREE.MeshStandardMaterial({color:0x2a3f8a,roughness:0.6,metalness:0.2}));
   [head,mit,tz,ephod].forEach(m=>g.add(m));
   const tool=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.08,0.12,10),gold);g.add(tool);
-  const mkAnimal=(col,L,Hh,hd)=>{const a=new THREE.Group(),m=new THREE.MeshStandardMaterial({color:col,roughness:0.9});const b=new THREE.Mesh(new THREE.BoxGeometry(L,Hh*0.5,Hh*0.42),m);b.position.y=Hh*0.62;a.add(b);const h=new THREE.Mesh(new THREE.BoxGeometry(hd,hd*0.8,hd*0.7),m);h.position.set(L/2+hd*0.35,Hh*0.85,0);a.add(h);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>{const l=new THREE.Mesh(new THREE.BoxGeometry(0.1,Hh*0.4,0.1),m);l.position.set(i*L*0.38,Hh*0.2,j*Hh*0.14);a.add(l)});return a};
-  const bull=mkAnimal(0x3b2a20,2.2,1.5,0.55),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
+  const mkAnimal=(col,L,Hh,hd,kind)=>mkBeast(kind||(L>1.5?"bull":"goat"),col,L,Hh);
+  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
   const thread=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.06,0.3),new THREE.MeshStandardMaterial({color:0xb3261e}));gB.add(thread);thread.position.set(0.75,0.75,0);
   const kalpi=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.35),gold);[bull,gA,gB,kalpi].forEach(m=>g.add(m));
   const cloud=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xd8d2c8,transparent:true,opacity:0.08,depthWrite:false}),18);cloud.frustumCulled=false;g.add(cloud);cloud.visible=false;
@@ -37,7 +68,7 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   [head,hat].forEach(m=>{m.frustumCulled=false;g.add(m)});
   const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"⚖️ כהנים בארבעה בגדי לבן — כתונת, מכנסיים, מגבעת ואבנט — יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס."};fig.userData=head.userData=info;cPick.push(fig);
   const silver=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.25}),fleece=new THREE.MeshStandardMaterial({color:0xf1ece2,roughness:1}),meat=new THREE.MeshStandardMaterial({color:0x9b3b32,roughness:0.7});
-  const lamb=new THREE.Group();{const b=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.42,0.4),fleece);b.position.y=0.55;lamb.add(b);const h=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.24,0.22),fleece);h.position.set(0.52,0.75,0);lamb.add(h);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>{const l=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.36,0.08),fleece);l.position.set(i*0.32,0.18,j*0.12);lamb.add(l)})}
+  const lamb=mkBeast("sheep",0xf1ece2,0.9,0.7);
   lamb.traverse(o=>{if(o.isMesh){o.userData={n:"כבש התמיד",r:"במדבר כח, ג-ח; תמיד ג, ג-ד; ד, א",t:"📜 \"את הכבש אחד תעשה בבקר ואת הכבש השני תעשה בין הערבים\". ⚖️ מביאים אותו מלשכת הטלאים, בודקים אותו לאור האבוקות ומשקים אותו בכוס של זהב. שוחטים אותו בצפון המזבח, בקרן מזרחית־צפונית, ובערב — בקרן מערבית־צפונית."};cPick.push(o)}});g.add(lamb);
   const mkLimbMesh=()=>{const grp=new THREE.Group();const meatM=new THREE.MeshStandardMaterial({color:0x6e3a2c,roughness:0.84,metalness:0.02});const boneM=new THREE.MeshStandardMaterial({color:0xe6d7b8,roughness:0.55});const sh=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.075,0.48,12),meatM);sh.rotation.z=Math.PI/2;const jt=new THREE.Mesh(new THREE.SphereGeometry(0.07,10,8),meatM);jt.position.x=0.20;const bn=new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.022,0.11,8),boneM);bn.rotation.z=Math.PI/2;bn.position.x=0.30;grp.add(sh,jt,bn);return grp};
   const limbs=[];for(let i=0;i<6;i++){const m=mkLimbMesh();m.userData={n:"הולכת האיברים",r:"תמיד ד, ג",t:"📜 שישה כהנים מוליכים את האיברים לכבש: הראש והרגל, שתי הידיים, העוקץ והרגל, החזה והגרה, שתי הדפנות, והקרביים. הם נותנים אותם בחצי התחתון של הכבש, במערבו, ומולחים אותם."};m.traverse(o=>{if(o.isMesh){o.userData=m.userData;cPick.push(o)}});limbs.push(m);g.add(m)}

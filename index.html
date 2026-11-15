@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -11218,6 +11218,37 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
     for(let i=0;i<m.count;i++){m.getMatrixAt(i,M);M.decompose(p,q,s);w.copy(p).applyMatrix4(m.matrixWorld);const gy=groundAt(w.x,w.z);if(w.y<gy-0.35){p.y=gy+0.3;M.compose(p,q,s);m.setMatrixAt(i,M);ch=true}}
     if(ch)m.instanceMatrix.needsUpdate=true})})(0);
 await __Y(84);let ACTS=null,CROWDT=null;
+// ---- 124.4: animals with a real shape (body, neck, head, ears, horns, legs, tail) instead of boxes. Head toward +x, like before ----
+function mkBeast(kind,col,L,H){const a=new THREE.Group(),U=THREE.BufferGeometryUtils,G={b:[],d:[]};
+  const put=(k,geo,x,y,z,sx,sy,sz,rx,ry,rz)=>{const m=new THREE.Object3D();m.position.set(x,y,z);m.scale.set(sx||1,sy||1,sz||1);m.rotation.set(rx||0,ry||0,rz||0);m.updateMatrix();const g=(geo.index?geo.toNonIndexed():geo.clone());g.deleteAttribute("uv");g.applyMatrix4(m.matrix);G[k].push(g)};
+  const sph=new THREE.SphereGeometry(1,14,10),cyl=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,n||8),cone=(r,h)=>new THREE.ConeGeometry(r,h,8);
+  const bull=kind==="bull",sheep=kind==="sheep",dep=H*(bull?0.33:0.27),wid=H*(bull?0.26:0.2),by=H*0.66;
+  put("b",sph,0,by,0,L*0.42,dep,wid);                       // barrel
+  put("b",sph,L*0.26,by+dep*0.12,0,L*0.24,dep*1.08,wid*1.05); // chest and shoulders
+  put("b",sph,-L*0.3,by+dep*0.05,0,L*0.2,dep*0.95,wid*0.98);  // rump
+  if(bull)put("b",sph,L*0.3,by+dep*0.95,0,L*0.13,dep*0.35,wid*0.6); // hump over the shoulders
+  const nx=L*0.47,ny=by+dep*0.55,hl=H*(bull?0.32:0.3),hx=L*0.5+hl*0.62,hy=ny+H*(bull?0.06:0.16);
+  put("b",cyl(wid*0.72,wid*0.48,hl,10),nx,ny,0,1,1,1,0,0,-1.05);                 // neck
+  if(bull)put("b",sph,nx+0.02,ny-dep*0.55,0,L*0.08,dep*0.45,wid*0.32);             // dewlap
+  put("b",sph,hx,hy,0,hl*0.36,hl*0.3,wid*0.5);                                     // skull
+  put("b",cyl(wid*0.42,wid*0.3,hl*0.55,10),hx+hl*0.3,hy-hl*0.12,0,1,1,1,0,0,-2.1); // face down to the muzzle
+  put("d",sph,hx+hl*0.52,hy-hl*0.3,0,hl*0.11,hl*0.1,wid*0.3);                      // nose
+  [1,-1].forEach(j=>{
+    put("b",sph,hx-hl*0.12,hy+hl*0.12,j*wid*(sheep?0.55:0.5),hl*0.14,hl*0.06,hl*(sheep?0.22:0.18),j*0.5,0,0); // ears
+    if(bull)put("d",cone(wid*0.1,hl*0.45),hx-hl*0.1,hy+hl*0.26,j*wid*0.52,1,1,1,j*1.1,0,0.15);
+    if(kind==="goat")put("d",cone(wid*0.08,hl*0.6),hx-hl*0.22,hy+hl*0.42,j*wid*0.2,1,1,1,j*0.18,0,0.75);
+    [1,-1].forEach(i=>{const lx=i*L*0.33,lz=j*wid*0.55,lh=by-dep*0.55;
+      put("b",cyl(H*0.075,H*0.04,lh*0.6,8),lx,lh*0.7,lz);   // upper leg
+      put("b",cyl(H*0.04,H*0.034,lh*0.55,8),lx,lh*0.28,lz); // lower leg
+      put("d",cyl(H*0.04,H*0.044,H*0.05,8),lx,H*0.025,lz)}); // hoof
+  });
+  if(kind==="goat")put("d",cone(wid*0.12,hl*0.35),hx+hl*0.32,hy-hl*0.52,0,1,1,1,Math.PI,0,0); // beard
+  put("b",cyl(H*0.025,H*0.012,H*(bull?0.55:0.2),6),-L*0.5,by+dep*(bull?0.1:0.5),0,1,1,1,0,0,bull?-0.15:-0.9); // tail
+  if(bull)put("d",sph,-L*0.53,by-dep*1.0,0,H*0.04,H*0.07,H*0.04);
+  const mb=new THREE.MeshStandardMaterial({color:col,roughness:sheep?1:0.82}),md=new THREE.MeshStandardMaterial({color:0x1d1814,roughness:0.6});
+  [["b",mb],["d",md]].forEach(([k,m])=>{let gs=G[k];if(!gs.length)return;let geo=null;try{geo=U&&U.mergeBufferGeometries(gs,false)}catch(e){}
+    if(geo){const ms=new THREE.Mesh(geo,m);ms.castShadow=true;a.add(ms)}else gs.forEach(g=>{const ms=new THREE.Mesh(g,m);ms.castShadow=true;a.add(ms)})});
+  return a}
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});
@@ -11226,8 +11257,8 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   const ephod=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.24,0.26),new THREE.MeshStandardMaterial({color:0x2a3f8a,roughness:0.6,metalness:0.2}));
   [head,mit,tz,ephod].forEach(m=>g.add(m));
   const tool=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.08,0.12,10),gold);g.add(tool);
-  const mkAnimal=(col,L,Hh,hd)=>{const a=new THREE.Group(),m=new THREE.MeshStandardMaterial({color:col,roughness:0.9});const b=new THREE.Mesh(new THREE.BoxGeometry(L,Hh*0.5,Hh*0.42),m);b.position.y=Hh*0.62;a.add(b);const h=new THREE.Mesh(new THREE.BoxGeometry(hd,hd*0.8,hd*0.7),m);h.position.set(L/2+hd*0.35,Hh*0.85,0);a.add(h);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>{const l=new THREE.Mesh(new THREE.BoxGeometry(0.1,Hh*0.4,0.1),m);l.position.set(i*L*0.38,Hh*0.2,j*Hh*0.14);a.add(l)});return a};
-  const bull=mkAnimal(0x3b2a20,2.2,1.5,0.55),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
+  const mkAnimal=(col,L,Hh,hd,kind)=>mkBeast(kind||(L>1.5?"bull":"goat"),col,L,Hh);
+  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
   const thread=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.06,0.3),new THREE.MeshStandardMaterial({color:0xb3261e}));gB.add(thread);thread.position.set(0.75,0.75,0);
   const kalpi=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.35),gold);[bull,gA,gB,kalpi].forEach(m=>g.add(m));
   const cloud=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xd8d2c8,transparent:true,opacity:0.08,depthWrite:false}),18);cloud.frustumCulled=false;g.add(cloud);cloud.visible=false;
@@ -11257,7 +11288,7 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   [head,hat].forEach(m=>{m.frustumCulled=false;g.add(m)});
   const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"⚖️ כהנים בארבעה בגדי לבן — כתונת, מכנסיים, מגבעת ואבנט — יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס."};fig.userData=head.userData=info;cPick.push(fig);
   const silver=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.25}),fleece=new THREE.MeshStandardMaterial({color:0xf1ece2,roughness:1}),meat=new THREE.MeshStandardMaterial({color:0x9b3b32,roughness:0.7});
-  const lamb=new THREE.Group();{const b=new THREE.Mesh(new THREE.BoxGeometry(0.9,0.42,0.4),fleece);b.position.y=0.55;lamb.add(b);const h=new THREE.Mesh(new THREE.BoxGeometry(0.26,0.24,0.22),fleece);h.position.set(0.52,0.75,0);lamb.add(h);[[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>{const l=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.36,0.08),fleece);l.position.set(i*0.32,0.18,j*0.12);lamb.add(l)})}
+  const lamb=mkBeast("sheep",0xf1ece2,0.9,0.7);
   lamb.traverse(o=>{if(o.isMesh){o.userData={n:"כבש התמיד",r:"במדבר כח, ג-ח; תמיד ג, ג-ד; ד, א",t:"📜 \"את הכבש אחד תעשה בבקר ואת הכבש השני תעשה בין הערבים\". ⚖️ מביאים אותו מלשכת הטלאים, בודקים אותו לאור האבוקות ומשקים אותו בכוס של זהב. שוחטים אותו בצפון המזבח, בקרן מזרחית־צפונית, ובערב — בקרן מערבית־צפונית."};cPick.push(o)}});g.add(lamb);
   const mkLimbMesh=()=>{const grp=new THREE.Group();const meatM=new THREE.MeshStandardMaterial({color:0x6e3a2c,roughness:0.84,metalness:0.02});const boneM=new THREE.MeshStandardMaterial({color:0xe6d7b8,roughness:0.55});const sh=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.075,0.48,12),meatM);sh.rotation.z=Math.PI/2;const jt=new THREE.Mesh(new THREE.SphereGeometry(0.07,10,8),meatM);jt.position.x=0.20;const bn=new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.022,0.11,8),boneM);bn.rotation.z=Math.PI/2;bn.position.x=0.30;grp.add(sh,jt,bn);return grp};
   const limbs=[];for(let i=0;i<6;i++){const m=mkLimbMesh();m.userData={n:"הולכת האיברים",r:"תמיד ד, ג",t:"📜 שישה כהנים מוליכים את האיברים לכבש: הראש והרגל, שתי הידיים, העוקץ והרגל, החזה והגרה, שתי הדפנות, והקרביים. הם נותנים אותם בחצי התחתון של הכבש, במערבו, ומולחים אותם."};m.traverse(o=>{if(o.isMesh){o.userData=m.userData;cPick.push(o)}});limbs.push(m);g.add(m)}
@@ -13250,12 +13281,17 @@ renderer.domElement.addEventListener("pointerup",e=>{
 // ---- loop ----
 let lastW=0,lastH=0;function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(Math.abs(w-lastW)<2&&Math.abs(h-lastH)<2)return;lastW=w;lastH=h;renderer.setSize(w,h,false);composer.setSize(w,h);if(typeof ssaoC!=="undefined"&&ssaoC)ssaoC.setSize(w,h);camera.aspect=w/h;camera.updateProjectionMatrix()}
 new ResizeObserver(resize).observe(stage);
+/* 124.4 · בטלפון כרטיס הסיור מכסה את חצי המסך התחתון, והדמות שבמרכז התמונה הוסתרה. מזיזים את התמונה כלפי מעלה, כך שמרכז התמונה יהיה באמצע החלק הגלוי שבין שורת החיפוש לכרטיס */
+const VS={cur:0,goal:0,n:0};function viewShift(){if(++VS.n%10===0){let g=0;try{if(document.body.classList.contains("touring")&&stage.clientWidth<=700){const sr=stage.getBoundingClientRect(),st=document.getElementById("story"),sb=document.getElementById("sbox");if(st&&!st.hidden){const cr=st.getBoundingClientRect();if(cr.height>0&&cr.top<sr.bottom&&cr.top>sr.top+sr.height*0.3){const top=sb&&sb.getBoundingClientRect().height>0?sb.getBoundingClientRect().bottom-sr.top:0;g=Math.round(sr.height/2-(top+(cr.top-sr.top))/2)}}}}catch(e){}VS.goal=Math.max(0,g)}
+  const w=stage.clientWidth,h=stage.clientHeight;if(Math.abs(VS.goal-VS.cur)<0.5){if(VS.cur===VS.goal&&(!VS.cur||camera.view&&camera.view.fullWidth===w&&camera.view.fullHeight===h))return;VS.cur=VS.goal}else VS.cur+=(VS.goal-VS.cur)*0.15;
+  if(VS.cur<0.5){VS.cur=0;camera.clearViewOffset()}else camera.setViewOffset(w,h,0,VS.cur,w,h)}
 const tmp=new THREE.Vector3(),clock=new THREE.Clock(),dObj=new THREE.Object3D();
 let lastMove=performance.now(),skipF=0,camSig="",LBN=0;const LMAX=QL==="low"?7:(SMALL?7:12);const PERF={on:false,f:0,t:performance.now(),fps:0};
 function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+c.y.toFixed(2)+c.z.toFixed(2)+q.x.toFixed(3)+q.y.toFixed(3);const now0=performance.now();if(sg!==camSig||tween||STORY||WALK||DRONE||(TRN&&TRN.riding)){camSig=sg;lastMove=now0}const idle=now0-lastMove;const step=idle>20000?6:idle>3000?3:idle>1200?2:1;if(++skipF%step!==0){requestAnimationFrame(frame);return}
   const tgt=PR;if(Math.abs(renderer.getPixelRatio()-tgt)>0.01){renderer.setPixelRatio(tgt);lastW=0;resize()} // ריצודים: לא מורידים רזולוציה בכל תחילת תנועה (כל החלפה שינתה את גודל הקנבס והבהבה); מכשיר איטי מוריד רזולוציה לפי מדידת הפריימים למטה
   if(PERF.on){PERF.f++;if(now0-PERF.t>1000){PERF.fps=PERF.f*1000/(now0-PERF.t);PERF.f=0;PERF.t=now0;const i=renderer.info;document.getElementById("perfbox").textContent="פריימים לשנייה "+PERF.fps.toFixed(0)+" · קריאות ציור "+i.render.calls+" · משולשים: "+(i.render.triangles/1e6).toFixed(2)+" מיליון · גיאומטריות "+i.memory.geometries+" · טקסטורות "+i.memory.textures+" · רזולוציה ×"+renderer.getPixelRatio().toFixed(2)+" · טעינה "+((window.__LOADT||0)/1000).toFixed(1)+" ש׳ · איכות "+(QL==="low"?"חסכונית":"גבוהה")}}}
   const rawdt=clock.getDelta(),dt=Math.min(0.1,rawdt),now=performance.now(),tt=now/1000;
+  viewShift();
   if(tween&&!tween.fx){tween.fx=true;if(tween.p1&&tween.t1)fixPhi(tween.p1,tween.t1)} // #18 B1: every flight ends inside the limits of the controls
   if(tween){const k=Math.min(1,(now-tween.start)/tween.dur),e=k<0.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;if(tween.path){const n=tween.path.length-1,f=e*n,i=Math.min(n-1,Math.floor(f)),g=f-i,sg=g*g*(3-2*g);camera.position.lerpVectors(tween.path[i],tween.path[i+1],sg);controls.target.lerpVectors(tween.tpath[i],tween.tpath[i+1],sg);if(k>=1){tween=null;controls.update()}}else{camera.position.lerpVectors(tween.p0,tween.p1,e);controls.target.lerpVectors(tween.t0,tween.t1,e);if(tween.arc)camera.position.y+=Math.sin(Math.PI*e)*Math.min(120,tween.p0.distanceTo(tween.p1)*0.15);{const fl=floorAt(camera.position.x,camera.position.z)+2;if(camera.position.y<fl&&k<1)camera.position.y=fl}if(k>=1){tween=null;controls.update()}}}
   if(TRN&&TRN.riding){TRN.camTick(camera)}else if(DRONE){droneTick(dt)}else if(WALK){const fw=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),st=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
@@ -13506,7 +13542,7 @@ const TOURFIGS=(function(){
   const actors=[],mixers=[];
   let proto=null,clips={},bindQ=null,ready=false,H=1.72,fail=false;
   const SKIN=0xc4a07a, EYEL=0xf2efe8, EYEIRIS=0x3d4a3a;
-  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0xe8d9a8,pilgrim:0xcbb892,pilgrim2:0xb89b6a,levite:0xe8e2cf,king:0x6e2a43};
+  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0x1b2a66,pilgrim:0xcbb892,pilgrim2:0xb89b6a,levite:0xe8e2cf,king:0x6e2a43};
   const SKIN_BONES={Head:1,neck_01:1,hand_l:1,hand_r:1,foot_l:1,foot_r:1,ball_l:1,ball_r:1,ball_leaf_l:1,ball_leaf_r:1};
   "index middle pinky ring thumb".split(" ").forEach(f=>{[1,2,3].forEach(n=>{SKIN_BONES[f+"_0"+n+"_l"]=1;SKIN_BONES[f+"_0"+n+"_r"]=1});SKIN_BONES[f+"_04_leaf_l"]=1;SKIN_BONES[f+"_04_leaf_r"]=1});
   function robeMat(hex,skinHex){
@@ -13641,13 +13677,13 @@ const TOURFIGS=(function(){
   }
   function linenMat(hex,rough){return new THREE.MeshStandardMaterial({color:hex,roughness:rough==null?0.88:rough,metalness:0.03,side:THREE.DoubleSide})}
   function addKit(root,kind){
-    const pelvis=findBone(root,"pelvis"), spine=findBone(root,"spine_02")||findBone(root,"spine_03");
+    const pelvis=findBone(root,"pelvis"), spine=findBone(root,"spine_02")||findBone(root,"spine_03"), spine3=findBone(root,"spine_03");
     const head=findBone(root,"Head");
     const uL=findBone(root,"upperarm_l"), uR=findBone(root,"upperarm_r");
     const lL=findBone(root,"lowerarm_l"), lR=findBone(root,"lowerarm_r");
     root.updateMatrixWorld(true);
     const robe=robeCol[kind]||robeCol.kohen;
-    const cloth=linenMat(robe,0.9);
+    const cloth=linenMat(robe,0.9), ketSleeve=kind==="gadolG"?linenMat(0xf4f0e4,0.9):null;
     const Y=new THREE.Vector3(0,1,0);
     function attachWorld(bone,mesh,wpos,wquat){
       mesh.position.copy(wpos);
@@ -13672,7 +13708,7 @@ const TOURFIGS=(function(){
       const skirt=new THREE.Mesh(hem,cloth);
       skirt.name="ketonet_skirt";
       attachWorld(pelvis,skirt,p.clone());
-      const sashCol=kind==="gadolG"?0x2a3f8a:kind==="king"?0xc9a227:0xe6dcc4;
+      const sashCol=kind==="gadolG"?0xb8861e:kind==="king"?0xc9a227:0xe6dcc4;
       const sash=linenMat(sashCol,0.78);
       const band=new THREE.Mesh(new THREE.TorusGeometry(0.2,0.025,8,22),sash);
       band.rotation.x=Math.PI/2;band.name="avnet_band";
@@ -13686,12 +13722,55 @@ const TOURFIGS=(function(){
     function sleeve(bone,len,r0,r1){
       if(!bone)return;
       const a=bonePos(bone), axis=boneAxis(bone);
-      const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r0,len,12,1,true),cloth);
+      const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r0,len,12,1,true),kind==="gadolG"?ketSleeve:cloth);
       const q=new THREE.Quaternion().setFromUnitVectors(Y,axis);
       attachWorld(bone,mesh,a.clone().addScaledVector(axis,len*0.48),q);
     }
     sleeve(uL,0.28,0.08,0.07);sleeve(uR,0.28,0.08,0.07);
     sleeve(lL,0.26,0.065,0.05);sleeve(lR,0.26,0.065,0.05);
+    if(kind==="gadolG")goldKit();
+    /* 124.4 · בגדי זהב של הכהן הגדול (שמות כח; רמב״ם, הלכות כלי המקדש ט–י): ⚖️ מעיל תכלת בלי שרוולים (השרוולים הלבנים הם של הכתונת), פעמונים ורימונים בשוליו; ⚖️ אפוד וחשב מזהב ותכלת וארגמן ותולעת שני, מאחור ובחגורה; ⚖️ שתי אבני שוהם על הכתפיים; ⚖️ חושן עם שתים עשרה אבנים בארבעה טורים על הלב; ⚖️ ציץ זהב על המצח. 💡 הגדלים, צבעי האבנים ומספר הפעמונים בדגם (24 ולא 72) נבחרו כדי שייראו מרחוק */
+    function goldKit(){
+      const M=(c,m,r)=>new THREE.MeshStandardMaterial({color:c,metalness:m||0,roughness:r==null?0.6:r});
+      const gold=M(0xd4a22e,0.65,0.3), weave=M(0xb8861e,0.5,0.42);
+      const ch=spine3||spine;
+      if(pelvis){
+        const p=bonePos(pelvis);
+        // פעמונים ורימונים בשולי המעיל (שמות כח, לג–לד)
+        const bell=new THREE.SphereGeometry(0.022,8,6), pom=new THREE.SphereGeometry(0.026,8,6);
+        const pomM=[M(0x2c4a9a),M(0x6b2a6e),M(0xa32a2a)];
+        for(let k=0;k<24;k++){const a=k/24*Math.PI*2,r=0.325,isB=k%2===0;
+          const m=new THREE.Mesh(isB?bell:pom,isB?gold:pomM[(k>>1)%3]);
+          attachWorld(pelvis,m,new THREE.Vector3(p.x+Math.sin(a)*r,p.y-0.955,p.z+Math.cos(a)*r))}
+        // האפוד: סינר מאחור מהמותניים ומטה (רש״י שמות כח, ו)
+        const ap=new THREE.Mesh(new THREE.CylinderGeometry(0.232,0.26,0.42,16,1,true,Math.PI*0.68,Math.PI*0.64),weave);
+        ap.material.side=THREE.DoubleSide;
+        attachWorld(pelvis,ap,new THREE.Vector3(p.x,p.y-0.17,p.z));
+      }
+      if(ch){
+        const c=bonePos(ch);
+        const fz=frontZ(c.y,c.x);
+        // החושן על הלב: מסגרת זהב ושתים עשרה אבנים בארבעה טורים (שמות כח, יז–כא). 💡 הצבעים
+        const plate=new THREE.Group();
+        const fr=new THREE.Mesh(new THREE.BoxGeometry(0.17,0.2,0.014),gold);plate.add(fr);
+        const ST=[0xb3202a,0x9ab33a,0x2f8f5a, 0x2fa7a0,0x2a4bc4,0xe8e4f0, 0xd0782a,0x9a9a92,0x7a3a9a, 0x2a8a8a,0x23302c,0xb05a3a];
+        const sg=new THREE.BoxGeometry(0.038,0.034,0.012);
+        ST.forEach((col,k)=>{const m=new THREE.Mesh(sg,M(col,0.1,0.25));m.position.set((1-k%3)*0.048,0.066-Math.floor(k/3)*0.044,0.01);plate.add(m)});
+        attachWorld(ch,plate,new THREE.Vector3(c.x,c.y-0.03,fz+0.012));
+        // כתפות האפוד ואבני השוהם על הכתפיים
+        [uL,uR].forEach(u=>{if(!u)return;const s=bonePos(u);
+          const sx=c.x+(s.x-c.x)*0.62, sy=s.y+0.05;
+          const st=new THREE.Mesh(new THREE.SphereGeometry(0.03,10,8),M(0x1c3a32,0.2,0.2));st.scale.set(1,0.6,1.2);
+          attachWorld(ch,st,new THREE.Vector3(sx,sy,c.z));
+          const strap=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.012,0.26),weave);
+          attachWorld(ch,strap,new THREE.Vector3(sx,sy-0.012,c.z))});
+      }
+    }
+    // the most forward point of the body at height y (bind pose), so the choshen sits on the chest
+    function frontZ(y,x){let best=-1e9;const v=new THREE.Vector3();
+      root.traverse(o=>{if(!o.isSkinnedMesh||!o.geometry)return;const P=o.geometry.attributes.position;
+        for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(o.matrixWorld);if(Math.abs(v.y-y)<0.05&&Math.abs(v.x-x)<0.06&&v.z>best)best=v.z}});
+      return best>-1e8?best:0.13}
     if(head&&(kind==="kohen"||kind==="gadolW"||kind==="gadolG"||kind==="levite")){
       const hp=bonePos(head);
       const wrap=linenMat(kind==="gadolG"?0xf3e7c4:0xf4f0e4,0.86);
@@ -13703,7 +13782,7 @@ const TOURFIGS=(function(){
       const c=new THREE.Mesh(new THREE.SphereGeometry(0.075,14,10,0,Math.PI*2,0,Math.PI/2),wrap);
       c.position.set(0,0.17,0);turban.add(c);
       if(kind==="gadolG"){
-        const tz=new THREE.Mesh(new THREE.BoxGeometry(0.085,0.016,0.008),new THREE.MeshStandardMaterial({color:0xd8b04a,metalness:0.55,roughness:0.35}));
+        const tz=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.026,0.008),new THREE.MeshStandardMaterial({color:0xe0b84a,metalness:0.6,roughness:0.3,emissive:0x3a2a08}));
         tz.position.set(0,0.145,0.095);turban.add(tz);
       }
       turban.traverse(o=>{if(o.isMesh)o.castShadow=true});
@@ -13983,7 +14062,7 @@ const TOURFIGS=(function(){
           else if(/brow|hair/i.test(nm)){const h=new THREE.MeshStandardMaterial({color:0x2a221c,roughness:0.8,metalness:0.02});h.skinning=true;o.material=h}
           else if(o.userData.skinGroups||(o.geometry&&o.geometry.groups&&o.geometry.groups.length>=2)){
             const seed=Math.random();
-            const cloth=varyMat(kind,seed);cloth.skinning=true;cloth.vertexColors=0;
+            const cloth=varyMat(kind,seed);cloth.skinning=true;cloth.vertexColors=0;/* 124.4: גוף הבגד בצבע הבגד עצמו (עד עכשיו היה תמיד לבן, ולכן בגדי הזהב נראו לבנים) */cloth.color.multiply(cloth.userData.robe);
             const skin=MAT_SKIN.clone();skin.skinning=true;skin.vertexColors=0;skin.color.offsetHSL((seed-0.5)*0.03,0,(seed-0.5)*0.04);
             const beard=new THREE.MeshStandardMaterial({color:0x3a2a20,roughness:0.86,metalness:0.02});beard.skinning=true;
             o.material=[cloth,skin,beard];
@@ -13999,7 +14078,7 @@ const TOURFIGS=(function(){
     if(clipName==="Walk"&&spec.prop)clipName="WalkCarry";
     if(clipName==="Working"&&spec.prop)clipName="Carry";
     const act=play(mixer,clipName,spec.speed||1);
-    const o={root,body,mixer,spec,t:Math.random()*10};
+    const o={root,body,mixer,spec,t:Math.random()*10};root.userData.fig=o;
     place(o);
     /* v114: קצב הצעדים לפי מהירות ההליכה בפועל (מחזור הליכה מלא = כ-1.78 מ׳), ופאזה אקראית כדי שלא יזוזו כולם יחד */
     if(act){if(spec.path&&spec._len&&!spec.speed&&/Walk/.test(clipName))act.timeScale=Math.max(0.3,Math.min(1.3,(spec._len*A/(spec.period||8))/1.78));try{act.time=Math.random()*act.getClip().duration}catch(e){}}
