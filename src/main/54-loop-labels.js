@@ -58,7 +58,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
 const UIX={f:0,r:[]};
 function uiRects(){if(UIX.f++%20)return UIX.r;const sr=stage.getBoundingClientRect();UIX.r=[];document.querySelectorAll("#sbox,#rail,#hud,.zgrp,#mini,#infocard,.story,#tbar,#stStrip,.exitb").forEach(e=>{if(e.hidden||!e.isConnected)return;const k=e.getBoundingClientRect();if(k.width<2||k.height<2)return;UIX.r.push([k.left-sr.left-6,k.top-sr.top-6,k.right-sr.left+6,k.bottom-sr.top+6])});return UIX.r}
 const ALT=[["translate(-50%,-120%)",(sx,sy,bw)=>[sx-bw/2,sy-34,sx+bw/2,sy-12]],["translate(-50%,20%)",(sx,sy,bw)=>[sx-bw/2,sy+4,sx+bw/2,sy+26]],["translate(8px,-50%)",(sx,sy,bw)=>[sx+8,sy-11,sx+8+bw,sy+11]],["translate(calc(-100% - 8px),-50%)",(sx,sy,bw)=>[sx-8-bw,sy-11,sx-8,sy+11]],["translate(-50%,-230%)",(sx,sy,bw)=>[sx-bw/2,sy-58,sx+bw/2,sy-36]],["translate(-50%,140%)",(sx,sy,bw)=>[sx-bw/2,sy+30,sx+bw/2,sy+52]]];
-function layoutLabels(w,h,inHouse,LOWC){const now=performance.now(),cp=camera.position,BOX=uiRects().slice(),used=new Set();LBN=0;
+function layoutLabels(w,h,inHouse,LOWC){const now=performance.now(),cp=camera.position,BOX=uiRects().slice(),used=new Set();LBN=0;/* 124.6: במבט מרחוק פחות שמות, כדי שהתמונה לא תתמלא בתוויות קטנות */const LCAP=!STORY&&!WALK&&cp.distanceTo(controls.target)>200?(SMALL?4:6):LMAX;
   const hitB=r=>BOX.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
   labels.forEach(L=>{L._d=cp.distanceTo(L.v)});
   const set=(L,on,hard)=>{if(hard||L.force){L._on=on;L._sw=0}else if(on!==!!L._on){if(!L._sw)L._sw=now;if(now-L._sw>=(on?160:320)){L._on=on;L._sw=0}}else L._sw=0;L.el.hidden=!L._on};
@@ -71,7 +71,7 @@ function layoutLabels(w,h,inHouse,LOWC){const now=performance.now(),cp=camera.po
     // the place the label had last time is tried first, so it does not hop between places
     const n=L.pr||L.force?ALT.length:1,first=(L._alt||0)<n?(L._alt||0):0;let pick=-1,rect=null;
     for(let q=0;q<n;q++){const a=q===0?first:(q<=first?q-1:q);const r=ALT[a][1](sx,sy,bw);if(r[0]<4||r[2]>w-4||r[1]<4||r[3]>h-4)continue;if(!hitB(r)){pick=a;rect=r;break}}
-    let ok=pick>=0&&(L.force||LBN<LMAX);
+    let ok=pick>=0&&(L.force||LBN<LCAP);
     set(L,ok,false);
     if(!L._on)return;if(key)used.add(key);LBN++;
     if(pick<0){pick=Math.min(L._alt||0,ALT.length-1);rect=ALT[pick][1](sx,sy,bw)}
