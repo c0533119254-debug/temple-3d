@@ -1,0 +1,12 @@
+<script src="music-module/music.js"></script>
+<script>try{TempleMusic.init({root:document.getElementById("stage")})}catch(e){}</script>
+<!--TEMPLE-LAYER v2-->
+<script>/* 124.2: כפתור המוזיקה בעמודת הכפתורים; כפתור ו־Esc ליציאה מהליכה */
+(function(){var st=document.getElementById("stage");if(!st)return;
+function mv(){var m=document.getElementById("temple-music-mute"),h=document.getElementById("hud");if(m&&h&&m.parentElement!==h){m.classList.add("hb");h.appendChild(m)}}
+mv();try{new MutationObserver(mv).observe(st,{childList:true})}catch(e){}
+var b=document.createElement("button");b.type="button";b.id="modeExit";b.textContent="✕ יציאה";b.setAttribute("aria-label","יציאה מההליכה וחזרה למבט הכללי");
+var home=function(){var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
+addEventListener("keydown",function(e){if(e.key!=="Escape")return;var c=document.body.classList;if(!c.contains("busy3d")||c.contains("touring")||c.contains("drawer")||c.contains("pane"))return;var a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;home()})})();
+</script>
+</body></html>

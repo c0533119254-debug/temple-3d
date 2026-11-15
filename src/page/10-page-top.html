@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang=he>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+/* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
+</script>
+<title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;600;700&family=Heebo:wght@400;600&family=IBM+Plex+Sans+Hebrew:wght@400;500;600&display=swap">
+<style>
+/* Layout: cinematic stage first; a slim glass control bar on it; inspector + notes below */
+:root{
+  --paper:#E8EDF1; --sheet:#F5F7F9; --ink:#1E386A; --ink-soft:#5B6F93; --holy:#B48526; --warn:#A33A2A; --line:#B9C6D6;
+  --glass:rgba(14,21,36,.62); --glass-ink:#EEF2F7; --glass-line:rgba(255,255,255,.18);
+  --f-display:"Frank Ruhl Libre","David","Times New Roman",serif;
+  --f-body:"IBM Plex Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E1524;--sheet:#141D30;--ink:#C9D6EA;--ink-soft:#8C9DBA;--holy:#D6AA4E;--warn:#E07A66;--line:#2D3A55;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0E1524;--sheet:#141D30;--ink:#C9D6EA;--ink-soft:#8C9DBA;--holy:#D6AA4E;--warn:#E07A66;--line:#2D3A55;color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+.wrap{max-width:1360px;margin:0 auto;padding-block:18px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:8px 24px;margin-bottom:12px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(24px,3.6vw,38px);margin:0;line-height:1.1}
+.sub{color:var(--ink-soft);margin:4px 0 0;max-width:72ch}
+.stamp{font-size:12px;border:1.5px solid var(--ink);padding:6px 10px;line-height:1.5}
+.stamp b{display:block;font-family:var(--f-display);font-size:15px}
+.stage{position:relative;height:min(70vh,780px);height:min(70svh,780px);min-height:420px;border-radius:6px;overflow:hidden;background:#9fb6cc;min-width:0}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.rows{display:flex;flex-direction:column;gap:6px;margin-top:10px}.row{display:flex;align-items:center;gap:8px;min-width:0}.rh{flex:none;width:6.2em;font-size:13px;color:var(--ink-soft)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start;min-width:0;flex:1}
+.grp{display:flex;flex-wrap:wrap;align-items:center;gap:4px;background:var(--glass);border:1px solid var(--glass-line);border-radius:8px;padding:4px 6px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.grp span{font-size:13px;color:#c9d4e6;padding:0 4px}
+.grp button{font:inherit;font-size:14px;min-height:34px;color:var(--glass-ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:5px 11px;cursor:pointer;white-space:nowrap}
+.grp button.help{min-width:30px;padding:3px 8px;border:1px solid var(--glass-line);border-radius:50%;font-weight:700;color:#E9D8A6}
+.grp button:hover{border-color:var(--glass-line)}
+.grp button[aria-pressed="true"]{background:#E9D8A6;color:#1b2333}
+.grp button:focus-visible{outline:2px solid #E9D8A6;outline-offset:1px}
+.lbl{position:absolute;top:0;left:0;font-size:12px;white-space:nowrap;background:rgba(14,21,36,.7);color:#EEF2F7;padding:1px 7px;border-radius:10px;pointer-events:none}
+.lbl.c{background:rgba(180,133,38,.9);color:#fff;font-weight:600}
+.story{position:absolute;left:12px;right:12px;bottom:12px;z-index:8;max-width:680px;margin:0 auto;background:var(--glass);color:var(--glass-ink);border:1px solid var(--glass-line,rgba(255,255,255,.25));border-radius:14px;padding:10px 14px 10px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.story[hidden]{display:none}.sthead{display:flex;align-items:center;gap:10px;font-size:14px}.sthead b{font-size:15px}.sthead span{opacity:.75;font-variant-numeric:tabular-nums}.sthead button{margin-inline-start:auto;background:none;border:0;color:inherit;font-size:22px;cursor:pointer;line-height:1}
+.stbar{height:3px;background:rgba(127,127,127,.3);border-radius:2px;margin:6px 0 8px;overflow:hidden}.stbar i{display:block;height:100%;width:0;background:#B48526;transition:width .6s}
+#stText{margin:0 0 6px;font-size:15px;line-height:1.55;height:4.65em;overflow-y:auto}html{overflow-anchor:none}.toast{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:12;max-width:min(520px,90%);background:#B48526;color:#fff;border-radius:12px;padding:10px 14px;font:600 14px/1.5 var(--f-body);box-shadow:0 6px 20px rgba(0,0,0,.3);cursor:pointer}.toast[hidden]{display:none}#stText mark{background:rgba(180,133,38,.28);color:inherit;border-radius:3px;padding:0 2px}
+.stctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.stctl button,.stctl select{border:1px solid rgba(127,127,127,.4);background:rgba(127,127,127,.12);color:inherit;border-radius:8px;padding:4px 9px;font:inherit;font-size:13px;cursor:pointer}.stctl button[aria-pressed="false"]{opacity:.55}.stnote{font-size:12px;opacity:.8;margin-top:6px}
+#stFold{display:none;background:none;border:0;color:inherit;font-size:16px;cursor:pointer;padding:0 4px}
+#stFold+#stX{margin-inline-start:0}
+@media (max-width:640px){.story{bottom:6px;left:6px;right:6px;padding:6px 9px;border-radius:12px}#stText{font-size:13px;line-height:1.45;height:4.4em;max-height:none;overflow-y:auto;margin-bottom:4px}.story.fold #stText{display:none}.stbar{margin:4px 0 5px}.sthead{font-size:12px}.sthead b{font-size:13px}.stctl{gap:4px}.stctl button,.stctl select{padding:3px 6px;font-size:12px}.stctl .lbl2{display:none}.stnote{display:none}#stFold{display:inline-block}}
+.caption{position:absolute;top:12px;right:60px;left:12px;display:flex;justify-content:flex-start;pointer-events:none}
+.caption div{font-size:15px!important;line-height:1.55;background:var(--glass);color:var(--glass-ink);border:1px solid var(--glass-line);border-radius:8px;padding:6px 12px;font-size:14px;max-width:62ch;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.joy{position:absolute;z-index:4;left:calc(68px + env(safe-area-inset-left,0px));/* v101 · משימה 08: מימין לעמודת כפתורי הפינה (12+44 פיקסלים), כדי שכפתור הבית לא יכסה את הבקר */bottom:150px;width:112px;height:112px;border-radius:50%;background:rgba(14,21,36,.35);border:1px solid rgba(255,255,255,.35);touch-action:none;user-select:none;-webkit-user-select:none}
+.joy[hidden]{display:none}
+.knob{position:absolute;left:36px;top:36px;width:40px;height:40px;border-radius:50%;background:rgba(233,216,166,.9);box-shadow:0 2px 6px rgba(0,0,0,.35);pointer-events:none}
+.walkhint{position:absolute;z-index:24;top:12px;left:60px;right:calc(80px + min(392px,100% - 92px));margin:0 auto;width:fit-content;max-width:100%;text-align:center;font-size:14px;color:#fff;background:rgba(14,21,36,.7);padding:6px 12px;border-radius:10px;pointer-events:none} /* v104: clear #sbox (top:12, right:68, width 392, plus chips). Previous top:68 still overlapped the chips row (~84×32 at 1280). Phone: top:58px below the bar. */
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:15px;background:#1b2639}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:900px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--sheet);border:1px solid var(--line);padding:12px 14px;border-radius:6px;min-width:0}
+.panel h2{font-family:var(--f-display);font-size:19px;margin:0 0 4px;line-height:1.25}
+.ref{font-size:13px;color:var(--holy);font-weight:600}
+.note{margin:6px 0 0;font-size:14px}
+.hint{font-size:13px;color:var(--ink-soft);margin:0}
+.fit{border-inline-start:4px solid var(--warn)}
+.fit.ok{border-inline-start-color:var(--holy)}
+ul.plain{margin:0;padding-inline-start:18px;font-size:14px}
+ul.plain li+li{margin-top:3px}
+@media (max-width:700px){.bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:6px;scrollbar-width:thin}.grp{flex-wrap:nowrap;flex:none}.lbl{font-size:11px;padding:0 6px}.stage{height:min(64vh,640px);height:min(64svh,640px);min-height:340px}.walkhint{font-size:12.5px}.caption div{font-size:13px}}
+.attrib{position:absolute;right:8px;bottom:8px;font-size:10.5px;line-height:1.4;color:#fff;background:rgba(10,14,22,.62);padding:1px 7px;border-radius:5px;pointer-events:none;direction:ltr}.attrib[hidden]{display:none}
+.perfbtn{position:absolute;left:8px;bottom:8px;z-index:6;width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,14,22,.55);color:#fff;font-size:14px;cursor:pointer}.perfbox{position:absolute;left:44px;bottom:10px;z-index:6;background:rgba(10,14,22,.75);color:#d8f5d0;font:12px/1.4 monospace;padding:4px 8px;border-radius:6px;direction:ltr}.perfbox[hidden]{display:none}
+.hud{position:absolute;top:12px;right:12px;display:flex;flex-direction:column;gap:6px;z-index:5}.hb{width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(14,21,36,.62);color:#fff;font-size:18px;line-height:1;cursor:pointer;position:relative;display:grid;place-items:center}.hb small{position:absolute;bottom:2px;font-size:8px;opacity:.8}#needle{display:inline-block;color:#e8584a;font-size:13px;transition:transform .1s linear}
+#mini{position:absolute;top:100px;right:12px;width:110px;height:110px;border-radius:50%;border:2px solid rgba(255,255,255,.6);box-shadow:0 2px 10px rgba(0,0,0,.3);z-index:5;background:#555}
+.exitb{position:absolute;top:12px;left:12px;z-index:6;background:#B48526;color:#fff;border:0;border-radius:20px;padding:8px 16px;font:600 14px var(--f-body);cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.3)}.exitb[hidden]{display:none}
+.legend{position:absolute;bottom:34px;right:8px;display:flex;gap:6px;z-index:4;pointer-events:none}.lg{font-size:11px;padding:1px 8px;border-radius:10px;color:#fff}.lg.g{background:rgba(180,133,38,.9)}.lg.s{background:rgba(14,21,36,.7)}
+@media (max-width:700px){#mini{width:84px;height:84px;top:96px}.legend{display:none}}
+.fastb{position:absolute;left:calc(140px + env(safe-area-inset-left,0px));bottom:84px;z-index:6;border:1px solid rgba(255,255,255,.4);background:rgba(14,21,36,.6);color:#fff;border-radius:18px;padding:7px 12px;font:600 13px var(--f-body);cursor:pointer}.fastb[aria-pressed="true"]{background:#B48526}.fastb[hidden]{display:none}
+.fade{position:absolute;inset:0;background:#0b0f18;opacity:0;pointer-events:none;transition:opacity .3s ease;z-index:4}.fade.on{opacity:1}
+.zoomhint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(10,14,22,.78);color:#fff;padding:8px 14px;border-radius:8px;font-size:14px;pointer-events:none;z-index:6}.zoomhint[hidden]{display:none}
+.infocard{position:absolute;top:12px;left:12px;width:min(340px,72%);max-height:58%;overflow:auto;background:rgba(14,21,36,.86);color:#EEF2F7;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:10px 14px 12px;font-size:13.5px;line-height:1.55;box-shadow:0 6px 24px rgba(0,0,0,.35);z-index:5}
+.infocard[hidden]{display:none}.infocard h2{font-size:16px;margin:0 0 4px 26px;color:#f3d48a}.infocard .ref{font-size:12px;color:#c9d3e0;margin-bottom:6px}.infocard p{margin:0}
+#infoX{position:absolute;top:6px;left:8px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:17px;line-height:26px;cursor:pointer}
+.lbl.go{pointer-events:auto;cursor:pointer}.lbl.go:hover{filter:brightness(1.2)}
+.ft{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px}.ft th,.ft td{border:1px solid rgba(128,128,128,.35);padding:3px 6px;text-align:right}.ft th{font-weight:600}
+.foot{margin-top:14px;font-size:14px;line-height:1.6;color:var(--ink);opacity:.85;max-width:95ch}
+#oS{display:none}@media (min-width:900px){#oS{display:inline-flex;align-items:center}}
+
+/* ---- page chrome ---- */
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}
+.eyebrow{font-size:12.5px;letter-spacing:.02em;color:var(--holy);font-weight:600;margin-bottom:4px}
+.top h1{font-size:clamp(26px,3.4vw,38px)}
+.top .sub{margin-top:6px;font-size:15px;max-width:70ch}
+.badge{flex:none;font-size:12.5px;line-height:1.45;color:var(--ink-soft);border:1px solid var(--line);border-radius:8px;padding:6px 12px;text-align:center;background:var(--sheet)}
+.badge span{color:var(--ink);font-weight:600}
+.stage{border-radius:12px;box-shadow:0 8px 28px rgba(20,35,70,.14)}
+.controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px;margin-top:14px}
+.cgroup{background:var(--sheet);border:1px solid var(--line);border-radius:12px;padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.cgroup:first-child{grid-column:1/-1}
+.cgroup:last-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;column-gap:14px}.cgroup:last-child .ch{grid-column:1/-1}
+.ch{margin:0;font-family:var(--f-display);font-size:17px;font-weight:700;color:var(--ink)}
+.ctl{display:flex;flex-direction:column;gap:5px;min-width:0}
+.cl{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-soft)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:3px;min-width:0}
+.seg button{font:inherit;font-size:14px;line-height:1.2;min-height:34px;color:var(--ink);background:transparent;border:0;border-radius:7px;padding:6px 12px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s}
+.seg button:hover{background:rgba(127,140,170,.14)}
+.seg button[aria-pressed="true"],.seg button[aria-pressed="true"]:hover{background:var(--ink);color:var(--sheet);font-weight:600}
+.seg button:focus-visible,.help:focus-visible{outline:2px solid var(--holy);outline-offset:2px}
+.seg.chips button[aria-pressed="true"],.seg.chips button[aria-pressed="true"]:hover{background:var(--holy);color:#fff}
+#viewSeg button[aria-pressed="true"],#viewSeg button[aria-pressed="true"]:hover{background:var(--holy)!important;color:#fff!important}#viewSeg button[aria-pressed="true"] *{color:#fff!important}
+.seg .tour{background:var(--holy);color:#fff;font-weight:700;margin-inline-end:6px}
+.seg .tour:hover{background:var(--holy);filter:brightness(1.08)}
+.help{width:18px;height:18px;border-radius:50%;border:1px solid var(--line);background:var(--sheet);color:var(--ink-soft);font:600 11px/16px var(--f-body);padding:0;cursor:pointer;font-style:italic}
+.help:hover{color:var(--holy);border-color:var(--holy)}
+.grid{gap:12px}
+.panel{border-radius:12px;padding:14px 16px}
+.panel h2{font-size:18px;margin-bottom:6px}
+ul.plain{line-height:1.55}
+.foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-soft);max-width:none;opacity:1}
+.foot p{margin:0 0 6px}.foot .credits{font-size:12.5px}
+@media (max-width:980px){.controls{grid-template-columns:1fr}.cgroup:first-child{grid-column:auto}}
+@media (max-width:560px){.cgroup:last-child{grid-template-columns:1fr}}
+@media (max-width:700px){.top{flex-direction:column;align-items:flex-start}.badge{display:none}.seg{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}.seg::-webkit-scrollbar{display:none}.seg button{flex:none;font-size:13.5px;padding:6px 10px}}
+@media (max-width:700px){.infocard{top:auto;bottom:0;left:0;right:0;width:auto;max-height:46%;border-radius:14px 14px 0 0;font-size:14px}}
+.seg button:disabled{opacity:.5;cursor:wait}
+</style>
+
+<style id="uicss">
+/* v77 review mode */
+#revBtn{position:absolute;right:12px;bottom:12px;z-index:26;height:30px;padding:0 12px;border-radius:15px;border:1px solid var(--ln);background:var(--nb2);color:var(--cr2);font:600 12.5px var(--f-body);cursor:pointer;opacity:.85}
+#revBtn:hover{color:var(--gold2);border-color:var(--gold)}
+body.touring #revBtn{display:none}
+@media (max-width:700px){#revBtn{bottom:auto;top:112px;right:8px}}
+body.review #sbox,body.review #rail,body.review .dr,body.review #intro,body.review .infocard,body.review #tbar,body.review .story,body.review #mini,body.review .exitb,body.review #resume,body.review .caption,body.review #icline,body.review .vjoy,body.review #pad,body.review .walkhint,body.review #toast,body.review .toast{display:none!important}
+#revOv{position:absolute;inset:0;pointer-events:none;z-index:45;direction:rtl}
+#rvTop{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:min(880px,calc(100% - 24px));box-sizing:border-box;background:rgba(9,13,10,.84);color:#F5EFE0;border:1px solid rgba(212,175,87,.4);border-radius:14px;padding:10px 16px 12px;text-align:center;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#rvN{font:700 clamp(24px,4.4vw,40px)/1.15 var(--f-display);color:#F0D58C}
+#rvM{font:600 clamp(15px,2.2vw,20px)/1.4 var(--f-body);margin-top:4px}
+#rvM b{color:#8CCB98;font-size:1.2em}#rvM small{opacity:.7}
+#rvH{font:600 clamp(14px,2vw,18px)/1.5 var(--f-body);margin-top:6px;white-space:pre-line}
+#rvBar{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:center;width:max-content;max-width:calc(100% - 24px)}
+#rvBar button{height:44px;padding:0 18px;border-radius:22px;border:1px solid rgba(212,175,87,.5);background:rgba(9,13,10,.88);color:#F5EFE0;font:700 15px var(--f-body);cursor:pointer}
+#rvBar #rvStop{background:#D4AF57;color:#1a1408;min-width:84px}
+#rvBar #rvExit{font-weight:600;opacity:.85}
+@media (max-width:700px){#rvBar{bottom:10px;gap:6px}#rvBar button{height:40px;padding:0 12px;font-size:14px}}
+
+
+[hidden]{display:none!important}
+/* ==== v61: Google Maps / Earth style shell ==== */
+:root{--nb:rgba(9,13,10,.9);--nb2:rgba(9,13,10,.95);--nbh:rgba(201,162,75,.12);--gold:#D4AF57;--gold2:#F0D58C;--green:#4E9A63;--green2:#8CCB98;--cream:#F5EFE0;--cr2:rgba(245,239,224,.7);--ln:rgba(212,175,87,.22);--f-display:"Frank Ruhl Libre","David",serif;--f-body:"Assistant","Heebo","IBM Plex Sans Hebrew",Arial,sans-serif;--sh:0 2px 6px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.25)}
+html,body{margin:0;height:100%;overflow:hidden;background:#070a08}
+body{font-family:var(--f-body)}
+.wrap{max-width:none!important;padding:0!important;margin:0!important}
+.wrap>header,.wrap>.controls,.wrap>.grid,.wrap>footer{display:none!important}
+.stage{position:fixed!important;inset:0;height:100%!important;min-height:0!important;border-radius:0!important;box-shadow:none!important}
+.ui{transition:opacity .4s}
+body.idle .ui.dim:not(:hover):not(:focus-within){opacity:.45}
+.gl{background:var(--nb);color:var(--cream);border:1px solid var(--ln);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:12px;box-shadow:var(--sh)}
+.ico{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* map labels: text with a halo, like a map — not pills */
+.lbl{background:none!important;color:#fff!important;padding:0!important;border-radius:0!important;font:600 13px var(--f-body)!important;text-shadow:0 0 2px #000,0 0 4px #070a08,0 0 6px rgba(7,10,8,.85),0 1px 2px #000;letter-spacing:.01em;display:flex;align-items:center;gap:4px;flex-direction:row-reverse}
+.lbl::after{content:"";width:9px;height:9px;border-radius:50%;background:var(--green2);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.5);flex:none}
+.lbl.c::after{background:var(--gold)}
+.lbl.c{color:#fff3d6!important}
+/* labels come in softly instead of popping */
+@keyframes lblIn{from{opacity:0}to{opacity:1}}.lbl:not([hidden]){animation:lblIn .22s ease-out}@media (prefers-reduced-motion:reduce){.lbl:not([hidden]){animation:none}}
+.lbl.hl{background:none!important;color:#ffe7a6!important;font-size:14px!important;z-index:3}
+.lbl.hl::after{width:13px;height:13px;background:var(--gold);box-shadow:0 0 0 4px rgba(201,162,75,.35)}
+/* search: a solid pill, always visible */
+#sbox{position:absolute;top:12px;right:68px;z-index:30;width:min(392px,calc(100% - 92px));direction:rtl}
+#sbox .row1{display:flex;align-items:center;gap:2px;height:48px;padding:0 4px;box-sizing:border-box;border-radius:24px;background:var(--nb2);border:1px solid var(--ln);box-shadow:var(--sh)}
+#sbox .row1:focus-within{border-color:var(--gold)}
+#sq{flex:1;min-width:0;height:44px;background:transparent;border:0;outline:0;color:var(--cream);font:500 16px var(--f-body);padding:0 8px}
+#sq::placeholder{color:var(--cr2)}
+#sbox .ib2{width:40px;height:40px;border:0;background:none;color:var(--cr2);border-radius:50%;display:grid;place-items:center;cursor:pointer;flex:none}
+#sbox .ib2:hover{background:var(--nbh);color:var(--cream)}
+#sbox .ib2.go{color:var(--gold)}
+#chips{display:flex;gap:8px;margin-top:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+@media (min-width:701px){#chips{overflow:visible;width:max-content}}
+#chips::-webkit-scrollbar{display:none}
+#chips button{flex:none;display:flex;align-items:center;gap:6px;border:1px solid var(--ln);background:var(--nb2);color:var(--cream);border-radius:16px;padding:0 12px;height:32px;font:600 13px var(--f-body);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+#chips button .ico{width:16px;height:16px}
+#chips button[aria-pressed="true"]{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+#sres{margin-top:6px;max-height:min(62vh,540px);overflow:auto;padding:6px 0;background:var(--nb2)!important;border-radius:14px}
+#sres[hidden]{display:none}
+#sres h4{margin:10px 16px 4px;font:700 12px var(--f-body);color:var(--gold)}
+#sres button{display:flex;align-items:center;gap:12px;width:100%;text-align:right;background:none;border:0;color:var(--cream);padding:8px 16px;cursor:pointer;font:inherit;min-height:48px}
+#sres button:hover,#sres button.on{background:var(--nbh)}
+#sres .ri{flex:none;width:32px;height:32px;border-radius:50%;background:rgba(78,154,99,.2);color:var(--green2);display:grid;place-items:center}
+#sres .ri .ico{width:17px;height:17px}
+#sres .rt{display:flex;flex-direction:column;min-width:0}#sres .rt b{font-weight:600;font-size:15px}#sres .rt small{color:var(--cr2);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:290px}
+#sres .none{padding:12px 16px;color:var(--cr2);font-size:14px}
+/* right rail: icons only */
+#rail{position:absolute;right:12px;top:12px;z-index:22;display:flex;flex-direction:column;gap:2px;padding:4px;border-radius:24px}
+#rail button{width:44px;height:44px;border:0;border-radius:50%;background:none;color:var(--cream);cursor:pointer;display:grid;place-items:center;position:relative}
+#rail button:hover{background:var(--nbh)}
+#rail button[aria-pressed="true"]{background:var(--gold);color:#1a1408}
+#rail button[data-tip]:hover::before{content:attr(data-tip);position:absolute;right:52px;top:50%;transform:translateY(-50%);background:#000c;color:#fff;font:600 12.5px var(--f-body);padding:4px 9px;border-radius:6px;white-space:nowrap;pointer-events:none}
+#rail button:focus-visible,#hud button:focus-visible,.dr button:focus-visible,#pane button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.dr{position:absolute;right:68px;top:12px;bottom:12px;width:min(320px,calc(100% - 96px));z-index:21;overflow:auto;padding:16px 16px 20px;box-sizing:border-box;transform:translateX(14px);opacity:0;pointer-events:none;transition:transform .2s,opacity .2s;direction:rtl;background:var(--nb2)!important}
+.dr.open{transform:none;opacity:1;pointer-events:auto}
+.dr::after{content:"";position:sticky;display:block;bottom:-20px;height:0;margin:0 -16px -20px;pointer-events:none;transition:height .2s,opacity .2s;opacity:0}
+.dr.more::after{content:"▾ גללו להמשך";height:44px;opacity:1;background:linear-gradient(to bottom,rgba(0,0,0,0),var(--nb2) 70%);color:var(--gold);font:600 12px var(--f-body);text-align:center;line-height:60px}
+.dr h2{font:700 22px var(--f-display);margin:0 0 12px;color:var(--gold2);letter-spacing:.01em}
+.dr h3{font:700 13px var(--f-body);color:var(--gold);margin:16px 0 6px}
+.dr p,.dr li{font-size:14px;line-height:1.55;color:var(--cream)}
+.dr .ch,.dr .cl{color:var(--cr2)!important}
+.dr .seg{background:rgba(255,255,255,.05)!important;border-color:var(--ln)!important;flex-wrap:wrap!important}
+.dr .seg button{color:var(--cream)!important;min-height:40px}
+.dr .seg button[aria-pressed="true"]{background:var(--gold)!important;color:#1a1408!important}
+.dr .seg .tour,.dr #vDrone{display:none!important}
+.dr .ctl{margin-bottom:12px}
+.dr .help{background:none;border:1px solid var(--ln);color:var(--gold);border-radius:50%;width:24px;height:24px;cursor:pointer;font-weight:700}
+.dr .panel{background:rgba(255,255,255,.04)!important;border-color:var(--ln)!important;color:var(--cream)}
+.dr .panel h2{font-size:16px}
+.dr .x{position:absolute;left:10px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--cr2);cursor:pointer;display:grid;place-items:center}
+.dr .x:hover{background:var(--nbh)}
+.tcard{display:flex;gap:12px;align-items:center;width:100%;text-align:right;background:rgba(255,255,255,.04);border:1px solid var(--ln);border-radius:12px;padding:10px;margin-bottom:10px;cursor:pointer;color:var(--cream);font:inherit;min-height:72px}
+.tcard:hover{border-color:var(--gold)}
+.tcard .tim{flex:none;width:64px;height:64px;border-radius:10px;display:grid;place-items:center;font-size:28px;color:var(--gold2);background:linear-gradient(135deg,#123020,#2f6a44 45%,#a07c2c)}
+.tcard b{display:block;font:700 16px var(--f-display)}.tcard small{color:var(--cr2);font-size:12.5px}
+.plist button{display:flex;align-items:center;gap:10px;width:100%;text-align:right;background:none;border:0;border-bottom:1px solid var(--ln);color:var(--cream);padding:10px 4px;font:inherit;font-size:14.5px;cursor:pointer;min-height:44px}
+.plist button:hover{color:var(--gold)}
+.plist button .ico{width:17px;height:17px;color:var(--gold)}
+.hourctl{min-width:0}
+.hourctl .cl b{font-weight:700;color:var(--cream)}
+.hslide{position:relative}
+.hmarks{position:absolute;left:14px;right:14px;top:0;bottom:0;pointer-events:none;z-index:3}
+.hmarks i{position:absolute;top:1px;width:2px;height:26px;border-radius:1px;background:var(--gold2);box-shadow:0 0 0 1px rgba(9,13,10,.7);transform:translateX(50%)}
+.hmarks i.on{width:3px;background:#fff}
+#hslider{-webkit-appearance:none;appearance:none;display:block;width:100%;height:44px;margin:0;background:transparent;direction:rtl;touch-action:none;position:relative;z-index:2;cursor:pointer}
+#hslider:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#hslider::-webkit-slider-runnable-track{height:6px;background:rgba(212,175,87,.35);border-radius:3px}
+#hslider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;margin-top:-11px;border-radius:50%;background:var(--gold);border:2px solid #1a1408;box-shadow:0 1px 4px rgba(0,0,0,.45);cursor:pointer}
+#hslider::-moz-range-track{height:6px;background:rgba(212,175,87,.35);border-radius:3px;border:0}
+#hslider::-moz-range-thumb{width:28px;height:28px;border:2px solid #1a1408;border-radius:50%;background:var(--gold);box-shadow:0 1px 4px rgba(0,0,0,.45);cursor:pointer}
+.hcap{min-height:22px;margin-top:2px;font:700 15px/22px var(--f-display);color:var(--gold2)}
+.hlist{display:flex;flex-wrap:nowrap;gap:0 8px;margin-top:2px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;font-size:12px;line-height:1.45;color:var(--cr2)}
+.hlist::-webkit-scrollbar{display:none}
+.hlist span{flex:none}
+.hlist .dot{color:rgba(212,175,87,.45)}
+.hlist span.on{color:var(--gold2);font-weight:700}
+.dr .seg.tap{gap:6px}
+.dr .seg.tap button{min-height:44px;flex:1 1 auto;padding:8px 10px;font-size:15px}
+kbd{background:rgba(255,255,255,.1);border:1px solid var(--ln);border-radius:5px;padding:0 6px;font:12px monospace;direction:ltr;unicode-bidi:isolate}
+bdi.n{direction:ltr;unicode-bidi:isolate}
+/* corner controls, like Google Earth: bottom-left column */
+.hud{top:auto!important;right:auto!important;left:12px!important;bottom:24px!important;flex-direction:column-reverse!important;gap:8px!important;z-index:20!important}
+.hud .hb{width:44px!important;height:44px!important;border-radius:50%!important;background:var(--nb2)!important;border:1px solid var(--ln)!important;color:var(--cream)!important;box-shadow:var(--sh);display:grid!important;place-items:center}
+.hud .zgrp{display:flex;flex-direction:column;border-radius:22px;background:var(--nb2);border:1px solid var(--ln);box-shadow:var(--sh);overflow:hidden}
+.hud .zgrp button{width:44px;height:44px;border:0;background:none;color:var(--cream);cursor:pointer;display:grid;place-items:center;font-size:22px}
+.hud .zgrp button+button{border-top:1px solid var(--ln)}
+.hud .zgrp button:hover{background:var(--nbh)}.hud .zgrp button:disabled{opacity:.4;cursor:not-allowed}
+#mini{top:auto!important;right:auto!important;left:66px!important;bottom:24px!important}
+.perfbtn{display:none!important}.perfbox{left:auto!important;right:68px!important;top:72px!important;bottom:auto!important;direction:rtl}
+.legend{display:none!important}
+.attrib{right:auto!important;left:66px!important;bottom:2px!important;font-size:10px!important}
+.exitb{top:72px!important;left:12px!important;right:auto!important;border-radius:20px!important}
+/* the place panel: full height on the left, like Google Maps */
+.infocard{top:0!important;left:0!important;bottom:0!important;width:min(408px,100%)!important;max-height:none!important;height:100%;box-sizing:border-box;background:var(--nb2)!important;color:var(--cream)!important;border:0!important;border-right:1px solid var(--ln)!important;border-radius:0!important;padding:0!important;backdrop-filter:blur(14px);font-size:15px!important;z-index:25!important;direction:rtl;overflow:auto;box-shadow:4px 0 24px rgba(0,0,0,.35)!important;animation:paneIn .2s ease-out}
+@keyframes paneIn{from{transform:translateX(-24px);opacity:0}to{transform:none;opacity:1}}
+#infoX{position:absolute;left:12px;top:12px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,.35)!important;color:#fff!important;border:0!important;font-size:22px!important;z-index:2;cursor:pointer}
+.ic-hero{height:132px;display:grid;place-items:center;background:radial-gradient(circle at 50% 120%,rgba(240,213,140,.55),transparent 60%),linear-gradient(160deg,#0b120d 0%,#1f3a27 55%,#6b5320 100%);color:var(--gold2)}
+.ic-hero .ico{width:54px;height:54px;stroke-width:1.2}
+.ic-head{padding:16px 20px 8px}
+.infocard h2{font:700 26px/1.25 var(--f-display)!important;color:var(--gold2)!important;margin:0 0 6px!important}
+.ic-type{font-size:14px;color:var(--cr2);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ic-tag{border-radius:10px;padding:1px 9px;font-weight:700;font-size:12.5px;background:rgba(201,162,75,.2);color:var(--gold)}
+.ic-tag.s{background:rgba(78,154,99,.22);color:var(--green2)}
+.ic-btns{display:flex;justify-content:space-around;gap:4px;padding:12px 12px 14px;border-bottom:1px solid var(--ln)}
+.ic-btns button{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;color:var(--gold);font:600 12.5px var(--f-body);cursor:pointer;min-width:64px}
+.ic-btns button span.c{width:40px;height:40px;border-radius:50%;border:1px solid var(--ln);display:grid;place-items:center;background:rgba(255,255,255,.04)}
+.ic-btns button:hover span.c{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+.ic-btns button .ico{width:19px;height:19px}
+.ic-body{padding:14px 20px 24px}
+.ic-txt{line-height:1.65}.ic-txt.short{max-height:9.9em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent)}
+.ic-more{background:none;border:0;color:var(--gold);font:700 13.5px var(--f-body);cursor:pointer;padding:6px 0}
+.ic-row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--ln);font-size:14px}
+.ic-row .ico{color:var(--gold);width:20px;height:20px;margin-top:1px}
+.ic-src{display:flex;flex-direction:column;gap:6px}
+.ic-src a{color:var(--cream);text-decoration:none}.ic-src a:hover{color:var(--gold);text-decoration:underline}
+.ic-near button{display:block;background:none;border:0;color:var(--cream);cursor:pointer;font:inherit;padding:3px 0;text-align:right}.ic-near button:hover{color:var(--gold)}
+#icline{position:absolute;inset:0;pointer-events:none;z-index:15}
+#share-t{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);z-index:30}
+body.pane .hud,body.pane #mini{left:420px!important}
+body.pane .exitb{left:420px!important}
+/* tours: step card left, fixed bar at the bottom */
+.story{left:12px!important;right:auto!important;top:72px!important;bottom:auto!important;width:min(380px,calc(100% - 24px));max-width:none!important;margin:0!important;background:var(--nb2)!important;color:var(--cream)!important;border:1px solid var(--ln)!important;border-radius:14px!important;padding:16px 18px!important;z-index:24!important;direction:rtl;box-shadow:var(--sh)}
+.story .sthead b#stTitle{display:none}
+.story .sthead{font-size:13px;color:var(--cr2)}
+#stStep{font:700 23px/1.3 var(--f-display);margin:2px 0 8px;color:var(--gold2)}
+#stText{font-size:18px!important;line-height:1.6!important;height:auto!important;max-height:42vh;overflow:auto}
+#stVerse{margin:0 0 8px;font:italic 14.5px/1.45 var(--f-display);color:var(--gold2);direction:rtl}
+#stVerse.reading span{color:#F5EFE0;transition:color .6s}
+#stVerse cite{display:inline;margin-inline-start:8px;font:600 12.5px/1.3 var(--f-body);font-style:normal;color:var(--cr2)}
+.story.fold #stVerse{display:none}
+.story .stbar{display:none}
+#tbar{position:absolute;left:12px;right:68px;bottom:12px;z-index:24;height:64px;display:flex;align-items:center;gap:10px;padding:0 10px;box-sizing:border-box;direction:rtl}
+#tbar[hidden]{display:none}
+#tbar .stctl{flex:none;display:flex;gap:6px;align-items:center;margin:0}
+#tbar .stctl button,#tbar .stctl select{height:40px;min-width:40px;border-radius:20px}
+#tbar .tx{flex:none;height:40px;padding:0 16px;border-radius:20px;border:1px solid var(--gold);background:var(--gold);color:#140f04;font:700 14px var(--f-body);cursor:pointer}
+#stStrip{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin;padding:4px 0}
+#stStrip button{flex:none;border:1px solid var(--ln);background:rgba(255,255,255,.05);color:var(--cr2);border-radius:16px;padding:0 12px;height:32px;font:600 12.5px var(--f-body);cursor:pointer;white-space:nowrap}
+#stStrip button.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+body.touring #chips,body.touring #rail,body.touring .dr{display:none!important}
+body.touring .infocard{display:none!important}
+#resume{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);z-index:26;height:44px;padding:0 20px;border-radius:22px;border:0;background:var(--gold);color:#1a1408;font:700 15px var(--f-body);cursor:pointer;box-shadow:var(--sh)}
+#resume[hidden]{display:none}
+/* intro */
+#intro{position:absolute;inset:0;z-index:40;display:grid;place-items:center;background:rgba(5,9,18,.25);pointer-events:none}#intro .box{pointer-events:auto}
+#intro[hidden]{display:none}
+#intro .box{width:min(420px,calc(100% - 32px));padding:24px 24px 18px;text-align:center}
+#intro .ill{width:64px;height:64px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;background:rgba(201,162,75,.16);color:var(--gold)}
+#intro .ill .ico{width:32px;height:32px}
+#intro h2{font:700 26px var(--f-display);margin:0 0 8px;color:var(--gold2)}
+#intro p{font-size:16px;line-height:1.6;margin:0 0 16px;color:var(--cream)}
+#intro .dots{display:flex;gap:6px;justify-content:center;margin-bottom:14px}#intro .dots i{width:8px;height:8px;border-radius:50%;background:var(--ln)}#intro .dots i.on{background:var(--gold)}
+#intro .ib{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#intro button{min-height:46px;border-radius:23px;border:1px solid var(--ln);background:rgba(255,255,255,.08);color:var(--cream);font:700 15px var(--f-body);padding:0 20px;cursor:pointer}
+#intro button.pri{background:var(--gold);color:#1a1408;border-color:var(--gold)}
+/* dual joysticks (touch) */
+.vjoy{position:absolute;bottom:96px;width:120px;height:120px;border-radius:50%;background:rgba(16,24,42,.45);border:2px solid rgba(245,239,224,.35);z-index:23;touch-action:none}
+.vjoy i{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:rgba(245,239,224,.75)}
+.vjoy.l{left:calc(68px + env(safe-area-inset-left,0px))}.vjoy.r{right:calc(24px + env(safe-area-inset-right,0px))}
+.vjoy[hidden]{display:none}
+/* phone */
+@media (max-width:700px){
+  .walkhint{top:58px;left:12px;right:12px;max-width:calc(100% - 24px)} /* v101 · משימה 08: מתחת לשורת החיפוש, כדי שהרמז לא ייחסם */
+  .vjoy.l{left:calc(68px + env(safe-area-inset-left,0px))}
+  #sbox{top:8px;right:8px;width:calc(100% - 16px)}
+  #rail{top:auto!important}
+  #rail{top:auto;bottom:0;right:0;left:0;transform:none;flex-direction:row;justify-content:space-around;border-radius:16px 16px 0 0;padding:4px 6px calc(4px + env(safe-area-inset-bottom,0px))}
+  #rail button{flex:1;height:52px;border-radius:12px}
+  #rail button[data-tip]:hover::before{display:none}
+  .dr{right:0;left:0;top:auto;bottom:60px;width:auto;max-height:58vh;border-radius:18px 18px 0 0;transform:translateY(24px)}
+  .dr.full{max-height:calc(100% - 80px)}
+  .dr .grab{display:block}
+  /* bottom sheet: full height, moved down by JS (core/32 sheetSet) to a strip / the buttons / half / full */
+  .infocard{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto!important;height:calc(100% - 64px)!important;max-height:none!important;border-radius:18px 18px 0 0!important;border-right:0!important;animation:none!important;transition:transform .28s cubic-bezier(.2,.8,.2,1);will-change:transform;overscroll-behavior:contain;touch-action:none;box-shadow:0 -6px 24px rgba(0,0,0,.4)!important}
+  .infocard.full{touch-action:pan-y}
+  .infocard.drag{transition:none}
+  .ic-hero{display:none}
+  .ic-head{padding-top:6px}
+  .ic-grab{display:block!important;width:48px!important;height:5px!important;margin:0 auto!important;padding:10px 40px!important;background-clip:content-box!important;box-sizing:content-box;cursor:grab}
+  body.pane .hud,body.pane #mini{left:12px!important}
+  .hud{bottom:72px!important}
+  #mini{bottom:72px!important}
+  .story{top:auto!important;bottom:72px!important;left:0!important;right:0!important;width:auto;border-radius:16px 16px 0 0!important;padding:12px 14px!important}
+  #stText{font-size:17px!important;max-height:24vh}
+  #stVerse{font-size:13.5px;margin-bottom:6px}
+  #stStep{font-size:19px}
+  #tbar{left:0;right:0;bottom:0;border-radius:0!important;height:68px}
+  #tbar .lbl2{display:none}
+  #tbar{gap:6px;padding:0 6px}
+  #tbar #stStrip{display:none}
+  #tbar .stctl{flex:1 1 auto;min-width:0;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  #tbar .stctl::-webkit-scrollbar{display:none}
+  #tbar .stctl>*{flex:none}
+  #tbar .tx{padding:0 12px}
+  .vjoy{bottom:150px}
+  .exitb{top:64px!important}
+}
+.dr .grab,.ic-grab{display:none;width:44px;height:5px;border-radius:3px;background:var(--ln);margin:8px auto 4px;cursor:grab}
+
+/* hod & hadar: a thin gold rule on panels, green for freshness */
+.gl,.dr,.infocard,.story,#sbox .row1,#sres{border-color:var(--ln)!important}
+.dr,.story{background-image:linear-gradient(180deg,rgba(212,175,87,.07),transparent 140px)!important}
+#sbox .row1:focus-within{box-shadow:0 0 0 2px rgba(212,175,87,.35),var(--sh)}
+#chips button:hover{border-color:var(--green2)}
+.ic-btns button{color:var(--gold2)}
+.ic-row .ico,.plist button .ico{color:var(--green2)}
+.dr h3{color:var(--green2)!important}
+#stStrip button.on,#rail button[aria-pressed="true"],#chips button[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold2),var(--gold))!important;color:#140f04!important}
+.dr.open~#sbox,body.drawer #sbox{display:none}
+.dr,.infocard .ic-body{scrollbar-width:thin;scrollbar-color:rgba(212,175,87,.5) transparent}.dr::-webkit-scrollbar{width:6px}.dr::-webkit-scrollbar-thumb{background:rgba(212,175,87,.5);border-radius:3px}
+#sbox input::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+
+
+
+/* topic 7, phone stage: every tap target at least 44×44 px (Apple HIG / WCAG 2.5.5). Small round icons keep their look and get a larger invisible hit area */
+@media (max-width:700px),(pointer:coarse){
+  .dr button:not(.help),#chips button,.controls button:not(.help),.stctl button,#tbar button,#sgo,#infoX,.ic-btns button{min-height:44px!important}
+  .stctl button,#tbar button,#sgo,#infoX,.dr .x,button.x{min-width:44px!important}
+  .dr .x,button.x{min-height:44px!important}
+  .dr button:not(.help),.controls button:not(.help){height:auto!important}
+  #stFold,#stX{min-width:44px!important;min-height:44px!important}
+  #stSpeed,#revBtn{min-height:44px!important}
+  button.help{position:relative}
+  button.help::after{content:"";position:absolute;left:50%;top:50%;width:44px;height:44px;transform:translate(-50%,-50%)}
+  .ic-src a{display:inline-flex;align-items:center;min-height:44px}
+}
+</style>
+<style>/* מסך הפתיחה: שחר מעל ירושלים – הוד (זהב, אבן), והתחדשות (אור עולה, ירוק רענן) */
+.loading{position:absolute;inset:0;z-index:50;display:grid;place-items:center;overflow:hidden;color:#F5EFE0;font:15px/1.5 var(--f-body,"Assistant",Arial,sans-serif);
+  background:
+    radial-gradient(120% 70% at 50% 108%,rgba(246,196,120,.55) 0%,rgba(214,140,92,.28) 32%,rgba(90,70,110,0) 62%),
+    radial-gradient(1.2px 1.2px at 18% 14%,rgba(255,248,230,.75),transparent),
+    radial-gradient(1px 1px at 72% 9%,rgba(255,248,230,.6),transparent),
+    radial-gradient(1.4px 1.4px at 86% 22%,rgba(255,248,230,.5),transparent),
+    radial-gradient(1px 1px at 34% 26%,rgba(255,248,230,.45),transparent),
+    radial-gradient(1px 1px at 58% 18%,rgba(255,248,230,.4),transparent),
+    linear-gradient(180deg,#0b1430 0%,#18254a 38%,#3b3a5c 64%,#7a5a5c 84%,#b98262 100%)}
+.loading::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(60% 45% at 50% 100%,rgba(255,226,160,.35),transparent 70%);animation:ldDawn 7s ease-in-out infinite alternate}
+@keyframes ldDawn{from{opacity:.35}to{opacity:1}}
+.ldcity{position:absolute;left:0;right:0;bottom:0;width:100%;height:clamp(70px,18vh,150px);pointer-events:none}
+.ldbox{position:relative;text-align:center;padding:0 20px;max-width:560px;margin-top:-6vh}
+.ldem{width:64px;height:64px;display:block;margin:0 auto 14px;filter:drop-shadow(0 0 14px rgba(240,213,140,.35))}
+.ldk{font:600 12px/1 var(--f-body,"Assistant",sans-serif);letter-spacing:.18em;color:#8CCB98;margin-bottom:10px}
+.ldn{margin:0;font:700 clamp(40px,9vw,64px)/1.05 var(--f-display,"Frank Ruhl Libre","David",serif);color:#F0D58C;
+  background:linear-gradient(180deg,#FFF1C6 0%,#F0D58C 45%,#C99A3E 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 2px 18px rgba(240,190,90,.22))}
+.ldrule{display:flex;align-items:center;gap:10px;justify-content:center;margin:16px auto 18px;color:#D4AF57;font-size:10px}
+.ldrule::before,.ldrule::after{content:"";height:1px;width:min(110px,22vw);background:linear-gradient(90deg,transparent,rgba(212,175,87,.8),transparent)}
+.lds{font:500 clamp(18px,4.4vw,22px)/1.6 var(--f-display,"Frank Ruhl Libre",serif);color:#F5EFE0;text-wrap:balance}
+.lds small{display:block;margin-top:4px;font:400 12px var(--f-body,"Assistant",sans-serif);color:rgba(245,239,224,.6);letter-spacing:.06em}
+.ldbar{width:min(260px,64vw);height:3px;border-radius:2px;background:rgba(245,239,224,.14);overflow:hidden;margin:26px auto 8px}
+.ldbar i{display:block;height:100%;width:var(--p,2%);background:linear-gradient(90deg,#F0D58C,#8CCB98);box-shadow:0 0 10px rgba(240,213,140,.6);transition:width .3s ease}
+.ldenter{display:none;margin:16px auto 0;min-width:120px;min-height:44px;padding:9px 34px;border-radius:22px;border:1px solid rgba(240,213,140,.7);background:rgba(240,213,140,.1);color:#F0D58C;font:700 16px var(--f-body,"Assistant",sans-serif);cursor:pointer;letter-spacing:.06em;position:relative;z-index:3;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-appearance:none;appearance:none}.ldenter:hover,.ldenter:focus-visible,.ldenter:active{background:rgba(240,213,140,.22);outline:none}.ldhint{margin-top:8px;font:600 12px var(--f-body,"Assistant",sans-serif);color:rgba(245,239,224,.7)}
+.loading.ldready .ldbar,.loading.ldready .ldt{display:none}.loading.ldready .ldenter{display:block;animation:ldenterin .5s ease both}@keyframes ldenterin{from{opacity:0}to{opacity:1}}
+.ldt{font:600 12px var(--f-body,"Assistant",sans-serif);color:rgba(245,239,224,.62);letter-spacing:.08em}
+.ldt b{font-weight:600;color:#F0D58C}
+@media (prefers-reduced-motion:reduce){.loading::before{animation:none;opacity:.8}}
+</style>
+<style>
+
+#cineBars{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+#cineBars i{position:absolute;left:0;right:0;height:9vh}
+#cineBars i:first-child{top:0;background:linear-gradient(180deg,rgba(8,6,3,.62),rgba(8,6,3,0))}
+#cineBars i:last-child{bottom:0;height:16vh;background:linear-gradient(0deg,rgba(8,6,3,.66),rgba(8,6,3,0))}
+body.touring #cineBars{opacity:1}
+#cineTitle{position:absolute;left:0;right:0;top:27%;z-index:9;pointer-events:none;text-align:center;direction:rtl;opacity:0;transform:translateY(10px);transition:opacity .9s ease,transform 1.6s ease;color:#fff7e2;text-shadow:0 2px 18px rgba(0,0,0,.75),0 0 2px rgba(0,0,0,.6);padding:0 18px}
+#cineTitle.on{opacity:1;transform:none}
+#cineTitle small{display:block;font:500 13px/1.4 var(--f-body,system-ui);letter-spacing:.12em;opacity:.85;margin-bottom:6px;color:#e9cf8f}
+#cineTitle b{display:block;font:700 clamp(24px,4.6vw,46px)/1.15 var(--f-display,serif)}
+#cineTitle b::after{content:"";display:block;width:64px;height:2px;margin:12px auto 0;background:linear-gradient(90deg,transparent,#d4af57,transparent)}
+@media (max-width:640px){#cineTitle{top:24%}#cineBars i:last-child{height:0}}
+@media (prefers-reduced-motion:reduce){#cineTitle{transition:opacity .2s}}
+/* v114: תג הגרסה לא מכסה את שורת החיפוש בטלפון; כפתור מצב הבדיקה שקט יותר */
+#verTag{opacity:.7}
+@media (max-width:700px){#verTag{top:auto!important;left:auto!important;right:6px!important;bottom:74px!important;font-size:9px!important;opacity:.55}}
+#revBtn{opacity:.55;transition:opacity .2s}#revBtn:hover,#revBtn:focus-visible{opacity:1}
+/* גרסה 115: עיצוב מחדש של הממשק — "אבן וזהב": לוחות בצבע אבן ירושלמית, כתב כהה, קו זהב דק. בלילה הלוחות מתכהים. */
+:root{--nb:rgba(250,246,237,.94);--nb2:rgba(252,249,243,.97);--nbh:rgba(138,101,20,.10);--gold:#8A6514;--gold2:#5E4610;--green:#3F7D52;--green2:#2F6E45;--cream:#2A2318;--cr2:rgba(42,35,24,.66);--ln:rgba(138,101,20,.26);--sh:0 10px 30px rgba(46,34,10,.20),0 1px 3px rgba(46,34,10,.14);--fill:linear-gradient(135deg,#E6C777,#C39A3C);--fillc:#22180a;--soft:rgba(42,35,24,.05);--f-display:"Frank Ruhl Libre","David Libre","David","Narkisim","Times New Roman",serif}
+body.tnight{--nb:rgba(17,19,25,.90);--nb2:rgba(17,19,25,.95);--nbh:rgba(217,183,101,.13);--gold:#D9B765;--gold2:#F0D58C;--green:#4E9A63;--green2:#8CCB98;--cream:#F3ECDD;--cr2:rgba(243,236,221,.7);--ln:rgba(217,183,101,.24);--sh:0 10px 30px rgba(0,0,0,.45);--soft:rgba(255,255,255,.05)}
+.gl{border-radius:14px}
+/* מילוי זהב אחד לכל מצב "נבחר" ולכל כפתור ראשי */
+#rail button[aria-pressed="true"],#chips button[aria-pressed="true"],.dr .seg button[aria-pressed="true"],#tbar .tx,#stStrip button.on,#resume,#intro button.pri,.ic-btns button:hover span.c,#cta .pri,#mplate .seg2 button[aria-pressed="true"]{background:var(--fill)!important;color:var(--fillc)!important;border-color:#B48C30!important}
+.dr .seg{background:var(--soft)!important;border-radius:12px!important;padding:3px!important}
+.dr .seg button{border-radius:9px!important}
+.dr .panel{background:var(--soft)!important}
+.tcard{background:var(--soft);border-radius:14px;transition:border-color .15s,transform .15s,box-shadow .15s}
+.tcard:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(46,34,10,.14)}
+.tcard .tim{background:linear-gradient(145deg,#F3E3B4,#D2AE58 60%,#A9822A);color:#3a2a08;border-radius:12px}
+.dr h2{font:700 25px var(--f-display);padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--ln);position:relative}
+.dr h2::after{content:"";position:absolute;right:0;bottom:-1px;width:54px;height:2px;background:var(--fill)}
+.dr .panel h2{border:0;padding:0;margin:0 0 4px}.dr .panel h2::after{display:none}
+.dr h3{letter-spacing:.04em}
+.dr,.story{background-image:none!important}
+kbd{background:var(--soft)}
+#hslider::-webkit-slider-thumb{background:#C9A24B;border-color:#fff}
+#hslider::-moz-range-thumb{background:#C9A24B;border-color:#fff}
+.hmarks i{background:var(--gold);box-shadow:none}.hmarks i.on{background:var(--cream)}
+#stText mark{background:rgba(201,162,75,.30)}
+.ic-hero{background:radial-gradient(circle at 50% 125%,rgba(230,199,119,.9),transparent 62%),linear-gradient(160deg,#F6EEDC 0%,#E7D7AE 60%,#CDAA55 100%)!important;color:#6B4E0E!important}
+body.tnight .ic-hero{background:radial-gradient(circle at 50% 120%,rgba(240,213,140,.5),transparent 60%),linear-gradient(160deg,#10131a 0%,#2a2a22 55%,#6b5320 100%)!important;color:var(--gold2)!important}
+#infoX{background:rgba(42,35,24,.55)!important}
+#rail button[data-tip]:hover::before{display:none!important}
+
+/* ---- סרגל ניווט: עמודה קבועה מימין, סמל ושם מתחתיו ---- */
+#rail{right:0!important;top:0!important;bottom:0;width:78px;box-sizing:border-box;border-radius:0!important;border:0!important;border-left:1px solid var(--ln)!important;padding:10px 7px!important;gap:4px!important;align-items:stretch;opacity:1!important}
+#rail::before{content:"";display:block;height:58px;margin:2px 0 10px;border-bottom:1px solid var(--ln);background:center 2px/40px 40px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23E6C777'/%3E%3Cstop offset='1' stop-color='%23A9822A'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='20' cy='20' r='19' fill='none' stroke='url(%23g)' stroke-width='1.4'/%3E%3Cpath d='M9 30h22M11 30V14h18v16M11 14l-2-3h22l-2 3M17 30V19h6v11' fill='none' stroke='url(%23g)' stroke-width='1.7' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")}
+#rail button{width:auto!important;height:62px!important;border-radius:12px!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:5px;color:var(--cr2)}
+#rail button::after{content:attr(aria-label);font:600 11.5px/1 var(--f-body);letter-spacing:.01em}
+#rail button:hover{color:var(--cream)}
+#sbox{right:92px}
+.dr{right:90px;top:12px;bottom:12px;width:min(340px,calc(100% - 118px));border-radius:16px!important;padding:18px 18px 22px}
+.perfbox{right:92px!important}
+#tbar{right:12px;border-radius:18px!important}
+#revBtn{right:92px!important}
+body.touring #revBtn,body.touring #mplate,body.touring #cta,body.pane #mplate,body.busy3d #mplate,body.busy3d #cta,body.drawer #cta,body.pane #cta{display:none!important}
+
+/* ---- חיפוש ושבבים ---- */
+#sbox .row1{border-radius:14px}
+#chips button{border-radius:10px;height:34px;box-shadow:0 2px 8px rgba(46,34,10,.14)}
+#chips button:hover{border-color:var(--gold)}
+@media (max-width:420px){#chips{gap:5px}#chips button{padding:0 8px;gap:4px}} /* v122.6: על מסך צר כל חמשת הכפתורים נכנסים, כך ש"הבית" לא נחתך בקצה */
+#sres{border-radius:14px}
+
+/* ---- לוח הזהות והשיטה: שמאל למעלה ---- */
+#mplate{position:absolute;left:12px;top:12px;z-index:21;padding:12px 14px 12px;direction:rtl;width:236px;box-sizing:border-box}
+#mplate .bt b{display:block;font:700 22px/1.15 var(--f-display);color:var(--gold2)}
+#mplate .bt small{display:block;font:500 12px/1.4 var(--f-body);color:var(--cr2);margin-top:2px}
+#mplate .row{display:flex;gap:6px;margin-top:10px;align-items:stretch}
+#mplate .seg2{flex:1;display:flex;background:var(--soft);border:1px solid var(--ln);border-radius:10px;padding:2px;gap:2px}
+#mplate .seg2 button{flex:1;border:1px solid transparent;background:none;color:var(--cream);font:600 13px var(--f-body);border-radius:8px;min-height:34px;cursor:pointer;padding:0 6px;white-space:nowrap}
+#mplate #mpTime{flex:none;border:1px solid var(--ln);background:var(--soft);color:var(--cream);font:600 13px var(--f-body);border-radius:10px;min-height:38px;padding:0 10px;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap}
+#mplate #mpTime:hover,#mplate .seg2 button:hover{border-color:var(--gold)}
+#mplate button:focus-visible,#cta button:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+#verTag{top:auto!important;left:66px!important;bottom:4px!important;right:auto!important;font-size:10px!important;opacity:.5!important;background:none!important;color:#fff!important;text-shadow:0 0 3px #000}
+.attrib{bottom:18px!important}
+
+/* ---- פעולה ראשית: למטה באמצע ---- */
+#cta{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:20;display:flex;gap:8px;direction:rtl;padding:6px;border-radius:30px}
+#cta button{height:44px;border-radius:22px;border:1px solid transparent;background:none;color:var(--cream);font:700 15px var(--f-body);padding:0 18px;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap}
+#cta button:not(.pri):hover{background:var(--nbh)}
+#cta .pri{box-shadow:0 2px 10px rgba(169,130,42,.35)}
+#cta svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---- כרטיס התחנה בסיור: כמו שלט במוזיאון ---- */
+.story{border-radius:16px!important;padding:16px 18px 14px!important;border-top:3px solid #C9A24B!important;width:min(400px,calc(100% - 24px))}
+.story{top:12px!important}
+#stStep{font:700 25px/1.25 var(--f-display)}
+#stText{font-size:17.5px!important;line-height:1.7!important}
+#stVerse{border-inline-start:2px solid #C9A24B;padding-inline-start:10px;font-size:15.5px}
+#stSrcL{color:var(--cr2)}
+#tbar .stctl button,#tbar .stctl select{border:1px solid var(--ln);background:var(--soft);color:var(--cream)}
+#tbar .stctl select{padding:0 8px;font:600 13px var(--f-body);max-width:150px}
+#tbar .stctl button[aria-pressed="false"]{opacity:.55}
+#stStrip button{background:var(--soft)}
+#stVoiceSel[hidden]{display:none}
+/* בקרי פינה */
+.hud .hb,.hud .zgrp{border-radius:14px!important}
+#intro .box{border-radius:20px;border-top:3px solid #C9A24B}
+#intro button{background:var(--soft)}
+.exitb{background:var(--nb2)!important;color:var(--cream)!important;border:1px solid var(--ln)!important;box-shadow:var(--sh)}
+
+/* ---- טלפון: סרגל לשוניות למטה עם שמות, לוח השיטה מצומצם מתחת לשבבים ---- */
+@media (max-width:700px){
+  #rail{top:auto!important;bottom:0!important;left:0!important;right:0!important;width:auto;height:auto;flex-direction:row!important;border-left:0!important;border-top:1px solid var(--ln)!important;border-radius:0!important;padding:4px 4px calc(4px + env(safe-area-inset-bottom,0px))!important;align-items:center}
+  #rail::before{display:none}
+  #rail button{flex:1;height:54px!important;gap:3px}
+  #rail button::after{font-size:10.5px}
+  #sbox{right:8px}
+  .dr{right:0;left:0;top:auto;bottom:63px;width:auto;border-radius:18px 18px 0 0!important}
+  #mplate{left:auto;right:8px;top:102px;width:auto;padding:4px;border-radius:12px}
+  #mplate .bt{display:none}
+  #mplate .row{margin:0}
+  #mplate .seg2 button{min-height:32px;font-size:12.5px;padding:0 8px}
+  #mplate #mpTime{min-height:36px;padding:0 8px;font-size:12.5px}
+  #cta{bottom:calc(74px + env(safe-area-inset-bottom,0px));padding:4px}
+  #cta button{height:42px;font-size:14px;padding:0 14px}
+  #cta .sec span{display:none}
+  .story{top:auto!important;border-radius:16px 16px 0 0!important;padding:12px 14px!important;width:auto}
+  #tbar{right:0;border-radius:0!important}
+  #revBtn{right:8px!important}
+  #verTag{left:auto!important;right:6px!important;bottom:68px!important}
+  #stVoiceSel{max-width:110px}
+}
+@media (max-height:520px){#cta{display:none}}
+body.idle #mplate.ui.dim:not(:hover):not(:focus-within),body.idle #cta.ui.dim:not(:hover):not(:focus-within),body.idle .hud.ui.dim:not(:hover){opacity:.82}
+body.drawer #revBtn{display:none!important}
+
+</style>
+<style id="v1242-ux">
+/* 124.2: תיקונים מבדיקת משתמש (15.11.2026). רק מיקום ותצוגה, בלי לגעת בקוד המוזיקה */
+/* כרטיסי הפתיחה ישבו בדיוק על בית המקדש: עכשיו הם למטה, והמקדש נשאר גלוי */
+#intro{place-items:end center;padding-bottom:96px;box-sizing:border-box}
+#intro .ill{display:none}
+/* כפתור המוזיקה עבר לעמודת הכפתורים (קודם ישב על הסמל ועל החיפוש) */
+#hud>#temple-music-mute{position:static;inset:auto;font-size:17px}
+/* יציאה גלויה מהליכה, רחפן ורכיבה */
+#modeExit{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:21;display:none;height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--ln);background:var(--nb2);color:var(--cream);font:700 15px var(--f-body);box-shadow:var(--sh);cursor:pointer;direction:rtl}
+body.busy3d:not(.touring) #modeExit{display:block}
+@media (max-width:700px){
+  #intro{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  #intro .box{padding:18px 18px 14px}
+  #stage>#temple-music-credit{bottom:calc(63px + env(safe-area-inset-bottom,0px));font-size:9px;line-height:11px;inset-inline-start:6px;inset-inline-end:6px}
+  body.touring #stage>#temple-music-credit{bottom:0}
+  body.pane #verTag,body.touring #verTag,body.busy3d #verTag,body:has(#intro:not([hidden])) #verTag{display:none!important}
+  .walkhint{top:118px}
+  #modeExit{bottom:calc(78px + env(safe-area-inset-bottom,0px));height:32px;padding:0 14px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<div class="wrap" dir="rtl">
+  <header class="top">
+    <div>
+      <div class="eyebrow">תוכנית אב לבית המקדש השלישי · גיליון A-04</div>
+      <h1>הדמיית המקדש בירושלים</h1>
+      <p class="sub">המקדש לפי יחזקאל והמלבי״ם, על הר הבית ובתוך העיר של היום. גוררים כדי לסובב, צובטים או גוללים כדי להתקרב, ולוחצים על כל חלק כדי לקרוא עליו.</p>
+    </div>
+    <div class="badge">טיוטה ללימוד<br><span>נובמבר 2026</span></div>
+  </header>
+
+  <div class="stage" id="stage">
+    <div class="loading" id="loading" role="status"><svg class="ldcity" viewBox="0 0 1200 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M0 92 C140 70 260 74 380 88 S620 64 760 76 S1020 60 1200 80 V150 H0Z" fill="#2a2440" opacity=".55"/><path d="M0 120 L120 112 L122 104 L134 104 L136 112 L300 108 L420 110 L430 96 L470 96 L470 88 L486 78 L502 88 L502 96 L560 96 L566 72 L582 60 L584 46 L596 40 L608 46 L610 60 L626 72 L632 96 L690 96 L700 104 L860 106 L866 98 L878 98 L882 106 L1080 110 L1200 104 V150 H0Z" fill="#141226"/><path d="M584 46 L596 40 L608 46" stroke="#F0D58C" stroke-width="1.2" fill="none" opacity=".7"/></svg><div class="ldbox"><svg class="ldem" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="#F0D58C" stroke-width="1.6" stroke-linejoin="round"><path d="M10 54 H54 M14 54 V30 M50 54 V30 M8 30 H56 L32 12 Z"/><path d="M24 54 V40 a8 8 0 0 1 16 0 V54"/><path d="M20 34 V50 M44 34 V50" opacity=".6"/><circle cx="32" cy="22" r="2" fill="#F0D58C"/></svg><div class="ldk">בית המקדש השלישי · ירושלים</div><h2 class="ldn">והראנו בבניינו</h2><div class="ldrule">◆</div><div class="lds">קוּמִי אוֹרִי כִּי בָא אוֹרֵךְ, וּכְבוֹד ה׳ עָלַיִךְ זָרָח<small>ישעיה ס, א</small></div><div class="ldbar"><i></i></div><div class="ldt">העיר נבנית <b>0%</b></div><button type="button" id="enterBtn" class="ldenter">כניסה</button><div class="ldhint" id="enterHint" hidden>לחצו «כניסה» כדי להיכנס (עם מוזיקה)</div><script>(function(){var E=window.__ENTER={entered:/[?&]skipenter\b/.test(location.search),ready:false,clicked:false,doHide:null,fired:0,err:null};
+var b=document.getElementById("enterBtn");if(!b)return;var tx=0,ty=0;
+function go(ev){try{if(E.clicked)return;E.clicked=true;E.fired++;if(ev&&ev.type==="touchend"&&ev.cancelable)ev.preventDefault();
+/* השמע מתחיל סינכרונית בתוך המחווה. כל כשל בו לא עוצר את הכניסה. */
+try{window.TempleMusic&&TempleMusic.enter&&TempleMusic.enter();setTimeout(function(){try{window.TempleMusic&&TempleMusic.endLoading()}catch(e){}},41000)}catch(e){E.err=String(e)}
+}catch(e){E.err=String(e)}finally{E.entered=true;try{if(E.ready&&E.doHide)E.doHide()}catch(e){E.err=String(e)}}}
+b.addEventListener("click",go);
+b.addEventListener("touchstart",function(e){var t=e.touches&&e.touches[0];if(t){tx=t.clientX;ty=t.clientY}},{passive:true});
+b.addEventListener("touchend",function(e){var t=e.changedTouches&&e.changedTouches[0];if(t&&Math.abs(t.clientX-tx)<12&&Math.abs(t.clientY-ty)<12)go(e)},{passive:false});
+})();</script></div></div>
+    <div class="caption"><div id="cap" hidden></div></div>
+    <div class="joy" id="pad" hidden aria-label="ג׳ויסטיק להליכה"><div class="knob" id="knob"></div></div>
+    <div class="infocard" id="infocard" hidden><button type="button" id="infoX" aria-label="סגור">×</button><div id="infobody"></div></div>
+    <div class="zoomhint" id="zoomhint" hidden>כדי להתקרב: Ctrl + גלילה (במק: ⌘), או צביטה באצבעות</div>
+    <div class="fade" id="fade"></div>
+    <button type="button" id="fastB" class="fastb" hidden aria-pressed="false">×2 מהר</button>
+    <div class="hud" id="hud"><button type="button" id="compass" class="hb" aria-label="צפון — לחצו כדי לפנות צפונה"><span id="needle">▲</span><small>צ</small></button><button type="button" id="homeB" class="hb" aria-label="חזרה למבט הכללי">⌂</button></div>
+    <canvas id="mini" width="132" height="132" aria-label="מפה קטנה" hidden></canvas>
+    <button type="button" id="exitB" class="exitb" hidden>⟵ יציאה מהבית</button>
+    <div class="legend" id="legend"><span class="lg g">חלקי המקדש</span><span class="lg s">מקומות בעיר</span></div>
+    <button type="button" class="perfbtn" id="perfbtn" aria-label="מונה ביצועים">⏱</button><div class="perfbox" id="perfbox" hidden></div>
+    <div class="attrib" id="attrib">תמונות לוויין: Esri, Maxar, Earthstar Geographics</div>
+    <div class="walkhint" id="walkhint" hidden>גוררים כדי להסתכל מסביב · העיגול (או W A S D / החצים) כדי ללכת · Shift או דחיפה עד הסוף — ריצה</div>
+  </div>
+  <section class="controls" aria-label="שליטה בהדמיה">
+    <div class="cgroup">
+      <h3 class="ch">מבט</h3>
+      <div class="ctl wide">
+        <div class="seg" role="group" aria-label="מבט" id="viewSeg">
+          <button type="button" class="tour" id="tourBtn">▶ עולה רגל</button>
+          <button type="button" class="tour" id="ykBtn">▶ יום הכיפורים</button>
+          <button type="button" class="tour" id="tmBtn">▶ סדר התמיד</button>
+          <button type="button" data-v="walk" aria-pressed="false" id="vWalk">הליכה</button>
+          <button type="button" data-v="drone" aria-pressed="false" id="vDrone">רחפן</button>
+          <button type="button" data-v="home" aria-pressed="true" id="vHome">מבט כללי</button>
+          <button type="button" data-v="top" aria-pressed="false" id="vTop">מלמעלה</button>
+          <button type="button" data-v="olives" aria-pressed="false" id="vOl">מהר הזיתים</button>
+          <button type="button" data-v="city" aria-pressed="false" id="vCity">מהרובע היהודי</button>
+          <button type="button" data-v="kotel" aria-pressed="false" id="vKotel">מרחבת הכותל</button>
+          <button type="button" data-v="court" aria-pressed="false" id="vCourt">בחצר</button>
+          <button type="button" data-v="inside" aria-pressed="false" id="vIn">בהיכל</button>
+          <button type="button" data-v="kodesh" aria-pressed="false" id="vKd">בקודש הקודשים</button>
+        </div>
+      </div>
+    </div>
+    <div class="cgroup">
+      <h3 class="ch">תצוגה</h3>
+      <div class="ctl">
+        <div class="cl">שעה ביום</div>
+        <div class="seg" role="group" aria-label="שעה ביום" id="timeSeg">
+          <button type="button" data-t="morning" aria-pressed="true" id="tM">בוקר</button>
+          <button type="button" data-t="noon" aria-pressed="false" id="tN">צהריים</button>
+          <button type="button" data-t="evening" aria-pressed="false" id="tE">ערב</button>
+          <button type="button" data-t="night" aria-pressed="false" id="tL">לילה</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">יום בשבוע</div>
+        <div class="seg" role="group" aria-label="יום בשבוע" id="shabSeg">
+          <button type="button" data-sh="0" aria-pressed="true">יום חול</button>
+          <button type="button" data-sh="1" aria-pressed="false">שבת / יום טוב</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">רקע <button type="button" class="help" data-help="floor" aria-label="הסבר על הרקע">i</button></div>
+        <div class="seg" role="group" aria-label="רקע" id="floorSeg">
+          <button type="button" data-s="sat" aria-pressed="true" id="sS">קרקע</button>
+          <button type="button" data-s="satm" aria-pressed="false" id="sM">ההר היום</button>
+          <button type="button" data-s="model" aria-pressed="false" id="sD">מודל פשוט</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">שכבות <button type="button" class="help" data-help="lines" aria-label="הסבר על השכבות">i</button></div>
+        <div class="seg chips" role="group" aria-label="שכבות" id="optSeg">
+          <button type="button" data-o="people" aria-pressed="true" id="oP">אנשים</button>
+          <button type="button" data-o="transit" aria-pressed="true" id="oT">תחבורה</button>
+          <button type="button" data-o="labels" aria-pressed="true" id="oL">שמות</button>
+          <button type="button" data-o="wall" aria-pressed="false" id="oW">חומת ההר היום</button>
+          <button type="button" data-o="fest" aria-pressed="false" id="oF">חג</button>
+          <button type="button" data-o="mini" aria-pressed="false" id="oM">מפה קטנה</button>
+          <button type="button" data-o="ssao" aria-pressed="false" id="oS">איכות גבוהה</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">שכבות דרך (OpenStreetMap)</div>
+        <div class="seg chips" role="group" aria-label="שכבות דרך" id="osmSeg">
+          <button type="button" data-k="sig" aria-pressed="true">רמזורים ומעברי חצייה</button>
+          <button type="button" data-k="sgn" aria-pressed="true">עצור ותן זכות</button>
+          <button type="button" data-k="rb" aria-pressed="true">כיכרות</button>
+          <button type="button" data-k="ln" aria-pressed="true">נתיבים</button>
+          <button type="button" data-k="nm" aria-pressed="true">שמות רחובות</button>
+          <button type="button" data-k="cem" aria-pressed="false">בתי קברות</button>
+          <button type="button" data-k="pk" aria-pressed="true">חניונים גדולים</button>
+          <button type="button" data-k="hsr" aria-pressed="true">רכבת מהירה (סכמטי)</button>
+          <button type="button" data-k="khn" aria-pressed="false">דרכים לכוהנים</button>
+        </div>
+      </div>
+    </div>
+    <div class="cgroup">
+      <h3 class="ch">שיטה</h3>
+      <div class="ctl">
+        <div class="cl">חזית הבית <button type="button" class="help" data-help="fac" aria-label="הסבר על חזית הבית">i</button></div>
+        <div class="seg" role="group" aria-label="חזית הבית" id="facSeg">
+          <button type="button" data-f="ez" aria-pressed="true" id="fEz">לפי יחזקאל</button>
+          <button type="button" data-f="mid" aria-pressed="false" id="fMid">לפי מידות</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">על הסלע <button type="button" class="help" data-help="loc" aria-label="הסבר על הסלע">i</button></div>
+        <div class="seg" role="group" aria-label="על הסלע" id="locSeg">
+          <button type="button" data-l="kodesh" aria-pressed="true" id="lK">קודש הקודשים</button>
+          <button type="button" data-l="altar" aria-pressed="false" id="lA">המזבח</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">גודל אמה <button type="button" class="help" data-help="amah" aria-label="הסבר על גודל האמה">i</button></div>
+        <div class="seg" role="group" aria-label="גודל אמה" id="amahSeg">
+          <button type="button" data-a="0.48" aria-pressed="false" id="a48">48 ס״מ</button>
+          <button type="button" data-a="0.525" aria-pressed="true" id="a525">52.5 ס״מ</button>
+          <button type="button" data-a="0.576" aria-pressed="false" id="a576">57.6 ס״מ</button>
+        </div>
+      </div>
+      <div class="ctl">
+        <div class="cl">שיטה <button type="button" class="help" data-help="gate" aria-label="הסבר על השיטות">i</button></div>
+        <div class="seg" role="group" aria-label="שיטה" id="gateSeg">
+          <button type="button" data-g="low" aria-pressed="true" id="gL">לפי המלבי״ם</button>
+          <button type="button" data-g="high" aria-pressed="false" id="gH">לפי רש״י והרמח״ל</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="panel" id="info" aria-live="polite">
+      <h2>פרטים</h2>
+      <p class="hint">לחצו על חלק במודל — הבית, המזבח, שער, לשכה או מקום בעיר — כדי לראות כאן את שמו, את המקור ואת המידות.</p>
+    </section>
+    <section class="panel fit" id="fit" aria-live="polite"><h2>התאמה להר</h2><p class="hint">מחשב…</p></section>
+    <section class="panel">
+      <h2>על מה המודל מבוסס</h2>
+      <ul class="plain">
+        <li><b>המקדש:</b> יחזקאל מ׳–מ״ז לפי המלבי״ם. גבהים שלא מפורשים — לפי מסכת מידות, או בהערכה.</li>
+        <li><b>כלי המקדש:</b> לפי התורה, מסכת מידות והרמב״ם, הלכות בית הבחירה.</li>
+        <li><b>הר הבית והעיר:</b> קווי המתאר, הבניינים, הרחובות והעצים מ־OpenStreetMap ו־Overture Maps; צילום לוויין וגבהי קרקע אמיתיים.</li>
+        <li><b>גובה הבניינים בעיר:</b> משוער לפי אזור ומספר קומות, חוץ מכמה עשרות שגובהם ידוע.</li>
+      </ul>
+    </section>
+  </div>
+  <footer class="foot">
+    <p>מודל עקרוני ללימוד, לא תוכנית ביצוע. הר הבית מוצג כקרקע פנויה רעיונית: המודל לא מציג את המבנים שעומדים עליו היום ולא עוסק בהם, חוץ מבתצוגת "ההר היום" להשוואה.</p>
+    <p class="credits">מקורות ונתונים: בניינים ורחובות © OpenStreetMap contributors (ODbL) · Overture Maps · תמונות לוויין Esri, Maxar, Earthstar Geographics · גבהים AWS Terrain Tiles (SRTM) · שמיים וטקסטורת אבן Poly Haven (CC0)</p>
+  </footer>
+</div>
+

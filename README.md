@@ -22,6 +22,20 @@ python3 -m http.server 8000
 
 דילוג על מסך הכניסה בבדיקות: http://localhost:8000/?skipenter
 
+## הקוד מפורק לקבצים (מגרסה 124.3)
+
+האתר עצמו הוא עדיין `index.html` אחד. התיקייה `src/` היא אותו קובץ בדיוק, חתוך ל־24 חלקים לפי נושא (`src/main/40-temple-build.js` הוא בניית המקדש, `src/main/62-tours-ui.js` הוא ממשק הסיורים, וכן הלאה). הסדר ב־`src/manifest.txt`.
+
+- ערכת קובץ ב־`src/`? מריצים `python3 tools/templesrc.py build`, וזה בונה את `index.html` מחדש.
+- ערכת את `index.html` ישירות (patch של Instinct, `layer/apply_layer.py`)? מריצים `python3 tools/templesrc.py split`, וזה מעדכן את `src/`.
+- `python3 tools/templesrc.py check` בודק ששניהם זהים בייט לבייט.
+
+## בדיקת משתמש אוטומטית
+
+בכל PR רצה ב־GitHub הבדיקה `.github/workflows/user-test.yml`: היא עוברת על האתר כמו משתמש חדש, במחשב ובטלפון (כניסה, כרטיסי פתיחה, סיור, חיפוש וכרטיס מידע, הליכה ויציאה), ונכשלת על שגיאת JavaScript, על צעד שלא עובד, או על כפתורים שעולים זה על זה. הדוח מופיע בסיכום הריצה, וצילומי המסך נשמרים כ־artifact בשם `user-test-screens`.
+
+הרצה מקומית: `npm i playwright && npx playwright install chromium`, ואז `python3 -m http.server 8765 &` ו־`node tools/test/user-path.js http://localhost:8765/ out`.
+
 ## שכבת הקול והמוזיקה
 
 הקריינות והמוזיקה מתווספות מחדש על גרסה של Claude באמצעות:
