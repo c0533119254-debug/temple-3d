@@ -1403,13 +1403,18 @@ function build(){
   // people
   if(SHOW_PEOPLE){
     const r=rng(101),list=[];const inCOL=(u,v,yA)=>{const w=W(u,v),y=yA*A;for(const c of COL){if(w[0]>c.x0-0.4&&w[0]<c.x1+0.4&&w[1]>c.z0-0.4&&w[1]<c.z1+0.4&&c.y1>y+0.3&&c.y0<y+1.6)return true}return false};
-    for(let k=0;k<(SMALL?600:1000);k++){const u=10+r()*480,v=10+r()*480;if(u<100&&v>190&&v<310)continue;if(u>95&&u<305&&v>140&&v<360)continue;if(u>230&&u<355&&v>230&&v<270)continue;if(u>225&&u<275&&(v<55||v>445))continue;if(inCOL(u,v,3.5))continue;list.push([u,v,3.5,0])}
+    /* 124.8: מרחוק 1000 אנשים מפוזרים באקראי נראו כמו רעש על הרצפה. עכשיו רובם עומדים בחבורות של 3 עד 9, פנים אל פנים, וחלק הולכים לבד. 💡 סידור לתצוגה */
+    const okP=(u,v)=>!(u<10||u>490||v<10||v>490||(u<100&&v>190&&v<310)||(u>95&&u<305&&v>140&&v<360)||(u>230&&u<355&&v>230&&v<270)||(u>225&&u<275&&(v<55||v>445))||inCOL(u,v,3.5));
+    {const NP=SMALL?600:1000,NG=Math.round(NP*0.72);let gd=0;
+      while(list.length<NG&&gd++<6000){const cu=14+r()*472,cv=14+r()*472;if(!okP(cu,cv))continue;const n=3+Math.floor(r()*7),R=1.3+n*0.32,a0=r()*6.283;
+        for(let j=0;j<n&&list.length<NG;j++){const a=a0+j/n*6.283+(r()-0.5)*0.5,rr=R*(0.8+r()*0.35),u=cu+Math.cos(a)*rr,v=cv+Math.sin(a)*rr;if(okP(u,v))list.push([u,v,3.5,0,cu,cv])}}
+      while(list.length<NP&&gd++<30000){const u=10+r()*480,v=10+r()*480;if(okP(u,v))list.push([u,v,3.5,0])}}
     list.push([186,250,13.56,1]);
     for(let k=0;k<70;k++){const u=205+r()*90,v=205+r()*90;if(Math.abs(u-250)<17&&Math.abs(v-250)<17)continue;if(u>240&&u<260&&v>264&&v<298)continue;if(u>208&&u<250&&v>232&&v<264)continue;if(inCOL(u,v,7.5))continue;list.push([u,v,7.5,1])}
     const bodyG=new THREE.LatheGeometry([[0,0],[0.3,0],[0.26,0.4],[0.21,0.95],[0.25,1.25],[0.2,1.38],[0.07,1.45],[0,1.45]].map(q=>new THREE.Vector2(q[0],q[1])),10).translate(0,-0.725,0),headG=FIG.head();
     const bm=FIG.mesh(list.length,FIG.mat(0xffffff)),hm=new THREE.InstancedMesh(headG,M.people,list.length),d=new THREE.Object3D(),c=new THREE.Color(),WKR=[];
     const pal=[0x6b5b4a,0x3e4a5c,0x8a7a62,0x5c3f3a,0xa89a84,0x2f3a2e,0x7b6c8a];
-    list.forEach((p,i)=>{const w=W(p[0],p[1]);const rot=r()*6.28;d.rotation.set(0,rot,0);d.position.set(w[0],p[2]*A,w[1]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);bm.setAmp(i,0);if(!p[3]&&r()<0.3){WKR.push({i,x:w[0],z:w[1],y:p[2]*A,R:2+r()*5,w:(0.6+r()*0.3)*(r()<0.5?1:-1),a:r()*6.28,go:r()<0.6,tm:2+r()*10});bm.setAmp(i,1)}c.setHex(p[3]?0xf6f4ee:pal[i%pal.length]);bm.setColorAt(i,c);d.position.y=p[2]*A+1.52;d.updateMatrix();hm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xfbfaf6:0xb38b6d);hm.setColorAt(i,c)});
+    list.forEach((p,i)=>{const w=W(p[0],p[1]);let rot=r()*6.28;if(p[4]!=null){const c0=W(p[4],p[5]);rot=Math.atan2(c0[0]-w[0],c0[1]-w[1])+(r()-0.5)*0.6}d.rotation.set(0,rot,0);d.position.set(w[0],p[2]*A,w[1]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);bm.setAmp(i,0);if(!p[3]&&p[4]==null&&r()<0.45){WKR.push({i,x:w[0],z:w[1],y:p[2]*A,R:2+r()*5,w:(0.6+r()*0.3)*(r()<0.5?1:-1),a:r()*6.28,go:r()<0.6,tm:2+r()*10});bm.setAmp(i,1)}c.setHex(p[3]?0xf6f4ee:pal[i%pal.length]);bm.setColorAt(i,c);d.position.y=p[2]*A+1.52;d.updateMatrix();hm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xfbfaf6:0xb38b6d);hm.setColorAt(i,c)});
     bm.castShadow=false;group.add(bm);group.add(hm);window.__CRW=[bm,hm];bm.frustumCulled=hm.frustumCulled=false;bm.userData.noLOD=hm.userData.noLOD=true; /* v101 · משימה 06: גוף וראש של קהל נע — מחוץ ל-LOD הסטטי */
     /* v101 · משימה 07: מסלול מעגלי מאושר רק אם כל 16 נקודות המעגל פנויות (blocked) ובאותו מפלס (groundAt, סטייה עד 0.3 מ׳); אחרת הדמות עומדת במקומה */
     let wkOK=false;const wkCheck=()=>{wkOK=true;for(let j=WKR.length-1;j>=0;j--){const o=WKR[j];let ok=true;for(let q=0;q<16&&ok;q++){const a=q/16*6.2832,x=o.x+Math.cos(o.a+a)*o.R,z=o.z+Math.sin(o.a+a)*o.R;if(blocked(x,z,o.y)||Math.abs(groundAt(x,z)-o.y)>0.3)ok=false}if(!ok){bm.setAmp(o.i,0);WKR.splice(j,1)}}};
