@@ -9,7 +9,7 @@ ART=(function(){
            night:{env:1}};
   let diff=[];
   function collect(){const seen=new Set();diff=[];scene.traverse(o=>{const mm=o.material;if(!mm)return;(Array.isArray(mm)?mm:[mm]).forEach(m=>{if(!m||seen.has(m)||!m.isMeshStandardMaterial)return;seen.add(m);if(m.metalness>=0.5)return;if(m.userData.e0==null)m.userData.e0=m.envMapIntensity;diff.push(m)})})}
-  function grade(){const g=G[TIME]||G.night;diff.forEach(m=>{m.envMapIntensity=m.userData.e0*g.env});if(TIME==="night"){/* 💡 אור ירח רך: בלילה הקירות היו כמעט שחורים */hemi.intensity=Math.max(hemi.intensity,0.36);hemi.color.set(0x93a9dc);hemi.groundColor.set(0x3b3c4c);return}if(!g.sun)return;
+  function grade(){const g=G[TIME]||G.night;diff.forEach(m=>{m.envMapIntensity=m.userData.e0*g.env});if(TIME==="night"){/* 💡 אור ירח רך: בלילה הקירות היו כמעט שחורים. 124.5: אבל 0.36 עם ירח 0.32 נראה כמו יום אפור. עכשיו אור שמיים כחול חלש וירח חלש, כך שרואים את הצורות, והאור החם בא מהחלונות, מהמנורות ומהמזבח */if(!INSIDE){hemi.intensity=0.06;sun.intensity=Math.min(sun.intensity,0.14);hemi.color.set(0x5a6fae);hemi.groundColor.set(0x15171f)}else{hemi.intensity=Math.max(hemi.intensity,0.36);hemi.color.set(0x93a9dc);hemi.groundColor.set(0x3b3c4c)}return}if(!g.sun)return;
     const sp=sunAt(HOUR!=null?HOUR:TIMES[TIME].h);if(sp.el<4)return; // דמדומים: נשארים כמו שהיו
     sun.color.set(g.sun);sun.intensity*=g.k;hemi.intensity=g.hemi;hemi.color.set(g.sky);hemi.groundColor.set(g.gnd);renderer.toneMappingExposure*=g.exp}
   // אבן ירושלמית: גוון דבש חם במקום קרם כמעט לבן (צבע בלבד)
