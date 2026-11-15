@@ -9,3 +9,5 @@ __pycache__/
 .gcp-tts-key
 *service-account*.json
 credentials.json
+node_modules/
+user-test-out/

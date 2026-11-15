@@ -1,0 +1,157 @@
+// בדיקת משתמש אוטומטית: עוברת על האתר כמו משתמש חדש, במחשב ובטלפון.
+// כניסה, כרטיסי פתיחה, סיור, חיפוש וכרטיס מידע, הליכה ויציאה ממנה.
+// נכשלת אם יש שגיאת JavaScript, אם צעד לא עובד, או אם כפתורים עולים זה על זה.
+//
+//   python3 -m http.server 8765 &      (מתוך תיקיית האתר)
+//   node tools/test/user-path.js http://localhost:8765/ out-dir
+//
+// צריך playwright (npm i playwright). צילומי המסך נשמרים ב-out-dir, וגם report.md.
+const { chromium, devices } = require("playwright");
+const fs = require("fs");
+const path = require("path");
+
+const URL = process.argv[2] || "http://localhost:8765/";
+const OUT = process.argv[3] || "user-test-out";
+fs.mkdirSync(OUT, { recursive: true });
+
+// UI pieces that must never cover each other (fixed controls on top of the scene)
+const NO_OVERLAP = ["#sbox", "#temple-music-mute", "#hud", "#rail button", "#cta", "#verTag",
+  "#temple-music-credit", "#modeExit", "#mpTime"];
+
+const report = [];
+let failed = false;
+const log = (dev, ok, step, note) => {
+  report.push(`| ${dev} | ${ok ? "✅" : "❌"} | ${step} | ${(note || "").replace(/\|/g, "/")} |`);
+  console.log(`${dev} ${ok ? "OK " : "FAIL"} ${step} ${note || ""}`);
+  if (!ok) failed = true;
+};
+
+async function overlaps(pg) {
+  return pg.evaluate((sels) => {
+    // for text-only strips (credit, version) measure the text itself, not the full-width box
+    const TEXT = ["temple-music-credit", "verTag"];
+    const vis = (e) => { if (!e || e.hidden) return null; const cs = getComputedStyle(e); if (cs.display === "none" || cs.visibility === "hidden" || +cs.opacity === 0) return null; let r = e.getBoundingClientRect(); if (TEXT.includes(e.id) && e.firstChild) { const g = document.createRange(); g.selectNodeContents(e); r = g.getBoundingClientRect(); } return r.width > 2 && r.height > 2 ? r : null; };
+    const items = sels.flatMap((s) => [...document.querySelectorAll(s)].map((e, k, a) => [a.length > 1 ? `${s}[${k}]` : s, e])).map(([s, e]) => [s, e, vis(e)]).filter((x) => x[2]);
+    const bad = [];
+    for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
+      const [sa, ea, a] = items[i], [sb, eb, b] = items[j];
+      if (ea.contains(eb) || eb.contains(ea)) continue;
+      const w = Math.min(a.right, b.right) - Math.max(a.left, b.left), h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+      if (w > 6 && h > 6) bad.push(`${sa} ↔ ${sb} (${Math.round(w)}×${Math.round(h)})`);
+    }
+    return bad;
+  }, NO_OVERLAP);
+}
+
+async function run(dev) {
+  const browser = await chromium.launch({ args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
+  const ctx = dev === "phone"
+    ? await browser.newContext({ ...devices["iPhone 13"], locale: "he-IL" })
+    : await browser.newContext({ viewport: { width: 1366, height: 800 }, locale: "he-IL" });
+  const pg = await ctx.newPage();
+  const errs = [];
+  pg.on("pageerror", (e) => errs.push(String(e).slice(0, 300)));
+  // the music module loads YouTube; a test machine without it is not a site error
+  await ctx.route(/youtube\.com|ytimg\.com|googlevideo\.com/, (r) => r.abort());
+  const shot = (n) => pg.screenshot({ path: path.join(OUT, `${dev}-${n}.png`), timeout: 180000 }).catch(() => {});
+  const ovl = async (where) => { const b = await overlaps(pg); log(dev, b.length === 0, `אין חפיפות: ${where}`, b.join("; ")); };
+  const step = async (name, fn) => { try { const note = await fn(); log(dev, true, name, note); return true; } catch (e) { log(dev, false, name, String(e.message || e).split("\n")[0].slice(0, 200)); await shot("fail-" + name.replace(/\s+/g, "_")); return false; } };
+
+  const t0 = Date.now();
+  await step("טעינה עד כפתור הכניסה", async () => {
+    await pg.goto(URL, { timeout: 120000, waitUntil: "domcontentloaded" });
+    await pg.waitForSelector("#enterBtn", { state: "visible", timeout: 600000 });
+    return `${Math.round((Date.now() - t0) / 1000)} שניות (במכונת בדיקה בלי כרטיס מסך)`;
+  });
+  await step("כניסה וכרטיסי פתיחה", async () => {
+    await pg.click("#enterBtn");
+    await pg.waitForSelector("#intro:not([hidden])", { timeout: 60000 });
+    await pg.waitForTimeout(1500);
+    const r = await pg.evaluate(() => { const b = document.querySelector("#intro .box").getBoundingClientRect(); const s = document.getElementById("stage").getBoundingClientRect(); return { top: b.top - s.top, h: s.height }; });
+    await shot("1-intro");
+    if (r.top < r.h * 0.4) throw new Error(`כרטיס הפתיחה גבוה מדי (מתחיל ב-${Math.round(r.top)} מתוך ${Math.round(r.h)}) ומסתיר את בית המקדש`);
+  });
+  await step("דילוג על כרטיסי הפתיחה", async () => {
+    await pg.click("#intro button:not(.pri)");
+    await pg.waitForSelector("#intro", { state: "hidden", timeout: 10000 });
+    await pg.waitForTimeout(2500);
+    await shot("2-overview");
+  });
+  await ovl("מבט כללי");
+
+  // In walk and tour modes the page draws every frame; on a test machine without a graphics card
+  // one frame can take seconds, so Playwright's own clicks wait for frames that come late.
+  // These helpers press the same buttons from inside the page and check on a timer instead.
+  const tap = (sel, text) => pg.evaluate(([sel, text]) => {
+    const vis = (e) => { const r = e.getBoundingClientRect(); const cs = getComputedStyle(e); return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none"; };
+    const el = [...document.querySelectorAll(sel)].find((e) => vis(e) && (!text || e.textContent.includes(text)));
+    if (!el) throw new Error(`לא נמצא כפתור גלוי: ${sel} ${text || ""}`);
+    el.click(); return true;
+  }, [sel, text || ""]);
+  const until = (fn, ms, arg) => pg.waitForFunction(fn, arg, { timeout: ms, polling: 500 });
+  const stNum = () => pg.evaluate(() => (document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/) || [])[1]);
+
+  await step("סיור יום הכיפורים: פתיחה ומעבר תחנות", async () => {
+    await tap("#rail button[aria-label='סיורים']");
+    await until(() => [...document.querySelectorAll(".dr button, .dr [role=button], .dr li, .dr div")].some((e) => e.offsetParent && e.textContent.includes("סדר העבודה ביום הכיפורים")), 20000);
+    await pg.evaluate(() => { const c = [...document.querySelectorAll(".dr *")].filter((e) => e.offsetParent && e.textContent.trim().startsWith("סדר העבודה ביום הכיפורים")); const el = c[c.length - 1]; (el.closest("button,[role=button],li,.card") || el).click(); });
+    await until(() => document.body.classList.contains("touring"), 60000);
+    await pg.waitForTimeout(4000);
+    const n1 = await stNum();
+    await shot("3-tour-1");
+    await tap("#stNext");
+    await until((n) => { const m = document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/); return m && +m[1] > +n; }, 30000, n1);
+    const n2 = await stNum();
+    await shot("4-tour-next");
+    return `תחנה ${n1} → ${n2}`;
+  });
+  await ovl("בתוך סיור");
+  await step("יציאה מהסיור", async () => {
+    await tap("#stX");
+    await until(() => !document.body.classList.contains("touring"), 30000);
+  });
+
+  await step("חיפוש «גזית» ופתיחת כרטיס מידע", async () => {
+    await pg.fill("#sq", "גזית");
+    await until(() => [...document.querySelectorAll("#sres button")].some((b) => b.textContent.includes("לשכת הגזית")), 20000);
+    await tap("#sres button", "לשכת הגזית");
+    await until(() => document.body.classList.contains("pane"), 30000);
+    await pg.waitForTimeout(4000);
+    await shot("5-info");
+    const t = await pg.evaluate(() => document.body.innerText.includes("סנהדרין"));
+    if (!t) throw new Error("בכרטיס המידע אין את ההסבר על הסנהדרין");
+  });
+  await ovl("כרטיס מידע");
+  await step("סגירת כרטיס המידע", async () => {
+    await pg.keyboard.press("Escape");
+    await pg.waitForTimeout(1000);
+    if (await pg.evaluate(() => document.body.classList.contains("pane"))) await tap("#infoX");
+    await until(() => !document.body.classList.contains("pane"), 15000);
+  });
+
+  await step("הליכה ויציאה בכפתור «יציאה»", async () => {
+    await pg.evaluate(() => { const b = [...document.querySelectorAll("#cta button")].find((x) => !x.classList.contains("pri")); b.click(); });
+    await until(() => document.body.classList.contains("busy3d"), 30000);
+    await pg.waitForTimeout(3000);
+    await shot("6-walk");
+    await until(() => { const e = document.getElementById("modeExit"); return e && getComputedStyle(e).display !== "none" && e.getBoundingClientRect().width > 0; }, 15000);
+    await tap("#modeExit");
+    await until(() => !document.body.classList.contains("busy3d"), 30000);
+  });
+  await ovl("אחרי הליכה");
+
+  const inPage = await pg.evaluate(() => window.__ERRS || []).catch(() => []);
+  const all = [...errs, ...inPage];
+  log(dev, all.length === 0, "בלי שגיאות JavaScript", all.slice(0, 3).join(" · "));
+  await browser.close();
+}
+
+(async () => {
+  for (const dev of ["desktop", "phone"]) {
+    try { await run(dev); } catch (e) { log(dev, false, "הבדיקה נעצרה", String(e).slice(0, 200)); }
+  }
+  const md = ["# בדיקת משתמש", "", "| מכשיר | | צעד | הערה |", "|---|---|---|---|", ...report, ""].join("\n");
+  fs.writeFileSync(path.join(OUT, "report.md"), md);
+  console.log(failed ? "\nנכשל" : "\nהכול עבר");
+  process.exit(failed ? 1 : 0);
+})();

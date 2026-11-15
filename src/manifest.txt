@@ -1,0 +1,26 @@
+# הסדר של חלקי index.html. נתיב<TAB>תחילת השורה הראשונה של החלק (עוגן).
+# כדי להוסיף חלק: מוסיפים שורה במקום הנכון, ומריצים split.
+page/10-page-top.html	<!doctype html>\n<html lang=he>\n<head>\n<meta charset="utf-8">
+vendor/three-r128.html	<script>/* three@0.128.0/build/three.min.js (MIT) */
+main/10-setup.js	<script>\n(async function(){\nlet __v6={}; /* 117: נתוני המדידה נשארים פנימיים, לא על window */
+main/12-ground.js	/* גרסה 117: בקצה מודל הגובה (DEM) הקרקע עברה בתוך 140 מ׳ לקרקע סינתטית, וזה יצר צוק מלאכותי (למשל בקו הצהוב במעלה השלום
+main/14-mount-walls.js	// ---- Temple Mount platform ----\n(function(){
+main/16-city-buildings.js	// ---- real buildings (OpenStreetMap footprints, ODbL) ----
+main/18-old-city-areas.js	// ---- topic 3, area 1: Jaffa Gate and the Citadel (Tower of David) ----
+main/20-living-city.js	// ---- living city: pedestrians on the alleys and streets, cars on the roads ----
+main/22-mount-gates.js	// ---- gates of the Temple Mount, joined to the streets they open onto ----
+main/24-transport.js	// ---- public transport, as if every plan already runs (Jerusalem master plan 2050) ----
+main/26-hills-osm.js	// ---- topic 5 (Claude): the ground of the hills: limestone outcrops on the open slopes. This file belongs to Claude (l
+main/30-temple-life.js	// ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
+main/32-story-tours.js	// ---- narrated story tours (pilgrim; Yom Kippur) ----
+main/40-temple-build.js	/* גרסה 116: בתחנות 1, 3 ו־5 של סיור יום הכיפורים המצלמה קרובה יותר לכהן הגדול (כ־16 אמה, מאותו כיוון). רק המצלמה זזה */
+main/50-time-of-day.js	/* v115 · מהירות: קבוצות סטטיות של הרבה רשתות קטנות (מסוף האוטובוסים, מפרצי ההורדה, אבני הנחל) מתאחדות לפי חומר ולפי כרט
+main/52-views-hud.js	// ---- views & tour ----\nfunction mizY(u,v){const R=AMZR;if(!R)return null;
+main/54-loop-labels.js	// ---- loop ----\nlet lastW=0,lastH=0;function resize(){const w=stage.clientWidth,h=stage.clientHeight;if(Math.abs(w-las
+main/60-navigation.js	// ==== v59 phase B: Earth-style navigation — drag pans, right/Ctrl drag turns, zoom to cursor, keys, double-click fly =
+main/62-tours-ui.js	// ==== v59 phase C: Voyager-style tours — station strip, slow orbit at each stop, three new festival tours ====
+main/64-shell-ui.js	// ==== v61: Google Maps / Earth style shell — search pill, icon rail, place panel, chips that light up the model, share
+main/70-lod-quality.js	// ==== v60: distance LOD for big instanced crowds (trees, people, graves, lamps): near = full, far = a box, small parts
+main/72-review-mode.js	// ==== v77: review mode ("מצב בדיקה") — low quality + a fixed-camera tour of every gate, opening and room ====
+main/74-art-layer.js	// ==== v114 · שכבת האמנות: אור, אבן וזהב ====
+page/90-page-end.html	<script src="music-module/music.js"></script>

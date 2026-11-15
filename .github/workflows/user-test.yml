@@ -1,0 +1,52 @@
+# בדיקה אוטומטית בכל PR: src/ ו-index.html תואמים, ובדיקת משתמש במחשב ובטלפון.
+# זה לא מפרסם כלום. הפרסום נשאר ב-pages.yml, רק אחרי מיזוג ל-main.
+name: בדיקת משתמש
+
+on:
+  pull_request:
+    paths: ["index.html", "src/**", "tools/**", "music-module/**", "layer/**", ".github/workflows/user-test.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: user-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: src/ ו-index.html זהים
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/templesrc.py check
+
+  user-path:
+    name: מסלול משתמש (מחשב וטלפון)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: התקנת דפדפן לבדיקה
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: הרצת האתר ובדיקה
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 2
+          node tools/test/user-path.js http://localhost:8765/ user-test-out
+      - name: דוח
+        if: always()
+        run: cat user-test-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: צילומי מסך
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: user-test-screens
+          path: user-test-out
+          retention-days: 14
