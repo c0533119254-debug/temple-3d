@@ -140,6 +140,38 @@ try{(function(){
     try{renderer.shadowMap.needsUpdate=true;lastMove=performance.now()}catch(e){}};
   setInterval(rule,400)})()}catch(e){console.warn("real",e)}
 
+/* 124.8 · רצפת הר הבית: קודם מרקם חול, שמרחוק נראה כמו עפר חום וריק. עכשיו ריצוף אבן ירושלמית בהירה בנדבכים,
+   כל אבן בגוון קצת אחר ועם פוגות כהות. 💡 צורת הריצוף ומידות האבנים הן הצעה לתצוגה. המרקם חוזר כל 9 מ׳ (לפי ה־UV של משטח ההר) */
+try{(function(){if(!PLATTOP)return;const S=QL==="low"||SMALL?512:1024,k=S/9;
+  const c=document.createElement("canvas");c.width=c.height=S;const x=c.getContext("2d");let sd=7;const rr=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  x.fillStyle="#b3a68e";x.fillRect(0,0,S,S);
+  const rows=[1.15,0.95,1.2,1.05,0.9,1.1,1.0,1.1,0.55],tot=rows.reduce((a,b)=>a+b,0);let y=0;
+  rows.forEach(h0=>{const h=h0*9/tot*k;let xs=rr()*S,used=0;const L=[];while(used<S-1.0*k){const l=Math.min((1.1+rr()*1.6)*k,S-used);L.push(l);used+=l}if(L.length)L[L.length-1]+=S-used;
+    L.forEach(l=>{const t=rr(),g=0.93+0.1*t,wr=Math.round(240*g),wg=Math.round(229*g),wb=Math.round(205*g*(0.98+0.04*rr()));
+      for(const dx of [0,-S]){const X=xs+dx;x.fillStyle="rgb("+wr+","+wg+","+wb+")";x.fillRect(X+1.2,y+1.2,l-2.4,h-2.4);
+        const gr=x.createLinearGradient(X,y,X,y+h);gr.addColorStop(0,"rgba(255,250,235,.10)");gr.addColorStop(1,"rgba(60,45,25,.10)");x.fillStyle=gr;x.fillRect(X+1.2,y+1.2,l-2.4,h-2.4)}
+      xs=(xs+l)%S});y+=h});
+  /* גרעין האבן: נקודות דקות */
+  const im=x.getImageData(0,0,S,S),D=im.data;for(let i=0;i<D.length;i+=4){const n=(rr()-0.5)*14;D[i]+=n;D[i+1]+=n;D[i+2]+=n*0.9}x.putImageData(im,0,0);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy());
+  /* משטחים שפונים למעלה מקבלים את הריצוף לפי המקום בעולם (כל 9 מ׳), כך שהאבנים באותו גודל בכל החצרות ועל ההר. קירות ומדרגות נשארים לפי ה־UV שלהם */
+  const fl=m=>{if(!m||m.userData.flag)return;m.userData.flag=true;const prev=m.onBeforeCompile;m.map=t;m.normalMap=null;m.color.setHex(0xfaf4ea);m.roughness=0.84;
+    m.onBeforeCompile=(sh,r)=>{if(prev)prev(sh,r);if(sh.vertexShader.indexOf("varying vec3 vWP")<0){sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying vec3 vWP;").replace("#include <worldpos_vertex>","#include <worldpos_vertex>\nvWP=(modelMatrix*vec4(transformed,1.0)).xyz;");sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying vec3 vWP;")}
+      sh.vertexShader=sh.vertexShader.replace("#include <common>","#include <common>\nvarying float vUp;").replace("#include <beginnormal_vertex>","#include <beginnormal_vertex>\nvUp=normalize(mat3(modelMatrix)*objectNormal).y;");
+      sh.fragmentShader=sh.fragmentShader.replace("#include <common>","#include <common>\nvarying float vUp;").replace("#include <map_fragment>","#ifdef USE_MAP\nvec4 texelColor=texture2D(map,vUp>0.7?vec2(vWP.x,-vWP.z)/9.0:vUv);texelColor=mapTexelToLinear(texelColor);diffuseColor*=texelColor;\n#endif")};
+    m.needsUpdate=true};
+  fl(M.pave);fl(PLATTOP);
+  try{renderer.shadowMap.needsUpdate=true}catch(e){}
+})()}catch(e){console.warn("pave",e)}
+
+/* 124.8 · שלב 6: «המקדש בדקה», סיור ראשון ברשימה למי שבא בפעם הראשונה. התחנות והמקורות לקוחים כמו שהם מסיור עולה הרגל,
+   רק פחות תחנות (כ־דקה). כרטיס הסיור הראשון בתפריט «סיורים» הוא הסיור הזה */
+try{(function(){if(!STORIES||!STORIES.pilgrim||STORIES.quick)return;
+  const pick=["השער הצפוני","העזרה החיצונה","המזבח","פתח האולם","בתוך ההיכל"].map(t=>STORIES.pilgrim.steps.find(s=>s.title===t)).filter(Boolean).map(s=>Object.assign({},s));
+  if(pick.length<4)return;
+  const q={title:"המקדש בדקה",open(){try{SND.crowd(0.04)}catch(e){}},steps:[{title:"המקדש על הר הבית",pose:VP("home"),cap:"זה בית המקדש לפי יחזקאל והמלבי״ם, על הר הבית, בתוך ירושלים של היום. בדקה אחת נעבור מהשער, דרך החצר והמזבח, עד ההיכל.",src:"💡 סיור קצר: התחנות מתוך סיור עולה הרגל"}].concat(pick)};
+  const rest=Object.assign({},STORIES);Object.keys(rest).forEach(k=>delete STORIES[k]);STORIES.quick=q;Object.assign(STORIES,rest)})()}catch(e){console.warn("quick",e)}
+
 /* 124.7 · שלב 2 של מסמך חוויית המשתמש: תפריט «תצוגה» מתחיל במה שרוב המבקרים מחפשים (שעה, יום, חג, שכבות).
    איכות, רקע, חומת ההר היום ושכבות הדרך עוברים ל«הגדרות מתקדמות» סגורות בתחתית. כפתור שיתוף גלוי בעמודת הכפתורים,
    ובמסך מגע «איך זזים» מסביר מגע ולא מקלדת. 💡 שינוי סידור בלבד: אף אפשרות לא נמחקה */
