@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -554,6 +554,25 @@ body.touring #revBtn,body.touring #mplate,body.touring #cta,body.pane #mplate,bo
 body.idle #mplate.ui.dim:not(:hover):not(:focus-within),body.idle #cta.ui.dim:not(:hover):not(:focus-within),body.idle .hud.ui.dim:not(:hover){opacity:.82}
 body.drawer #revBtn{display:none!important}
 
+</style>
+<style id="v1242-ux">
+/* 124.2: תיקונים מבדיקת משתמש (15.11.2026). רק מיקום ותצוגה, בלי לגעת בקוד המוזיקה */
+/* כרטיסי הפתיחה ישבו בדיוק על בית המקדש: עכשיו הם למטה, והמקדש נשאר גלוי */
+#intro{place-items:end center;padding-bottom:96px;box-sizing:border-box}
+#intro .ill{display:none}
+/* כפתור המוזיקה עבר לעמודת הכפתורים (קודם ישב על הסמל ועל החיפוש) */
+#hud>#temple-music-mute{position:static;inset:auto;font-size:17px}
+/* יציאה גלויה מהליכה, רחפן ורכיבה */
+#modeExit{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:21;display:none;height:44px;padding:0 20px;border-radius:22px;border:1px solid var(--ln);background:var(--nb2);color:var(--cream);font:700 15px var(--f-body);box-shadow:var(--sh);cursor:pointer;direction:rtl}
+body.busy3d:not(.touring) #modeExit{display:block}
+@media (max-width:700px){
+  #intro{padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+  #intro .box{padding:18px 18px 14px}
+  #stage>#temple-music-credit{bottom:0;font-size:9px;line-height:11px;inset-inline-start:6px;inset-inline-end:6px}
+  body.pane #verTag,body.touring #verTag,body.busy3d #verTag,body:has(#intro:not([hidden])) #verTag{display:none!important}
+  .walkhint{top:118px}
+  #modeExit{bottom:calc(66px + env(safe-area-inset-bottom,0px));height:32px;padding:0 14px;font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -15028,4 +15047,12 @@ frame();
 <script src="music-module/music.js"></script>
 <script>try{TempleMusic.init({root:document.getElementById("stage")})}catch(e){}</script>
 <!--TEMPLE-LAYER v2-->
+<script>/* 124.2: כפתור המוזיקה בעמודת הכפתורים; כפתור ו־Esc ליציאה מהליכה */
+(function(){var st=document.getElementById("stage");if(!st)return;
+function mv(){var m=document.getElementById("temple-music-mute"),h=document.getElementById("hud");if(m&&h&&m.parentElement!==h){m.classList.add("hb");h.appendChild(m)}}
+mv();try{new MutationObserver(mv).observe(st,{childList:true})}catch(e){}
+var b=document.createElement("button");b.type="button";b.id="modeExit";b.textContent="✕ יציאה";b.setAttribute("aria-label","יציאה מההליכה וחזרה למבט הכללי");
+var home=function(){var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
+addEventListener("keydown",function(e){if(e.key!=="Escape")return;var c=document.body.classList;if(!c.contains("busy3d")||c.contains("touring")||c.contains("drawer")||c.contains("pane"))return;var a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;home()})})();
+</script>
 </body></html>
