@@ -56,7 +56,7 @@ const TOURFIGS=(function(){
   const actors=[],mixers=[];
   let proto=null,clips={},bindQ=null,ready=false,H=1.72,fail=false;
   const SKIN=0xc4a07a, EYEL=0xf2efe8, EYEIRIS=0x3d4a3a;
-  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0xe8d9a8,pilgrim:0xcbb892,pilgrim2:0xb89b6a,levite:0xe8e2cf,king:0x6e2a43};
+  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0x1b2a66,pilgrim:0xcbb892,pilgrim2:0xb89b6a,levite:0xe8e2cf,king:0x6e2a43};
   const SKIN_BONES={Head:1,neck_01:1,hand_l:1,hand_r:1,foot_l:1,foot_r:1,ball_l:1,ball_r:1,ball_leaf_l:1,ball_leaf_r:1};
   "index middle pinky ring thumb".split(" ").forEach(f=>{[1,2,3].forEach(n=>{SKIN_BONES[f+"_0"+n+"_l"]=1;SKIN_BONES[f+"_0"+n+"_r"]=1});SKIN_BONES[f+"_04_leaf_l"]=1;SKIN_BONES[f+"_04_leaf_r"]=1});
   function robeMat(hex,skinHex){
@@ -191,13 +191,13 @@ const TOURFIGS=(function(){
   }
   function linenMat(hex,rough){return new THREE.MeshStandardMaterial({color:hex,roughness:rough==null?0.88:rough,metalness:0.03,side:THREE.DoubleSide})}
   function addKit(root,kind){
-    const pelvis=findBone(root,"pelvis"), spine=findBone(root,"spine_02")||findBone(root,"spine_03");
+    const pelvis=findBone(root,"pelvis"), spine=findBone(root,"spine_02")||findBone(root,"spine_03"), spine3=findBone(root,"spine_03");
     const head=findBone(root,"Head");
     const uL=findBone(root,"upperarm_l"), uR=findBone(root,"upperarm_r");
     const lL=findBone(root,"lowerarm_l"), lR=findBone(root,"lowerarm_r");
     root.updateMatrixWorld(true);
     const robe=robeCol[kind]||robeCol.kohen;
-    const cloth=linenMat(robe,0.9);
+    const cloth=linenMat(robe,0.9), ketSleeve=kind==="gadolG"?linenMat(0xf4f0e4,0.9):null;
     const Y=new THREE.Vector3(0,1,0);
     function attachWorld(bone,mesh,wpos,wquat){
       mesh.position.copy(wpos);
@@ -222,7 +222,7 @@ const TOURFIGS=(function(){
       const skirt=new THREE.Mesh(hem,cloth);
       skirt.name="ketonet_skirt";
       attachWorld(pelvis,skirt,p.clone());
-      const sashCol=kind==="gadolG"?0x2a3f8a:kind==="king"?0xc9a227:0xe6dcc4;
+      const sashCol=kind==="gadolG"?0xb8861e:kind==="king"?0xc9a227:0xe6dcc4;
       const sash=linenMat(sashCol,0.78);
       const band=new THREE.Mesh(new THREE.TorusGeometry(0.2,0.025,8,22),sash);
       band.rotation.x=Math.PI/2;band.name="avnet_band";
@@ -236,12 +236,55 @@ const TOURFIGS=(function(){
     function sleeve(bone,len,r0,r1){
       if(!bone)return;
       const a=bonePos(bone), axis=boneAxis(bone);
-      const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r0,len,12,1,true),cloth);
+      const mesh=new THREE.Mesh(new THREE.CylinderGeometry(r1,r0,len,12,1,true),kind==="gadolG"?ketSleeve:cloth);
       const q=new THREE.Quaternion().setFromUnitVectors(Y,axis);
       attachWorld(bone,mesh,a.clone().addScaledVector(axis,len*0.48),q);
     }
     sleeve(uL,0.28,0.08,0.07);sleeve(uR,0.28,0.08,0.07);
     sleeve(lL,0.26,0.065,0.05);sleeve(lR,0.26,0.065,0.05);
+    if(kind==="gadolG")goldKit();
+    /* 124.4 · בגדי זהב של הכהן הגדול (שמות כח; רמב״ם, הלכות כלי המקדש ט–י): ⚖️ מעיל תכלת בלי שרוולים (השרוולים הלבנים הם של הכתונת), פעמונים ורימונים בשוליו; ⚖️ אפוד וחשב מזהב ותכלת וארגמן ותולעת שני, מאחור ובחגורה; ⚖️ שתי אבני שוהם על הכתפיים; ⚖️ חושן עם שתים עשרה אבנים בארבעה טורים על הלב; ⚖️ ציץ זהב על המצח. 💡 הגדלים, צבעי האבנים ומספר הפעמונים בדגם (24 ולא 72) נבחרו כדי שייראו מרחוק */
+    function goldKit(){
+      const M=(c,m,r)=>new THREE.MeshStandardMaterial({color:c,metalness:m||0,roughness:r==null?0.6:r});
+      const gold=M(0xd4a22e,0.65,0.3), weave=M(0xb8861e,0.5,0.42);
+      const ch=spine3||spine;
+      if(pelvis){
+        const p=bonePos(pelvis);
+        // פעמונים ורימונים בשולי המעיל (שמות כח, לג–לד)
+        const bell=new THREE.SphereGeometry(0.022,8,6), pom=new THREE.SphereGeometry(0.026,8,6);
+        const pomM=[M(0x2c4a9a),M(0x6b2a6e),M(0xa32a2a)];
+        for(let k=0;k<24;k++){const a=k/24*Math.PI*2,r=0.325,isB=k%2===0;
+          const m=new THREE.Mesh(isB?bell:pom,isB?gold:pomM[(k>>1)%3]);
+          attachWorld(pelvis,m,new THREE.Vector3(p.x+Math.sin(a)*r,p.y-0.955,p.z+Math.cos(a)*r))}
+        // האפוד: סינר מאחור מהמותניים ומטה (רש״י שמות כח, ו)
+        const ap=new THREE.Mesh(new THREE.CylinderGeometry(0.232,0.26,0.42,16,1,true,Math.PI*0.68,Math.PI*0.64),weave);
+        ap.material.side=THREE.DoubleSide;
+        attachWorld(pelvis,ap,new THREE.Vector3(p.x,p.y-0.17,p.z));
+      }
+      if(ch){
+        const c=bonePos(ch);
+        const fz=frontZ(c.y,c.x);
+        // החושן על הלב: מסגרת זהב ושתים עשרה אבנים בארבעה טורים (שמות כח, יז–כא). 💡 הצבעים
+        const plate=new THREE.Group();
+        const fr=new THREE.Mesh(new THREE.BoxGeometry(0.17,0.2,0.014),gold);plate.add(fr);
+        const ST=[0xb3202a,0x9ab33a,0x2f8f5a, 0x2fa7a0,0x2a4bc4,0xe8e4f0, 0xd0782a,0x9a9a92,0x7a3a9a, 0x2a8a8a,0x23302c,0xb05a3a];
+        const sg=new THREE.BoxGeometry(0.038,0.034,0.012);
+        ST.forEach((col,k)=>{const m=new THREE.Mesh(sg,M(col,0.1,0.25));m.position.set((1-k%3)*0.048,0.066-Math.floor(k/3)*0.044,0.01);plate.add(m)});
+        attachWorld(ch,plate,new THREE.Vector3(c.x,c.y-0.03,fz+0.012));
+        // כתפות האפוד ואבני השוהם על הכתפיים
+        [uL,uR].forEach(u=>{if(!u)return;const s=bonePos(u);
+          const sx=c.x+(s.x-c.x)*0.62, sy=s.y+0.05;
+          const st=new THREE.Mesh(new THREE.SphereGeometry(0.03,10,8),M(0x1c3a32,0.2,0.2));st.scale.set(1,0.6,1.2);
+          attachWorld(ch,st,new THREE.Vector3(sx,sy,c.z));
+          const strap=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.012,0.26),weave);
+          attachWorld(ch,strap,new THREE.Vector3(sx,sy-0.012,c.z))});
+      }
+    }
+    // the most forward point of the body at height y (bind pose), so the choshen sits on the chest
+    function frontZ(y,x){let best=-1e9;const v=new THREE.Vector3();
+      root.traverse(o=>{if(!o.isSkinnedMesh||!o.geometry)return;const P=o.geometry.attributes.position;
+        for(let i=0;i<P.count;i++){v.fromBufferAttribute(P,i).applyMatrix4(o.matrixWorld);if(Math.abs(v.y-y)<0.05&&Math.abs(v.x-x)<0.06&&v.z>best)best=v.z}});
+      return best>-1e8?best:0.13}
     if(head&&(kind==="kohen"||kind==="gadolW"||kind==="gadolG"||kind==="levite")){
       const hp=bonePos(head);
       const wrap=linenMat(kind==="gadolG"?0xf3e7c4:0xf4f0e4,0.86);
@@ -253,7 +296,7 @@ const TOURFIGS=(function(){
       const c=new THREE.Mesh(new THREE.SphereGeometry(0.075,14,10,0,Math.PI*2,0,Math.PI/2),wrap);
       c.position.set(0,0.17,0);turban.add(c);
       if(kind==="gadolG"){
-        const tz=new THREE.Mesh(new THREE.BoxGeometry(0.085,0.016,0.008),new THREE.MeshStandardMaterial({color:0xd8b04a,metalness:0.55,roughness:0.35}));
+        const tz=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.026,0.008),new THREE.MeshStandardMaterial({color:0xe0b84a,metalness:0.6,roughness:0.3,emissive:0x3a2a08}));
         tz.position.set(0,0.145,0.095);turban.add(tz);
       }
       turban.traverse(o=>{if(o.isMesh)o.castShadow=true});
@@ -533,7 +576,7 @@ const TOURFIGS=(function(){
           else if(/brow|hair/i.test(nm)){const h=new THREE.MeshStandardMaterial({color:0x2a221c,roughness:0.8,metalness:0.02});h.skinning=true;o.material=h}
           else if(o.userData.skinGroups||(o.geometry&&o.geometry.groups&&o.geometry.groups.length>=2)){
             const seed=Math.random();
-            const cloth=varyMat(kind,seed);cloth.skinning=true;cloth.vertexColors=0;
+            const cloth=varyMat(kind,seed);cloth.skinning=true;cloth.vertexColors=0;/* 124.4: גוף הבגד בצבע הבגד עצמו (עד עכשיו היה תמיד לבן, ולכן בגדי הזהב נראו לבנים) */cloth.color.multiply(cloth.userData.robe);
             const skin=MAT_SKIN.clone();skin.skinning=true;skin.vertexColors=0;skin.color.offsetHSL((seed-0.5)*0.03,0,(seed-0.5)*0.04);
             const beard=new THREE.MeshStandardMaterial({color:0x3a2a20,roughness:0.86,metalness:0.02});beard.skinning=true;
             o.material=[cloth,skin,beard];
@@ -549,7 +592,7 @@ const TOURFIGS=(function(){
     if(clipName==="Walk"&&spec.prop)clipName="WalkCarry";
     if(clipName==="Working"&&spec.prop)clipName="Carry";
     const act=play(mixer,clipName,spec.speed||1);
-    const o={root,body,mixer,spec,t:Math.random()*10};
+    const o={root,body,mixer,spec,t:Math.random()*10};root.userData.fig=o;
     place(o);
     /* v114: קצב הצעדים לפי מהירות ההליכה בפועל (מחזור הליכה מלא = כ-1.78 מ׳), ופאזה אקראית כדי שלא יזוזו כולם יחד */
     if(act){if(spec.path&&spec._len&&!spec.speed&&/Walk/.test(clipName))act.timeScale=Math.max(0.3,Math.min(1.3,(spec._len*A/(spec.period||8))/1.78));try{act.time=Math.random()*act.getClip().duration}catch(e){}}
