@@ -3,7 +3,8 @@
 let __v6={}; /* 117: נתוני המדידה נשארים פנימיים, לא על window */
 const __Q=[];let __DONE=false;const __AFTER=f=>__DONE?f():__Q.push(f);const __Y=p=>new Promise(r=>{const l=document.getElementById("loading");if(l){l.style.setProperty("--p",p+"%");const t=l.querySelector("b");if(t)t.textContent=p+"%"}requestAnimationFrame(()=>setTimeout(r,0))});
 const stage=document.getElementById("stage");
-if(!window.THREE||!THREE.OrbitControls||!THREE.Sky){document.getElementById("loading").textContent="לא הצלחתי לטעון את ספריית התלת־ממד.";return;}
+if(!window.THREE||!THREE.OrbitControls||!THREE.Sky){if(window.__noGL)__noGL("lib");else document.getElementById("loading").textContent="לא הצלחתי לטעון את ספריית התלת־ממד.";return;}
+{let ok=false;try{const c=document.createElement("canvas");ok=!!(c.getContext("webgl2")||c.getContext("webgl")||c.getContext("experimental-webgl"))}catch(e){}if(!ok){if(window.__noGL)__noGL("probe");return}}
 const REVIEW=(()=>{try{if(/[?&#]review=1/.test(location.search+location.hash))return true}catch(e){} /* מכונות מצב: קישור עם review=1 תמיד נכנס, גם אחרי יציאה קודמת */try{const f=sessionStorage.getItem("tm_review");if(f==="0")return false;if(f==="1")return true}catch(e){}try{return /[?&]review=1/.test(document.referrer)}catch(e){return false}})();
 const reduce=REVIEW||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 
@@ -44,7 +45,7 @@ const PLAZA_BIG=(()=>{const P=GEO.PLAZA;let cx=0,cn=0;P.forEach(q=>{cx+=q[0]/P.l
 const ROCK=(()=>{const q=G2S(GEO.ROCK[0],GEO.ROCK[1]);return{x:q[0],n:q[1]}})();
 
 const QSET=(()=>{try{return localStorage.getItem("tm_q")||"auto"}catch(e){return"auto"}})();const QL=REVIEW?"low":QSET!=="auto"?QSET:(()=>{let soft=false;try{const g=document.createElement("canvas").getContext("webgl"),x=g&&g.getExtension("WEBGL_debug_renderer_info");soft=!!(x&&/swiftshader|llvmpipe|software/i.test(g.getParameter(x.UNMASKED_RENDERER_WEBGL)))}catch(e){}const small=Math.min(innerWidth,innerHeight)<720,mem=navigator.deviceMemory||8,cpu=navigator.hardwareConcurrency||8;return(soft||(small&&(mem<=4||cpu<=6))||mem<=2||cpu<=2)?"low":"high"})();
-const renderer=new THREE.WebGLRenderer({antialias:QL!=="low",powerPreference:"high-performance",logarithmicDepthBuffer:false});
+let renderer;try{renderer=new THREE.WebGLRenderer({antialias:QL!=="low",powerPreference:"high-performance",logarithmicDepthBuffer:false})}catch(e){if(window.__noGL)__noGL("renderer");return}
 const SMALL=Math.min(window.innerWidth,window.innerHeight)<720;const PRMAX=REVIEW?0.5:Math.min(QL==="low"?1:(SMALL?1.5:2),window.devicePixelRatio||1);let PR=PRMAX,frN=0,frT=0;renderer.setPixelRatio(PR);
 renderer.outputEncoding=THREE.sRGBEncoding;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.55;

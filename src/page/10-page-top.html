@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 124.8"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 125.0"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -583,6 +583,13 @@ body.busy3d:not(.touring) #modeExit{display:block}
   body.pane #verTag,body.touring #verTag,body.busy3d #verTag,body:has(#intro:not([hidden])) #verTag{display:none!important}
   .walkhint{top:118px}
   #modeExit{bottom:calc(78px + env(safe-area-inset-bottom,0px));height:32px;padding:0 14px;font-size:13px}
+  /* 125.0 (ביקורת 22): כתובית הסיור בטלפון קטנה יותר, כדי שהדמות והפעולה יישארו גלויות. הפסוק נפתח בלחיצה על ▴ */
+  #stText{font-size:15px!important;line-height:1.45!important;max-height:13.5vh!important;overflow-y:auto}
+  .story:not(.open) #stVerse{display:none!important}
+  #stSrcL{font-size:11px!important;margin-bottom:3px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .story.open #stSrcL{white-space:normal}
+  .story.open #stText{max-height:30vh!important}
+  .story{padding:8px 12px!important}
 }
 </style>
 </head>
@@ -599,6 +606,15 @@ body.busy3d:not(.touring) #modeExit{display:block}
 
   <div class="stage" id="stage">
     <div class="loading" id="loading" role="status"><svg class="ldcity" viewBox="0 0 1200 150" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><path d="M0 92 C140 70 260 74 380 88 S620 64 760 76 S1020 60 1200 80 V150 H0Z" fill="#2a2440" opacity=".55"/><path d="M0 120 L120 112 L122 104 L134 104 L136 112 L300 108 L420 110 L430 96 L470 96 L470 88 L486 78 L502 88 L502 96 L560 96 L566 72 L582 60 L584 46 L596 40 L608 46 L610 60 L626 72 L632 96 L690 96 L700 104 L860 106 L866 98 L878 98 L882 106 L1080 110 L1200 104 V150 H0Z" fill="#141226"/><path d="M584 46 L596 40 L608 46" stroke="#F0D58C" stroke-width="1.2" fill="none" opacity=".7"/></svg><div class="ldbox"><svg class="ldem" viewBox="0 0 64 64" aria-hidden="true" fill="none" stroke="#F0D58C" stroke-width="1.6" stroke-linejoin="round"><path d="M10 54 H54 M14 54 V30 M50 54 V30 M8 30 H56 L32 12 Z"/><path d="M24 54 V40 a8 8 0 0 1 16 0 V54"/><path d="M20 34 V50 M44 34 V50" opacity=".6"/><circle cx="32" cy="22" r="2" fill="#F0D58C"/></svg><div class="ldk">בית המקדש השלישי · ירושלים</div><h2 class="ldn">והראנו בבניינו</h2><div class="ldrule">◆</div><div class="lds">קוּמִי אוֹרִי כִּי בָא אוֹרֵךְ, וּכְבוֹד ה׳ עָלַיִךְ זָרָח<small>ישעיה ס, א</small></div><div class="ldbar"><i></i></div><div class="ldt">העיר נבנית <b>0%</b></div><button type="button" id="enterBtn" class="ldenter">כניסה</button><div class="ldhint" id="enterHint" hidden>לחצו «כניסה» כדי להיכנס (עם מוזיקה)</div><script>(function(){var E=window.__ENTER={entered:/[?&]skipenter\b/.test(location.search),ready:false,clicked:false,doHide:null,fired:0,err:null};
+/* 125.0 (ביקורת סעיף 1): כשהדפדפן לא מצליח לפתוח תלת־ממד (WebGL), מסך הטעינה לא נתקע על 0%. מופיעה הודעה בעברית, ניסיון חוזר וקריאה של הסיורים בלי תלת־ממד */
+window.__noGL=function(why){var l=document.getElementById("loading");if(!l||l.__nogl)return;l.__nogl=1;l.classList.remove("ldready");
+[".ldbar",".ldt","#enterBtn","#enterHint"].forEach(function(s){var e=l.querySelector(s);if(e)e.style.display="none"});
+var host=l.querySelector(".ldbox")||l,d=document.createElement("div");d.className="ldfail";d.setAttribute("role","alert");
+d.innerHTML='<p style="margin:14px 0 6px;font-weight:700;font-size:17px;color:#F0D58C">הדפדפן הזה לא הצליח לפתוח את התלת־ממד</p><p style="margin:0 0 12px;max-width:440px;opacity:.85;line-height:1.5">אולי הדפדפן ישן, או שהאצת החומרה (כרטיס המסך) כבויה. אפשר לנסות שוב, לפתוח ב־Chrome, Edge או Safari מעודכנים, או לקרוא בינתיים את הסיורים בלי תלת־ממד.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button type="button" class="ldenter" style="display:block" id="glRetry">לנסות שוב</button><button type="button" class="ldenter" style="display:block;background:transparent;border:1px solid rgba(240,213,140,.6);color:#F0D58C" id="glRead">קריאת הסיורים</button></div><div id="glText" hidden style="margin-top:14px;max-height:52vh;overflow:auto;text-align:right;direction:rtl;max-width:min(560px,92vw);background:rgba(0,0,0,.28);padding:12px 16px;border-radius:12px;line-height:1.55"></div>';
+host.appendChild(d);document.getElementById("glRetry").onclick=function(){location.reload()};
+document.getElementById("glRead").onclick=function(){var t=document.getElementById("glText");t.hidden=false;t.textContent="טוען…";
+fetch("audio/manifest.json").then(function(r){return r.json()}).then(function(j){var keep=["pilgrim","yk","tamid","hakhel","oldcity"],h="";keep.forEach(function(k){var it=Object.keys(j.items).filter(function(q){return j.items[q].tour===k}).map(function(q){return j.items[q]}).sort(function(a,b){return a.step-b.step});if(!it.length)return;h+="<h3 style=\"color:#F0D58C;margin:12px 0 4px\">"+it[0].tourTitle+"</h3>";it.forEach(function(s){h+="<p style=\"margin:0 0 8px\"><b>"+s.step+". "+s.title+"</b> · "+s.text+(s.verse?" <i>"+s.verse+" ("+s.verseRef+")</i>":"")+"</p>"})});t.innerHTML=h||"לא נמצא טקסט."}).catch(function(){t.textContent="לא הצלחתי לטעון את הטקסט. בדקו את החיבור לאינטרנט."})}};
+addEventListener("error",function(e){if(/WebGL|webgl/.test(e.message||""))window.__noGL("err")});
 var b=document.getElementById("enterBtn");if(!b)return;var tx=0,ty=0;
 function go(ev){try{if(E.clicked)return;E.clicked=true;E.fired++;if(ev&&ev.type==="touchend"&&ev.cancelable)ev.preventDefault();
 /* השמע מתחיל סינכרונית בתוך המחווה. כל כשל בו לא עוצר את הכניסה. */
