@@ -164,12 +164,12 @@ try{(function(){if(!PLATTOP)return;const S=QL==="low"||SMALL?512:1024,k=S/9;
   try{renderer.shadowMap.needsUpdate=true}catch(e){}
 })()}catch(e){console.warn("pave",e)}
 
-/* 124.8 · שלב 6: «המקדש בדקה», סיור ראשון ברשימה למי שבא בפעם הראשונה. התחנות והמקורות לקוחים כמו שהם מסיור עולה הרגל,
+/* 124.8 · שלב 6: «המקדש בשתי דקות» (125.0: נמדד כשתי דקות, לא דקה), סיור ראשון ברשימה למי שבא בפעם הראשונה. התחנות והמקורות לקוחים כמו שהם מסיור עולה הרגל,
    רק פחות תחנות (כ־דקה). כרטיס הסיור הראשון בתפריט «סיורים» הוא הסיור הזה */
 try{(function(){if(!STORIES||!STORIES.pilgrim||STORIES.quick)return;
   const pick=["השער הצפוני","העזרה החיצונה","המזבח","פתח האולם","בתוך ההיכל"].map(t=>STORIES.pilgrim.steps.find(s=>s.title===t)).filter(Boolean).map(s=>Object.assign({},s));
   if(pick.length<4)return;
-  const q={title:"המקדש בדקה",open(){try{SND.crowd(0.04)}catch(e){}},steps:[{title:"המקדש על הר הבית",pose:VP("home"),cap:"זה בית המקדש לפי יחזקאל והמלבי״ם, על הר הבית, בתוך ירושלים של היום. בדקה אחת נעבור מהשער, דרך החצר והמזבח, עד ההיכל.",src:"💡 סיור קצר: התחנות מתוך סיור עולה הרגל"}].concat(pick)};
+  const q={title:"המקדש בשתי דקות",min:2,open(){try{SND.crowd(0.04)}catch(e){}},steps:[{title:"המקדש על הר הבית",pose:VP("home"),cap:"זה בית המקדש לפי יחזקאל והמלבי״ם, על הר הבית, בתוך ירושלים של היום. בשתי דקות נעבור מהשער, דרך החצר והמזבח, עד ההיכל.",src:"💡 סיור קצר: התחנות מתוך סיור עולה הרגל"}].concat(pick)};
   const rest=Object.assign({},STORIES);Object.keys(rest).forEach(k=>delete STORIES[k]);STORIES.quick=q;Object.assign(STORIES,rest)})()}catch(e){console.warn("quick",e)}
 
 /* 124.7 · שלב 2 של מסמך חוויית המשתמש: תפריט «תצוגה» מתחיל במה שרוב המבקרים מחפשים (שעה, יום, חג, שכבות).

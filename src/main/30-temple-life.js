@@ -42,7 +42,7 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   const thread=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.06,0.3),new THREE.MeshStandardMaterial({color:0xb3261e}));gB.add(thread);thread.position.set(0.75,0.75,0);
   const kalpi=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.35),gold);[bull,gA,gB,kalpi].forEach(m=>g.add(m));
   const cloud=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xd8d2c8,transparent:true,opacity:0.08,depthWrite:false}),18);cloud.frustumCulled=false;g.add(cloud);cloud.visible=false;
-  const tag=label("הכהן הגדול",0,0,0,"c",{n:"הכהן הגדול",r:"משנה יומא",t:"הכהן הגדול עושה לבדו את כל עבודת היום. בבגדי זהב (שמונה בגדים) לעבודות של כל יום, ובבגדי לבן (ארבעה בגדים) לעבודות המיוחדות של יום הכיפורים."});tag.yk=1;tag.m=false;cLabels.push(tag);
+  const tag=label("הכהן הגדול",0,0,0,"c",{n:"הכהן הגדול",r:"משנה יומא",t:"⚖️ ביום הכיפורים הכהן הגדול עושה לבדו את כל עבודת היום (יומא ג–ז). 📜 לעבודות של כל יום הוא לובש בגדי זהב, שמונה בגדים: כתונת, מכנסיים, מצנפת, אבנט, חושן, אפוד, מעיל וציץ (שמות כח). 📜 לעבודות המיוחדות של יום הכיפורים הוא לובש בגדי לבן, ארבעה בגדים של בד: כתונת, מכנסיים, אבנט ומצנפת (ויקרא טז, ד). ⚖️ האבנט של כל השנה הוא של צמר צבוע ופשתן, ושל יום הכיפורים כולו בוץ לבן (רמב״ם, הלכות כלי המקדש ח, א–ג). ⚖️ כהן הדיוט עובד בארבעה בגדים: כתונת, מכנסיים, מגבעת ואבנט."});tag.yk=1;tag.m=false;cLabels.push(tag);
   const ring=new THREE.Mesh(new THREE.RingGeometry(0.45,0.62,24),new THREE.MeshBasicMaterial({color:0xffd27a,transparent:true,opacity:0.75,side:THREE.DoubleSide,depthWrite:false}));ring.rotation.x=-Math.PI/2;g.add(ring);
   const st={pos:P(170,200,7.5),from:null,to:null,t0:0,dur:1,face:0,act:0,garb:"gold",cloud:null,goat:null};
   const placeA=(o,u,v,y,face)=>{o.position.copy(P(u,v,y));o.rotation.y=face};
@@ -66,7 +66,7 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   const N=13,fig=FIG.mesh(N,FIG.mat(0xfbfaf4));fig.frustumCulled=false;g.add(fig);
   const head=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),N),hat=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.135,0.15,10),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.85}),N);
   [head,hat].forEach(m=>{m.frustumCulled=false;g.add(m)});
-  const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"⚖️ כהנים בארבעה בגדי לבן — כתונת, מכנסיים, מגבעת ואבנט — יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס."};fig.userData=head.userData=info;cPick.push(fig);
+  const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"📜 כהן הדיוט לובש ארבעה בגדים: כתונת, מכנסיים ומגבעת של פשתן לבן, ואבנט (שמות כח, מ–מב). ⚖️ האבנט שלו של צמר צבוע ופשתן, ולא לבן כולו (רמב״ם, הלכות כלי המקדש ח, א–ב). לכהן הגדול שמונה בגדים, וביום הכיפורים בגדי לבן מיוחדים (ויקרא טז, ד). ⚖️ הכהנים עובדים יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס. 💡 מספר הדמויות הוא המחשה."};fig.userData=head.userData=info;cPick.push(fig);
   const silver=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.25}),fleece=new THREE.MeshStandardMaterial({color:0xf1ece2,roughness:1}),meat=new THREE.MeshStandardMaterial({color:0x9b3b32,roughness:0.7});
   const lamb=mkBeast("sheep",0xf1ece2,0.9,0.7);
   lamb.traverse(o=>{if(o.isMesh){o.userData={n:"כבש התמיד",r:"במדבר כח, ג-ח; תמיד ג, ג-ד; ד, א",t:"📜 \"את הכבש אחד תעשה בבקר ואת הכבש השני תעשה בין הערבים\". ⚖️ מביאים אותו מלשכת הטלאים, בודקים אותו לאור האבוקות ומשקים אותו בכוס של זהב. שוחטים אותו בצפון המזבח, בקרן מזרחית־צפונית, ובערב — בקרן מערבית־צפונית."};cPick.push(o)}});g.add(lamb);
@@ -85,7 +85,7 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
     pais1:[[GZ[0],GZ[1],GZ[2],GZ[0]+1,GZ[1],0.6]].concat(circ(GZ[0],GZ[1],GZ[2],2.8,12,0.15)),
     deshen:[[250,258,16.5,250,250,0.8],[222.3,265.2,7.5,222,263,0.4]].concat(line(226,270,240,270,7.5,7.5,11,250,250,0)),
     wood:line(244,247,256,253,16.5,16.5,4,250,250,0.9).concat(line(226,272,244,272,7.5,7.5,9,250,262,0)),
-    pais2:[[GZ[0],GZ[1],GZ[2],GZ[0]+1,GZ[1],0.6]].concat(circ(GZ[0],GZ[1],GZ[2],2.8,12,0.15)),
+    pais2:circ(GZ[0],GZ[1],GZ[2],2.9,13,0.15), /* 125.0: שלושה עשר הזוכים במעגל (משנה תמיד ג, א). הממונה לא מוצג */
     lamb:[[250,166,27.6,300,140,0.5],[250.6,201,7.5,250,203,0.3],[249.4,201,7.5,250,203,0.3]].concat(line(236,197,264,197,3.5,3.5,10,250,205,0)),
     shechita:[[244.6,214.6,7.5,244,216,0.8],[245.6,217.6,7.5,244,216,0.6]].concat(line(234,224,260,224,7.5,7.5,11,244,216,0)),
     heikhal:[[154,250,13.56,152,250,0.6],[151,256,13.56,150,257.5,0.6]].concat(line(206,240,206,260,10.5,10.5,11,180,250,0)),

@@ -17,6 +17,9 @@ const I=(k,c)=>'<svg class="ico'+(c?" "+c:"")+'" viewBox="0 0 24 24" aria-hidden
 // --- Hebrew-forgiving search ---
 const norm=s=>String(s||"").replace(/<[^>]+>/g," ").replace(/[֑-ׇ]/g,"").replace(/["'״׳`’]/g,"").toLowerCase();
 const words=s=>norm(s).split(/[^א-תa-z0-9]+/).filter(Boolean).map(w=>w.length>2&&w[0]==="ה"?w.slice(1):w);
+/* 125.0 (ביקורת 23, 24): חיפוש שסולח לשגיאות כתיב. משווים צורה "רכה": אותיות סופיות, כתיב חסר (בלי ו/י), ט/ת, ח/כ, ס/ש, א/ה בסוף, ומרחק של אות אחת במילים ארוכות */
+const fz=w=>w.replace(/[ךםןףץ]/g,c=>({"ך":"כ","ם":"מ","ן":"נ","ף":"פ","ץ":"צ"})[c]).replace(/[וי]/g,"").replace(/ט/g,"ת").replace(/ח/g,"כ").replace(/ס/g,"ש").replace(/ק/g,"כ").replace(/א$/,"ה");
+const lev1=(a,b)=>{if(Math.abs(a.length-b.length)>1)return false;let i=0;while(i<a.length&&i<b.length&&a[i]===b[i])i++;return a.slice(i+1)===b.slice(i+1)||a.slice(i)===b.slice(i+1)||a.slice(i+1)===b.slice(i)};
 const CATS=[["שערים","gate",/שער|פתח/],["לשכות","room",/לשכ|תאים|בית המוקד|בית החליפות|בית הטבילה|בית אבטינס/],["מזבח","fire",/מזבח|כבש|סובב|יסוד|קרנ|מערכה|שיתין/],["כלים","vessel",/מנור|שולחן|כיור|ארון|מכונ|כלי|חצוצר|מחת|ציץ|לחם הפנים|קטורת|פרוכת|אבן השתי|דוכן/],["הבית","house",/היכל|אולם|קודש|הבית|צלע|עליי/]];
 const catOf=(n,city)=>{if(city)return["מקומות בעיר","city"];for(const c of CATS)if(c[2].test(n))return[c[0],c[1]];return["חלקי המקדש","diamond"]};
 const isCity=L=>!L.c&&!cLabels.includes(L);
@@ -28,9 +31,14 @@ function buildIndex(){const out=[],seen=new Set();
   const shown=o=>{for(let q=o;q;q=q.parent){if(!q.visible&&!q.userData.hid)return false}return true};
   cPick.concat(PICK).forEach(o=>{const d=o.userData;if(!d||!d.n||d.train||o.isInstancedMesh||o.__lodFar||!shown(o))return;const k=norm(d.n);if(seen.has(k))return;seen.add(k);const c=catOf(d.n,PICK.includes(o));out.push({n:d.n,sub:d.r||"",cat:c[0],ic:c[1],w:words(d.n),w2:words(d.t),go:()=>pickObj(o)})});
   Object.keys(STORIES).forEach(key=>{const S=STORIES[key];out.push({n:"סיור: "+S.title,sub:S.steps.length+" תחנות",cat:"סיורים",ic:"tour",w:words(S.title+" סיור"),w2:words(S.steps.map(s=>s.title).join(" ")),go:()=>startTour(key)})});
+  /* 125.0 (ביקורת 24): "היכל" ו"אולם" מובילים לחלל עצמו, לפני שער ההיכל ואולם השער */
+  out.push({n:"ההיכל (מבפנים)",sub:"יחזקאל מא, א–ב",cat:"הבית",ic:"house",b:3,w:["יכל","היכל"],w2:words("מנורה שולחן מזבח הזהב"),go:()=>{const b=$("vIn");if(b)b.click()}});
+  out.push({n:"אולם הבית",sub:"יחזקאל מ, מח–מט",cat:"הבית",ic:"house",b:3,w:["אולם","אלם","ולם"],w2:words("עמודים פתח"),go:()=>{if(STORY)STORY.stop();if(WALK)stopWalk();const pt=AP(228,250,10,200,250,22)();routeTo(pt[0],pt[1],2600)}});
   Object.keys(HELP).forEach(k=>{const d=HELP[k];if(!d||!d.n)return;out.push({n:d.n,sub:"הסבר",cat:"הסברים",ic:"help",w:words(d.n),w2:words(d.t),go:()=>{UIPT=null;showInfo(d)}})});
   return out}
-function score(it,q){if(!q.length)return 1;let s=0;for(const w of q){let best=0;for(const x of it.w){if(x===w)best=Math.max(best,10);else if(x.startsWith(w))best=Math.max(best,7);else if(x.includes(w))best=Math.max(best,4)}if(!best)for(const x of it.w2){if(x.startsWith(w)){best=1.5;break}}if(!best)return 0;s+=best}return s}
+function score(it,q){if(!q.length)return 1;let s=0;for(const w of q){let best=0;for(const x of it.w){if(x===w)best=Math.max(best,10);else if(x.startsWith(w))best=Math.max(best,7);else if(x.includes(w))best=Math.max(best,4)}
+    if(!best&&w.length>=3){const fw=fz(w);for(const x of it.w){const fx=fz(x);if(fx===fw)best=Math.max(best,8);else if(fw.length>=3&&fx.startsWith(fw))best=Math.max(best,5);else if(Math.max(w.length,x.length)>=4&&(lev1(w,x)||(fw.length>=3&&lev1(fw,fx))))best=Math.max(best,3)}}
+    if(!best)for(const x of it.w2){if(x.startsWith(w)){best=1.5;break}}if(!best)return 0;s+=best}return s+(it.b||0)}
 // --- search pill ---
 const sbox=mk("div","ui");sbox.id="sbox";sbox.innerHTML='<div class="row1"><button type="button" class="ib2 go" id="sgo" aria-label="חיפוש">'+I("search")+'</button><input id="sq" type="search" autocomplete="off" placeholder="חיפוש במקדש ובעיר" aria-label="חיפוש במודל"><button type="button" class="ib2" id="sx" aria-label="ניקוי" hidden>'+I("x")+'</button></div><div id="chips" role="group" aria-label="סינון מהיר"></div><div id="sres" hidden role="listbox"></div>';
 stage.appendChild(sbox);
@@ -82,7 +90,7 @@ Object.values(DR).forEach(x=>grabSwipe(x.d.querySelector(".grab"),x.d,closeDr));
 // tours drawer: cards with picture tile, length and stations
 const TICON={oldcity:"🏛",pilgrim:"🚶",yk:"🕯",tamid:"🐑",pesach:"🍷",shavuot:"🌾",sukkot:"🌿",hakhel:"📖"};
 DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEach(x=>x.remove());
-  Object.keys(STORIES).forEach(k=>{const S=STORIES[k];const min=Math.max(2,Math.round(S.steps.reduce((a,s)=>a+(s.cap||"").length,0)/14/60+S.steps.length*0.15));const b=mk("button","tcard",'<span class="tim">'+(TICON[k]||"🧭")+'</span><span><b>'+esc(S.title)+'</b><small>'+S.steps.length+' תחנות · כ־<bdi class="n">'+min+'</bdi> דקות</small></span>');b.type="button";b.onclick=()=>startTour(k);d.appendChild(b)});
+  Object.keys(STORIES).forEach(k=>{const S=STORIES[k];const min=S.min||Math.max(2,Math.round(S.steps.reduce((a,s)=>a+(s.cap||"").length,0)/14/60+S.steps.length*0.15));const b=mk("button","tcard",'<span class="tim">'+(TICON[k]||"🧭")+'</span><span><b>'+esc(S.title)+'</b><small>'+S.steps.length+' תחנות · כ־<bdi class="n">'+min+'</bdi> דקות</small></span>');b.type="button";b.onclick=()=>startTour(k);d.appendChild(b)});
   d.appendChild(mk("p","tnote ch",'נגיעה במודל עוצרת את הסיור לרגע, ו"המשך סיור" מחזיר אותו. Esc יוצא מהסיור.'))};
 // places drawer: views, then places by area
 {const d=DR.places.d;d.appendChild(mk("h3",null,"נקודות מבט"));const vs=$("viewSeg");vs.classList.add("vseg");d.appendChild(vs);const pl=mk("div","plist");pl.id="plist";d.appendChild(pl);
@@ -120,16 +128,16 @@ DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEac
   const dw=mk("div","ctl",'<div class="cl">סוג היום</div><div class="seg tap" id="daySeg" role="group" aria-label="סוג היום">'+days.map(([k,n])=>'<button type="button" data-day="'+k+'" aria-pressed="'+(DAY===k?"true":"false")+'">'+n+'</button>').join("")+'</div>');d.appendChild(dw);
   dw.querySelector("#daySeg").addEventListener("click",e=>{const b=e.target.closest("button[data-day]");if(!b)return;dw.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));setDay(b.dataset.day)});
   // 122.6: "יום רגיל" (FEST.chol) is the default and the way back from a festival
-  const fests=[["chol","יום רגיל"],["pesach","פסח"],["shavuot","שבועות"],["sukkot","סוכות"]];
+  const fests=[["chol","יום רגיל"],["pesach","פסח"],["shavuot","שבועות"],["sukkot","סוכות"],["yk","יום הכיפורים"]]; /* 125.0 (ביקורת 39): יום הכיפורים פותח את הסיור שלו */
   const curF=Object.keys(FEST).find(k=>FEST[k].doy===DOY)||"";
   const fw=mk("div","ctl",'<div class="cl">חג</div><div class="seg tap" id="festSeg" role="group" aria-label="חג">'+fests.map(([k,n])=>'<button type="button" data-fest="'+k+'" aria-pressed="'+(curF===k?"true":"false")+'">'+n+'</button>').join("")+'</div>');d.appendChild(fw);
-  fw.querySelector("#festSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-fest]");if(!b)return;fw.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));setFest(b.dataset.fest);zKey=null;marks();readout(+hsl.value)});
+  fw.querySelector("#festSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-fest]");if(!b)return;if(b.dataset.fest==="yk"){closeDr();startTour("yk");return}fw.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));setFest(b.dataset.fest);zKey=null;marks();readout(+hsl.value)});
 
   /* גרסה 118: בורר ימי סוכות (ט״ו עד כ״ב) ומתג יום ולילה. מופיע רק כשנבחר «חג ← סוכות» */
   {const sdays=[[15,"ט״ו"],[16,"ט״ז"],[17,"י״ז"],[18,"י״ח"],[19,"י״ט"],[20,"כ׳"],[21,"כ״א"],[22,"כ״ב"]];
     const sw=mk("div","ctl",'<div class="cl">ימי סוכות (תשרי)</div><div class="seg tap" id="sukSeg" role="group" aria-label="יום בחג הסוכות" style="flex-wrap:wrap">'+sdays.map(([k,n])=>'<button type="button" data-sd="'+k+'" aria-pressed="'+(SUKDAY===k?"true":"false")+'">'+n+'</button>').join("")+'</div><div class="seg tap" id="sukDN" role="group" aria-label="יום או לילה" style="margin-top:6px"><button type="button" data-dn="d">יום</button><button type="button" data-dn="n">לילה</button></div><div class="cl" id="sukNote" style="opacity:.85;margin-top:4px"></div>');d.appendChild(sw);
     const dayCard=k=>{const b={15:13,16:12,17:11,18:10,19:9,20:8,21:7}[k],nm=SUK?SUK.DN[k]:"";
-      const t=k===22?"⚖️ שמיני עצרת הוא רגל בפני עצמו. מוסף: פר, איל, שבעה כבשים ושעיר. אין ערבה, אין ניסוך המים ואין שמחת בית השואבה.":"⚖️ מוסף היום: "+b+" פרים, שני אילים, ארבעה עשר כבשים ושעיר. 📜 ערבות זקופות בצדי המזבח, "+(k===21?"ושבע הקפות סביב המזבח בלולבים":"והקפה אחת סביב המזבח בלולבים")+". 📜 בבוקר: ניסוך המים מן השילוח. 📜 לולב ניטל במקדש כל שבעה. "+(k===15?"שמחת בית השואבה מתחילה בליל ט״ז.":"בלילה: שמחת בית השואבה, חוץ משבת.")+" 💡 צפיפות הקהל, מספר הסוכות והלפידים ומקום הדיר הם הצעות לתצוגה.";
+      const t=k===22?"⚖️ שמיני עצרת הוא רגל בפני עצמו. מוסף: פר, איל, שבעה כבשים ושעיר. אין ערבה, אין ניסוך המים ואין שמחת בית השואבה.":"⚖️ מוסף היום: "+b+" פרים, שני אילים, ארבעה עשר כבשים ושעיר. 📜 ערבות זקופות בצדי המזבח, "+(k===21?"ושבע הקפות סביב המזבח בלולבים":"והקפה אחת סביב המזבח בלולבים")+". 📜 בבוקר: ניסוך המים מן השילוח"+(DAY==="shabbat"?" (⚖️ בשבת לא יורדים לשילוח: ממלאים מערב שבת חבית של זהב ומניחים אותה בלשכה, סוכה ד, י)":"")+". 📜 לולב ניטל במקדש כל שבעה. "+(k===15?"שמחת בית השואבה מתחילה בליל ט״ז.":"בלילה: שמחת בית השואבה, חוץ משבת.")+" 💡 צפיפות הקהל, מספר הסוכות והלפידים ומקום הדיר הם הצעות לתצוגה.";
       showInfo({n:"סוכות · "+nm,r:"סוכה ד, א; ד, ה; ד, ט; ה, א-ו; רמב״ם, הלכות תמידין ומוספין י, ג-ה",t})};
     const sukUI=()=>{const on=DOY===FEST.sukkot.doy;sw.style.display=on?"":"none";sw.querySelectorAll("#sukSeg button").forEach(x=>x.setAttribute("aria-pressed",+x.dataset.sd===SUKDAY?"true":"false"));const ng=TIME==="night";sw.querySelectorAll("#sukDN button").forEach(x=>x.setAttribute("aria-pressed",(x.dataset.dn==="n")===ng?"true":"false"));
       sw.querySelector("#sukNote").textContent=!ng?"":(DAY==="shabbat"?"בשבת אין שמחת בית השואבה.":(SUKDAY===15||SUKDAY===22)?"בלילה הזה אין שמחת בית השואבה. היא בלילות ט״ז עד כ״א.":"שמחת בית השואבה: ליל "+sdays.find(q=>q[0]===SUKDAY)[1]+" בתשרי.")};
@@ -173,7 +181,7 @@ showInfo=function(d){if(!d)return;_show(d);const pt=UIPT;UIPT=null;CUR.d=d;CUR.p
   const src=(d.r||"").split(/[;؛]| · /).map(x=>x.trim()).filter(Boolean);
   const inner=/היכל|קודש הקודשים|הבית$/.test(d.n||"");
   let h='<div class="ic-grab"></div><div class="ic-hero">'+I(c[1])+'</div><div class="ic-head"><h2>'+esc(d.n)+'</h2><div class="ic-type"><span>'+esc(c[0])+'</span>'+tagsOf(t)+'</div></div>';
-  h+='<div class="ic-btns">'+(CUR.pt?'<button type="button" data-a="fly"><span class="c">'+I("fly")+'</span>טוס לשם</button>':'')+(inner?'<button type="button" data-a="in"><span class="c">'+I("door")+'</span>היכנס</button>':'')+(CUR.pt?'<button type="button" data-a="near"><span class="c">'+I("near")+'</span>מה בסביבה</button>':'')+'<button type="button" data-a="share"><span class="c">'+I("share")+'</span>שתף</button></div><div class="ic-body">';
+  h+='<div class="ic-btns">'+(CUR.pt?'<button type="button" data-a="fly"><span class="c">'+I("fly")+'</span>טוס לשם</button>':'')+(inner?'<button type="button" data-a="in"><span class="c">'+I("door")+'</span>היכנס</button>':'')+(CUR.pt?'<button type="button" data-a="near"><span class="c">'+I("near")+'</span>מה בסביבה</button><button type="button" data-a="walk"><span class="c">'+I("walk")+'</span>הליכה מכאן</button>':'')+'<button type="button" data-a="share"><span class="c">'+I("share")+'</span>שתף</button></div><div class="ic-body">';
   if(t)h+='<div class="ic-txt'+(long?' short':'')+'">'+t+'</div>'+(long?'<button type="button" class="ic-more">עוד</button>':'');
   const dm=dimsOf(t);if(dm)h+='<div class="ic-row">'+I("size")+'<div>'+dm+'<br><small class="ch">אמה של <bdi class="n">'+Math.round(A*1000)/10+'</bdi> ס״מ</small></div></div>';
   if(src.length)h+='<div class="ic-row">'+I("book")+'<div class="ic-src">'+src.map(x=>'<a href="https://www.sefaria.org.il/search?q='+encodeURIComponent(x.replace(/[֑-ׇ]/g,""))+'&tab=text" target="_blank" rel="noopener">'+esc(x)+'</a>').join("")+'</div></div>';
@@ -213,6 +221,7 @@ card.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)retur
   if(a==="fly"&&CUR.pt){const L=CUR.pt._L;if(L)goLabel(L);else flyToPoint(CUR.pt,20);CUR.dist0=0}
   else if(a==="in"){const k=/קודש הקודשים/.test(CUR.d.n)?"vKd":"vIn";$(k).click()}
   else if(a==="near"&&CUR.pt){const box=card.querySelector(".ic-near");box.hidden=!box.hidden;if(!box.hidden){box.innerHTML=I("near")+'<div><b>בסביבה</b></div>';const w=box.lastChild;near(CUR.pt,6).forEach(([L,dd])=>{const q=mk("button",null,esc(L.txt)+' <small class="ch">(<bdi class="n">'+Math.round(dd/A)+'</bdi> אמה)</small>');q.type="button";q.onclick=()=>pickLabel(L);w.appendChild(q)})}}
+  else if(a==="walk"&&CUR.pt){const pt=CUR.pt.clone();try{closeInfo()}catch(e){}startWalk(pt)}
   else if(a==="share")share()});
 // click on the sky closes the panel
 const tv=new THREE.Vector3();
@@ -225,14 +234,14 @@ function cardTick(){requestAnimationFrame(cardTick);
   svg.style.display="";const ln=svg.firstChild,ci=svg.lastChild;ln.setAttribute("x1",cx);ln.setAttribute("y1",cy);ln.setAttribute("x2",x);ln.setAttribute("y2",y);ci.setAttribute("cx",x);ci.setAttribute("cy",y)}
 requestAnimationFrame(cardTick);
 // --- share link ---
-function shareURL(){const p=camera.position,t=controls.target,f=v=>v.toFixed(1);const q=["v="+[p.x,p.y,p.z,t.x,t.y,t.z].map(f).join(","),"a="+A,"f="+FMODE,"l="+LOC,"g="+GATE,"t="+TIME,"d="+DAY,"s="+FLOOR,"y="+DOY];if(PESPICK)q.push("pp="+PESDAY);if(SHVPICK)q.push("sp="+SHVDAY);if(HOUR!=null)q.push("h="+HOUR.toFixed(2));if(CUR.d&&!card.hidden)q.push("o="+encodeURIComponent(CUR.d.n));q.push("ly="+["oP","oT","oL","oW","oF","oM","oS"].map(id=>{const b=$(id);return b&&b.getAttribute("aria-pressed")==="true"?"1":"0"}).join(""));return location.href.split("#")[0]+"#"+q.join("&")}
+function shareURL(){const p=camera.position,t=controls.target,f=v=>v.toFixed(1);const q=["v="+[p.x,p.y,p.z,t.x,t.y,t.z].map(f).join(","),"a="+A,"f="+FMODE,"l="+LOC,"g="+GATE,"t="+TIME,"d="+DAY,"s="+FLOOR,"y="+DOY];if(PESPICK)q.push("pp="+PESDAY);if(SHVPICK)q.push("sp="+SHVDAY);if(DOY===FEST.sukkot.doy)q.push("kd="+SUKDAY);if(HOUR!=null)q.push("h="+HOUR.toFixed(2));if(CUR.d&&!card.hidden)q.push("o="+encodeURIComponent(CUR.d.n));q.push("ly="+["oP","oT","oL","oW","oF","oM","oS"].map(id=>{const b=$(id);return b&&b.getAttribute("aria-pressed")==="true"?"1":"0"}).join(""));return location.href.split("#")[0]+"#"+q.join("&")}
 function share(){const u=shareURL();try{history.replaceState(null,"",u)}catch(e){}const done=()=>toast("הקישור הועתק. מי שיפתח אותו יראה בדיוק את המבט הזה.");if(navigator.share&&window.innerWidth<=700){navigator.share({title:"הדמיית המקדש",url:u}).catch(()=>{})}else if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,()=>toast(u));else toast(u)}
 function restore(){const h=location.hash.slice(1);if(!h||!/v=/.test(h))return false;const Q={};h.split("&").forEach(kv=>{const i=kv.indexOf("=");if(i>0)Q[kv.slice(0,i)]=decodeURIComponent(kv.slice(i+1))});
   const click=id=>{const b=$(id);if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
   if(Q.a){const m={"0.48":"a48","0.525":"a525","0.576":"a576"}[Q.a];if(m)click(m)}if(Q.f==="mid")click("fMid");if(Q.g==="high")click("gH");if(Q.l==="altar")click("lA");
   // מכונות מצב: הקישור שומר גם שיטה, שעה, סוג יום, חג ורצפה
   if(Q.y){const f=Object.keys(FEST).find(k=>String(FEST[k].doy)===Q.y);if(f){const b=document.querySelector('#festSeg button[data-fest="'+f+'"]');if(b)b.click()}}
-  /* 121: קישור שיתוף מפעיל את שכבת הפסח רק אם היא הייתה פעילה */PESPICK=!!(Q.pp&&/^(14am|14pm|15n|15|16n|16|chm|21)$/.test(Q.pp)&&DOY===FEST.pesach.doy);if(PESPICK)PESDAY=Q.pp;if(window.__pesUI)window.__pesUI();SHVPICK=!!(Q.sp&&/^(eve|6|t7|t8|t9|t10|t11|t12)$/.test(Q.sp)&&DOY===FEST.shavuot.doy);if(SHVPICK)SHVDAY=Q.sp;if(window.__shvUI)window.__shvUI();
+  /* 121: קישור שיתוף מפעיל את שכבת הפסח רק אם היא הייתה פעילה */PESPICK=!!(Q.pp&&/^(14am|14pm|15n|15|16n|16|chm|21)$/.test(Q.pp)&&DOY===FEST.pesach.doy);if(PESPICK)PESDAY=Q.pp;if(window.__pesUI)window.__pesUI();SHVPICK=!!(Q.sp&&/^(eve|6|t7|t8|t9|t10|t11|t12)$/.test(Q.sp)&&DOY===FEST.shavuot.doy);if(SHVPICK)SHVDAY=Q.sp;if(window.__shvUI)window.__shvUI();/* 125.0 (ביקורת 27): גם היום בסוכות נשמר בקישור */if(Q.kd&&/^(1[5-9]|2[0-2])$/.test(Q.kd)&&DOY===FEST.sukkot.doy){SUKDAY=+Q.kd;if(window.__sukUI)window.__sukUI()}
   if(Q.h&&isFinite(+Q.h)){const s=$("hslider");if(s){s.value=Q.h;s.dispatchEvent(new Event("change"))}}else if(Q.t){const id={morning:"tM",noon:"tN",evening:"tE",night:"tL"}[Q.t];if(id)click(id)}
   if(Q.d){const b=document.querySelector('#daySeg button[data-day="'+Q.d+'"]');if(b)b.click()}
   if(Q.s){const id={sat:"sS",satm:"sM",model:"sD"}[Q.s];if(id)click(id)}if(Q.ly){const ids=["oP","oT","oL","oW","oF","oM","oS"];[...Q.ly].forEach((ch,i)=>{const b=$(ids[i]);if(!b)return;const want=ch==="1";const cur=b.getAttribute("aria-pressed")==="true";if(cur!==want)b.click()})}closeInfo();
