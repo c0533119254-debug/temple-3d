@@ -1018,11 +1018,11 @@ function build(){
               if(s.ok){const cp=camera.position;if(pm)B.katT.update(cp,true);if(pm||fl)B.outT.update(cp,true);if(pm&&s.shab){B.shA.update(cp,true);B.shB.update(cp,true)}}}
             if(PESC.apply)PESC.apply(s)},
           tick(dt,tt,still){const s=this.state(),k=[s.on,s.ok,s.d,s.shab].join();if(k!==psig){psig=k;this.apply(s)}if(!s.on)return;
-            setP("פסח · "+PDN[s.d]+" · "+(s.ok?PHUD[s.d]:(PNIGHT[s.d]?"בחרו «לילה» כדי לראות":"בחרו שעת יום כדי לראות")));
+            setP("פסח · "+PDN[s.d]+" · "+(s.ok?(this.tour&&this.tour.exitView?"יוצאים מן העזרה":PHUD[s.d]):(PNIGHT[s.d]?"בחרו «לילה» כדי לראות":"בחרו שעת יום כדי לראות")));
             if(s.ok&&B){const cp=camera.position;if(B.gKat.visible)B.katT.update(cp);if(B.gOut.visible)B.outT.update(cp);if(B.gShab.visible){B.shA.update(cp);B.shB.update(cp)}
               if(!still){if(B.gRows.visible)B.rowsTick(tt);if(B.gFlow.visible)B.flow.tick(dt);if(B.gExit.visible)B.exit.tick(dt)}}}};
         /* ===== גרסה 123 · משימה 4: סיור פסח קולנועי. כלי העזר של התחנות. אין קריינות ואין מוזיקה ===== */
-        PES.tour=(()=>{let H=null;const TM={"14am":"tM","14pm":"tE","15":"tM","15n":"tL"},T={n:-1,door:1};
+        PES.tour=(()=>{let H=null;const TM={"14am":"tM","14pm":"tE","15":"tM","15n":"tL"},T={n:-1,door:1,exitView:false};
           const hero=()=>{if(H||!B)return H;const g=new THREE.Group();g.name="PESTOUR";g.visible=false;PG.add(g);
             const bl=new THREE.InstancedMesh(new THREE.BoxGeometry(0.34,0.03,0.025),silM,3);bl.frustumCulled=false;bl.castShadow=false;bl.userData=NL(PC.sl);cPick.push(bl);g.add(bl);
             /* לוי מפשיט ליד זוג הישראלים עם המקל. 💡 מקום */const lv=figset(g,1,PC.hang,()=>LEVC),p=P3(290,213.9,7.5);lv.set(0,p.x,p.y,p.z,Math.PI/2);lv.done();
@@ -1036,11 +1036,11 @@ function build(){
             const st=new THREE.Mesh(new THREE.CylinderGeometry(0.035,0.045,0.7,6),M.wood);st.position.set(q[0]+1.9,q[2]+0.35,-q[1]-0.2);gr.add(st);
             const rp=new THREE.Mesh(new THREE.BoxGeometry(0.95,0.02,0.02),std(0xb89a62,{roughness:1}));rp.position.set(q[0]+1.42,q[2]+0.62,-q[1]-0.28);rp.rotation.y=0.25;gr.add(rp);
             gr.traverse(m=>{m.userData=NL(PC.hav);if(m.isMesh)PICK.push(m)});WG.add(gr);PESC.hero={q,g:gr,cx:best.cx,cn:best.cn};return PESC.hero};
-          const o={get active(){return T.n>=0},
+          const o={get active(){return T.n>=0},get exitView(){return T.exitView},
             pose1(){const h=cityHero();if(!h)return AP(250,-60,14,250,40,6)();const q=h.q;return GP(h.cx,h.cn,19,q[0]+1.1,q[1]-0.1,0.4)()},
-            go(n){T.n=n;PTD=["14am","15","14pm","14pm","14pm","14pm","14pm","15n"][n];const t=TM[PTD];if(t&&TIME!==({tM:"morning",tN:"noon",tE:"evening",tL:"night"})[t])document.getElementById(t).click();
+            go(n,exitView=false){T.n=n;T.exitView=exitView;PTD=["14am","15","14pm","14pm","14pm","14pm","14pm","15n"][n];const t=TM[PTD];if(t&&TIME!==({tM:"morning",tN:"noon",tE:"evening",tL:"night"})[t])document.getElementById(t).click();
               PES.tick(0.016,performance.now()/1000,true);const h=hero();if(h)h.g.visible=n===4||n===6;if(B&&B.leaves)T.door=n===2?0:1;if(B&&B.setDoor)B.setDoor(T.door);if(n===0)cityHero()},
-            end(){T.n=-1;PTD=null;if(H)H.g.visible=false;if(B&&B.setDoor)B.setDoor(1)},
+            end(){T.n=-1;T.exitView=false;PTD=null;if(H)H.g.visible=false;if(B&&B.setDoor)B.setDoor(1)},
             tick(dt,tt,still){if(T.n<0||!B)return;if(T.n===2&&T.door<1&&!still&&STORY_API&&STORY_API.S&&!STORY_API.S.move){T.door=Math.min(1,T.door+dt/3.2);B.setDoor(T.door)}
               if(H&&H.g.visible){const sw=Math.sin(tt*7)*0.2,m=new THREE.Matrix4(),q=new THREE.Quaternion(),s=new THREE.Vector3(1,1,1),v=new THREE.Vector3();
                 [[H.p0,0.45,1],[H.p1,0.45,1],[H.p2,-0.4,-1]].forEach((a,i)=>{v.set(a[0].x+sw*(i%2?1:-1),a[0].y+1.1,a[0].z+a[1]);m.compose(v,q.setFromEuler(new THREE.Euler(0,0,sw)),s);H.bl.setMatrixAt(i,m)});H.bl.instanceMatrix.needsUpdate=true}}};
