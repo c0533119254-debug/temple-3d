@@ -40,18 +40,72 @@ jobs:
           python3 -m http.server 8765 >/dev/null 2>&1 &
           sleep 2
           node tools/test/user-path.js http://localhost:8765/ user-test-out
-      - name: עשרת מסלולי ההליכה בעיר (125.3)
-        if: always()
-        run: node tools/test/city-walks.js http://localhost:8765/ user-test-out/city
       - name: דוח
         if: always()
-        run: |
-          cat user-test-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
-          cat user-test-out/city/report.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: cat user-test-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
       - name: צילומי מסך
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: user-test-screens
           path: user-test-out
+          retention-days: 14
+
+  # 125.7: מסלולי העיר והסדרה הרחבה רצים במקביל, כדי שהבדיקה כולה לא תתארך
+  city-walks:
+    name: מסלולי ההליכה בעיר
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: התקנת דפדפן לבדיקה
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: מסלולי ההליכה (יעד גלוי, הליכה בפקדים, קיר חוסם)
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 2
+          node tools/test/city-walks.js http://localhost:8765/ city-out
+      - name: דוח
+        if: always()
+        run: cat city-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: צילומי מסך
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: city-walk-screens
+          path: city-out
+          retention-days: 14
+
+  usage-matrix:
+    name: סדרת שימוש רחבה (חגים, סיורים, חיפושים, מסכים)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: התקנת דפדפן לבדיקה
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: הסדרה
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 2
+          node tools/test/usage-matrix.js http://localhost:8765/ matrix-out
+      - name: דוח
+        if: always()
+        run: cat matrix-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: צילומי מסך
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: usage-matrix-screens
+          path: matrix-out
           retention-days: 14
