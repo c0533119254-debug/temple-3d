@@ -78,7 +78,7 @@ async function run(dev) {
     await shot("2-overview");
   });
   await ovl("מבט כללי");
-  // 125.7 (בדיקה חוזרת, א): חלופת הקריאה (tours/reading.json) זהה לסיורים שהאתר מציג
+  // 125.8 (בדיקה חוזרת, א): חלופת הקריאה (tours/reading.json) זהה לסיורים שהאתר מציג
   if (dev === "desktop") await step("חלופת הקריאה זהה לכל הסיורים באתר", async () => {
     const r = await pg.evaluate(async () => { const live = window.__toursText(); const f = await (await fetch("tours/reading.json", { cache: "no-store" })).json(); return { same: JSON.stringify(live) === JSON.stringify(f.tours), n: live.length, s: live.reduce((a, t) => a + t.steps.length, 0) }; });
     if (!r.same) throw new Error("tours/reading.json לא מעודכן. להריץ: node tools/test/reading-dump.js");
@@ -152,7 +152,7 @@ async function run(dev) {
     await pg.keyboard.press("Escape");
   });
 
-  // 125.7 (בדיקה חוזרת, ד): גם יעד החיפוש «אולם הבית» שומר את המבט הקודם
+  // 125.8 (בדיקה חוזרת, ד): גם יעד החיפוש «אולם הבית» שומר את המבט הקודם
   await step("חיפוש «אולם» ואז חזרה למבט הקודם", async () => {
     await pg.fill("#sq", "אולם");
     await until(() => [...document.querySelectorAll("#sres button")].some((b) => b.textContent.includes("אולם הבית")), 20000);
@@ -168,7 +168,7 @@ async function run(dev) {
     const d = (a, b) => { const x = a.replace("v=", "").split(",").map(Number), y = b.replace("v=", "").split(",").map(Number); return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); };
     if (d(v2, v0) > 3) throw new Error(`«חזרה» לא החזירה למבט שלפני החיפוש (${Math.round(d(v2, v0))} מ׳ ממנו)`);
   });
-  // 125.7 (בדיקה חוזרת, ה): המפה הקטנה נגישה למקלדת
+  // 125.8 (בדיקה חוזרת, ה): המפה הקטנה נגישה למקלדת
   if (dev === "desktop") await step("מפה קטנה במקלדת: Tab, חצים ו־Enter", async () => {
     // the mini map is a layer that starts off: turn it on as a user would
     const ti = await pg.evaluate(() => { const m = document.getElementById("mini"); if (m && m.hidden) { const b = document.querySelector("[data-o=mini]"); if (b) b.click(); } return m && !m.hidden ? m.tabIndex : null; });
@@ -183,7 +183,7 @@ async function run(dev) {
     await pg.evaluate(() => { const b = document.querySelector("[data-o=mini]"); if (b) b.click(); });
   });
 
-  // 125.7 (בדיקה חוזרת, ב+ג): מקש שנשאר לחוץ כשהחלון מאבד מיקוד, ו־Escape שסוגר שכבה אחת בלבד
+  // 125.8 (בדיקה חוזרת, ב+ג): מקש שנשאר לחוץ כשהחלון מאבד מיקוד, ו־Escape שסוגר שכבה אחת בלבד
   await step("הליכה: Escape סוגר מגירה בלי לצאת מההליכה", async () => {
     await pg.evaluate(() => { const b = [...document.querySelectorAll("#cta button")].find((x) => !x.classList.contains("pri")); b.click(); });
     await until(() => document.body.classList.contains("busy3d"), 30000);

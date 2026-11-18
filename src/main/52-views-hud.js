@@ -47,11 +47,11 @@ function endModes(keepStory){if(STORY&&!keepStory)STORY.stop();if(TRN&&TRN.ridin
 let DRONE=false,WALK=false,yaw=0,pitch=0;const keys={};
 function syncWalkHud(){const off=WALK||DRONE,zg=document.querySelector(".zgrp");if(zg)zg.querySelectorAll("button").forEach(b=>{b.disabled=off;b.setAttribute("aria-disabled",off?"true":"false");b.title=off?"בהליכה וברחפן כפתורי הזום אינם פעילים. בהליכה גובה העין קבוע, ומתקרבים בצעידה.":(b.getAttribute("aria-label")||"")});const c=document.getElementById("compass");if(c){const t=WALK?"בהליכה: לחצו כדי לפנות צפונה":"צפון — לחצו כדי לפנות צפונה";c.title=t;c.setAttribute("aria-label",t)}}
 /* 125.0 (ביקורת 40): במסך מגע לא מזכירים מקלדת */
-/* 125.7 (בדיקה חוזרת 40): במכשיר משולב (מסך מגע עם עכבר או מקלדת) ההוראות לפי מה שהמשתמש עושה בפועל: הנגיעה האחרונה או המקש האחרון, ולא לפי סוג המסך בלבד */
+/* 125.8 (בדיקה חוזרת 40): במכשיר משולב (מסך מגע עם עכבר או מקלדת) ההוראות לפי מה שהמשתמש עושה בפועל: הנגיעה האחרונה או המקש האחרון, ולא לפי סוג המסך בלבד */
 let LASTPT=null,USEDKB=false;addEventListener("pointerdown",e=>{LASTPT=e.pointerType},{capture:true,passive:true});addEventListener("keydown",e=>{if(/^(w|a|s|d|arrow)/i.test(e.key))USEDKB=true},{capture:true,passive:true});
 const isTouchUI=()=>{try{if(LASTPT)return LASTPT==="touch"||LASTPT==="pen";return matchMedia("(pointer:coarse)").matches&&!matchMedia("(pointer:fine)").matches}catch(e){return false}};
 const kbToo=()=>{try{return USEDKB||matchMedia("(any-pointer:fine)").matches}catch(e){return USEDKB}};
-/* 125.7 (בדיקה חוזרת 28): כשמתחילים ללכת ליד יעד מסמנים את היעד בעמוד אור ובשורה בהוראות: כמה מטרים ולאן, עד שמגיעים אליו */
+/* 125.8 (בדיקה חוזרת 28): כשמתחילים ללכת ליד יעד מסמנים את היעד בעמוד אור ובשורה בהוראות: כמה מטרים ולאן, עד שמגיעים אליו */
 let WGOAL=null;function clearGoal(){if(WGOAL){clearInterval(WGOAL.t);scene.remove(WGOAL.m);WGOAL.m.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()});WGOAL=null}}
 function WALKGOAL(at,best){clearGoal();const m=new THREE.Group();const mat=new THREE.MeshBasicMaterial({color:0x3b82f6,transparent:true,opacity:0.45,depthWrite:false});
   const beam=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.35,14,12,1,true),mat);beam.position.y=7;m.add(beam);const ring=new THREE.Mesh(new THREE.RingGeometry(1.4,1.9,32),mat.clone());ring.rotation.x=-Math.PI/2;ring.position.y=0.08;m.add(ring);
@@ -92,7 +92,7 @@ window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
   pad.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();id=e.pointerId;try{pad.setPointerCapture(id)}catch(_){}set(e)});
   pad.addEventListener("pointermove",e=>{if(e.pointerId===id)set(e)});
   const end=e=>{if(e.pointerId!==id)return;id=null;JOY.x=JOY.y=0;knob.style.transform=""};pad.addEventListener("pointerup",end);pad.addEventListener("pointercancel",end)
-  /* 125.7 (בדיקה חוזרת, ב): כשהחלון מאבד מיקוד או הדף מוסתר, שום מקש או ג׳ויסטיק לא נשארים "לחוצים" */
+  /* 125.8 (בדיקה חוזרת, ב): כשהחלון מאבד מיקוד או הדף מוסתר, שום מקש או ג׳ויסטיק לא נשארים "לחוצים" */
   const release=()=>{for(const k in keys)keys[k]=false;id=null;JOY.x=JOY.y=0;knob.style.transform=""};
   window.addEventListener("blur",release);window.addEventListener("pagehide",release);document.addEventListener("visibilitychange",()=>{if(document.hidden)release()});pad.addEventListener("lostpointercapture",end)})();
 let look=null;renderer.domElement.addEventListener("pointerdown",e=>{if(WALK||DRONE){look=[e.clientX,e.clientY,yaw,pitch,e.pointerId]}});
@@ -191,7 +191,7 @@ function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);con
   if(MINIV.kb){const kx=MINIV.kx*S,ky=MINIV.ky*S;x.save();x.strokeStyle="#1d4ed8";x.lineWidth=2.5;x.beginPath();x.arc(kx,ky,9,0,7);x.moveTo(kx-15,ky);x.lineTo(kx-5,ky);x.moveTo(kx+5,ky);x.lineTo(kx+15,ky);x.moveTo(kx,ky-15);x.lineTo(kx,ky-5);x.moveTo(kx,ky+5);x.lineTo(kx,ky+15);x.stroke();x.restore()}}
 /* 125.0 (ביקורת 26): לחיצה על המפה הקטנה טסה למקום שנלחץ */
 {const mc=document.getElementById("mini");mc.style.cursor="pointer";mc.title="לחצו על המפה כדי לטוס לשם";mc.setAttribute("role","button");
-  /* 125.7 (בדיקה חוזרת, ה): המפה נגישה למקלדת: Tab מגיע אליה, החצים מזיזים סמן כחול, Enter או רווח טסים אליו */
+  /* 125.8 (בדיקה חוזרת, ה): המפה נגישה למקלדת: Tab מגיע אליה, החצים מזיזים סמן כחול, Enter או רווח טסים אליו */
   mc.tabIndex=0;mc.setAttribute("aria-label","מפה קטנה. החצים מזיזים סמן, Enter או רווח טסים אליו. אפשר גם לחפש מקום בשורת החיפוש");MINIV.kx=MINIV.ky=0.5;
   mc.addEventListener("focus",()=>{if(mc.matches(":focus-visible")){MINIV.kb=true;MINIV.kx=MINIV.ky=0.5}});mc.addEventListener("blur",()=>{MINIV.kb=false});
   mc.addEventListener("keydown",e=>{const d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];

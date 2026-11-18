@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 125.7"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 125.8"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -591,7 +591,7 @@ body.busy3d:not(.touring) #modeExit{display:block}
   .story.open #stText{max-height:30vh!important}
   .story{padding:8px 12px!important}
 }
-/* 125.7 (בדיקת מסכים): טלפון לרוחב, מסך נמוך. כרטיס הסיור צר ונצמד לצד, כדי שרוב המסך יישאר לדגם */
+/* 125.8 (בדיקת מסכים): טלפון לרוחב, מסך נמוך. כרטיס הסיור צר ונצמד לצד, כדי שרוב המסך יישאר לדגם */
 @media (max-height:440px) and (orientation:landscape){
   .story{left:auto!important;right:0!important;width:min(56vw,460px)!important;border-radius:14px 0 0 0!important;padding:6px 10px!important}
   #stStep{font-size:15px!important}
@@ -620,7 +620,7 @@ var host=l.querySelector(".ldbox")||l,d=document.createElement("div");d.classNam
 d.innerHTML='<p style="margin:14px 0 6px;font-weight:700;font-size:17px;color:#F0D58C">הדפדפן הזה לא הצליח לפתוח את התלת־ממד</p><p style="margin:0 0 12px;max-width:440px;opacity:.85;line-height:1.5">אולי הדפדפן ישן, או שהאצת החומרה (כרטיס המסך) כבויה. אפשר לנסות שוב, לפתוח ב־Chrome, Edge או Safari מעודכנים, או לקרוא בינתיים את הסיורים בלי תלת־ממד.</p><div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button type="button" class="ldenter" style="display:block" id="glRetry">לנסות שוב</button><button type="button" class="ldenter" style="display:block;background:transparent;border:1px solid rgba(240,213,140,.6);color:#F0D58C" id="glRead">קריאת הסיורים</button></div><div id="glText" hidden style="margin-top:14px;max-height:52vh;overflow:auto;text-align:right;direction:rtl;max-width:min(560px,92vw);background:rgba(0,0,0,.28);padding:12px 16px;border-radius:12px;line-height:1.55"></div>';
 host.appendChild(d);document.getElementById("glRetry").onclick=function(){location.reload()};
 document.getElementById("glRead").onclick=function(){var t=document.getElementById("glText");t.hidden=false;t.textContent="טוען…";
-/* 125.7 (בדיקה חוזרת, א): כל 9 הסיורים, עם המקור, הפסוק וההסתייגויות, מאותו מקור נתונים של הסיור עצמו */
+/* 125.8 (בדיקה חוזרת, א): כל 9 הסיורים, עם המקור, הפסוק וההסתייגויות, מאותו מקור נתונים של הסיור עצמו */
 var E2=function(x){return String(x==null?"":x).replace(/&/g,"&amp;").replace(/</g,"&lt;")};
 fetch("tours/reading.json").then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(j){var h="<p style=\"margin:0 0 8px;font-size:13px;opacity:.85\">📜 מפורש · ⚖️ הלכה ופירוש · 💡 הצעה (השלמה של הדגם). "+E2(j.note||"")+"</p>";
 (j.tours||[]).forEach(function(T){h+="<h3 style=\"color:#F0D58C;margin:14px 0 4px\">"+E2(T.title)+"</h3>";(T.steps||[]).forEach(function(s){h+="<div style=\"margin:0 0 10px\"><b>"+s.n+". "+E2(s.title)+"</b>"+(s.cap?" · "+E2(s.cap):"")+(s.verse?"<br><i>"+E2(s.verse)+(s.verseRef?" ("+E2(s.verseRef)+")":"")+"</i>":"")+(s.src?"<br><small style=\"opacity:.8\">מקור: "+E2(s.src)+"</small>":"")+(s.full?"<details style=\"margin-top:3px\"><summary style=\"cursor:pointer;font-size:13px\">📖 קריאת מקור</summary><div style=\"font-size:13px;opacity:.9\">"+E2(s.full)+"</div></details>":"")+"</div>"})});

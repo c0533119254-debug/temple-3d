@@ -71,7 +71,7 @@ function flyToPoint(c,r){if(STORY)STORY.stop();if(WALK)stopWalk();if(DRONE){dron
 function objCenter(o){const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return null;const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return[c,Math.max(3,0.5*Math.hypot(s.x,s.y*0.7,s.z))]}
 function pickObj(o){const cr=objCenter(o);if(!cr)return;UIPT=cr[0].clone();showInfo(o.userData);if(o.userData.cam&&!DRONE){try{if(STORY)STORY.stop();if(WALK)stopWalk();const [p,t]=o.userData.cam();tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:reduce?1:1600,arc:true};return}catch(e){}}flyToPoint(cr[0],cr[1])}
   /* 125.2 (ביקורת, אמת מידה מוזיאלית: "איך חוזרים למבט הקודם"): כל טיסה אל מקום שומרת את המבט שלפניה, וכפתור החזרה מחזיר אליו */
-let pushView=()=>{}; /* 125.7 (בדיקה חוזרת, ד): גם יעדי החיפוש "היכל" ו"אולם" שומרים את המבט הקודם */
+let pushView=()=>{}; /* 125.8 (בדיקה חוזרת, ד): גם יעדי החיפוש "היכל" ו"אולם" שומרים את המבט הקודם */
 {const hud=$("hud");if(hud&&!$("backB")){const bb=document.createElement("button");bb.type="button";bb.className="hb";bb.id="backB";bb.style.display="none";bb.setAttribute("aria-label","חזרה למבט הקודם");bb.title="חזרה למבט הקודם";
     bb.innerHTML='<svg class="ico" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
     const VS=[];let lastP=0;const push=()=>{try{if(STORY||WALK||DRONE)return;const n=performance.now();if(n-lastP<400)return;lastP=n;VS.push([camera.position.clone(),controls.target.clone()]);if(VS.length>10)VS.shift();bb.style.display=""}catch(e){}};
@@ -92,7 +92,7 @@ function closeDr(refocus){let last=null;document.body.classList.remove("drawer")
 {let t0=null;stage.addEventListener("pointerdown",e=>{t0=(e.target&&e.target.tagName==="CANVAS"&&document.body.classList.contains("drawer"))?[e.clientX,e.clientY]:null},true);
   stage.addEventListener("pointerup",e=>{if(!t0)return;const m=Math.hypot(e.clientX-t0[0],e.clientY-t0[1]);t0=null;if(m<6)closeDr()},true)}
 function toggleDr(k){const was=DR[k].d.classList.contains("open");closeDr();if(was)return;sres.hidden=true;document.body.classList.add("drawer");if(DR[k].fill)DR[k].fill();DR[k].d.classList.add("open");DR[k].d.scrollTop=0;DR[k].b.setAttribute("aria-pressed","true");requestAnimationFrame(()=>drMore(DR[k].d));setTimeout(()=>drMore(DR[k].d),260);try{DR[k].d.querySelector(".x").focus({preventScroll:true})}catch(e){}if(window.innerWidth<=700)closeInfo()}
-// 125.7 (בדיקה חוזרת, ג): Escape מטופל במקום אחד, שכבה אחת בכל לחיצה: מגירה ← כרטיס מידע ← סיור ← יציאה מהליכה/רחפן
+// 125.8 (בדיקה חוזרת, ג): Escape מטופל במקום אחד, שכבה אחת בכל לחיצה: מגירה ← כרטיס מידע ← סיור ← יציאה מהליכה/רחפן
 window.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented)return;const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;e.preventDefault();
   if(closeDr(true))return;
   const ic=document.getElementById("infocard");if(ic&&!ic.hidden){closeInfo();return}
@@ -110,7 +110,7 @@ DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEac
   DR.places.fill=()=>{pl.innerHTML="";const g={};buildIndex().filter(it=>it.L).forEach(it=>{const a=areaOf(it.L);(g[a]=g[a]||[]).push(it)});
     ["הבית","עזרה פנימית","עזרה חיצונה","שערים","העיר"].forEach(c=>{if(!g[c])return;pl.appendChild(mk("h3",null,esc(c)));g[c].sort((a,b)=>a.n.localeCompare(b.n,"he")).forEach(it=>{const b=mk("button",null,I(it.ic)+esc(it.n));b.type="button";b.onclick=()=>{if(window.innerWidth<=700)closeDr();it.go()};pl.appendChild(b)})})}}
 // method drawer
-{const d=DR.method.d;/* 125.7 (בדיקה חוזרת 2, 3, 13, 34): היקף הפרויקט מוצג למבקר בראש מגירת השיטה, במפורש */
+{const d=DR.method.d;/* 125.8 (בדיקה חוזרת 2, 3, 13, 34): היקף הפרויקט מוצג למבקר בראש מגירת השיטה, במפורש */
   d.appendChild(mk("div","scope",'<p class="ch" style="margin:0 0 6px"><b>מה מוצג כאן.</b> הבסיס הוא בית המקדש של <b>יחזקאל לפי המלבי״ם</b>. האפשרויות "לפי מידות" ו"הרמב״ם" הן השוואה ללימוד, ולא הדגם העיקרי.</p><p class="ch" style="margin:0 0 6px">המתחם המצויר הוא 500 × 500 אמה. ההיקף העתידי הגדול (יחזקאל מב, טו–כ) לא מצויר.</p><p class="ch" style="margin:0 0 10px">העיר היא <b>ירושלים של היום</b>. מה שעוד לא נבנה (רכבת, רכבל) מסומן "עתידי". 💡 בניינים גבוהים ליד ההר <b>הונמכו</b> כדי שלא יעברו את ההיכל: זה עיבוד, ולא העתק מדויק של קו הרקיע.</p>'));
   const grp=[...document.querySelectorAll(".controls .cgroup")];const m=grp.find(g=>g.querySelector("#facSeg"));if(m)m.querySelectorAll(".ctl").forEach(c=>d.appendChild(c));
   d.appendChild(mk("p","ch",'המודל מראה שיטה אחת בכל פעם. הכפתור i ליד כל אפשרות מסביר את המחלוקת ואת המקור.'));const fit=$("fit");if(fit)d.appendChild(fit)}
