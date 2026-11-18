@@ -13,7 +13,7 @@ function groundHit(ray,max){const o=ray.origin,d=ray.direction;let t=0.5,prev=0;
     for(const c of COL){if(c.y1-c.y0<2||tmp.x<c.x0||tmp.x>c.x1||tmp.z<c.z0||tmp.z>c.z1||tmp.y<c.y0||tmp.y>c.y1)continue;return tmp.clone()}
     prev=t;t+=Math.max(0.4,t*0.015)}return null}
 function sceneHit(ray){try{rc.ray.copy(ray);rc.near=0;rc.far=8000;const objs=[];if(group)objs.push(group);const h=rc.intersectObjects(objs,true).find(h=>{for(let q=h.object;q;q=q.parent)if(!q.visible)return false;return !(h.object.material&&h.object.material.transparent&&h.object.material.opacity<0.5)});const g=groundHit(ray);if(h&&(!g||h.distance<g.distanceTo(ray.origin)))return h.point.clone();return g}catch(e){return groundHit(ray)}}
-/* 125.9 (בדיקה חוזרת, ו): לבדיקת מסלולי העיר — האם נקודה נראית מהמצלמה, או שקיר או בניין מסתירים אותה */
+/* 126.1 (בדיקה חוזרת, ו): לבדיקת מסלולי העיר — האם נקודה נראית מהמצלמה, או שקיר או בניין מסתירים אותה */
 if(window.__GA)window.__GA.seen=(x,y,z)=>{const o=camera.position.clone(),d=new THREE.Vector3(x,y,z).sub(o),L=d.length();d.normalize();const r2=new THREE.Raycaster(o,d,0.3,L);r2.camera=camera;const objs=[];scene.children.forEach(c=>{if(c.visible&&!c.isLight)objs.push(c)});
   const objs2=[];objs.forEach(o=>o.traverse(q=>{if(q.isMesh&&!q.isInstancedMesh&&!q.isSkinnedMesh&&q.visible)objs2.push(q)}));const h=r2.intersectObjects(objs2,false).find(h=>{if(h.object.isSprite||h.object.isPoints||h.object.isLine)return false;for(let q=h.object;q;q=q.parent)if(!q.visible)return false;const m=h.object.material;return !(m&&(m.colorWrite===false||m.transparent&&m.opacity<0.6))});return{dist:+L.toFixed(1),hit:h?+h.distance.toFixed(1):null,seen:!h||h.distance>L-2.5}};
 const busy=()=>WALK||DRONE||(TRN&&TRN.riding);

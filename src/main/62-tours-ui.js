@@ -984,7 +984,7 @@ const ctl=box.querySelector(".stctl");if(ctl)bar.appendChild(ctl);bar.appendChil
 const tx=document.createElement("button");tx.type="button";tx.className="tx";tx.textContent="✕ יציאה";tx.onclick=()=>STORY_API.stop();bar.appendChild(tx);
 const step=document.createElement("div");step.id="stStep";const txt=$("stText");txt.parentNode.insertBefore(step,txt);
 const res=document.createElement("button");res.id="resume";res.type="button";res.hidden=true;res.textContent="▶ המשך סיור";res.onclick=()=>$("stPlay").click();stage.appendChild(res);
-/* 125.9: Escape של הסיור עבר למטפל האחד ב־64-shell-ui */
+/* 126.1: Escape של הסיור עבר למטפל האחד ב־64-shell-ui */
 let sDef=null,sI=-1,orb=null,wasMove=false;
 function buildStrip(){const S=STORY_API.S;strip.innerHTML="";S.def.steps.forEach((st,i)=>{const b=document.createElement("button");b.type="button";b.textContent=(i+1)+". "+(st.title||"");b.setAttribute("role","tab");b.onclick=()=>{if(STORY_API.S.paused){STORY_API.S.paused=false;STORY_API.S.user=false;$("stPlay").textContent="⏸"}STORY_API.go(i)};strip.appendChild(b)})}
 function tick(){requestAnimationFrame(tick);try{TOURFIGS.tick(0)}catch(e){}const S=STORY_API&&STORY_API.S;if(!S)return;document.body.classList.toggle("touring",!!STORY);bar.hidden=!STORY;res.hidden=!(STORY&&S.paused&&S.user);if(!STORY){sDef=null;orb=null;return}

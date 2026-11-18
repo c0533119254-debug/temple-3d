@@ -1,4 +1,4 @@
-// 125.9 (בדיקה חוזרת 125.5): סדרת שימוש רחבה, בנוסף ל־user-path.js.
+// 126.1 (בדיקה חוזרת 125.5): סדרת שימוש רחבה, בנוסף ל־user-path.js.
 //  1. סוכות: 8 ימים × חול/שבת × בוקר/לילה. בודקים את הדין (טבלה נפרדת כאן, לפי המשנה) מול מה שמוצג בפועל.
 //  2. פסח ביום ובלילה.
 //  3. סיור יום הכיפורים: כל 12 התחנות. סדר התמיד: כל 14 התחנות, כולל הפיס השלישי והרביעי.
@@ -124,7 +124,7 @@ const SEARCHES = [
       await click(pg, "#stX"); await pg.waitForFunction(() => !document.body.classList.contains("touring"), null, { timeout: 30000 });
       return `תחנות ${seen.join(",")}`;
     };
-    // 125.9 (בדיקה חוזרת 44): במכונת הבדיקה אין קול עברי. הסיור הקצר לא נשאר שקט וריק: הכתוביות מתחלפות לבד
+    // 126.1 (בדיקה חוזרת 44): במכונת הבדיקה אין קול עברי. הסיור הקצר לא נשאר שקט וריק: הכתוביות מתחלפות לבד
     await step(W, "הסיור הקצר בלי קול עברי: הכתוביות מתקדמות", async () => {
       await pg.evaluate(() => { const b = document.querySelector("#rail button[aria-label='סיורים']"); b.click(); });
       await pg.waitForTimeout(1500);
@@ -269,7 +269,7 @@ const SEARCHES = [
     await ctx.close();
   }
 
-  const md = ["# סדרת שימוש רחבה (125.9)", "", "| איפה | | צעד | הערה |", "|---|---|---|---|", ...report, ""].join("\n");
+  const md = ["# סדרת שימוש רחבה (126.1)", "", "| איפה | | צעד | הערה |", "|---|---|---|---|", ...report, ""].join("\n");
   fs.writeFileSync(path.join(OUT, "report.md"), md);
   await browser.close();
   console.log(failed ? "\nנכשל" : "\nהכול עבר");
