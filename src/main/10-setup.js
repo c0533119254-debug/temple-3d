@@ -27,6 +27,12 @@ const GEO={"THETA":0.13538,"MOUNT":[[204.0,-212.1],[179.6,20.0],[179.0,25.1],[17
 const THETA=GEO.THETA,cT=Math.cos(THETA),sT=Math.sin(THETA);
 const G2S=(x,n)=>[x*cT+n*sT,-x*sT+n*cT],S2G=(x,n)=>[x*cT-n*sT,x*sT+n*cT];
 const KZ=[[-88.5,-175.5],[-122.4,-173.6],[-136,-185.8],[-150,-230],[-148,-262],[-80,-264],[-75,-250.5]];const MOUNT=GEO.MOUNT,OLD=GEO.OLD,WALL_LINE=GEO.WALL,PLAZA=GEO.PLAZA,GATES=GEO.GATES,COD=GEO.COD;
+/* 125.5 (תמונות Mapillary של רחבת הכותל): KP = הרחבה הדרומית, שטוחה ומרוצפת בגובה הרחבה (בתמונות: רחבה ישרה עם מקום להורדה וחניה קצרה; במודל היה שם מדרון של עד 15 מ׳).
+   KST = המדרגות מהרובע היהודי אל הרחבה, לאורך השבילים של OSM. בכל נקודה: x, n, גובה מעל הרחבה (מ׳), לפי פני הקרקע של המודל לאורך השביל */
+const KP=[[-142.3,-214.3],[-162.8,-218.4],[-166.5,-224],[-168.5,-236],[-171,-251],[-160,-256.5],[-148,-256],[-138,-255],[-130.5,-254],[-130.3,-246.2],[-136.3,-247.2]];
+const KST=[{w:3.2,n:"המדרגות הדרומיות מהרובע לכותל",p:[[-207.4,-238.0,27.2],[-189.8,-236.6,20.2],[-187.0,-257.7,18.4],[-182.1,-256.8,18.2],[-174.2,-266.1,14],[-153.2,-262.2,4],[-142.1,-260.1,0]]},
+  {w:3.2,n:"המדרגות מבתי מחסה אל הרחבה הדרומית",p:[[-182.1,-256.8,18.2],[-184.6,-239,12],[-180.5,-238.1,11],[-174.1,-236.9,8.8],[-172.2,-228,5.6],[-161.2,-215,0]]}];
+function kstAt(x,n){let best=null;for(const F of KST){for(let i=0;i<F.p.length-1;i++){const a=F.p[i],b=F.p[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2)),d=Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n);if(!best||d<best.d)best={d,y:a[2]+(b[2]-a[2])*t,w:F.w}}}return best}
 // Dung Gate area (Claude, issue #30, 5.11.2026). 💡 Buses and cars do not enter the gate: the area inside is for people on foot.
 // Z = the no-traffic zone inside the wall, from the gate west to the Jewish Quarter road (geo metres).
 // The bus drop-off terminal sits on the open lot across the road from the gate (the Givati lot of today):

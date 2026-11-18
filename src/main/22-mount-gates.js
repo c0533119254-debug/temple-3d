@@ -245,3 +245,75 @@ const GATEG=new THREE.Group();WG.add(GATEG);
   im(box,M.pave,paves,p=>{d.rotation.set(0,p[3],0);d.scale.set(p[4],p[5],p[6]);d.position.set(p[0],p[1],-p[2])});
 })();
 
+// ---- 125.5 (תמונות Mapillary של רחבת הכותל): המדרגות מהרובע, הרחבה הדרומית, אזור התפילה, כיור ופנסים ----
+// 📜 לפי 96 תמונות רחוב של Mapillary (2014–2023) ברשת של 25 מ׳ על הרחבה. מה ששייך רק להיום (עמדות בידוק, גדרות זמניות, מכוניות חונות) לא נבנה, כי המודל מראה את העתיד
+(function(){try{
+  const d=new THREE.Object3D(),r=rng(1255),Y0=PLZ+0.25;
+  const MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.85},o||{}));
+  const BOX=new THREE.BoxGeometry(1,1,1);
+  const put=(list,mat,info,geo)=>{if(!list.length)return null;const m=new THREE.InstancedMesh(geo||BOX,mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.rotation.set(0,q[3],q[7]||0);d.scale.set(q[4],q[5],q[6]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m);return m};
+  /* box at geo point (x,n), base y0, height h, along-axis angle a, length l, thickness t */
+  const bx=(L,x,n,y0,h,a,l,t)=>L.push([x,y0+h/2,n,a,l,h,t]);
+
+  // 1) המדרגות מהרובע היהודי אל הרחבה (לאורך השבילים של OSM)
+  const STP=[],SIDE=[],HR=[];
+  KST.forEach(F=>{const hw=F.w/2;for(let i=0;i<F.p.length-1;i++){const a=F.p[i],b=F.p[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn),ux=dx/L,un=dn/L,px=-un,pn=ux,ang=Math.atan2(dn,dx),drop=a[2]-b[2];
+    const ns=Math.max(1,Math.round(Math.abs(drop)/0.16)),tr=L/ns;
+    for(let k=0;k<ns;k++){const s=(k+0.5)*tr,cx=a[0]+ux*s,cn=a[1]+un*s,top=PLZ+a[2]-drop*k/ns,yb=Math.min(H(cx,cn),top)-0.8;
+      STP.push([cx,(top+yb)/2,cn,ang,tr+0.03,top-yb,F.w]);
+      if(WALKG&&WALKG.h){const c=Math.cos(ang),sn=Math.sin(ang),A=(u,v)=>[cx+c*u-sn*v,-(cn+sn*u+c*v)],q=[A(-tr/2,-hw),A(tr/2,-hw),A(tr/2,hw),A(-tr/2,hw)];WALKG.tri(q[0][0],top,q[0][1],q[1][0],top,q[1][1],q[2][0],top,q[2][1]);WALKG.tri(q[0][0],top,q[0][1],q[2][0],top,q[2][1],q[3][0],top,q[3][1])}
+      /* מעקה אבן מדורג משני הצדדים; ליד הצמתים (2 מ׳ מכל קצה) פתוח, כדי שאפשר לעבור בין גרמי המדרגות */
+      if(s<2||s>L-2)continue;
+      [1,-1].forEach(sd=>{const ox=cx+px*sd*(hw+0.15),on=cn+pn*sd*(hw+0.15),go=H(cx+px*sd*(hw+4.5),cn+pn*sd*(hw+4.5)),tp=Math.max(top+0.95,go+0.15);SIDE.push([ox,(tp+yb)/2,on,ang,tr+0.03,tp-yb,0.3])})}
+    if(L>4.5)[1,-1].forEach(sd=>{const mx=(a[0]+b[0])/2+px*sd*(hw+0.15),mn=(a[1]+b[1])/2+pn*sd*(hw+0.15),lo=PLZ+Math.min(a[2],b[2]);cwAdd(mx,mn,ang,L-4,0.3,lo-2,PLZ+Math.max(a[2],b[2])+3);
+      /* מאחז יד ממתכת על המעקה */
+      const sl=Math.atan2(-drop,L);HR.push([mx-px*sd*0.05,PLZ+(a[2]+b[2])/2+1.0,mn-pn*sd*0.05,ang,Math.hypot(L-4,drop*(L-4)/L),0.05,0.05,sl])})}});
+  const SI={n:"המדרגות מהרובע היהודי לכותל",r:"תמונות רחוב (Mapillary, 2014–2023); OpenStreetMap",t:"📜 המדרגות יורדות מהרובע היהודי אל רחבת הכותל, לאורך השבילים שבמפה, עם מעקה אבן ומאחז יד, כמו בתמונות. 💡 גובה כל מדרגה (16 ס״מ) והרוחב (3.2 מ׳) מקורבים."};
+  put(STP,MAT(0xd9cdb2),SI);put(SIDE,M.stoneL||MAT(0xcfc2a5),SI);put(HR,MAT(0x3a3d40,{metalness:0.5,roughness:0.5}),SI);
+
+  // 2) הרחבה הדרומית: ריצוף, וקיר תמך בקצה שבו הקרקע גבוהה יותר
+  {const sh=new THREE.Shape();KP.forEach((q,i)=>i?sh.lineTo(q[0],q[1]):sh.moveTo(q[0],q[1]));const g=new THREE.ShapeGeometry(sh);g.rotateX(-Math.PI/2);{const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)/4,uv.getY(i)/4)}
+    const m=new THREE.Mesh(g,M.pave);m.position.y=PLZ+0.21;m.receiveShadow=true;m.renderOrder=2;m.userData={n:"הרחבה הדרומית של רחבת הכותל",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 בתמונות זו רחבה ישרה ומרוצפת בגובה רחבת הכותל, ומשמשת להורדה ולחניה קצרה. במודל היה כאן מדרון שלא קיים. 💡 עמדות הבידוק והגדרות של היום לא נבנו, כי המודל מראה את העתיד."};WG.add(m);PICK.push(m);}
+
+  // 3) אזור התפילה ליד הכותל: גדר נמוכה עם פתחים, ארונות קודש, ארונות ספרים, כיסאות, שולחנות, סטנדרים ושמשיות
+  {let best=null;for(let i=0;i<MOUNT.length;i++){const a=MOUNT[i],b=MOUNT[(i+1)%MOUNT.length],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn||1,t=Math.max(0,Math.min(1,((-93-a[0])*dx+(-147-a[1])*dn)/l2)),fx=a[0]+dx*t,fn=a[1]+dn*t,e=Math.hypot(fx+93,fn+147);if(!best||e<best.e)best={e,fx,fn,dx,dn}}
+    const l=Math.hypot(best.dx,best.dn);let ax=best.dx/l,an=best.dn/l;if(an<0){ax=-ax;an=-an}/* al חיובי = צפונה */
+    let ox=-an,on=ax;if(ox>0){ox=-ox;on=-on}/* nn חיובי = מערבה, אל הרחבה */
+    const P=(nn,al)=>[best.fx+ox*nn+ax*al,best.fn+on*nn+an*al],WA=Math.atan2(an,ax)/* כיוון לאורך הכותל */,FACE=Math.atan2(-on,-ox)/* מבט אל הכותל */;
+    const FEN=[],ARK=[],BOOK=[],CH=[],TB=[],SHT=[],UMP=[],UMT=[];
+    // הגדר: 26 מ׳ מהכותל, מ־25 מ׳ דרומה עד 24 מ׳ צפונה, עם ארבעה פתחים של 3 מ׳
+    const OPEN=[-18,-6,8,18],FN=26;let runs=[],cur=-25;OPEN.forEach(o=>{runs.push([cur,o-1.5]);cur=o+1.5});runs.push([cur,24]);
+    runs.forEach(([s0,s1])=>{const L=s1-s0;if(L<0.5)return;const c=P(FN,(s0+s1)/2);bx(FEN,c[0],c[1],Y0+0.98,0.05,WA,L,0.05);bx(FEN,c[0],c[1],Y0+0.5,0.04,WA,L,0.04);
+      for(let s=s0;s<=s1+0.01;s+=1.5){const q=P(FN,Math.min(s,s1));bx(FEN,q[0],q[1],Y0,1.03,WA,0.06,0.06)}cwAdd(c[0],c[1],WA,L,0.12,PLZ-1,Y0+1.03)});
+    put(FEN,MAT(0x2e3236,{metalness:0.5,roughness:0.5}),{n:"גדר אזור התפילה",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 גדר מתכת נמוכה בין הרחבה לבין אזור התפילה ליד הכותל, עם פתחים, כמו בתמונות. 💡 מקום הפתחים בדיוק הוא השלמה."});
+    const busy=[];const free=(nn,al,rad)=>busy.every(b=>Math.hypot(b[0]-nn,b[1]-al)>b[2]+rad);
+    [6,12,18].forEach(al=>{const q=P(1.1,al);bx(ARK,q[0],q[1],Y0,2.4,WA,1.5,0.75);busy.push([1.1,al,1.4])});
+    [[24.6,4],[24.6,13],[24.6,21],[24.6,-11],[24.6,-21]].forEach(([nn,al])=>{const q=P(nn,al);bx(BOOK,q[0],q[1],Y0,1.9,WA,2.2,0.45);busy.push([nn,al,1.6])});
+    busy.push([14,0,0.9]);/* המחיצה */
+    const place=(cnt,a0,a1,rad,fn)=>{let k=0,t=0;while(k<cnt&&t<cnt*40){t++;const nn=2+r()*21.5,al=a0+r()*(a1-a0);if(Math.abs(al)<1.2||!free(nn,al,rad))continue;busy.push([nn,al,rad]);fn(nn,al);k++}};
+    const chair=(nn,al)=>{const q=P(nn,al),f=FACE+(r()-0.5)*1.2,c=Math.cos(f),s=Math.sin(f);CH.push([q[0],Y0+0.45,q[1],f,0.44,0.05,0.44]);CH.push([q[0]-c*0.2,Y0+0.7,q[1]-s*0.2,f,0.05,0.45,0.44]);CH.push([q[0],Y0+0.21,q[1],f,0.36,0.42,0.36])};
+    place(10,2,23,1.2,(nn,al)=>{const q=P(nn,al);TB.push([q[0],Y0+0.72,q[1],WA,1.8,0.04,0.75]);TB.push([q[0],Y0+0.35,q[1],WA,1.6,0.7,0.04]);chair(nn+0.9,al)});
+    place(20,1.5,23,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
+    place(8,-24,-1.5,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
+    place(90,1.5,23,0.4,chair);place(45,-24,-1.5,0.4,chair);
+    [[22,-8],[22,-16],[20,-22],[22,10],[22,16]].forEach(([nn,al])=>{const q=P(nn,al);UMP.push([q[0],Y0+1.25,q[1],0,0.06,2.5,0.06]);UMT.push([q[0],Y0+2.45,q[1],0,1.7,0.5,1.7])});
+    const PI={n:"אזור התפילה ליד הכותל",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 ליד הכותל עומדים ארונות קודש מעץ, ארונות ספרים, כיסאות, שולחנות וסטנדרים, ובקיץ שמשיות לבנות, כמו בתמונות. 💡 המקום של כל פריט הוא השלמה."};
+    put(ARK,MAT(0x6b4a2b),PI);put(BOOK,MAT(0x5a3d24),PI);put(CH,MAT(0xf1f0ea,{roughness:0.6}),PI);put(TB,MAT(0xeeeeea,{roughness:0.6}),PI);put(SHT,MAT(0x7a5634),PI);
+    put(UMP,MAT(0xcfcfcf,{metalness:0.4}),PI);put(UMT,MAT(0xf7f6f0,{roughness:0.9}),PI,new THREE.ConeGeometry(1,1,8))}
+
+  // 4) כיור נטילת ידיים ברחבה, ופנסי רחוב
+  {const KI=[],KC=[],x=-140,n=-177.5;KI.push([x,Y0+0.38,n,0,1.3,0.76,1.3]);KC.push([x,Y0+0.85,n,0,0.3,1.2,0.3]);cwAdd(x,n,0,1.4,1.4,PLZ-1,Y0+0.76);
+    put(KI,M.stoneL||MAT(0xcfc2a5),{n:"כיור נטילת ידיים",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 כיור אבן עגול עם עמוד ברזים באמצע, ברחבה שלפני אזור התפילה, כמו בתמונות."},new THREE.CylinderGeometry(0.5,0.42,1,20));
+    put(KC,MAT(0x8a6b3c,{metalness:0.6,roughness:0.4}),{n:"כיור נטילת ידיים",r:"תמונות רחוב (Mapillary)",t:"📜 עמוד הברזים של הכיור."},new THREE.CylinderGeometry(0.4,0.5,1,12))}
+  {const LP=[],LH=[];[[-168,-205],[-158,-186],[-150,-166],[-146,-146],[-152,-232],[-140,-244],[-160,-245],[-128,-228],[-132,-200],[-125,-120]].forEach(([x,n])=>{if(!inPoly(x,n,PLAZA)&&!inPoly(x,n,KP))return;LP.push([x,Y0+3.5,n,0,0.14,7,0.14]);LH.push([x,Y0+7.05,n,0,0.7,0.18,0.35])});
+    const LI={n:"פנס רחוב",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 פנסים גבוהים ודקים ברחבה, כמו בתמונות. 💡 המקום של כל פנס הוא השלמה."};put(LP,MAT(0x34383c,{metalness:0.5}),LI);put(LH,MAT(0x2a2d30,{metalness:0.5}),LI)}
+
+  // 5) מדרגות אבן (טרסות) על המדרון שבין הרחבה לבין הרובע: בתמונות אין שם מדרון חול, אלא קירות אבן ובתים. כל טרסה מכסה עלייה של עד 6 מ׳ אופקית
+  {const TW=[],nearE0=(x,n)=>{const u=(x+175.5)*-0.983+(n+169)*-0.185,v=(x+175.5)*0.185+(n+169)*-0.983;return u>-3&&u<34&&Math.abs(v)<10},
+    inBld=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x>=o.xa&&x<=o.xb&&n>=o.na&&n<=o.nb&&inPoly(x,n,o.p))return true}return false};
+    [PLAZA,KP].forEach(P=>{for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn);if(L<1)continue;const ux=dx/L,un=dn/L;let px=-un,pn=ux;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;if(inPoly(mx+px*0.8,mn+pn*0.8,P)){px=-px;pn=-pn}const ang=Math.atan2(dn,dx);
+      for(let s=1;s<L;s+=2){const ex=a[0]+ux*s,en=a[1]+un*s;if(ex>-100)continue;let gc=PLZ;
+        for(const off of [0.5,6.5,12.5,18.5]){const x=ex+px*off,n=en+pn*off;if(nearE0(x,n)||inPoly(x,n,KP)||inPoly(x,n,PLAZA)||inPoly(x,n,KZ)||inBld(x,n)||inPoly(x,n,MOUNT_BIG)||onStreet(x,n))break;const k=kstAt(x,n);if(k&&k.d<k.w/2+2)break;
+          const g1=H(ex+px*(off+5.5),en+pn*(off+5.5));if(g1-gc<1.2){if(off>0.6)break;continue}const tp=Math.min(g1+0.3,gc+7);TW.push([x,(gc-0.4+tp)/2,n,ang,2.15,tp-gc+0.4,0.8]);cwAdd(x,n,ang,2.15,0.8,gc-1,tp);gc=Math.min(g1,tp)}}}});
+    put(TW,M.stoneL||MAT(0xcfc2a5),{n:"קירות אבן בין הרחבה לרובע",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 בתמונות, בין רחבת הכותל לבין הרובע היהודי שמעליה, עולים קירות אבן ובתים, ולא מדרון של עפר. 💡 כאן הם בנויים כטרסות לפי פני הקרקע של המודל."})}
+}catch(e){console.warn("kotel plaza",e)}})();

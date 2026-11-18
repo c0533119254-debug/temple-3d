@@ -413,3 +413,38 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
   for(let k=0;k<30;k++){const tc=6+0.7*k+0.35,top=HUL-(k+1)*6.8/30,bot=HUL-8.2,g=wbox(64,top-bot,0.74,4),m=new THREE.Matrix4().makeRotationY(R);m.setPosition(45+ox*tc,(top+bot)/2,-(-237.15+on*tc));g.applyMatrix4(m);if(g.attributes.uv2)g.deleteAttribute("uv2");GS.push(g.index?g.toNonIndexed():g)}
   const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS,false);if(!mg)return;const me=new THREE.Mesh(mg,M.pave||M.stone2||M.wall);me.receiveShadow=true;me.castShadow=true;
   me.userData={n:"המדרגות הדרומיות",r:"חפירות העופל; מדידות וורן וכספי",t:"📜 מדרגות רחבות, כ־64 מטר, שעולות מהרחוב שמדרום להר אל שערי חולדה. 📜 מפתן השערים בגובה 725.4 מטר, והמדרגות עולות אליו כ־6.8 מטר. 💡 במודל יש 30 מדרגות שוות. במציאות המדרגות לא שוות: מדרגה צרה ומדרגה רחבה לסירוגין."};WG.add(me);PICK.push(me)}catch(e){console.warn("ssteps",e)}})();
+
+// ---- 125.5 (תמונות Mapillary): חנויות בקומת הרחוב של רחובות השוק ----
+// 📜 בתמונות הרחוב (Mapillary, 2018–2023) ברחוב דוד, ברחוב השלשלת, בחאן א־זית, בוויה דולורוזה ובמוריסטן, קומת הרחוב היא שורה של חנויות פתוחות:
+// פתח כהה, סחורה על דוכן לפני הפתח, תריס מתכת מגולגל מעל, ולפעמים סוכך בד. בדגם היה שם קיר עם חלונות. השווקים המקורים (אזור 2) כבר בנויים עם חנויות ולא נוגעים בהם.
+(function(){try{
+  const SP=[[[-720,-165],[-560,-125],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
+  const nearSpine=(x,n)=>SP.some(L=>{for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));if(Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n)<9)return true}return false});
+  const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const souq=(x,n)=>x>-442&&x<-384&&n>-140&&n<22;
+  const F=[],seen=new Set(),r=rng(1254);
+  ROADS.forEach(rd=>{if(rd.c!==4)return;let nxt=1.6,acc=0;/* הנקודות של קו הרחוב צפופות (פחות ממטר), אז הולכים לאורך הקו כולו ודוגמים כל 3.2 מ׳ */for(let i=0;i<rd.p.length-1;i++){const a=rd.p[i],b=rd.p[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn);if(L<1e-3)continue;const ux=dx/L,un=dn/L,a0=acc;acc+=L;
+    for(;nxt<acc;nxt+=3.2){const s=nxt-a0,x=a[0]+ux*s,n=a[1]+un*s;if(!inPoly(x,n,OLD)||souq(x,n))continue;if(!nearSpine(x,n))continue;
+      [1,-1].forEach(sd=>{const px=-un*sd,pn=ux*sd;let d=-1;for(let q=0.6;q<=rd.w/2+3.5;q+=0.3){if(inB(x+px*q,n+pn*q)){d=q;break}}if(d<0)return;
+        const fx=x+px*(d-0.05),fn=n+pn*(d-0.05),k=Math.round(fx/2.4)+"_"+Math.round(fn/2.4);if(seen.has(k))return;seen.add(k);
+        /* החזית צריכה להיות ישרה כאן: גם 1 מ׳ לכל צד עדיין קיר */
+        if(!inB(fx+px*0.3+ux*1.1,fn+pn*0.3+un*1.1)||!inB(fx+px*0.3-ux*1.1,fn+pn*0.3-un*1.1))return;
+        F.push({w:rd.w,x:fx,n:fn,g:surfY(fx-px*0.4,fn-pn*0.4),a:Math.atan2(pn,px),o:r(),o2:r(),o3:r()})})}}});
+  if(!F.length)return;
+  const N=F.length,d=new THREE.Object3D(),col=new THREE.Color();
+  const mk=(geo,mat,cnt)=>{const m=new THREE.InstancedMesh(geo,mat,cnt);m.castShadow=false;m.receiveShadow=true;return m};
+  const dark=mk(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:0x2a2119,roughness:1}),N);
+  const shut=mk(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:0x5f6366,metalness:0.3,roughness:0.7}),N);
+  const goods=mk(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({roughness:0.85}),N*3);
+  const awn=mk(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({roughness:0.9,side:THREE.DoubleSide}),N);
+  const PAL=[0xb2412f,0x2f6d8c,0xd9a441,0x6b8f3a,0x8c3f6b,0xe0d3b8,0x4a3a2a,0xc96f2d];
+  let gi=0,ai=0;
+  F.forEach((f,i)=>{const c=Math.cos(f.a),s=Math.sin(f.a),P=(al,out)=>[f.x+c*out-s*al,f.n+s*out+c*al];/* out: מהקיר אל הרחוב (הכיוון ההפוך לנורמל), al: לאורך הקיר */
+    const W=2.2+f.o*0.6,Hh=2.5;
+    {const p=P(0,-0.04);d.position.set(p[0],f.g+Hh/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.12,Hh,W);d.updateMatrix();dark.setMatrixAt(i,d.matrix)}
+    {const p=P(0,-0.08);d.position.set(p[0],f.g+Hh+0.2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.14,0.4,W+0.1);d.updateMatrix();shut.setMatrixAt(i,d.matrix)}
+    for(let k=0;k<3;k++){const al=(k-1)*W/3,h=0.3+((f.o2*7+k*3)%1)*0.45,p=P(al,-0.25);d.position.set(p[0],f.g+h/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.4,h,W/3-0.15);d.updateMatrix();goods.setMatrixAt(gi,d.matrix);goods.setColorAt(gi,col.setHex(PAL[Math.floor(((f.o3*13+k*5)%1)*PAL.length)]));gi++}
+    if(f.o3<0.45&&f.w>=4){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
+  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
+
+}catch(e){console.warn("shops",e)}})();

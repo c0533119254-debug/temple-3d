@@ -5,6 +5,8 @@ function H(x,n){let h=Hsyn(x,n);const D=DEM,X1=D.x0+(D.nx-1.01)*D.st,N1=D.n0+(D.
     if(out===0){const r=segDist(x,n,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2));h=dm}
     else{const r=segDist(cx,cn,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2));const ss=q=>{q=Math.max(0,Math.min(1,q));return q*q*(3-2*q)},base=dm+(h-Hsyn(cx,cn))*ss(out/300);h=base+(h-base)*ss((out-300)/900)}}}
   if(x>-240&&x<-40&&n>-300&&n<-70){let f;if(inPoly(x,n,PLAZA)||inPoly(x,n,KZ))f=1;else{let dmin=1e9;for(let i=0;i<PLAZA.length;i++){const r=segDist(x,n,[PLAZA[i],PLAZA[(i+1)%PLAZA.length]]);if(r[0]<dmin)dmin=r[0]}f=Math.max(0,1-dmin/35)}if(f>0){f=f*f*(3-2*f);h=h*(1-f)+PLZ*f}}
+  /* 125.5: הרחבה הדרומית שטוחה, והקרקע לאורך המדרגות מהרובע יורדת מתחת למדרגות */
+  if(x>-225&&x<-125&&n>-276&&n<-205){if(inPoly(x,n,KP))h=PLZ;const k=kstAt(x,n);if(k&&k.d<k.w/2+3.5)h=Math.min(h,PLZ+k.y-0.3)}
   if(x>-160&&x<260&&n>-680&&n<-205&&!inPoly(x,n,MOUNT))h=groundFix(x,n,h);
   return h;
 }

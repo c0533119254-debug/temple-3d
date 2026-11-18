@@ -1,0 +1,12 @@
+{"note":"נקודות ייחוס לעיר של היום (x מזרח, n צפון, מטרים ממרכז המודל; אותן קואורדינטות של GEO). רק לעבודה, לא לאתר.",
+ "points":[
+  ["jaffa_gate_out",-770,-150],["jaffa_gate_in",-720,-165],["david_st",-560,-125],["david_st_east",-440,-122],
+  ["damascus_gate_out",-462,450],["damascus_gate_in",-470,395],["khan_zeit",-424,80],["souqs_south",-411,-88],
+  ["zion_gate_out",-552,-590],["jewish_q_road",-450,-450],["hurva",-387,-290],["cardo",-418,-330],
+  ["dung_gate_out",-112,-380],["kotel_plaza",-140,-175],["chain_st",-300,-131],
+  ["lions_gate_out",175,318],["via_dolorosa",-120,296],["herod_gate_out",-160,575],["muslim_q_alley",-250,330],
+  ["new_gate_out",-885,160],["christian_q",-700,40],["muristan",-518,-60],["armenian_q",-598,-382],
+  ["mt_zion",-600,-680],["city_of_david",40,-600],["siloam",-15,-825],
+  ["kidron_road",323,90],["olives_road",600,40],["golden_gate_out",215,106],
+  ["sultan_suleiman_st",-300,560],["hatzanchanim_st",-930,0],["maale_hashalom",-400,-640],["ofel_road",120,-420],["jericho_road",330,300]
+ ]}
