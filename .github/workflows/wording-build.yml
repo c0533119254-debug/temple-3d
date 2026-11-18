@@ -1,0 +1,21 @@
+name: Build approved wording branch
+on:
+  push:
+    branches: [instinct/new-tour-wording-20261118]
+    paths: [.github/workflows/wording-build.yml]
+permissions:
+  contents: write
+jobs:
+  build:
+    if: github.ref == 'refs/heads/instinct/new-tour-wording-20261118'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 tools/templesrc.py build
+          python3 tools/templesrc.py check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'Rebuild index from approved wording source'
+          git push origin HEAD:instinct/new-tour-wording-20261118
