@@ -132,10 +132,11 @@ const SEARCHES = [
       await pg.waitForFunction(() => document.body.classList.contains("touring"), null, { timeout: 60000 });
       const snap = () => pg.evaluate(() => { const t = document.getElementById("stText"); return [t.innerText.trim(), t.innerHTML.length, (document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/) || [])[1]]; });
       await pg.waitForTimeout(2500); const a = await snap();
-      await pg.waitForTimeout(9000); const b = await snap();
+      // each caption piece stays length×70 ms (a long sentence can pass 10 s), so wait up to 25 s for the first change
+      let b = a; for (let t = 0; t < 25 && b[0] === a[0] && b[1] === a[1] && b[2] === a[2]; t++) { await pg.waitForTimeout(1000); b = await snap(); }
       await click(pg, "#stX"); await pg.waitForFunction(() => !document.body.classList.contains("touring"), null, { timeout: 30000 });
       if (!a[0]) throw new Error("אין כתובית בתחנה הראשונה");
-      if (a[0] === b[0] && a[1] === b[1] && a[2] === b[2]) throw new Error("הכתובית לא התקדמה ב־9 שניות");
+      if (a[0] === b[0] && a[1] === b[1] && a[2] === b[2]) throw new Error("הכתובית לא התקדמה ב־25 שניות");
       return `תחנה ${a[2]} → ${b[2]}`;
     });
     await step(W, "סיור יום הכיפורים: כל 12 התחנות", () => runTour("סדר העבודה ביום הכיפורים", 12));
@@ -250,8 +251,8 @@ const SEARCHES = [
         await pg.waitForTimeout(1500);
         // on a phone the card is a bottom sheet that opens at the buttons; a tap on its handle raises it a step, up to full screen
         for (let i = 0; i < 3; i++) { const st = await pg.evaluate(() => { const c = document.getElementById("infocard"); return c.dataset.vis != null && !c.classList.contains("full"); }); if (!st) break; await pg.evaluate(() => document.querySelector("#infocard .ic-grab").click()); await pg.waitForTimeout(700); }
-        const card = await pg.evaluate(() => { const ic = document.getElementById("infocard"), c = ic.getBoundingClientRect(), vis = ic.dataset.vis != null ? +ic.dataset.vis : null; return { b: vis != null ? c.bottom - (c.height - vis) : c.bottom, h: innerHeight, t: vis != null ? c.bottom - vis : c.top, scroll: document.getElementById("infocard").scrollHeight > document.getElementById("infocard").clientHeight + 2, ov: getComputedStyle(document.getElementById("infocard")).overflowY }; });
-        if (card.b > card.h + 1 || card.t < -1) probs.push("כרטיס המקום יוצא מהמסך");
+        const card = await pg.evaluate(() => { const ic = document.getElementById("infocard"), c = ic.getBoundingClientRect(), vis = ic.dataset.vis != null ? +ic.dataset.vis : null, sb = document.getElementById("stage").getBoundingClientRect().bottom, h2 = ic.querySelector("h2"), hr = h2 && h2.getBoundingClientRect(), top = hr && document.elementFromPoint(hr.left + hr.width / 2, hr.top + hr.height / 2); return { cov: !!(hr && top && !ic.contains(top)), b: vis != null ? sb : c.bottom, h: innerHeight, t: vis != null ? sb - vis : c.top, scroll: document.getElementById("infocard").scrollHeight > document.getElementById("infocard").clientHeight + 2, ov: getComputedStyle(document.getElementById("infocard")).overflowY }; });
+        if (card.b > card.h + 1 || card.t < -1) probs.push("כרטיס המקום יוצא מהמסך"); if (card.cov) probs.push("שם המקום בכרטיס מוסתר מתחת לכפתורים אחרים");
         if (card.scroll && !/auto|scroll/.test(card.ov)) probs.push("כרטיס המקום ארוך ואי אפשר לגלול אותו");
         await pg.screenshot({ path: path.join(OUT, `${tag}-${orient}-card.png`) }).catch(() => probs.push("צילום לא נשמר"));
         await click(pg, "#infoX");

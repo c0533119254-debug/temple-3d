@@ -591,6 +591,8 @@ body.busy3d:not(.touring) #modeExit{display:block}
   .story.open #stText{max-height:30vh!important}
   .story{padding:8px 12px!important}
 }
+/* 126.1 (בדיקת מסכים): כרטיס מקום פתוח לכל הגובה בטלפון. שורת הקטגוריות ישבה על שם המקום, ולכן היא מוסתרת כל עוד הכרטיס מלא */
+body:has(.infocard.full) #chips{display:none!important}
 /* 126.1 (בדיקת מסכים): טלפון לרוחב, מסך נמוך. כרטיס הסיור צר ונצמד לצד, כדי שרוב המסך יישאר לדגם */
 @media (max-height:440px) and (orientation:landscape){
   .story{left:auto!important;right:0!important;width:min(56vw,460px)!important;border-radius:14px 0 0 0!important;padding:6px 10px!important}
