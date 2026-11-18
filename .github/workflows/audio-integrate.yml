@@ -1,0 +1,43 @@
+name: Prepare audio-only integration branch
+on:
+  push:
+    branches: [instinct/audio-v2-integration-20261118]
+    paths: [.github/workflows/audio-integrate.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Copy verified incoming assets only
+        run: |
+          set -eu
+          git fetch origin audio-v2-preview
+          test "$(git rev-parse origin/audio-v2-preview)" = c3627dcd2b32e955004997b2cd67b901542cf54c
+          mkdir -p /tmp/incoming
+          git archive c3627dcd2b32e955004997b2cd67b901542cf54c audio-v2 | tar -x -C /tmp/incoming
+          python3 - <<'PY'
+          import json,pathlib,shutil
+          p=pathlib.Path('audio');src=pathlib.Path('/tmp/incoming/audio-v2')
+          base=json.load(open(p/'manifest.json'));inc=json.load(open(src/'manifest.json'))
+          assert len(inc['items'])==60
+          for k,r in inc['items'].items():
+              r=dict(r);assert r['file']==k+'.mp3'
+              if k.startswith('tamid_') and r['stepIndex']>=10:
+                  r['stepIndex']+=1;r['step']+=1
+              base['items'][k]=r
+              shutil.copyfile(src/r['file'],p/r['file'])
+          base['sourceNote']='60 approved-caption recordings from audio-v2-preview@c3627dcd2b, copied as assets only. Old City entries preserved. Tamid lottery stop has no clip; index maps null. No new Shavuot or quick-intro recording.'
+          (p/'manifest.json').write_text(json.dumps(base,ensure_ascii=False,indent=2)+'\n')
+          PY
+          test "$(git diff --name-only | wc -l)" -eq 61
+          test -z "$(git diff --name-only | grep -v '^audio/' || true)"
+          git diff --exit-code -- audio/index.json 'audio/oldcity*'
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add audio
+          git commit -m 'Copy 60 verified tour recordings and preserve topic mapping'
+          git push origin HEAD:instinct/audio-v2-integration-20261118
