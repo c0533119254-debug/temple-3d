@@ -443,13 +443,13 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
 // 📜 בתמונות הרחוב (Mapillary, 2018–2023) ברחוב דוד, ברחוב השלשלת, בחאן א־זית, בוויה דולורוזה ובמוריסטן, קומת הרחוב היא שורה של חנויות פתוחות:
 // פתח כהה, סחורה על דוכן לפני הפתח, תריס מתכת מגולגל מעל, ולפעמים סוכך בד. בדגם היה שם קיר עם חלונות. השווקים המקורים (אזור 2) כבר בנויים עם חנויות ולא נוגעים בהם.
 (function(){try{
-  const SP=[[[-720,-165],[-560,-125],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
+  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
   const nearSpine=(x,n)=>SP.some(L=>{for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));if(Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n)<9)return true}return false});
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const souq=(x,n)=>x>-442&&x<-384&&n>-140&&n<22;
   const F=[],seen=new Set(),r=rng(1254);
   ROADS.forEach(rd=>{if(rd.c!==4)return;let nxt=1.6,acc=0;/* הנקודות של קו הרחוב צפופות (פחות ממטר), אז הולכים לאורך הקו כולו ודוגמים כל 3.2 מ׳ */for(let i=0;i<rd.p.length-1;i++){const a=rd.p[i],b=rd.p[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn);if(L<1e-3)continue;const ux=dx/L,un=dn/L,a0=acc;acc+=L;
-    for(;nxt<acc;nxt+=3.2){const s=nxt-a0,x=a[0]+ux*s,n=a[1]+un*s;if(!inPoly(x,n,OLD)||souq(x,n))continue;if(!nearSpine(x,n))continue;
+    for(;nxt<acc;nxt+=3.2){const s=nxt-a0,x=a[0]+ux*s,n=a[1]+un*s;if(!inPoly(x,n,OLD)||souq(x,n))continue;if(!nearSpine(x,n)||inB(x,n))continue;
       [1,-1].forEach(sd=>{const px=-un*sd,pn=ux*sd;let d=-1;for(let q=0.6;q<=rd.w/2+3.5;q+=0.3){if(inB(x+px*q,n+pn*q)){d=q;break}}if(d<0)return;
         const fx=x+px*(d-0.05),fn=n+pn*(d-0.05),k=Math.round(fx/2.4)+"_"+Math.round(fn/2.4);if(seen.has(k))return;seen.add(k);
         /* החזית צריכה להיות ישרה כאן: גם 1 מ׳ לכל צד עדיין קיר */
