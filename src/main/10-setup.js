@@ -36,6 +36,9 @@ const COD8=(()=>{const way=[[-57,-878.6],[-63.6,-871.8],[-70.7,-863.2],[-76.8,-8
   const onWay=(x,n)=>segDist(x,n,way)[0]<2.6;
   const clear=(x,n)=>{if(x<-130||x>130||n<-960||n>-410)return false;if(segDist(x,n,way)[0]<7.5)return true;const q=loc(x,n);if(Math.abs(q[0])<pool.hw+5&&Math.abs(q[1])<pool.hl+5)return true;if(Math.hypot(x-gihon[0],n-gihon[1])<15)return true;return inPoly(x,n,garden)};
   return{way,pool,loc,gihon,garden,onWay,clear}})();
+/* 126.9: הר הזיתים — קו הראייה ממקום שריפת הפרה אל פתח ההיכל (מידות ב, ד). הקו על ציר הבית (z=-3 בעולם, n=3 במערכת ההר), ממזרח לנחל קדרון עד מעבר למקום השריפה.
+   clear = הבניינים שעל הקו (רצועה של 8 מ׳ לכל צד) ומסביב למתחם השריפה (30 מ׳) יורדים */
+const PARA9=(()=>{const a=S2G(330,3),b=S2G(640,3),c=S2G(600,3),line=[a,b];return{line,c,clear:(x,n)=>segDist(x,n,line)[0]<8||Math.hypot(x-c[0],n-c[1])<30,near:(x,n)=>segDist(x,n,line)[0]<10}})();
 const KZ=[[-88.5,-175.5],[-122.4,-173.6],[-136,-185.8],[-150,-230],[-148,-262],[-80,-264],[-75,-250.5]];const MOUNT=GEO.MOUNT,OLD=GEO.OLD,WALL_LINE=GEO.WALL,PLAZA=GEO.PLAZA,GATES=GEO.GATES,COD=GEO.COD;
 /* 125.5 (תמונות Mapillary של רחבת הכותל): KP = הרחבה הדרומית, שטוחה ומרוצפת בגובה הרחבה (בתמונות: רחבה ישרה עם מקום להורדה וחניה קצרה; במודל היה שם מדרון של עד 15 מ׳).
    KST = המדרגות מהרובע היהודי אל הרחבה, לאורך השבילים של OSM. בכל נקודה: x, n, גובה מעל הרחבה (מ׳), לפי פני הקרקע של המודל לאורך השביל */

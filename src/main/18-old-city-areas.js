@@ -590,6 +590,22 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
   window.__COD8={mik:MIK.length,lamps:LP.length,steps:GS.light.length,trees:C.trees,y0,streets:SR.length};
 }catch(e){console.warn("cityOfDavid",e)}})();
 
+// ---- 126.9: מקום המשואות בראש הר הזיתים (📜 ראש השנה ב, ד: "ומאין היו משיאין משואות? מהר המשחה לסרטבא") ----
+(function(){try{
+  let best=null;for(let r=0;r<=90;r+=6)for(let a=0;a<6.283;a+=r?6/r:7){const x=840+Math.cos(a)*r,n=50+Math.sin(a)*r;const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));let inb=false;if(L)for(const o of L)if(x>=o.xa&&x<=o.xb&&n>=o.na&&n<=o.nb&&inPoly(x,n,o.p))inb=true;if(inb||onRoad(x,n))continue;const h=TY(x,n);if(!best||h>best[2])best=[x,n,h]}
+  if(!best)return;const [x,n]=best;let g=1e9;for(let a=0;a<6.283;a+=0.785)g=Math.min(g,TY(x+Math.cos(a)*5,n+Math.sin(a)*5));
+  const inf={n:"מקום המשואות",r:"ראש השנה ב, ב-ד",t:"📜 \"ומאין היו משיאין משואות? מהר המשחה לסרטבא\" (ראש השנה ב, ד). 📜 כך הודיעו לכל הגולה שבית הדין קידש את החודש: \"מביאין כלונסות של ארז ארוכין וקנים ועצי שמן ונעורת של פשתן... ומוליך ומביא ומעלה ומוריד, עד שהוא רואה את חבירו שהוא עושה כן בראש ההר השני\" (ראש השנה ב, ג). 📜 המשנה מספרת שאחר כך החליפו את המשואות בשלוחים (ראש השנה ב, ב). 💡 כאן מוצג המקום בראש ההר, עם רחבת אבן, כלונסות ארז ועצים מוכנים. אם ידליקו משואות בזמן הבא, זו הצעה."};
+  const GS=[],WD=[],add=(arr,geo,px,py,pn,rx,rz)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4();m.makeRotationFromEuler(new THREE.Euler(rx||0,0,rz||0));m.setPosition(px,py,-pn);geo.applyMatrix4(m);arr.push(geo)};
+  add(GS,wbox(12,Math.max(1,best[2]-g+1),12,3),x,g+(best[2]-g+1)/2-0.6,n);add(GS,wbox(12.4,0.25,12.4,3),x,best[2]+0.5,n);
+  add(GS,wbox(3,0.9,3,2),x,best[2]+1.05,n);
+  for(let k=0;k<6;k++){const a=k*Math.PI/3;add(WD,new THREE.CylinderGeometry(0.09,0.12,7,6),x+Math.cos(a)*0.4,best[2]+4.3,n+Math.sin(a)*0.4,Math.sin(a)*0.06,-Math.cos(a)*0.06)}
+  for(let k=0;k<8;k++)add(WD,new THREE.CylinderGeometry(0.12,0.12,3.6,6),x+3.2+(k%4)*0.28,best[2]+0.75+Math.floor(k/4)*0.25,n-3.5,0,Math.PI/2);
+  [[GS,M.stoneL||M.stone],[WD,M.wood||new THREE.MeshStandardMaterial({color:0x6b4a2f,roughness:0.9})]].forEach(([arr,mat])=>{const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(arr,false);if(!mg)return;const m=new THREE.Mesh(mg,mat);m.castShadow=true;m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)});
+  cwAdd(x,n,0,12,12,g-1,best[2]+0.5);
+  __AFTER(()=>{try{const q=G2S(x,n);label("מקום המשואות",q[0],best[2]+12,-q[1],null,inf)}catch(e){console.warn("beacon label",e)}});
+  window.__BEACON=best;
+}catch(e){console.warn("beacon",e)}})();
+
 /* 126.1 (בדיקה חוזרת 35): מידות הקרדו החפור, וגובה ההליכה בתוכו (קואורדינטות גאוגרפיות x מזרח, n צפון) */
 function cardoGeom(){if(cardoGeom.C)return cardoGeom.C;const cx=-418,cn=-329,L=Math.hypot(0.03,1),vx=0.03/L,vn=1/L,ux=vn,un=-vx,hw=10,hl=12,stw=2,su=3.6;
   const top=(x,n)=>surfY(x,n);let mn=1e9;for(let u=-hw;u<=hw;u+=2)for(let v=-hl;v<=hl;v+=2){const x=cx+u*ux+v*vx,n=cn+u*un+v*vn;mn=Math.min(mn,top(x,n))}
