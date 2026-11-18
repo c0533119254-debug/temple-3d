@@ -29,7 +29,7 @@ function sillSteps(add,off,gf,x,n,a,y,w){const q=off(x,n,a,1.6,0),g0=gf(q[0],q[1
 // ---- Old City wall, towers, gates ----
 (function(){
   const merl=[],tow=[],WLm=[];
-  const wi={n:"חומות העיר העתיקה",r:"נבנו בימי סולימאן, 1537–1541",t:"החומות של היום, באורך של כ־4 ק״מ. הן לא חלק מהתוכנית ונשארות כמו שהן."};
+  const wi={n:"חומות העיר העתיקה",r:"נבנו בימי סולימאן, 1537–1541",t:"📜 החומות של היום, באורך של כ־4 ק״מ, עם 34 מגדלים. גובהן משתנה לפי הקרקע, בין 5 ל־15 מ׳ (בממוצע כ־12). הן לא חלק מהתוכנית ונשארות כמו שהן. 💡 בהדמיה הגובה אחיד (13 מ׳) והמגדלים מפוזרים לפי אורך כל קטע, ולא במקומות המדויקים. המצודה ושער יפו בנויים לפי המקום האמיתי."};
   // the wall is 3.6 m thick. Keep its centre at least 5 m from the Mount outline so it does not share a face with the Mount wall at the NE corner, and does not cut the Hulda East block.
   const CLEAR=5,farM=(x,n)=>nearEdge(x,n,MOUNT)[0]>=CLEAR&&!(x>-70&&x<70&&n>-285&&n<-225);/* גרסה 116: 💡 חומת העיר נעצרת לפני רחבת שערי חולדה, כדי שלא תחצה את פתח השער המשולש (בחירת מודל, לא מידה ממקור) */
   for(let i=0;i<WALL_LINE.length-1;i++){

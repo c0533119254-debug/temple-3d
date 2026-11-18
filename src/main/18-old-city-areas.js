@@ -227,7 +227,7 @@ begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t
   const oc=new THREE.CylinderGeometry(6.6,6.6,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.4,8,1.4,3.4*vs);
   dome("lead",x,n,Y(21),6.1,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
 // ===== the Cardo: a row of Roman/Byzantine columns in the excavated street west of the Hurva =====
-begin({n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי. 💡 כאן מוצגות שתי שורות עמודים, בלי התעלה החפורה."});
+begin({n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי. 📜 הקרדו החשוף נמוך בכמה מטרים מהרחוב של היום: יורדים אליו במדרגות, ומהרחוב רואים אותו מעבר למעקה. 💡 בהדמיה מוצגות רק שתי שורות העמודים, בגובה הרחוב. הירידה, שפת החפירה והמעקה לא מוצגים."});
 [-425.5,-410.5].forEach(cx=>{for(let n=-339;n<=-317;n+=3.6){const x=cx+(n+330)*0.03,g=G(x,n);A("light",wbox(0.9,0.5,0.9,2),x,g+0.25,n,0);A("light",new THREE.CylinderGeometry(0.32,0.36,4.2,12),x,g+0.5+2.1,n,0);A("light",wbox(0.95,0.45,0.95,2),x,g+4.9,n,0)}
   const g=G(cx,-328);A("light",wbox(0.9,0.7,23,3),cx,g+5.47,-328,0.03)});
 // ===== the Sephardi synagogues: small domes on their roofs (📜 the four are built low, under the street) =====

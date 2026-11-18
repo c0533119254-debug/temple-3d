@@ -22,6 +22,8 @@ function groundAt(x,z){const n=-z;
       if(u>=203&&u<=203+COMP.nst&&v>=236&&v<=264)return(13.5-6*(u-203)/COMP.nst)*A;
       if(u>=242&&u<=258&&v>=264&&v<=296.1)return(7.5+Math.min(9,9*(296.1-v)/32))*A;
       if(u>=236&&u<=264&&v>=236&&v<=264)return 16.5*A;
+      /* 125.0 (ביקורת 32): המדרגות אל המנח (12 של חצי אמה, בצפון ובדרום) הן גם הרצפה של ההולך, באותו פרופיל כמו האבנים */
+      if(COMP.nst===10&&u>=137&&u<=143){const d=v<COMP.vmin?COMP.vmin-v:v>COMP.vmax?v-COMP.vmax:-1;if(d>=0&&d<=12)return(13.5-0.5*Math.ceil(d))*A}
       if(u>=98&&u<=203&&v>=COMP.vmin&&v<=COMP.vmax)return 13.56*A;if(u<=300&&v>=200&&v<=300)return 7.5*A;return 3.5*A}}
   {const tf=tunFloor(x,n);if(tf!=null)return tf}if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n),dl=DUNG.lotY(g[0],g[1]);return dl!=null?dl:surfY(g[0],g[1])}}
 function blocked(x,z,feet){
@@ -154,16 +156,21 @@ const MAPR=2000,MAPS=2048,MAPK=MAPS/(2*MAPR),MAPC=(function(){const c=document.c
   const lab=(t,q)=>{const p=P(q);x.lineWidth=8;x.strokeStyle="rgba(255,255,255,.85)";x.strokeText(t,p[0],p[1]);x.fillText(t,p[0],p[1])};
   {let sx=0,sn=0;GEO.OLD&&GEO.OLD.forEach(q=>{sx+=q[0];sn+=q[1]});if(GEO.OLD)lab("העיר העתיקה",[sx/GEO.OLD.length-250,sn/GEO.OLD.length])}
   lab("הר הזיתים",[900,80]);return c})();
-const MB=SATB.old;
+const MB=SATB.old;const MINIV={cx:0,cy:0,span:0};
 function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);const nW=new THREE.Vector3(0,0,-1).applyAxisAngle(new THREE.Vector3(0,1,0),-THETA);const ang=Math.atan2(fw.x*nW.z-fw.z*nW.x,fw.x*nW.x+fw.z*nW.z);document.getElementById("needle").style.transform="rotate("+(ang*180/Math.PI)+"deg)";
   const c=document.getElementById("mini");if(c.hidden)return;const x=c.getContext("2d"),l=WG.worldToLocal(camera.position.clone()),gx=l.x,gn=-l.z,S=c.width,span=1600*MAPK;
-  const px0=(gx+MAPR)*MAPK,py0=(MAPR-gn)*MAPK,cx=Math.max(span/2,Math.min(MAPS-span/2,px0)),cy=Math.max(span/2,Math.min(MAPS-span/2,py0)),M2=q=>[(q[0]-cx)/span*S+S/2,(q[1]-cy)/span*S+S/2];
+  const px0=(gx+MAPR)*MAPK,py0=(MAPR-gn)*MAPK,cx=Math.max(span/2,Math.min(MAPS-span/2,px0)),cy=Math.max(span/2,Math.min(MAPS-span/2,py0));MINIV.cx=cx;MINIV.cy=cy;MINIV.span=span;const M2=q=>[(q[0]-cx)/span*S+S/2,(q[1]-cy)/span*S+S/2];
   x.save();x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();x.drawImage(MAPC,cx-span/2,cy-span/2,span,span,0,0,S,S);
   // the Temple compound, drawn from the model itself
-  if(COMP){const A=0.576,co=[[0,0],[500,0],[500,500],[0,500]].map(([u,v])=>{const w=WG.worldToLocal(new THREE.Vector3(COMP.X0+u*A,0,-(COMP.N0-v*A)));return M2([(w.x+MAPR)*MAPK,(MAPR+w.z)*MAPK])});
+  /* 125.0 (ביקורת 25): המתחם במפה מצויר באותה אמה של הדגם (A), לא ב־0.576 קבוע */if(COMP){const co=[[0,0],[500,0],[500,500],[0,500]].map(([u,v])=>{const w=WG.worldToLocal(new THREE.Vector3(COMP.X0+u*A,0,-(COMP.N0-v*A)));return M2([(w.x+MAPR)*MAPK,(MAPR+w.z)*MAPK])});
     x.beginPath();co.forEach((p,i)=>i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1]));x.closePath();x.fillStyle="rgba(201,162,74,.55)";x.fill();x.strokeStyle="#8a6a1f";x.lineWidth=1.5;x.stroke();
     const hp=WG.worldToLocal(new THREE.Vector3(COMP.X0+150*A,0,-(COMP.N0-250*A))),h=M2([(hp.x+MAPR)*MAPK,(MAPR+hp.z)*MAPK]);x.fillStyle="#7a5a12";x.fillRect(h[0]-2.5,h[1]-1.5,5,3)}
   const p=M2([px0,py0]),hd=ang;x.translate(p[0],p[1]);x.rotate(hd);x.fillStyle="rgba(232,88,74,.35)";x.beginPath();x.moveTo(0,0);x.arc(0,0,20,-Math.PI/2-0.5,-Math.PI/2+0.5);x.closePath();x.fill();x.fillStyle="#e8584a";x.strokeStyle="#fff";x.lineWidth=2;x.beginPath();x.arc(0,0,4.5,0,7);x.fill();x.stroke();x.restore()}
+/* 125.0 (ביקורת 26): לחיצה על המפה הקטנה טסה למקום שנלחץ */
+{const mc=document.getElementById("mini");mc.style.cursor="pointer";mc.title="לחצו על המפה כדי לטוס לשם";mc.setAttribute("role","button");
+  mc.addEventListener("click",e=>{if(!MINIV.span)return;const r=mc.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;if(Math.hypot(sx-0.5,sy-0.5)>0.5)return;
+    const px=MINIV.cx+(sx-0.5)*MINIV.span,py=MINIV.cy+(sy-0.5)*MINIV.span,gx=px/MAPK-MAPR,gn=MAPR-py/MAPK,w=WG.localToWorld(new THREE.Vector3(gx,0,-gn));w.y=groundAt(w.x,w.z);
+    try{flyToPoint(w,60)}catch(err){console.warn(err)}})}
 document.getElementById("homeB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="home"?"true":"false"));flyTo("home",1600)});
 document.getElementById("exitB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="court"?"true":"false"));flyTo("court",1600)});
 document.getElementById("compass").addEventListener("click",()=>{const nW=new THREE.Vector3(0,0,1).applyAxisAngle(new THREE.Vector3(0,1,0),-THETA);if(WALK){yaw=Math.atan2(nW.x,nW.z);pitch=0.02;camera.rotation.order="YXZ";camera.rotation.set(pitch,yaw,0);return}const t=controls.target,d=camera.position.distanceTo(t);const h=Math.max(20,camera.position.y-t.y);const p=t.clone().addScaledVector(nW,Math.sqrt(Math.max(1,d*d-h*h)));p.y=t.y+h;tween={p0:camera.position.clone(),t0:t.clone(),p1:p,t1:t.clone(),start:performance.now(),dur:900}});
@@ -174,6 +181,8 @@ let closeInfo=()=>{ // let: core/32 עוטף אותה (כש־const העטיפה 
 // ---- labels fly to their place ----
 function goLabel(L){if(STORY)STORY.stop();if(TRN&&TRN.riding)TRN.stopRide();if(DRONE){droneFly(L.v.clone());showInfo(L.info);return}if(WALK)stopWalk();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   showInfo(L.info);
+  /* 125.1: מקום שהמצלמה לא מוצאת אליו דרך לבד (פתח בתוך קיר) נותן לה נקודת מבט קבועה */
+  if(L.info&&L.info.cam){try{const [p,t]=L.info.cam();tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:reduce?1:1600,arc:true};return}catch(e){}}
   // the object behind the label, whole and in the middle of the free part of the screen
   try{if(!L.inh){const b=lblBox(L);let c,r;if(b){c=b.getCenter(new THREE.Vector3());const z=b.getSize(new THREE.Vector3());r=Math.max(3,0.5*Math.hypot(z.x,z.y*0.7,z.z))}
     else{c=L.v.clone();const g=floorAt(c.x,c.z);if(isFinite(g)&&g<c.y&&c.y-g<45){r=Math.max(L.c?5:20,(c.y-g)*0.8);c.y=(c.y+g)/2}else r=L.c?8:40}
