@@ -129,6 +129,23 @@ async function run(dev) {
     await until(() => !document.body.classList.contains("pane"), 15000);
   });
 
+  // 125.2 (ביקורת, כיסוי בדיקות): חזרה למבט הקודם, וחיפוש עם שגיאת כתיב
+  await step("חזרה למבט הקודם", async () => {
+    await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
+    const cam = () => pg.evaluate(() => (window.__UI.shareURL().split("#")[1] || "").split("&")[0]);
+    const v1 = await cam();
+    await tap("#backB");
+    await pg.waitForTimeout(3000);
+    const v2 = await cam();
+    if (v1 === v2) throw new Error("המצלמה לא זזה אחרי «חזרה»");
+  });
+  await step("חיפוש עם שגיאת כתיב («מזבך»)", async () => {
+    await pg.fill("#sq", "מזבך");
+    await until(() => { const b = document.querySelector("#sres button b"); return b && b.textContent.includes("מזבח"); }, 20000);
+    await pg.fill("#sq", "");
+    await pg.keyboard.press("Escape");
+  });
+
   await step("הליכה ויציאה בכפתור «יציאה»", async () => {
     await pg.evaluate(() => { const b = [...document.querySelectorAll("#cta button")].find((x) => !x.classList.contains("pri")); b.click(); });
     await until(() => document.body.classList.contains("busy3d"), 30000);
@@ -140,6 +157,17 @@ async function run(dev) {
   });
   await ovl("אחרי הליכה");
 
+  if (dev === "desktop") await step("בלי תלת־ממד: הודעה וקריאת הסיורים", async () => {
+    const c2 = await browser.newContext({ viewport: { width: 1000, height: 700 }, locale: "he-IL" });
+    await c2.route(/youtube\.com|ytimg\.com|googlevideo\.com/, (r) => r.abort());
+    await c2.addInitScript(() => { const g = HTMLCanvasElement.prototype.getContext; HTMLCanvasElement.prototype.getContext = function (t, ...a) { if (/webgl/.test(t)) return null; return g.call(this, t, ...a); }; });
+    const p2 = await c2.newPage();
+    await p2.goto(URL, { waitUntil: "domcontentloaded" });
+    await p2.waitForSelector(".ldfail", { timeout: 60000 });
+    await p2.click("#glRead");
+    await p2.waitForFunction(() => document.querySelectorAll("#glText h3").length >= 3, null, { timeout: 30000 });
+    await c2.close();
+  });
   const inPage = await pg.evaluate(() => window.__ERRS || []).catch(() => []);
   const all = [...errs, ...inPage];
   log(dev, all.length === 0, "בלי שגיאות JavaScript", all.slice(0, 3).join(" · "));
