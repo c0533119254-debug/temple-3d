@@ -230,6 +230,8 @@ let failed = false, warned = 0;
       for (let k = 0; k < n - 1 && out.length < 8; k += Math.max(1, Math.floor(n / 24))) {
         const a = W[k], b = W[k + 1]; if (!a || !b) continue; const L = Math.hypot(b[0] - a[0], b[1] - a[1]); if (L < 6) continue;
         const m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; if (gp.some((g) => Math.hypot(g[0] - m[0], g[1] - m[1]) < 40)) continue;
+        // the wall is not drawn in front of the Huldah gates plaza on purpose (14-mount-walls.js farM, a model choice since v116)
+        if (m[0] > -70 && m[0] < 70 && m[1] > -285 && m[1] < -225) continue;
         // where the city wall meets the Temple compound, the compound's own walls and rules take over (not the city wall)
         { const C = G.getCOMP(), A = G.getA(), q = g2s(m[0], m[1]); if (C) { const u = (q[0] - C.X0) / A, v = (C.N0 - q[1]) / A; if (u >= -20 && u <= 520 && v >= -20 && v <= 520) continue; } }
         const nx = -(b[1] - a[1]) / L, nn = (b[0] - a[0]) / L, P = [m[0] + nx * 7, m[1] + nn * 7], Q = [m[0] - nx * 7, m[1] - nn * 7];
