@@ -96,7 +96,7 @@ const nearMount=(x,n)=>inPoly(x,n,MOUNT_BIG);
 const plaza=(x,n)=>x>-200&&x<-70&&n>-270&&n<-100&&inPoly(x,n,PLAZA);
 function cityPass(){
 instBlocks({count:2600,seed:7,area:[-920,210,-580,640],test:(x,n)=>inPoly(x,n,OLD)&&!nearMount(x,n)&&!plaza(x,n)&&Math.hypot(x+384,n+295)>22&&Math.hypot(x+705,n+190)>30&&segDist(x,n,[[-98,-116.5],[-87.8,-174.7]])[0]>4,size:[7,19],ht:[6,13],tint:tints,domes:0.35});
-instBlocks({count:620,seed:11,area:[-110,560,-1050,-360],test:(x,n)=>segDist(x,n,KIDRON)[0]>26&&!inPoly(x,n,OLD)&&(inPoly(x,n,COD)||x>200),size:[7,15],ht:[5,10],tint:tints,domes:0.2});
+instBlocks({count:620,seed:11,area:[-110,560,-1050,-360],test:(x,n)=>segDist(x,n,KIDRON)[0]>26&&!inPoly(x,n,OLD)&&(inPoly(x,n,COD)||x>200)&&!COD8.clear(x,n),size:[7,15],ht:[5,10],tint:tints,domes:0.2});
 instBlocks({count:900,seed:13,area:[-2200,-980,-1500,1700],test:(x,n)=>segDist(x,n,HINNOM)[0]>70,size:[16,40],ht:[10,34],tint:[0xe6dfd0,0xddd6c6,0xeae4d6,0xd4ccb9],rot:0.05});
 instBlocks({count:700,seed:17,area:[-950,260,660,1700],test:(x,n)=>segDist(x,n,KIDRON)[0]>60&&!inPoly(x,n,OLD),size:[14,34],ht:[8,26],tint:[0xe6dfd0,0xddd6c6,0xeae4d6],rot:-0.08});
 instBlocks({count:260,seed:19,area:[720,1450,-700,1100],test:(x,n)=>x>750,size:[10,24],ht:[6,15],tint:tints,domes:0.15});

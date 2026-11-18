@@ -26,6 +26,16 @@ const GEO={"THETA":0.13538,"MOUNT":[[204.0,-212.1],[179.6,20.0],[179.0,25.1],[17
 // Frames: "geo" = metres east/north of the Dome of the Rock (from OpenStreetMap); "scene" = geo rotated so the Mount's walls run along the axes.
 const THETA=GEO.THETA,cT=Math.cos(THETA),sT=Math.sin(THETA);
 const G2S=(x,n)=>[x*cT+n*sT,-x*sT+n*cT],S2G=(x,n)=>[x*cT-n*sT,x*sT+n*cT];
+/* 126.8: עיר דוד — בריכת השילוח, רחוב העולים, הגיחון וגן המלך (קואורדינטות גאוגרפיות: x מזרח, n צפון).
+   way = רחוב העולים, מהקצה הדרומי של הבריכה צפונה בגיא, עד כביש גבעתי (משם צפונה זה אזור רחבת הכותל).
+   pool: מרכז, ציר ארוך (A), חצי רוחב (hw) וחצי אורך (hl). 💡 המקום לפי צילום הלוויין (אוהלי החפירה), בקירוב של כמה מטרים */
+const COD8=(()=>{const way=[[-57,-878.6],[-63.6,-871.8],[-70.7,-863.2],[-76.8,-854.6],[-82.9,-844],[-86.5,-834.9],[-88.8,-828.1],[-91,-821.3],[-102.9,-790.1],[-107.2,-777.7],[-109.1,-770.3],[-109.6,-759.1],[-107.8,-732.3],[-102.7,-698.6],[-75.8,-597.6],[-73.6,-588.9],[-72.2,-582.9],[-68.6,-574.5],[-60.3,-557.9],[-56.6,-550.1],[-52.4,-541],[-38.2,-510.4],[-18.5,-468.1],[-10.6,-451.1],[1.1,-421.2]];
+  const l=Math.hypot(0.671,-0.741),A=[0.671/l,-0.741/l],U=[-A[1],A[0]],pool={c:[-43,-861],A,U,hw:15,hl:25};
+  const loc=(x,n)=>{const dx=x-pool.c[0],dn=n-pool.c[1];return[dx*U[0]+dn*U[1],dx*A[0]+dn*A[1]]};
+  const gihon=[110,-542],garden=[[8,-884],[52,-893],[58,-946],[14,-952]];
+  const onWay=(x,n)=>segDist(x,n,way)[0]<2.6;
+  const clear=(x,n)=>{if(x<-130||x>130||n<-960||n>-410)return false;if(segDist(x,n,way)[0]<7.5)return true;const q=loc(x,n);if(Math.abs(q[0])<pool.hw+5&&Math.abs(q[1])<pool.hl+5)return true;if(Math.hypot(x-gihon[0],n-gihon[1])<15)return true;return inPoly(x,n,garden)};
+  return{way,pool,loc,gihon,garden,onWay,clear}})();
 const KZ=[[-88.5,-175.5],[-122.4,-173.6],[-136,-185.8],[-150,-230],[-148,-262],[-80,-264],[-75,-250.5]];const MOUNT=GEO.MOUNT,OLD=GEO.OLD,WALL_LINE=GEO.WALL,PLAZA=GEO.PLAZA,GATES=GEO.GATES,COD=GEO.COD;
 /* 125.5 (תמונות Mapillary של רחבת הכותל): KP = הרחבה הדרומית, שטוחה ומרוצפת בגובה הרחבה (בתמונות: רחבה ישרה עם מקום להורדה וחניה קצרה; במודל היה שם מדרון של עד 15 מ׳).
    KST = המדרגות מהרובע היהודי אל הרחבה, לאורך השבילים של OSM. בכל נקודה: x, n, גובה מעל הרחבה (מ׳), לפי פני הקרקע של המודל לאורך השביל */

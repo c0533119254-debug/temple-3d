@@ -511,6 +511,85 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),OI,new THREE.ConeGeometry(0.5,1,8,1,true));put(RK,MAT(0xa8432f),OI);window.__SQ=Object.assign(window.__SQ||{},{lamps:LP.length,umb:UP.length})}
 }catch(e){console.warn("squares",e)}})();
 
+// ---- 126.8: עיר דוד — בריכת השילוח, רחוב העולים, מקוואות, מעיין הגיחון וגן המלך (תוכנית: city-of-david/תוכנית-עיר-דוד.md) ----
+// 📜 נחמיה ג, טו: "ואת חומת ברכת השלח לגן המלך ועד המעלות היורדות מעיר דויד". הקואורדינטות ב־COD8 (10-setup).
+(function(){try{
+  const C=COD8,PL=C.pool,U=PL.U,A=PL.A,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{}));
+  const I=(n,r,t)=>({n,r,t});
+  const INF={
+    pool:I("בריכת השילוח","ישעיה ח, ו; נחמיה ג, טו; סוכה ד, ט; פרה ג, ב-ג","📜 \"מי השלח ההלכים לאט\" (ישעיה ח, ו). 📜 \"ואת חומת ברכת השלח לגן המלך ועד המעלות היורדות מעיר דויד\" (נחמיה ג, טו). ⚖️ מכאן ממלאים בסוכות את המים לניסוך: \"צלוחית של זהב מחזקת שלשת לוגים היה ממלא מן השילוח\" (סוכה ד, ט). ⚖️ לכאן יורדים הילדים שממלאים מים לפרה אדומה: \"הגיעו לשילוח, ירדו ומלאו ועלו\" (פרה ג, ב-ג). 📜 בחפירות נמצאה בריכה גדולה עם מדרגות סביב: שלוש מערכות של חמש מדרגות, ומשטח מנוחה ביניהן. 💡 המקום לפי צילום הלוויין, והגודל (כ־50 על 30 מ׳) בקירוב."),
+    street:I("רחוב העולים — המעלות היורדות מעיר דוד","נחמיה ג, טו; יב, לז; ראש השנה טז ע״ב","📜 \"ועל שער העין ונגדם עלו על מעלות עיר דויד במעלה לחומה\" (נחמיה יב, לז). ⚖️ \"חייב אדם לטהר עצמו ברגל\" (ראש השנה טז ע״ב): העולים טובלים בשילוח ובמקוואות שבדרך, ועולים ברחוב הזה אל הר הבית. 📜 בחפירות נמצא רחוב מדורג רחב, מרוצף באבנים גדולות, שעולה מהשילוח צפונה בגיא. 💡 במודל הרחוב עובר על תוואי הכביש של היום, כי הרחוב הקדום חפור מתחתיו. אין בו מכוניות. 💡 הרוחב (7.5 מ׳), מקום המדרגות והפנסים הם הצעה."),
+    mik:I("מקווה לעולים","יומא ג, ג; ראש השנה טז ע״ב","⚖️ \"אין אדם נכנס לעזרה לעבודה, אפילו טהור, עד שיטבול\" (יומא ג, ג). ⚖️ \"חייב אדם לטהר עצמו ברגל\" (ראש השנה טז ע״ב). 📜 לאורך הדרך לעיר נמצאו הרבה מקוואות חצובים, עם מדרגות ומחיצה באמצע: יורדים מצד אחד ועולים מהצד השני. 💡 המקום והמספר של המקוואות כאן הם הצעה."),
+    gihon:I("מעיין הגיחון","מלכים א א, לג-לט; הוריות יב ע״א; דברי הימים ב לב, ל","📜 \"והורדתם אתו אל גחון, ומשח אתו שם צדוק הכהן ונתן הנביא למלך על ישראל\" (מלכים א א, לג-לד). ⚖️ \"אין מושחין את המלכים אלא על המעיין, כדי שתמשך מלכותן\" (הוריות יב ע״א). 📜 \"והוא יחזקיהו סתם את מוצא מימי גיחון העליון ויישרם למטה מערבה לעיר דויד\" (דברי הימים ב לב, ל): מכאן יוצאת נקבת חזקיהו, ובה המים עוברים מתחת לעיר אל בריכת השילוח. 💡 בית המעיין, המדרגות והבריכה הקטנה הם הצעה לתצוגה."),
+    garden:I("גן המלך","נחמיה ג, טו; מלכים ב כה, ד","📜 \"ברכת השלח לגן המלך\" (נחמיה ג, טו). 📜 \"דרך שער בין החמתים אשר על גן המלך\" (מלכים ב כה, ד). 💡 הגן מוצג במקום שבו הגיא פוגש את נחל קדרון, לפי המסורת. העצים (זית, תאנה ותמר) הם הצעה.")};
+  const GS={pave:[],wall:[],light:[],iron:[],water:[],dark:[]},MATS={pave:M.pave||M.stoneL,wall:M.stone||M.stoneL,light:M.stoneL,iron:M.iron||MAT(0x2b2b2b,{metalness:0.6,roughness:0.5}),water:MAT(0x3d7584,{roughness:0.12,metalness:0.1}),dark:MAT(0x2a2620,{roughness:1})};
+  const GI={};Object.keys(GS).forEach(k=>GI[k]=[]);
+  const add=(k,geo,x,y,n,rot,inf)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4().makeRotationY(rot||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);GS[k].push(geo);GI[k].push(inf)};
+  const PU=(u,v)=>[PL.c[0]+u*U[0]+v*A[0],PL.c[1]+u*U[1]+v*A[1]],rotP=Math.atan2(U[1],U[0]);
+  const putP=(k,geo,u,v,y)=>{const q=PU(u,v);add(k,geo,q[0],y,q[1],rotP,INF.pool)};
+  const top=(x,n)=>surfY(x,n);
+  // ---- 1) בריכת השילוח ----
+  const hw=PL.hw,hl=PL.hl;let y0=1e9;for(let u=-hw;u<=hw;u+=3)for(const v of [-hl,hl]){const q=PU(u,v);y0=Math.min(y0,top(q[0],q[1]))}for(let v=-hl;v<=hl;v+=3)for(const u of [-hw,hw]){const q=PU(u,v);y0=Math.min(y0,top(q[0],q[1]))}
+  y0=Math.round((y0+0.25)*10)/10;const NST=15,RISE=0.2,TREAD=0.42,LAND=1.4,fl=y0-NST*RISE-0.3,wl=y0-NST*RISE+0.7;
+  const inset=k=>k*TREAD+Math.floor(k/5)*LAND;
+  for(let k=0;k<NST;k++){const a=inset(k),b=inset(k+1),yt=y0-RISE*(k+1),h=yt-fl,w=b-a;
+    putP("light",wbox(w,h,2*(hl-a),3),-hw+a+w/2,0,fl+h/2);putP("light",wbox(w,h,2*(hl-a),3),hw-a-w/2,0,fl+h/2);
+    putP("light",wbox(2*(hw-b),h,w,3),0,-hl+a+w/2,fl+h/2);putP("light",wbox(2*(hw-b),h,w,3),0,hl-a-w/2,fl+h/2)}
+  {const b=inset(NST);putP("pave",wbox(2*(hw-b)+0.02,0.4,2*(hl-b)+0.02,3),0,0,fl-0.2+0.01);putP("water",new THREE.BoxGeometry(2*(hw-inset(11))-0.1,0.05,2*(hl-inset(11))-0.1),0,0,wl)}
+  // שפת הבריכה: קיר תמך מסביב, מגובה הקרקע עד שפת האבן (בצד הנמוך הבריכה עומדת על בסיס, בצד הגבוה הקרקע נעצרת בקיר)
+  const edge=(u0,v0,u1,v1)=>{const L=Math.hypot(u1-u0,v1-v0),nn=Math.max(1,Math.ceil(L/2.5)),horiz=Math.abs(v1-v0)<1e-6;for(let k=0;k<nn;k++){const t=(k+0.5)/nn,uu=u0+(u1-u0)*t,vv=v0+(v1-v0)*t,q=PU(uu,vv),g=top(q[0],q[1]),lo=Math.min(g,y0)-0.6,hi=Math.max(g,y0)+0.25,len=L/nn+0.02;
+      const W=(h,d)=>horiz?wbox(len,h,d,3):wbox(d,h,len,3);putP("wall",W(hi-lo,1.2),uu,vv,(hi+lo)/2);putP("light",W(0.16,1.4),uu,vv,hi+0.08);
+      if(g<y0+0.9){putP("iron",W(0.06,0.06),uu,vv,hi+1.05);putP("iron",new THREE.CylinderGeometry(0.03,0.03,0.9,6),uu,vv,hi+0.6)}}
+    const a=PU(u0,v0),b=PU(u1,v1);cwAdd((a[0]+b[0])/2,(a[1]+b[1])/2,Math.atan2(b[1]-a[1],b[0]-a[0]),L,1.4,fl-1,y0+3)};
+  const E=0.6;edge(-hw-E,-hl-E,hw+E,-hl-E);edge(-hw-E,hl+E,hw+E,hl+E);edge(-hw-E,-hl-E,-hw-E,hl+E);edge(hw+E,-hl-E,hw+E,hl+E);
+  // מסכת עומק מעל הפתח: הקרקע לא נראית בתוך הבריכה (כמו בקרדו)
+  {const nu=Math.ceil(2*hw/1.5),nv=Math.ceil(2*hl/1.5),pos=[],idx=[];for(let j=0;j<=nv;j++)for(let i=0;i<=nu;i++){const u=-hw+0.1+(2*hw-0.2)*i/nu,v=-hl+0.1+(2*hl-0.2)*j/nv,q=PU(u,v);pos.push(q[0],Math.max(top(q[0],q[1]),y0)+0.32,-q[1])}
+    for(let j=0;j<nv;j++)for(let i=0;i<nu;i++){const a=j*(nu+1)+i,b=a+1,c=a+nu+1,d=c+1;idx.push(a,c,b,b,c,d)}
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);
+    const mk=new THREE.Mesh(g,new THREE.MeshBasicMaterial({colorWrite:false,side:THREE.DoubleSide}));mk.renderOrder=-1;mk.name="codMask";mk.frustumCulled=false;WG.add(mk)}
+  PL.y0=y0;PL.fl=fl;PL.wl=wl;
+  // ---- 2) רחוב העולים: מדרגות (שורת אבן כל פעם שהרחוב עולה 16 ס״מ, ולפחות כל 7 מ׳), אבני שפה ופנסים ----
+  const SR=ROADS.filter(rd=>rd.cod),LP=[],LH=[];let lampSide=1;
+  SR.forEach(rd=>{const P=rd.p;let last=null,dist=0,since=0;
+    for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.05)continue;const ux=(b[0]-a[0])/L,un=(b[1]-a[1])/L,px=-un,pn=ux,rot=Math.atan2(un,ux);
+      for(let s=0;s<L;s+=0.6){const x=a[0]+ux*s,n=a[1]+un*s,y=top(x,n);since+=0.6;dist+=0.6;
+        if(last===null)last=y;if(Math.abs(y-last)>=0.16||since>=7){add("light",wbox(0.4,0.2,rd.w-0.3,2),x,Math.max(y,last)-0.04,n,rot,INF.street);last=y;since=0}
+        if(Math.round(dist/0.6)%4===0)[1,-1].forEach(sd=>{const cx=x+px*sd*(rd.w/2+0.25),cn=n+pn*sd*(rd.w/2+0.25);add("wall",wbox(2.45,0.42,0.42,2),cx,top(cx,cn)+0.12,cn,rot,INF.street)});
+        if(Math.round(dist/0.6)%36===0){const cx=x+px*lampSide*(rd.w/2+0.9),cn=n+pn*lampSide*(rd.w/2+0.9),g=top(cx,cn);LP.push([cx,g+2.1,cn,0,0.12,4.2,0.12]);LH.push([cx,g+4.35,cn,0,0.42,0.42,0.42]);lampSide=-lampSide}}}});
+  // ---- 3) מקוואות: אחד ליד הבריכה ושניים לאורך העלייה. מבנה אבן קטן עם שני פתחים (יורדים בזה ועולים בזה) ----
+  const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const MIK=[];[[-80,-872],[-98,-650],[-45,-480]].forEach(t=>{let best=null;for(let r=0;r<26&&!best;r+=2)for(let a=0;a<6.283&&!best;a+=0.524){const x=t[0]+Math.cos(a)*r,n=t[1]+Math.sin(a)*r;const sd=segDist(x,n,C.way)[0],q=C.loc(x,n);if(sd<9||sd>16||(Math.abs(q[0])<hw+7&&Math.abs(q[1])<hl+7))continue;if([[4,0],[-4,0],[0,4],[0,-4],[0,0]].some(o=>inB(x+o[0],n+o[1])||onRoad(x+o[0],n+o[1])))continue;best=[x,n]}if(best)MIK.push(best)});
+  MIK.forEach(([x,n])=>{let k=0,bd=1e9;for(let i=0;i<C.way.length-1;i++){const d=segDist(x,n,[C.way[i],C.way[i+1]])[0];if(d<bd){bd=d;k=i}}const a=C.way[k],b=C.way[k+1],rot=Math.atan2(b[1]-a[1],b[0]-a[0]);
+    let g=1e9;[[3.5,3],[-3.5,3],[3.5,-3],[-3.5,-3]].forEach(o=>{const xx=x+Math.cos(rot)*o[0]-Math.sin(rot)*o[1],nn=n+Math.sin(rot)*o[0]+Math.cos(rot)*o[1];g=Math.min(g,top(xx,nn))});
+    add("wall",wbox(7,4.2,6,3),x,g+2.0,n,rot,INF.mik);add("light",wbox(7.4,0.3,6.4,3),x,g+4.2,n,rot,INF.mik);
+    const ux=Math.cos(rot),un=Math.sin(rot),px=-un,pn=ux,side=segDist(x+px*3,n+pn*3,C.way)[0]<segDist(x-px*3,n-pn*3,C.way)[0]?1:-1;
+    [-1.6,1.6].forEach(o=>{const dx=x+ux*o+px*side*3.02,dn=n+un*o+pn*side*3.02;add("dark",wbox(1.1,2.2,0.08,1),dx,g+1.1,dn,rot,INF.mik)});
+    cwAdd(x,n,rot,7,6,g-1,g+4.5)});
+  // ---- 4) מעיין הגיחון: בית מעיין מאבן במורד, מדרגות יורדות אל פתח המערה, בריכה קטנה ותעלה ----
+  {const [gx,gn]=C.gihon;let g=1e9,gh=-1e9;for(let a=0;a<6.283;a+=0.785){const y=top(gx+Math.cos(a)*6,gn+Math.sin(a)*6);g=Math.min(g,y);gh=Math.max(gh,y)}
+    const rot=0;/* הפתח פונה מזרחה, אל הנחל */
+    add("wall",wbox(10,Math.max(5,gh-g+4),9,3),gx-2,g+Math.max(5,gh-g+4)/2-0.5,gn,rot,INF.gihon);
+    {const s=new THREE.Shape();s.moveTo(-2,0);s.lineTo(-2,2.4);s.absarc(0,2.4,2,Math.PI,0,true);s.lineTo(2,0);s.lineTo(-2,0);const ag=new THREE.ExtrudeGeometry(s,{depth:0.3,bevelEnabled:false});ag.rotateY(Math.PI/2);add("dark",ag,gx+3.05,g,gn,0,INF.gihon)}
+    add("light",wbox(1.2,0.5,6,2),gx+3.4,g+4.7,gn,0,INF.gihon);
+    for(let k=0;k<6;k++)add("light",wbox(0.9,0.6,5,2),gx+3.9+k*0.9,g-0.2*(k+1)-0.3,gn,0,INF.gihon);
+    const pc=[gx+12,gn],pg=top(pc[0],pc[1]),py=Math.min(pg,g-1.1);add("wall",wbox(7,1.2,6,3),pc[0],py-0.1,pc[1],0,INF.gihon);add("water",new THREE.BoxGeometry(5.8,0.05,4.8),pc[0],py+0.42,pc[1],0,INF.gihon);
+    add("light",wbox(7.4,0.2,6.4,3),pc[0],py+0.6,pc[1],0,INF.gihon);cwAdd(gx-2,gn,0,10,9,g-1,g+6);C.gihonY=g}
+  // merge by material; each merged mesh carries the card of its first part (the cards differ by area, so split by card)
+  Object.keys(GS).forEach(k=>{const by=new Map();GS[k].forEach((geo,i)=>{const inf=GI[k][i];if(!by.has(inf))by.set(inf,[]);by.get(inf).push(geo)});
+    by.forEach((list,inf)=>{const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(list,false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=inf===INF.pool?-2:0;m.castShadow=k!=="pave"&&k!=="water";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)})});
+  {const d=new THREE.Object3D(),put=(list,mat,info)=>{if(!list.length)return;const m=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.rotation.set(0,0,0);d.scale.set(q[4],q[5],q[6]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)};
+    put(LP,MAT(0x34383c,{metalness:0.5}),INF.street);put(LH,MAT(0xf2e6c8,{emissive:0x332a18}),INF.street)}
+  // ---- 5) גן המלך: זיתים, תאנים ותמרים ----
+  {const r=rng(1268),T={olive:[],fig:[],palm:[]};let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;C.garden.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
+    for(let x=xa;x<xb;x+=6.5)for(let n=na;n<nb;n+=6.5){const xx=x+(r()-0.5)*3,nn=n+(r()-0.5)*3;if(!inPoly(xx,nn,C.garden)||onRoad(xx,nn)||inB(xx,nn))continue;const q=r(),k=q<0.55?"olive":q<0.85?"fig":"palm";T[k].push([xx,TY(xx,nn),-nn,0.8+r()*0.35,r()*6.28])}
+    Object.keys(T).forEach(k=>{if(T[k].length)TREES5.plant(WG,k,T[k],INF.garden)});C.trees=T.olive.length+T.fig.length+T.palm.length}
+  // ---- תוויות לחיפוש ולטיסה ----
+  __AFTER(()=>{try{const L=(t,x,n,y,inf)=>{const q=G2S(x,n);label(t,q[0],y,-q[1],null,inf)};
+    L("בריכת השילוח",PL.c[0],PL.c[1],y0+9,INF.pool);L("מעיין הגיחון",C.gihon[0],C.gihon[1],(C.gihonY||0)+10,INF.gihon);L("גן המלך",33,-918,TY(33,-918)+9,INF.garden);
+    const mid=C.way[14];L("רחוב העולים",mid[0],mid[1],TY(mid[0],mid[1])+8,INF.street)}catch(e){console.warn("cod labels",e)}});
+  window.__COD8={mik:MIK.length,lamps:LP.length,steps:GS.light.length,trees:C.trees,y0,streets:SR.length};
+}catch(e){console.warn("cityOfDavid",e)}})();
+
 /* 126.1 (בדיקה חוזרת 35): מידות הקרדו החפור, וגובה ההליכה בתוכו (קואורדינטות גאוגרפיות x מזרח, n צפון) */
 function cardoGeom(){if(cardoGeom.C)return cardoGeom.C;const cx=-418,cn=-329,L=Math.hypot(0.03,1),vx=0.03/L,vn=1/L,ux=vn,un=-vx,hw=10,hl=12,stw=2,su=3.6;
   const top=(x,n)=>surfY(x,n);let mn=1e9;for(let u=-hw;u<=hw;u+=2)for(let v=-hl;v<=hl;v+=2){const x=cx+u*ux+v*vx,n=cn+u*un+v*vn;mn=Math.min(mn,top(x,n))}
