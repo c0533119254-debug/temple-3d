@@ -199,7 +199,7 @@ function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);con
     if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();MINIV.kb=true;goMini(MINIV.kx,MINIV.ky);MINIV.kx=MINIV.ky=0.5}});
   const goMini=(sx,sy)=>{if(!MINIV.span)return;
     const px=MINIV.cx+(sx-0.5)*MINIV.span,py=MINIV.cy+(sy-0.5)*MINIV.span,gx=px/MAPK-MAPR,gn=MAPR-py/MAPK,w=WG.localToWorld(new THREE.Vector3(gx,0,-gn));w.y=groundAt(w.x,w.z);
-    try{flyToPoint(w,60)}catch(err){console.warn(err)}};
+    try{window.__flyToPoint(w,60)}catch(err){console.warn(err)}};
   mc.addEventListener("click",e=>{const r=mc.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;if(Math.hypot(sx-0.5,sy-0.5)>0.5)return;goMini(sx,sy)})}
 document.getElementById("homeB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="home"?"true":"false"));flyTo("home",1600)});
 document.getElementById("exitB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="court"?"true":"false"));flyTo("court",1600)});

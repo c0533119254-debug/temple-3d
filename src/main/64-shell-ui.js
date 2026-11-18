@@ -75,7 +75,7 @@ let pushView=()=>{}; /* 125.9 (בדיקה חוזרת, ד): גם יעדי החי�
 {const hud=$("hud");if(hud&&!$("backB")){const bb=document.createElement("button");bb.type="button";bb.className="hb";bb.id="backB";bb.style.display="none";bb.setAttribute("aria-label","חזרה למבט הקודם");bb.title="חזרה למבט הקודם";
     bb.innerHTML='<svg class="ico" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>';
     const VS=[];let lastP=0;const push=()=>{try{if(STORY||WALK||DRONE)return;const n=performance.now();if(n-lastP<400)return;lastP=n;VS.push([camera.position.clone(),controls.target.clone()]);if(VS.length>10)VS.shift();bb.style.display=""}catch(e){}};
-    const wrap=f=>function(){push();return f.apply(this,arguments)};pickLabel=wrap(pickLabel);pickObj=wrap(pickObj);flyToPoint=wrap(flyToPoint);pushView=push;
+    const wrap=f=>function(){push();return f.apply(this,arguments)};pickLabel=wrap(pickLabel);pickObj=wrap(pickObj);flyToPoint=wrap(flyToPoint);pushView=push;/* 125.9: המפה הקטנה (בקוד אחר) טסה דרך כאן; קודם קראה לשם שלא קיים שם ולא זזה */window.__flyToPoint=(c,r)=>flyToPoint(c,r);
     bb.onclick=()=>{const v=VS.pop();bb.style.display=VS.length?"":"none";if(!v)return;try{if(STORY)STORY.stop();if(WALK)stopWalk();closeInfo()}catch(e){}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:v[0],t1:v[1],start:performance.now(),dur:reduce?1:1400,arc:true};lastP=performance.now()};
     const hm=$("homeB");if(hm&&hm.nextSibling)hud.insertBefore(bb,hm.nextSibling);else hud.appendChild(bb)}}
 function startTour(key){closeInfo();closeDr();if(STORY)STORY.stop();if(WALK)stopWalk();try{stopDrone()}catch(e){}STORY_API.start(key)}
