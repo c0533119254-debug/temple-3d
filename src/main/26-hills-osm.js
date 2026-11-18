@@ -41,7 +41,7 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
   Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],Object.assign({n:TREES5.NAMES[k]},card)));
   // 3. terrace and retaining walls of dry stone (barrier=retaining_wall / barrier=wall)
   const WS=[];D.walls.forEach(w=>{const P=w.p;for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;
-    if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)||(mx>-80&&mx<75&&mn>-350&&mn<-225)/* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל ובמדרגות שערי חולדה */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0]),w.r?1.3:1.8])}});
+    if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)||(mx>-165&&mx<75&&mn>-352&&mn<-225)/* 126.6: גם בין שער האשפות לרחבה *//* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל ובמדרגות שערי חולדה */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0]),w.r?1.3:1.8])}});
   if(WS.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,0.6),M.wall,WS.length);WS.forEach((w,i)=>{d.rotation.set(0,w[3],0);d.position.set(w[0],TY(w[0],w[1])+w[4]/2-0.3,-w[1]);d.scale.set(w[2]+0.3,w[4],1);d.updateMatrix();wm.setMatrixAt(i,d.matrix)});
     wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"קירות טרסה ותמך",r:"OpenStreetMap (barrier=retaining_wall / wall)",t:"קירות אבן של טרסות וקירות תמך במקום שלהם לפי OpenStreetMap. 💡 הגובה (1.3 מ׳ לקיר תמך, 1.8 מ׳ לקיר) משוער, כי ב־OSM אין גובה."};WG.add(wm);PICK.push(wm)}
   // 4. Gethsemane: eight ancient olives instead of the young orchard trees there
