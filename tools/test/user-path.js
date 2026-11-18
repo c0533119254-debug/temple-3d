@@ -141,8 +141,8 @@ async function run(dev) {
     await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
     const v1 = await cam();
     await tap("#backB");
-    await pg.waitForTimeout(3000);
-    const v2 = await cam();
+    // 126.6: poll up to 15 s instead of a fixed 3 s (slow CI machine)
+    let v2 = v1; for (let t = 0; t < 15 && v2 === v1; t++) { await pg.waitForTimeout(1000); v2 = await cam(); }
     if (v1 === v2) throw new Error("המצלמה לא זזה אחרי «חזרה»");
   });
   await step("חיפוש עם שגיאת כתיב («מזבך»)", async () => {
