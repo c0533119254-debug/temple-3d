@@ -164,9 +164,9 @@ async function run(dev) {
     await pg.waitForTimeout(3000);
     await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
     await tap("#backB");
-    await pg.waitForTimeout(4000);
-    const v2 = await cam();
     const d = (a, b) => { const x = a.replace("v=", "").split(",").map(Number), y = b.replace("v=", "").split(",").map(Number); return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); };
+    // 126.6: the flight back is slow on a test machine without a graphics card (CI stopped it 18-61 m short after a fixed 4 s): wait up to 15 s for it to land
+    let v2 = await cam(); for (let t = 0; t < 15 && d(v2, v0) > 3; t++) { await pg.waitForTimeout(1000); v2 = await cam(); }
     if (d(v2, v0) > 3) throw new Error(`«חזרה» לא החזירה למבט שלפני החיפוש (${Math.round(d(v2, v0))} מ׳ ממנו)`);
   });
   // 126.1 (בדיקה חוזרת, ה): המפה הקטנה נגישה למקלדת
