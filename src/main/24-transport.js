@@ -120,6 +120,8 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
   /* v116: אוטובוס לא נוסע על המסילה של הרכבת הקלה: נקודות מסלול שבתוך רצועת המסילה זזות הצידה, אל מחוץ לה */
   {let mv=0;TR.bus.forEach(b=>{const P=b.p,D=[P[0]];for(let i=0;i<P.length-1;i++){const a=P[i],c=P[i+1],L=Math.hypot(c[0]-a[0],c[1]-a[1]),m=Math.max(1,Math.ceil(L/5));for(let k=1;k<m;k++){const q=[a[0]+(c[0]-a[0])*k/m,a[1]+(c[1]-a[1])*k/m];if(a[2]&&c[2])q.push(1);D.push(q)}D.push(c)}
      D.forEach(q=>{if(q[2])return;const r=railNear(q[0],q[1]);if(!r||r.d>=4.7)return;let nx=q[0]-r.px,nn=q[1]-r.pn,l=Math.hypot(nx,nn);if(l<0.05){nx=r.un;nn=-r.ux;l=1}q[0]=r.px+nx/l*4.7;q[1]=r.pn+nn/l*4.7;mv++});b.p=D});__v6=Object.assign(__v6||{},{busPtsMoved:mv})}
+  /* 126.3: אין אוטובוסים בתוך חומות העיר העתיקה (שער יפו, כיכר עומר אל־חטאב, הרובע הארמני והיהודי): שם הרחובות להולכי רגל. קווים שעברו שם נחתכים בחומה, וכל צד נשאר קו בפני עצמו. רק הגישה לתחנה שליד הכותל, דרך שער האשפות, נשארת */
+  {const ban=q=>!q[2]&&q[0]<-170&&inPoly(q[0],q[1],OLD),out=[];TR.bus.forEach(b=>{let cur=[];const fl=()=>{let L=0;for(let i=1;i<cur.length;i++)L+=Math.hypot(cur[i][0]-cur[i-1][0],cur[i][1]-cur[i-1][1]);if(cur.length>=4&&L>150)out.push(Object.assign({},b,{p:cur}));cur=[]};b.p.forEach(q=>{if(ban(q))fl();else cur.push(q)});fl()});TR.bus=out}
   const BUSP=TR.bus.map(b=>{const q=mk(b.p,0.2);q.r=b.r;q.st=[];return q});
   // terminal stretches: the lane is drawn exactly, so the bus keeps to it (no side offset there), and it stops at its slot
   BUSP.forEach((q,j)=>{const P=TR.bus[j].p;let a=-1,b=-1;P.forEach((p,i)=>{if(p[2]){if(a<0)a=i;b=i}if(p[2]===2)q.st.push({s:q.l[i]})});if(a<0)return;
