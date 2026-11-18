@@ -188,8 +188,8 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     {const p=P(14,0);SCR.push([p[0],Y+0.9,p[1],w.a+Math.PI/2,22,1.8,0.12,0])}
     /* גרסה 122.2: ברחבה מחיצה אחת בלבד בין הגברים לנשים. המעקה הנמוך עם הפתחים הוסר */
     const q1=G2S(...P(12,13*north)),q2=G2S(...P(12,-13*north)),q3=G2S(...P(31,0));
-    label("תפילה — גברים",q1[0],Y+4,-q1[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, והמעבר מהרחבה לאזור התפילה פתוח, בלי מעקה."}).m=true;
-    label("תפילה — נשים",q2[0],Y+4,-q2[1],null,{n:"אזור התפילה ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום: מחיצה באמצע, גברים בצד אחד ונשים בצד השני, והמעבר מהרחבה לאזור התפילה פתוח, בלי מעקה."}).m=true}
+    label("תפילה — גברים",q1[0],Y+4,-q1[1],null,{n:"עזרת הגברים ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום. זה הצד הצפוני, של הגברים, הקרוב לקשת וילסון. מחיצה מפרידה בינו לבין עזרת הנשים שבדרום, והמעבר אליו מהרחבה פתוח, בלי מעקה."}).m=true;
+    label("תפילה — נשים",q2[0],Y+4,-q2[1],null,{n:"עזרת הנשים ליד הכותל",r:"כמו היום",t:"💡 אזור התפילה נשאר כמו היום. זה הצד הדרומי, של הנשים. מחיצה מפרידה בינו לבין עזרת הגברים שבצפון, והמעבר אליו מהרחבה פתוח, בלי מעקה."}).m=true}
   /* גרסה 122.2: ירידה מסודרת אל רחבת הכותל, מהרובע היהודי במערב: גרם מדרגות רחב אחד עם רחבות מנוחה, מעקות ורחבה למעלה, במקום שביל קטן על מדרון. 💡 המיקום והמידות הצעה שלי */
   {const yb=PLZ+0.25,E0=[-175.5,-169],o=[-0.983,-0.185],t=[0.185,-0.983],aa=Math.atan2(t[1],t[0]),W=14,tread=0.4,FL=13,LAND=2.6,Q=(dd,al)=>[E0[0]+o[0]*dd+t[0]*al,E0[1]+o[1]*dd+t[1]*al];
     let top=yb+3;for(let k=-1;k<=1;k++){const q=Q(24,k*W/2);top=Math.max(top,Math.min(TY(q[0],q[1])+0.2,yb+9))}
@@ -202,7 +202,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     const qd=G2S(...Q(D0+tot*0.5,0));label("ירידה אל רחבת הכותל",qd[0],top+4,-qd[1],null,{n:"הירידה אל רחבת הכותל",r:"הצעה של התוכנית",t:"💡 גרם מדרגות רחב אחד, עם רחבות מנוחה ומעקות, מהרובע היהודי אל רחבת התפילה. במציאות היום הירידה בשבילים ובמדרגות צרות."}).m=true}
   const im=(geo,mat,arr,fn,info)=>{if(!arr.length)return;const m=new THREE.InstancedMesh(geo,mat,arr.length);arr.forEach((p,i)=>{fn(p);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;PICK.push(m)}GATEG.add(m)};
   const box=new THREE.BoxGeometry(1,1,1),half=(()=>{const g=new THREE.CylinderGeometry(1,1,0.2,16,1,false,0,Math.PI);g.rotateX(Math.PI/2);g.rotateZ(Math.PI/2);g.rotateY(Math.PI/2);return g})();
-  const gInfo={n:"שערי הר הבית",r:SRC,t:"השערים בחומות ההר, כל אחד במקום של שער אמיתי ובקצה של רחוב אמיתי. בדרום — שני שערי חולדה עם מדרגות רחבות; במערב — שער קיפונוס מעל רחבת הכותל ושערי העיר העתיקה; בצפון — שער טדי ועוד. שער המזרח (שער הרחמים) נשאר סגור: \"השער הזה סגור יהיה\" (יחזקאל מד, ב)."};
+  const gInfo={n:"שערי הר הבית",r:SRC,t:"השערים בחומות ההר, כל אחד במקום של שער אמיתי ובקצה של רחוב אמיתי. בדרום — שני שערי חולדה עם מדרגות רחבות; במערב — שער קיפונוס מעל רחבת הכותל ושערי העיר העתיקה; בצפון — שער טדי ועוד. 📜 שער הרחמים שבחומה המזרחית של היום אטום, ובהדמיה הוא נשאר אטום כמו היום. 💡 הוא לא השער הסגור שביחזקאל: \"השער הזה סגור יהיה\" (מד, ב) נאמר על השער החיצוני המזרחי של המתחם, שבהדמיה עומד מזרחה יותר."};
   // #25: the gate masses use the same Herodian stone as the mount wall skin (topic 25), measured in metres, so a gate no longer reads as a dark block stuck on the wall
   {if(!M.mgate)M.mgate=T.mwC?new THREE.MeshStandardMaterial({map:T.mwC,normalMap:T.mwN,roughness:0.92}):gateM;const gs=[];
     stoneG.forEach(p=>{const [x,y,n,a,sx,sy,sz]=p,ax=Math.abs(sx),ay=Math.abs(sy),az=Math.abs(sz);if(ax<1e-3||ay<1e-3||az<1e-3)return;const g=new THREE.BoxGeometry(ax,ay,az),uv=g.attributes.uv,y0=y-ay/2;

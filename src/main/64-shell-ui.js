@@ -69,7 +69,7 @@ function flyToPoint(c,r){if(STORY)STORY.stop();if(WALK)stopWalk();if(DRONE){dron
   document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   if(reduce){camAt(p,t);return}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:1600,arc:true}}
 function objCenter(o){const b=new THREE.Box3().setFromObject(o);if(b.isEmpty())return null;const c=b.getCenter(new THREE.Vector3()),s=b.getSize(new THREE.Vector3());return[c,Math.max(3,0.5*Math.hypot(s.x,s.y*0.7,s.z))]}
-function pickObj(o){const cr=objCenter(o);if(!cr)return;UIPT=cr[0].clone();showInfo(o.userData);flyToPoint(cr[0],cr[1])}
+function pickObj(o){const cr=objCenter(o);if(!cr)return;UIPT=cr[0].clone();showInfo(o.userData);if(o.userData.cam&&!DRONE){try{if(STORY)STORY.stop();if(WALK)stopWalk();const [p,t]=o.userData.cam();tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:reduce?1:1600,arc:true};return}catch(e){}}flyToPoint(cr[0],cr[1])}
 function startTour(key){closeInfo();closeDr();if(STORY)STORY.stop();if(WALK)stopWalk();try{stopDrone()}catch(e){}STORY_API.start(key)}
 // --- icon rail + drawers ---
 const rail=mk("nav","gl ui dim");rail.id="rail";rail.setAttribute("aria-label","תפריט");stage.appendChild(rail);

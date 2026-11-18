@@ -33,7 +33,7 @@ TRN=(function(){const TR={"lines":[{"k":"lrt","id":"PINK","n":"הקו הוורו
 if(oP.length!==P.length){g.setAttribute("position",new THREE.Float32BufferAttribute(oP,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(oU,2));g.deleteAttribute("normal");g.computeVertexNormals();g.computeBoundingSphere()}});__v6=Object.assign(__v6||{},{railClip:st})}
    let av=null;try{av=LIFE.avoid((x,n,ux,un,w)=>{const r=railNear(x,n);return!!r&&r.d<(w?4.5+w/4:3.6)&&Math.abs(ux*r.ux+un*r.un)>0.6})}catch(e){console.warn("avoid",e)}
    __v6=Object.assign(__v6||{},{conformRail:cr,avoid:av})}
-  const bm=mesh(bed,bedM);bm.name="railBed";bm.userData={n:"מסילת הרכבת הקלה",r:"תוכנית האב 2050",t:"מסילה כפולה: רכבת לכל כיוון. מעליה חוטי חשמל."};PICK.push(bm);
+  const bm=mesh(bed,bedM);bm.name="railBed";bm.userData={n:"מסילת הרכבת הקלה",r:"תוכנית האב 2050",t:"💡 תרחיש עתידי: הקו הזה מצויר לפי תוכנית האב לתחבורה של ירושלים (2050), כאילו הוא כבר נבנה. היום אין רכבת קלה ליד שער האשפות. מסילה כפולה: רכבת לכל כיוון. מעליה חוטי חשמל."};PICK.push(bm);
   mesh(rail,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.35,metalness:0.8,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-6})).name="rail";
   {const wg=new THREE.BufferGeometry();wg.setAttribute("position",new THREE.Float32BufferAttribute(wires,3));g.add(new THREE.LineSegments(wg,new THREE.LineBasicMaterial({color:0x2a2a2a,transparent:true,opacity:0.7})))}
   if(poles.length){const pm=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.16,6.6,6),new THREE.MeshStandardMaterial({color:0x5d6166,roughness:0.6,metalness:0.5}),poles.length),am=new THREE.InstancedMesh(new THREE.BoxGeometry(0.12,0.12,5),pm.material,poles.length);
