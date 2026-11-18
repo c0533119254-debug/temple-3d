@@ -158,9 +158,10 @@ async function run(dev) {
     await until(() => [...document.querySelectorAll("#sres button")].some((b) => b.textContent.includes("אולם הבית")), 20000);
     const v0 = await cam();
     await tap("#sres button", "אולם הבית");
-    await pg.waitForTimeout(5000);
-    const v1 = await cam();
-    if (v0 === v1) throw new Error("החיפוש לא הזיז את המצלמה");
+    // the flight can start late on a slow test machine: wait up to 15 s for the camera to move
+    let v1 = v0; for (let t = 0; t < 15 && v1 === v0; t++) { await pg.waitForTimeout(1000); v1 = await cam(); }
+    if (v0 === v1) { const st = await pg.evaluate(() => ({ pane: document.body.classList.contains("pane"), res: document.querySelectorAll("#sres button").length, q: document.getElementById("sq").value })); throw new Error("החיפוש לא הזיז את המצלמה " + JSON.stringify(st)); }
+    await pg.waitForTimeout(3000);
     await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
     await tap("#backB");
     await pg.waitForTimeout(4000);
