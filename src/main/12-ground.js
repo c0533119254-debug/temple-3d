@@ -2,8 +2,8 @@
 function H(x,n){let h=Hsyn(x,n);const D=DEM,X1=D.x0+(D.nx-1.01)*D.st,N1=D.n0+(D.nn-1.01)*D.st,cx=Math.max(D.x0+0.01,Math.min(X1,x)),cn=Math.max(D.n0+0.01,Math.min(N1,n)),out=Math.hypot(x-cx,n-cn);
   {let dm=demAt(cx,cn);if(dm!==null){
     if(out===0&&x>-200&&x<260&&n>-320&&n<330&&!inPoly(x,n,GEO.MOUNT)){const e=nearEdge(x,n,GEO.MOUNT);if(e[0]<55){const k=(55-e[0])/Math.max(e[0],0.5),o=demAt(x+(x-e[1])*k,n+(n-e[2])*k);if(o!==null){const f=1-e[0]/55;dm=Math.min(dm,o+(dm-o)*(1-f)-4*f)}}}
-    if(out===0){const r=segDist(x,n,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2));h=dm}
-    else{const r=segDist(cx,cn,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2));const ss=q=>{q=Math.max(0,Math.min(1,q));return q*q*(3-2*q)},base=dm+(h-Hsyn(cx,cn))*ss(out/300);h=base+(h-base)*ss((out-300)/900)}}}
+    if(out===0){if(!segFar(x,n,KIDRON,90)){const r=segDist(x,n,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2))}h=dm}
+    else{if(!segFar(cx,cn,KIDRON,90)){const r=segDist(cx,cn,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2))}const ss=q=>{q=Math.max(0,Math.min(1,q));return q*q*(3-2*q)},base=dm+(h-Hsyn(cx,cn))*ss(out/300);h=base+(h-base)*ss((out-300)/900)}}}
   if(x>-240&&x<-40&&n>-300&&n<-70){let f;if(inPoly(x,n,PLAZA)||inPoly(x,n,KZ))f=1;else{let dmin=1e9;for(let i=0;i<PLAZA.length;i++){const r=segDist(x,n,[PLAZA[i],PLAZA[(i+1)%PLAZA.length]]);if(r[0]<dmin)dmin=r[0]}f=Math.max(0,1-dmin/35)}if(f>0){f=f*f*(3-2*f);h=h*(1-f)+PLZ*f}}
   /* 125.5: הרחבה הדרומית שטוחה, והקרקע לאורך המדרגות מהרובע יורדת מתחת למדרגות */
   if(x>-225&&x<-125&&n>-276&&n<-205){if(inPoly(x,n,KP))h=PLZ;const k=kstAt(x,n);if(k&&k.d<k.w/2+3.5)h=Math.min(h,PLZ+k.y-0.3)}
@@ -181,7 +181,10 @@ M.plaster=new THREE.MeshStandardMaterial({color:0xe9e2d2,roughness:0.95,envMapIn
   const blob=(x,p,sc,o)=>{x.beginPath();for(let a=0;a<=24;a++){const t=a/24*Math.PI*2,n=1+0.13*Math.sin(t*3+p[4]*5)+0.07*Math.sin(t*5+p[5]*9);x.lineTo(p[0]+o[0]+Math.cos(t+p[4])*p[2]*sc*n,p[1]+o[1]+Math.sin(t+p[4])*p[3]*sc*n)}x.closePath()};
   const tile=(x,fn)=>P.forEach(p=>[[0,0],[W,0],[-W,0],[0,W],[0,-W],[W,W],[-W,-W],[W,-W],[-W,W]].forEach(o=>fn(p,o)));
   const col=cv(W,W,(x)=>{x.fillStyle="#e4ddce";x.fillRect(0,0,W,W);tile(x,(p,o)=>{x.fillStyle=shade("#efe9dd",0.98+p[5]*0.04);blob(x,p,1,o);x.fill()});noiseFill(x,W,W,9,78)});
-  const hc=cv(W,W,(x)=>{x.fillStyle="#3a3a3a";x.fillRect(0,0,W,W);x.filter="blur(7px)";tile(x,(p,o)=>{x.fillStyle="#8a8a8a";blob(x,p,1,o);x.fill();x.fillStyle="#d8d8d8";blob(x,p,0.62,o);x.fill()});x.filter="none";noiseFill(x,W,W,14,79)});
+  /* 125.6 מהירות: הטשטוש היה על כל אבן בנפרד (1458 ציורים מטושטשים, כ־3 שניות בטעינה). עכשיו מציירים בלי טשטוש, ומטשטשים פעם אחת עותק של 3×3 אריחים, כדי שהאריח ימשיך להתחבר בלי תפר */
+  const hc=cv(W,W,(x)=>{x.fillStyle="#3a3a3a";x.fillRect(0,0,W,W);tile(x,(p,o)=>{x.fillStyle="#8a8a8a";blob(x,p,1,o);x.fill();x.fillStyle="#d8d8d8";blob(x,p,0.62,o);x.fill()});
+    const t3=document.createElement("canvas");t3.width=t3.height=W*3;const t3x=t3.getContext("2d");for(let i=0;i<3;i++)for(let j=0;j<3;j++)t3x.drawImage(x.canvas,i*W,j*W);
+    const tb=document.createElement("canvas");tb.width=tb.height=W*3;const tbx=tb.getContext("2d");tbx.filter="blur(7px)";tbx.drawImage(t3,0,0);x.drawImage(tb,W,W,W,W,0,0,W,W);noiseFill(x,W,W,14,79)});
   M.altarS=new THREE.MeshStandardMaterial({map:tex(col,true),normalMap:tex(normalFrom(hc,1.7)),roughness:0.93,envMapIntensity:0.3});
   M.ash=new THREE.MeshStandardMaterial({color:0x8d8984,roughness:1});M.ember=new THREE.MeshBasicMaterial({color:0xff6a20});
   M.iron=new THREE.MeshStandardMaterial({color:0x4b4a48,metalness:0.8,roughness:0.45})}
