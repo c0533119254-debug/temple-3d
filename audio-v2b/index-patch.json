@@ -1,0 +1,23 @@
+{
+ "tamid_insert": {
+  "tour": "tamid",
+  "slot": 10,
+  "station": 11,
+  "file": "tamid_11b.mp3"
+ },
+ "shavuot": [
+  "shavuot_01.mp3",
+  "shavuot_02.mp3",
+  "shavuot_03.mp3",
+  "shavuot_04.mp3",
+  "shavuot_05.mp3",
+  "shavuot_06.mp3",
+  "shavuot_07.mp3"
+ ],
+ "quick_first": {
+  "tour": "quick",
+  "slot": 0,
+  "station": 1,
+  "file": "quick_01.mp3"
+ }
+}

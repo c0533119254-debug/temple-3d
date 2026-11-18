@@ -1,0 +1,9 @@
+2026-11-19T00:23:13 +02:00	voice=he-IL-Wavenet-D	id=tamid_11b	chars=2306	usd_est=0.03690
+2026-11-19T00:23:17 +02:00	voice=he-IL-Wavenet-D	id=shavuot_01	chars=2264	usd_est=0.03622
+2026-11-19T00:23:20 +02:00	voice=he-IL-Wavenet-D	id=shavuot_02	chars=1831	usd_est=0.02930
+2026-11-19T00:23:23 +02:00	voice=he-IL-Wavenet-D	id=shavuot_03	chars=1956	usd_est=0.03130
+2026-11-19T00:23:26 +02:00	voice=he-IL-Wavenet-D	id=shavuot_04	chars=2226	usd_est=0.03562
+2026-11-19T00:23:29 +02:00	voice=he-IL-Wavenet-D	id=shavuot_05	chars=1902	usd_est=0.03043
+2026-11-19T00:23:32 +02:00	voice=he-IL-Wavenet-D	id=shavuot_06	chars=2150	usd_est=0.03440
+2026-11-19T00:23:36 +02:00	voice=he-IL-Wavenet-D	id=shavuot_07	chars=2571	usd_est=0.04114
+2026-11-19T00:23:39 +02:00	voice=he-IL-Wavenet-D	id=quick_01	chars=1900	usd_est=0.03040
