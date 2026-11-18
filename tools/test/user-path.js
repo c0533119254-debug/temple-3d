@@ -179,8 +179,9 @@ async function run(dev) {
     await pg.focus("#mini");
     for (let i = 0; i < 4; i++) await pg.keyboard.press("ArrowUp");
     await pg.keyboard.press("Enter");
-    await pg.waitForTimeout(4000);
-    if (v0 === await cam()) throw new Error("Enter במפה לא הזיז את המבט");
+    // 126.6: poll up to 15 s instead of a fixed 4 s (slow CI machine)
+    let v1 = v0; for (let t = 0; t < 15 && v1 === v0; t++) { await pg.waitForTimeout(1000); v1 = await cam(); }
+    if (v0 === v1) throw new Error("Enter במפה לא הזיז את המבט");
     await pg.evaluate(() => { const b = document.querySelector("[data-o=mini]"); if (b) b.click(); });
   });
 
