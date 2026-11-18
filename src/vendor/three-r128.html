@@ -573,7 +573,7 @@
 
 			}
 
-			function handleTouchStartRotate( event ) {
+			function handleTouchStartRotate( event ) { if ( ! event.touches || event.touches.length < 1 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				if ( event.touches.length == 1 ) {
 
@@ -589,7 +589,7 @@
 
 			}
 
-			function handleTouchStartPan( event ) {
+			function handleTouchStartPan( event ) { if ( ! event.touches || event.touches.length < 1 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				if ( event.touches.length == 1 ) {
 
@@ -605,7 +605,7 @@
 
 			}
 
-			function handleTouchStartDolly( event ) {
+			function handleTouchStartDolly( event ) { if ( ! event.touches || event.touches.length < 2 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				const dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
 				const dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
@@ -628,7 +628,7 @@
 
 			}
 
-			function handleTouchMoveRotate( event ) {
+			function handleTouchMoveRotate( event ) { if ( ! event.touches || event.touches.length < 1 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				if ( event.touches.length == 1 ) {
 
@@ -651,7 +651,7 @@
 
 			}
 
-			function handleTouchMovePan( event ) {
+			function handleTouchMovePan( event ) { if ( ! event.touches || event.touches.length < 1 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				if ( event.touches.length == 1 ) {
 
@@ -671,7 +671,7 @@
 
 			}
 
-			function handleTouchMoveDolly( event ) {
+			function handleTouchMoveDolly( event ) { if ( ! event.touches || event.touches.length < 2 ) return; /* 125.6: אצבע שהורמה באמצע מחווה — בלי שגיאת pageX */
 
 				const dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
 				const dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
