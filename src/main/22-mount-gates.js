@@ -115,7 +115,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     else if(gb>=thr-0.1&&!g.st_)paves.push([w.x+w.ox*4,thr+0.05,w.n+w.on*4,w.a,g.w+4,0.1,5]);
     // a gate whose street is far above the ground below it stands on a stone causeway, like Wilson's Arch under the Street of the Chain
     if(cwy){const thr=-1.5;let D=12;while(D<130&&H(w.x+w.ox*D,w.n+w.on*D)<thr-0.6)D+=2;D+=2;const yb=Math.min(yo,(PLZ+0.25))-1,cw=g.w+2,cx=w.x+w.ox*(D/2+2),cn=w.n+w.on*(D/2+2);
-      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);[-1,1].forEach(sd=>{const a=P(2.5,sd*(cw/2-0.25)),b=P(D+2,sd*(cw/2-0.25));RAILS.push([a[0],thr+1.1,a[1],b[0],thr+1.1,b[1]])});const arcs=[];
+      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);[-1,1].forEach(sd=>{/* 127.0: בגשר וילסון, פתח במעקה הדרומי לראש המדרגות שיורדות אל הרחבה (21–33 מ׳ מהשער) */const cut=g.n==="שער השלשלת"&&sd>0?[[2.5,20.5],[33,D+2]]:[[2.5,D+2]];cut.forEach(([d0,d1])=>{const a=P(d0,sd*(cw/2-0.25)),b=P(d1,sd*(cw/2-0.25));RAILS.push([a[0],thr+1.1,a[1],b[0],thr+1.1,b[1]])})});const arcs=[];
       for(let d=8;d<D-4;d+=13){const ay=H(w.x+w.ox*(d+2),w.n+w.on*(d+2));if(ay>thr-6)continue;const gq=[w.x+w.ox*(d+2),w.n+w.on*(d+2)],fl=inPoly(gq[0],gq[1],GEO.PLAZA)||inPoly(gq[0],gq[1],KZ)?(PLZ+0.45):TY(gq[0],gq[1]);arcs.push([d+2-3.5,d+2+3.5,fl,Math.min(fl+Math.min(thr-ay-3,11),thr-2.2)])}
       const piece=(a0,a1,y0,y1)=>{if(a1-a0<0.05||y1-y0<0.05)return;const c=(a0+a1)/2;stoneG.push([w.x+w.ox*c,(y0+y1)/2,w.n+w.on*c,w.a,cw,y1-y0,a1-a0])};let s0=2;
       arcs.forEach(r=>{piece(s0,r[0],yb,thr);piece(r[0],r[1],r[3],thr);piece(r[0],r[1],yb,r[2]);[-1,1].forEach(sd=>{const c=(r[0]+r[1])/2,px=w.x+w.ox*c+fx*sd*(cw/2+0.15),pn=w.n+w.on*c+fn*sd*(cw/2+0.15);stoneG.push([px,r[3]+0.35,pn,w.a,0.3,0.7,r[1]-r[0]+1.2])});s0=r[1]});piece(s0,D+2,yb,thr);
@@ -264,11 +264,13 @@ const GATEG=new THREE.Group();WG.add(GATEG);
       if(WALKG&&WALKG.h){const c=Math.cos(ang),sn=Math.sin(ang),A=(u,v)=>[cx+c*u-sn*v,-(cn+sn*u+c*v)],q=[A(-tr/2,-hw),A(tr/2,-hw),A(tr/2,hw),A(-tr/2,hw)];WALKG.tri(q[0][0],top,q[0][1],q[1][0],top,q[1][1],q[2][0],top,q[2][1]);WALKG.tri(q[0][0],top,q[0][1],q[2][0],top,q[2][1],q[3][0],top,q[3][1])}
       /* מעקה אבן מדורג משני הצדדים; ליד הצמתים (2 מ׳ מכל קצה) פתוח, כדי שאפשר לעבור בין גרמי המדרגות */
       if(s<2||s>L-2)continue;
-      [1,-1].forEach(sd=>{const ox=cx+px*sd*(hw+0.15),on=cn+pn*sd*(hw+0.15),go=H(cx+px*sd*(hw+4.5),cn+pn*sd*(hw+4.5)),tp=Math.max(top+0.95,go+0.15);SIDE.push([ox,(tp+yb)/2,on,ang,tr+0.03,tp-yb,0.3])})}
-    if(L>4.5)[1,-1].forEach(sd=>{const mx=(a[0]+b[0])/2+px*sd*(hw+0.15),mn=(a[1]+b[1])/2+pn*sd*(hw+0.15),lo=PLZ+Math.min(a[2],b[2]);cwAdd(mx,mn,ang,L-4,0.3,lo-2,PLZ+Math.max(a[2],b[2])+3);
+      /* 127.0: F.open = [[קטע, צד]] — צד פתוח בלי מעקה (ראש המדרגות מגשר וילסון נפתח אל הגשר) */
+      [1,-1].forEach(sd=>{if(F.open&&F.open.some(o=>o[0]===i&&o[1]===sd))return;const ox=cx+px*sd*(hw+0.15),on=cn+pn*sd*(hw+0.15),go=H(cx+px*sd*(hw+4.5),cn+pn*sd*(hw+4.5)),tp=Math.max(top+0.95,go+0.15);SIDE.push([ox,(tp+yb)/2,on,ang,tr+0.03,tp-yb,0.3])})}
+    if(L>4.5)[1,-1].forEach(sd=>{if(F.open&&F.open.some(o=>o[0]===i&&o[1]===sd))return;const mx=(a[0]+b[0])/2+px*sd*(hw+0.15),mn=(a[1]+b[1])/2+pn*sd*(hw+0.15),lo=PLZ+Math.min(a[2],b[2]);cwAdd(mx,mn,ang,L-4,0.3,lo-2,PLZ+Math.max(a[2],b[2])+3);
       /* מאחז יד ממתכת על המעקה */
       const sl=Math.atan2(-drop,L);HR.push([mx-px*sd*0.05,PLZ+(a[2]+b[2])/2+1.0,mn-pn*sd*0.05,ang,Math.hypot(L-4,drop*(L-4)/L),0.05,0.05,sl])})}});
   const SI={n:"המדרגות מהרובע היהודי לכותל",r:"תמונות רחוב (Mapillary, 2014–2023); OpenStreetMap",t:"📜 המדרגות יורדות מהרובע היהודי אל רחבת הכותל, לאורך השבילים שבמפה, עם מעקה אבן ומאחז יד, כמו בתמונות. 💡 גובה כל מדרגה (16 ס״מ) והרוחב (3.2 מ׳) מקורבים."};
+  {const q=G2S(-140,-131);label("מדרגות מגשר וילסון",q[0],PLZ+10,-q[1],null,{n:"המדרגות מגשר וילסון אל רחבת הכותל",r:"תוכנית רחבת הכותל, כניסה 6",t:"💡 מי שבא משער יפו ברחוב השלשלת יורד בסוף הרחוב במדרגות רחבות אל גשר וילסון, ובאמצע הגשר יורד במדרגות האלה אל צפון רחבת הכותל, בלי לעלות להר. הבניין שחסם היום את סוף הרחוב מעל הגשר לא נבנה. היום אין כאן ירידה ישירה. 💡 המקום והמידות הם הצעה."}).m=true}
   put(STP,MAT(0xd9cdb2),SI);put(SIDE,M.stoneL||MAT(0xcfc2a5),SI);put(HR,MAT(0x3a3d40,{metalness:0.5,roughness:0.5}),SI);
 
   // 2) הרחבה הדרומית: ריצוף, וקיר תמך בקצה שבו הקרקע גבוהה יותר
@@ -320,8 +322,10 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     /* 126.4 (תוכנית רחבת הכותל, ג5): בשוליים שבמערב ובצפון, במקום מדרון חול – טרסות אבן שטוחות במדרגות של 4.5 מ׳ (נושא 2), עם קיר אבן בכל מעבר בין טרסות */
     {const EDG=[];[PLAZA,KP,KZ].forEach(P=>{for(let i=0;i<P.length;i++)EDG.push([P[i],P[(i+1)%P.length]])});
      const dE=(x,n)=>{let m=1e9;for(const [a,b] of EDG){const dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn||1,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));m=Math.min(m,Math.hypot(x-a[0]-dx*t,n-a[1]-dn*t))}return m};
-     const S=2,X0=-200,N0=-280,NX=52,NN=86,LV=new Float32Array(NX*NN).fill(NaN);
-     const ok=(x,n)=>{if(x>-97||inPoly(x,n,PLAZA)||inPoly(x,n,KP)||inPoly(x,n,KZ)||inPoly(x,n,MOUNT_BIG)||nearE0(x,n)||inBld(x,n)||onStreet(x,n))return false;const k=kstAt(x,n);if(k&&k.d<k.w/2+1.5)return false;return dE(x,n)<30};
+     /* 127.0: הרשת ממשיכה צפונה עד n=-74, אל מדרון החול שמצפון לגשר וילסון (בין הבתים לכותל, עד שער המטהרה). מתחת לגשר עצמו לא בונים */
+     const DK=(window.__MG||[]).find(g=>g.n==="שער השלשלת"),dkw=DK&&DK.w_,underDeck=(x,n)=>{if(!dkw||x<-168)return false;const t=(x-dkw.x)/dkw.ox;return Math.abs(n-(dkw.n+dkw.on*t))<DK.w/2+3};
+     const S=2,X0=-200,N0=-280,NX=52,NN=103,LV=new Float32Array(NX*NN).fill(NaN);
+     const ok=(x,n)=>{if(x>-97||inPoly(x,n,PLAZA)||inPoly(x,n,KP)||inPoly(x,n,KZ)||inPoly(x,n,MOUNT_BIG)||nearE0(x,n)||inBld(x,n)||onStreet(x,n))return false;const k=kstAt(x,n);if(k&&k.d<k.w/2+1.5)return false;if(underDeck(x,n))return false;return dE(x,n)<30||(x>-162&&n>-124)};
      for(let i=0;i<NX;i++)for(let j=0;j<NN;j++){const x=X0+(i+0.5)*S,n=N0+(j+0.5)*S;if(!ok(x,n))continue;const d=Math.max(H(x,n),TY(x,n))-PLZ;if(d>27)continue;LV[j*NX+i]=PLZ+0.22+Math.max(0,Math.round(d/4.5))*4.5}
      /* מחליקים את קווי הטרסות: כל תא מקבל את הגובה הנפוץ בין 5×5 השכנים שלו (שלוש פעמים), כדי שהקירות יהיו ישרים ולא משוננים */
      for(let it=0;it<3;it++){const L0=LV.slice();for(let i=0;i<NX;i++)for(let j=0;j<NN;j++){if(isNaN(L0[j*NX+i]))continue;const c=new Map();for(let a=-2;a<=2;a++)for(let b=-2;b<=2;b++){const ii=i+a,jj=j+b;if(ii<0||jj<0||ii>=NX||jj>=NN)continue;const v=L0[jj*NX+ii];if(!isNaN(v))c.set(v,(c.get(v)||0)+1)}let bv=L0[j*NX+i],bc=0;c.forEach((k,v)=>{if(k>bc||(k===bc&&v===L0[j*NX+i])){bc=k;bv=v}});LV[j*NX+i]=bv}}
@@ -333,6 +337,6 @@ const GATEG=new THREE.Group();WG.add(GATEG);
          const ex=di>0?x+S:di<0?x:x+S/2,en=dj>0?n+S:dj<0?n:n+S/2,ang=di?Math.PI/2:0,h=L-L2+0.3;RIS.push([ex,L2-0.3+h/2,en,ang,S+0.02,h,0.5]);if(L-L2>1.2)cwAdd(ex,en,ang,S,0.5,L2-1,L)})}
      if(TOP.length){try{TMESH.conform(TOP,{lo:0.15,hi:99})}catch(e){console.warn("kotel terraces conform",e)}
        const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(TOP,3));g.computeVertexNormals();const m=new THREE.Mesh(g,M.pave);m.receiveShadow=true;m.renderOrder=2;
-       const TI={n:"טרסות האבן בשולי הרחבה",r:"תוכנית רחבת הכותל; נושא 2 (טרסות של 4.5 מ׳)",t:"💡 בין רחבת הכותל לבין הרובע היהודי הקרקע עולה בטרסות שטוחות של אבן, 4.5 מ׳ כל אחת, ולא במדרון חול. עולים ויורדים רק במדרגות."};m.userData=TI;WG.add(m);PICK.push(m);put(RIS,M.stoneL||MAT(0xcfc2a5),TI)}}
+       const TI={n:"טרסות האבן בשולי הרחבה",r:"תוכנית רחבת הכותל; נושא 2 (טרסות של 4.5 מ׳)",t:"💡 בין רחבת הכותל לבין הרובע היהודי, וגם מצפון לגשר וילסון, הקרקע עולה בטרסות שטוחות של אבן, 4.5 מ׳ כל אחת, ולא במדרון חול. עולים ויורדים רק במדרגות."};m.userData=TI;WG.add(m);PICK.push(m);put(RIS,M.stoneL||MAT(0xcfc2a5),TI)}}
   }
 }catch(e){console.warn("kotel plaza",e)}})();
