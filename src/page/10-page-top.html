@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 126.0"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 126.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -216,7 +216,7 @@ body.idle .ui.dim:not(:hover):not(:focus-within){opacity:.45}
 .dr .help{background:none;border:1px solid var(--ln);color:var(--gold);border-radius:50%;width:24px;height:24px;cursor:pointer;font-weight:700}
 .dr .panel{background:rgba(255,255,255,.04)!important;border-color:var(--ln)!important;color:var(--cream)}
 .dr .panel h2{font-size:16px}
-.dr .x{position:absolute;left:10px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--cr2);cursor:pointer;display:grid;place-items:center}
+.dr .x{position:absolute;z-index:3;/* 126.2: הכותרת (position:relative) כיסתה את האיקס בטלפון */left:10px;top:10px;width:36px;height:36px;border:0;border-radius:50%;background:none;color:var(--cr2);cursor:pointer;display:grid;place-items:center}
 .dr .x:hover{background:var(--nbh)}
 .tcard{display:flex;gap:12px;align-items:center;width:100%;text-align:right;background:rgba(255,255,255,.04);border:1px solid var(--ln);border-radius:12px;padding:10px;margin-bottom:10px;cursor:pointer;color:var(--cream);font:inherit;min-height:72px}
 .tcard:hover{border-color:var(--gold)}
