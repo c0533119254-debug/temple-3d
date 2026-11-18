@@ -287,7 +287,7 @@ bdi.n{direction:ltr;unicode-bidi:isolate}
 .ic-btns button .ico{width:19px;height:19px}
 .ic-body{padding:14px 20px 24px}
 .ic-txt{line-height:1.65}.ic-txt.short{max-height:9.9em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent)}
-.ic-more{background:none;border:0;color:var(--gold);font:700 13.5px var(--f-body);cursor:pointer;padding:6px 0}
+.ic-more,.ic-read{background:none;border:0;color:var(--gold);font:700 13.5px var(--f-body);cursor:pointer;padding:6px 0}.ic-read{display:block;text-align:start}
 .ic-row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--ln);font-size:14px}
 .ic-row .ico{color:var(--gold);width:20px;height:20px;margin-top:1px}
 .ic-src{display:flex;flex-direction:column;gap:6px}
@@ -14784,6 +14784,10 @@ showInfo=function(d){if(!d)return;_show(d);const pt=UIPT;UIPT=null;CUR.d=d;CUR.p
   let h='<div class="ic-grab"></div><div class="ic-hero">'+I(c[1])+'</div><div class="ic-head"><h2>'+esc(d.n)+'</h2><div class="ic-type"><span>'+esc(c[0])+'</span>'+tagsOf(t)+'</div></div>';
   h+='<div class="ic-btns">'+(CUR.pt?'<button type="button" data-a="fly"><span class="c">'+I("fly")+'</span>טוס לשם</button>':'')+(inner?'<button type="button" data-a="in"><span class="c">'+I("door")+'</span>היכנס</button>':'')+(CUR.pt?'<button type="button" data-a="near"><span class="c">'+I("near")+'</span>מה בסביבה</button><button type="button" data-a="walk"><span class="c">'+I("walk")+'</span>הליכה מכאן</button>':'')+'<button type="button" data-a="share"><span class="c">'+I("share")+'</span>שתף</button></div><div class="ic-body">';
   if(t)h+='<div class="ic-txt'+(long?' short':'')+'">'+t+'</div>'+(long?'<button type="button" class="ic-more">עוד</button>':'');
+  /* 125.4 (ביקורת, "קריאת מקור במקום"): אותו טקסט, מסודר לפי שלוש דרגות הוודאות: מה כתוב במקור, איך מפרשים, ומה נבחר להמחשה */
+  {const parts={"📜":[],"⚖️":[],"💡":[]};const tt=t.replace(/⚖(?!️)/g,"⚖️");const re=/(📜|⚖️|💡)/g;let m,last=null,pos=0;while((m=re.exec(tt))){if(last)parts[last].push(tt.slice(pos,m.index).trim());last=m[1];pos=m.index+m[1].length}if(last)parts[last].push(tt.slice(pos).trim());
+    const kinds=Object.keys(parts).filter(k=>parts[k].filter(Boolean).length);if(kinds.length>=2){const L={"📜":"מה כתוב במקור","⚖️":"איך מפרשים","💡":"מה נבחר להמחשה"};
+      h+='<button type="button" class="ic-read" aria-expanded="false">קריאת מקור: מה כתוב, איך מפרשים, מה הוספנו</button><div class="ic-rd" hidden>'+kinds.map(k=>'<div class="ic-row"><div><b>'+k+' '+L[k]+'</b><ul style="margin:4px 0 0;padding-inline-start:18px">'+parts[k].filter(Boolean).map(x=>'<li>'+x+'</li>').join("")+'</ul></div></div>').join("")+'</div>'}}
   /* 125.3 (ביקורת, שיפור 15): חתך מצויר של הצלעות ושל לשכות הכהנים, עם הקומות ומסלול הכניסה */
   {const sk=/צלע/.test(d.n||"")?"rib":/^לשכות הכהנים/.test(d.n||"")?"lish":d.n==="המזבח"?"alt":null;if(sk){const q=SECT[sk];h+='<details class="ic-sec" open><summary><b>חתך</b></summary>'+q.svg+'<div class="ic-txt" style="font-size:13px">'+q.t+'</div></details>'}}
   const dm=dimsOf(t);if(dm)h+='<div class="ic-row">'+I("size")+'<div>'+dm+'<br><small class="ch">אמה של <bdi class="n">'+Math.round(A*1000)/10+'</bdi> ס״מ</small></div></div>';
@@ -14819,6 +14823,7 @@ window.addEventListener("resize",()=>{if(card.hidden)return;if(isPhone())sheetSe
 const _close=closeInfo;try{closeInfo=function(){_close();document.body.classList.remove("pane");CUR.pt=null}}catch(e){}
 new MutationObserver(()=>{document.body.classList.toggle("pane",!card.hidden)}).observe(card,{attributes:true,attributeFilter:["hidden"]});
 card.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.classList.contains("ic-read")){const x=card.querySelector(".ic-rd");if(x){x.hidden=!x.hidden;b.setAttribute("aria-expanded",x.hidden?"false":"true")}return}
   if(b.classList.contains("ic-more")){const x=card.querySelector(".ic-txt");const s=x.classList.toggle("short");b.textContent=s?"עוד":"פחות";return}
   const a=b.dataset.a;if(!a)return;e.stopPropagation();
   if(a==="fly"&&CUR.pt){const L=CUR.pt._L;if(L)goLabel(L);else flyToPoint(CUR.pt,20);CUR.dist0=0}
