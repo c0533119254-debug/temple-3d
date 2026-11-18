@@ -78,6 +78,12 @@ async function run(dev) {
     await shot("2-overview");
   });
   await ovl("מבט כללי");
+  // 126.1 (בדיקה חוזרת, א): חלופת הקריאה (tours/reading.json) זהה לסיורים שהאתר מציג
+  if (dev === "desktop") await step("חלופת הקריאה זהה לכל הסיורים באתר", async () => {
+    const r = await pg.evaluate(async () => { const live = window.__toursText(); const f = await (await fetch("tours/reading.json", { cache: "no-store" })).json(); return { same: JSON.stringify(live) === JSON.stringify(f.tours), n: live.length, s: live.reduce((a, t) => a + t.steps.length, 0) }; });
+    if (!r.same) throw new Error("tours/reading.json לא מעודכן. להריץ: node tools/test/reading-dump.js");
+    return `${r.n} סיורים, ${r.s} תחנות`;
+  });
 
   // In walk and tour modes the page draws every frame; on a test machine without a graphics card
   // one frame can take seconds, so Playwright's own clicks wait for frames that come late.
@@ -89,6 +95,7 @@ async function run(dev) {
     el.click(); return true;
   }, [sel, text || ""]);
   const until = (fn, ms, arg) => pg.waitForFunction(fn, arg, { timeout: ms, polling: 500 });
+  const cam = () => pg.evaluate(() => (window.__UI.shareURL().split("#")[1] || "").split("&")[0]);
   const stNum = () => pg.evaluate(() => (document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/) || [])[1]);
 
   await step("סיור יום הכיפורים: פתיחה ומעבר תחנות", async () => {
@@ -132,7 +139,6 @@ async function run(dev) {
   // 125.2 (ביקורת, כיסוי בדיקות): חזרה למבט הקודם, וחיפוש עם שגיאת כתיב
   await step("חזרה למבט הקודם", async () => {
     await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
-    const cam = () => pg.evaluate(() => (window.__UI.shareURL().split("#")[1] || "").split("&")[0]);
     const v1 = await cam();
     await tap("#backB");
     await pg.waitForTimeout(3000);
@@ -144,6 +150,65 @@ async function run(dev) {
     await until(() => { const b = document.querySelector("#sres button b"); return b && b.textContent.includes("מזבח"); }, 20000);
     await pg.fill("#sq", "");
     await pg.keyboard.press("Escape");
+  });
+
+  // 126.1 (בדיקה חוזרת, ד): גם יעד החיפוש «אולם הבית» שומר את המבט הקודם
+  await step("חיפוש «אולם» ואז חזרה למבט הקודם", async () => {
+    await pg.fill("#sq", "אולם");
+    await until(() => [...document.querySelectorAll("#sres button")].some((b) => b.textContent.includes("אולם הבית")), 20000);
+    const v0 = await cam();
+    await tap("#sres button", "אולם הבית");
+    // the flight can start late on a slow test machine: wait up to 15 s for the camera to move
+    let v1 = v0; for (let t = 0; t < 15 && v1 === v0; t++) { await pg.waitForTimeout(1000); v1 = await cam(); }
+    if (v0 === v1) { const st = await pg.evaluate(() => ({ pane: document.body.classList.contains("pane"), res: document.querySelectorAll("#sres button").length, q: document.getElementById("sq").value })); throw new Error("החיפוש לא הזיז את המצלמה " + JSON.stringify(st)); }
+    await pg.waitForTimeout(3000);
+    await until(() => { const e = document.getElementById("backB"); return e && getComputedStyle(e).display !== "none"; }, 15000);
+    await tap("#backB");
+    await pg.waitForTimeout(4000);
+    const v2 = await cam();
+    const d = (a, b) => { const x = a.replace("v=", "").split(",").map(Number), y = b.replace("v=", "").split(",").map(Number); return Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]); };
+    if (d(v2, v0) > 3) throw new Error(`«חזרה» לא החזירה למבט שלפני החיפוש (${Math.round(d(v2, v0))} מ׳ ממנו)`);
+  });
+  // 126.1 (בדיקה חוזרת, ה): המפה הקטנה נגישה למקלדת
+  if (dev === "desktop") await step("מפה קטנה במקלדת: Tab, חצים ו־Enter", async () => {
+    // the mini map is a layer that starts off: turn it on as a user would
+    const ti = await pg.evaluate(() => { const m = document.getElementById("mini"); if (m && m.hidden) { const b = document.querySelector("[data-o=mini]"); if (b) b.click(); } return m && !m.hidden ? m.tabIndex : null; });
+    if (ti === null) throw new Error("לא הצלחתי להדליק את המפה הקטנה");
+    if (ti !== 0) throw new Error("למפה אין tabindex");
+    const v0 = await cam();
+    await pg.focus("#mini");
+    for (let i = 0; i < 4; i++) await pg.keyboard.press("ArrowUp");
+    await pg.keyboard.press("Enter");
+    await pg.waitForTimeout(4000);
+    if (v0 === await cam()) throw new Error("Enter במפה לא הזיז את המבט");
+    await pg.evaluate(() => { const b = document.querySelector("[data-o=mini]"); if (b) b.click(); });
+  });
+
+  // 126.1 (בדיקה חוזרת, ב+ג): מקש שנשאר לחוץ כשהחלון מאבד מיקוד, ו־Escape שסוגר שכבה אחת בלבד
+  await step("הליכה: Escape סוגר מגירה בלי לצאת מההליכה", async () => {
+    await pg.evaluate(() => { const b = [...document.querySelectorAll("#cta button")].find((x) => !x.classList.contains("pri")); b.click(); });
+    await until(() => document.body.classList.contains("busy3d"), 30000);
+    await pg.waitForTimeout(2000);
+    await tap("#rail button[aria-label='סיורים']");
+    await until(() => document.body.classList.contains("drawer"), 15000);
+    await pg.keyboard.press("Escape");
+    await pg.waitForTimeout(1500);
+    const st = await pg.evaluate(() => ({ dr: document.body.classList.contains("drawer"), walk: document.body.classList.contains("busy3d") }));
+    if (st.dr) throw new Error("Escape לא סגר את המגירה");
+    if (!st.walk) throw new Error("Escape סגר את המגירה וגם יצא מההליכה");
+    if (dev === "desktop") {
+      await pg.keyboard.down("w");
+      await pg.waitForTimeout(800);
+      await pg.evaluate(() => window.dispatchEvent(new Event("blur")));
+      await pg.waitForTimeout(1500);
+      const a = await cam();
+      await pg.waitForTimeout(3000);
+      const b = await cam();
+      await pg.keyboard.up("w");
+      if (a !== b) throw new Error("אחרי איבוד מיקוד ההליכה ממשיכה לבד (מקש W נשאר לחוץ)");
+    }
+    await pg.keyboard.press("Escape");
+    await until(() => !document.body.classList.contains("busy3d"), 30000);
   });
 
   await step("הליכה ויציאה בכפתור «יציאה»", async () => {
@@ -165,7 +230,7 @@ async function run(dev) {
     await p2.goto(URL, { waitUntil: "domcontentloaded" });
     await p2.waitForSelector(".ldfail", { timeout: 60000 });
     await p2.click("#glRead");
-    await p2.waitForFunction(() => document.querySelectorAll("#glText h3").length >= 3, null, { timeout: 30000 });
+    await p2.waitForFunction(() => document.querySelectorAll("#glText h3").length >= 9 && document.getElementById("glText").textContent.includes("מקור:"), null, { timeout: 30000 });
     await c2.close();
   });
   const inPage = await pg.evaluate(() => window.__ERRS || []).catch(() => []);
