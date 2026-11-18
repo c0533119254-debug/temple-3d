@@ -1,0 +1,62 @@
+name: Reconcile approved wording branch
+on:
+  push:
+    branches: [instinct/new-tour-wording-20261118]
+    paths: [.github/workflows/wording-reconcile.yml]
+permissions:
+  contents: write
+jobs:
+  reconcile:
+    if: github.ref == 'refs/heads/instinct/new-tour-wording-20261118'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Reconcile known main revision
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          test "$(git rev-parse origin/main)" = f22a61bcca292ff611ce0f144e358158e40b5ad7
+          git merge --no-commit --no-ff origin/main || test "$(git diff --name-only --diff-filter=U | wc -l)" = 2
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          import re, subprocess, hashlib
+          p=Path('src/main/40-temple-build.js')
+          s=p.read_text()
+          blocks=list(re.finditer(r'<<<<<<< HEAD\n(.*?)=======\n(.*?)>>>>>>> origin/main\n',s,re.S))
+          assert len(blocks)==2, f'Expected two source conflicts, got {len(blocks)}'
+          first=blocks[0]
+          new=[l for l in first[2].splitlines() if 'enter:()=>ACTS.tm.set("pais4")' in l]
+          assert len(new)==1
+          ours=first[1]
+          needle='  {title:"הקטורת",'
+          assert ours.count(needle)==1
+          ours=ours.replace(needle,new[0]+'\n'+needle)
+          second=blocks[1]
+          second_text=second[1].replace('title:"הרכבת מגיעה"','title:"הרכבת (העתידית) מגיעה"',1)
+          s=s[:second.start()]+second_text+s[second.end():]
+          s=s[:first.start()]+ours+s[first.end():]
+          assert '<<<<<<<' not in s and '>>>>>>>' not in s
+          p.write_text(s)
+          # index.html is generated entirely from the reconciled source parts.
+          subprocess.run(['git','checkout','--ours','index.html'],check=True)
+          subprocess.run(['python3','tools/templesrc.py','build'],check=True)
+          subprocess.run(['python3','tools/templesrc.py','check'],check=True)
+          subprocess.run(['git','add','src/main/40-temple-build.js','index.html'],check=True)
+          PYCODE
+      - name: Refresh canonical reading export
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          node tools/test/reading-dump.js http://localhost:8765/
+          git add tours/reading.json
+          git diff --check --cached
+          git commit -m 'Reconcile approved wording with main and preserve new Tamid lottery stop'
+          git push origin HEAD:instinct/new-tour-wording-20261118
