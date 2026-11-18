@@ -393,17 +393,17 @@ const crenel=(x,n,rot,len,top)=>{add("wall",wbox(len,1.0,0.8,6),x,top+0.5,n,rot)
 const archP=(P,w,h)=>{const r=w/2;P.moveTo(-r,0);P.lineTo(-r,h-w*0.62);P.quadraticCurveTo(-r,h-w*0.08,0,h);P.quadraticCurveTo(r,h-w*0.08,r,h-w*0.62);P.lineTo(r,0);P.lineTo(-r,0);return P};
 const archOn=(k,x,n,a,y,w,h,dep,pro,hole)=>{const s=archP(new THREE.Shape(),w,h);if(hole)s.holes.push(archP(new THREE.Path(),hole[0],hole[1]));const g=new THREE.ExtrudeGeometry(s,{depth:dep,bevelEnabled:false,curveSegments:6});g.translate(0,0,-dep+(pro==null?0.12:pro));add(k,g,x,y,n,a+Math.PI/2)};
 // the same towers the wall code places (every ~110 m), now with battlements and arrow slits
-for(let i=0;i<WALL_LINE.length-1;i++){const a=WALL_LINE[i],b=WALL_LINE[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn),ang=Math.atan2(dn,dx),nt=Math.floor(L/110);
-  for(let k=1;k<=nt;k++){const t=k/(nt+1),x=a[0]+dx*t,n=a[1]+dn*t,top=H(x,n)-2+17;
-    [4-0.4,-4+0.4].forEach(o=>{const p=off(x,n,ang,0,o);crenel(p[0],p[1],ang,9,top)});[4.5-0.4,-4.5+0.4].forEach(o=>{const p=off(x,n,ang,o,0);crenel(p[0],p[1],ang+Math.PI/2,6.4,top)});
-    [-2.2,2.2].forEach(u=>{const p=off(x,n,ang,u,0);add("dark",new THREE.BoxGeometry(0.4,1.6,8.3),p[0],top-5,p[1],ang)})}}
+/* 125.3 (ביקורת 37): אותם מגדלים שקוד החומה בונה, במקומות האמיתיים (wallTowers), עם שיניים בראש וחרכי ירי בחזית */
+wallTowers().forEach(T=>{if(T.top==null)return;const x=T.x,n=T.n,ang=T.ang,top=T.top,hw=T.w/2,hd=T.d/2;
+    [hd-0.4,-hd+0.4].forEach(o=>{const p=off(x,n,ang,0,o);crenel(p[0],p[1],ang,T.w,top)});[hw-0.4,-hw+0.4].forEach(o=>{const p=off(x,n,ang,o,0);crenel(p[0],p[1],ang+Math.PI/2,T.d-0.8,top)});
+    const fo=-(hd+0.02),k=Math.max(1,Math.round(T.w/5));for(let j=0;j<k;j++){const u=-hw+T.w*(j+0.5)/k,p=off(x,n,ang,u,0);const q=[p[0]-T.ix*(hd+0.03),p[1]-T.inn*(hd+0.03)];add("dark",new THREE.BoxGeometry(0.4,1.6,0.12),q[0],top-5,q[1],ang)}});
 // the New Gate (1889): a straight gate between two small battlemented towers
 {const g0=[-871.6,144.3];let best=[1e9,0,0,0];for(let i=1;i<WALL_LINE.length;i++){const a=WALL_LINE[i-1],b=WALL_LINE[i],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn||1,t=Math.max(0,Math.min(1,((g0[0]-a[0])*dx+(g0[1]-a[1])*dn)/l2)),d=Math.hypot(a[0]+dx*t-g0[0],a[1]+dn*t-g0[1]);if(d<best[0])best=[d,Math.atan2(dn,dx),a[0]+dx*t,a[1]+dn*t]}
   const rot=best[1],gx=best[2],gn=best[3],lx=-Math.sin(rot),ln=Math.cos(rot),out=((gx+380)*lx+gn*ln)>0?1:-1,base=Math.min(H(gx,gn),TY(gx,gn))-2,hi=Math.max(H(gx,gn),TY(gx,gn)),top=Math.min(hi+13,LCAP-2.4);
   gatePass(add,off,wbox,{x:gx,n:gn,rot,w:9,d:5,base,hi,top,ph:7.7,cor:[[-2.1,2.1,-2.5,2.5]],faces:[[0,2.5,rot+Math.PI/2,4.2,7.3,false],[0,-2.5,rot-Math.PI/2,4.2,7.3,false]]});crenel(...off(gx,gn,rot,0,out*2.1),rot,9,top);
   [-1,1].forEach(s=>{const c=off(gx,gn,rot,s*6.5,out*0.8);add("wall",wbox(4.5,top+2-base,6.6,6),c[0],(top+2+base)/2,c[1],rot);[3.3-0.4,-3.3+0.4].forEach(o=>{const p=off(c[0],c[1],rot,0,o);crenel(p[0],p[1],rot,4.5,top+2)})});
   [1,-1].forEach(s=>{const f=off(gx,gn,rot,0,s*2.5);const nrm=rot+s*Math.PI/2;archOn("light",f[0],f[1],nrm,hi,5.6,8,0.6,0.35,[4.2,7.3])})}
-const info={n:"חומות העיר העתיקה",r:"נבנו בימי סולימאן, 1537–1541",t:"📜 החומות של היום, באורך של כ־4 ק״מ, עם כ־34 מגדלים ושבעה שערים פתוחים. 📜 בראש החומות ובראש המגדלים יש שיניים (צינה) וחרכי ירי. 💡 המגדלים במודל עומדים במרחקים קבועים, ולא בדיוק במקומות האמיתיים. 📜 השער החדש נפתח רק בשנת 1889."};
+const info={n:"חומות העיר העתיקה",r:"נבנו בימי סולימאן, 1537–1541",t:"📜 החומות של היום, באורך של כ־4 ק״מ, עם כ־34 מגדלים ושבעה שערים פתוחים. 📜 בראש החומות ובראש המגדלים יש שיניים (צינה) וחרכי ירי. 📜 המגדלים עומדים במקומות שלהם לפי קו החומה במפה (OpenStreetMap), שבו כל מגדל בולט החוצה. 📜 השער החדש נפתח רק בשנת 1889."};
 const MAT={wall:M.wall,dark:M.dark,light:M.stone||M.stoneL};
 Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MAT[k]);m.castShadow=true;m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)});
 }catch(e){console.warn("area8",e)}})();

@@ -40,9 +40,14 @@ jobs:
           python3 -m http.server 8765 >/dev/null 2>&1 &
           sleep 2
           node tools/test/user-path.js http://localhost:8765/ user-test-out
+      - name: עשרת מסלולי ההליכה בעיר (125.3)
+        if: always()
+        run: node tools/test/city-walks.js http://localhost:8765/ user-test-out/city
       - name: דוח
         if: always()
-        run: cat user-test-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+        run: |
+          cat user-test-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+          cat user-test-out/city/report.md >> "$GITHUB_STEP_SUMMARY" || true
       - name: צילומי מסך
         if: always()
         uses: actions/upload-artifact@v4

@@ -408,3 +408,23 @@ function TREECLEAR(){const mats=new Set([M.leaf,M.trunk,M.cypress,TREES5.mat].fi
   [WG,CITYSAT].forEach(G=>G.children.forEach(o=>{if(!o.isInstancedMesh||!mats.has(o.material))return;let ch=0;for(let i=0;i<o.count;i++){o.getMatrixAt(i,m4);m4.decompose(p,q,sc);if(sc.x<1e-3)continue;tot++;if(bad(p.x,-p.z)){o.setMatrixAt(i,Z);ch++}}if(ch){o.instanceMatrix.needsUpdate=true;n+=ch}}));return{removed:n,of:tot}}
 
 const PICK=[];
+/* 125.3: רשת החסימה של העיר בהליכה (בתים, חומה, מגדלים). נבנית בקבצים 14 ו־16 */
+const CB={st:8,b:new Map(),r:new Map(),w:new Map()},cbK=(i,j)=>i*100003+j;
+/* 125.3 (ביקורת 37): מגדלי החומה במקומות האמיתיים. קו החומה של OSM כבר משרטט כל מגדל כ״שקע״ החוצה: צלע קצרה החוצה, חזית, וצלע קצרה פנימה,
+   עם פניות של כ־90°. מוצאים את החזיתות האלה (צד החוץ נקבע לפי מצולע העיר העתיקה) ובונים עליהן מגדל שעולה מעל החומה. במקום 3 מגדלים כלליים כל 110 מ׳ */
+function wallTowers(){if(wallTowers.T)return wallTowers.T;const W=WALL_LINE,T=[],R=Math.PI/180;let vote=0;
+  for(let i=0;i<W.length-1;i++){const a=W[i],b=W[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn);if(L<20)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2,rx=dn/L,rn=-dx/L,o1=inPoly(mx+rx*25,mn+rn*25,OLD),o2=inPoly(mx-rx*25,mn-rn*25,OLD);if(!o1&&o2)vote++;else if(o1&&!o2)vote--}
+  const out=vote>=0?1:-1;/* 1: הצד הימני (בכיוון הקו) הוא החוץ */
+  const turn=i=>{if(i<=0||i>=W.length-1)return 0;const p=W[i-1],a=W[i],b=W[i+1];let d=Math.atan2(b[1]-a[1],b[0]-a[0])-Math.atan2(a[1]-p[1],a[0]-p[0]);while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d};
+  const len=i=>Math.hypot(W[i+1][0]-W[i][0],W[i+1][1]-W[i][1]);
+  for(let i=1;i<W.length-2;i++){const L=len(i),t1=turn(i),t2=turn(i+1);
+    if(L>35||Math.abs(t1)<55*R||Math.abs(t2)<55*R||Math.abs(t1)>125*R||Math.abs(t2)>125*R)continue;
+    /* פנייה ימינה היא שלילית; החזית מתחילה ונגמרת בפנייה אל צד הפנים */
+    if(!(t1*out>0&&t2*out>0))continue;const s1=len(i-1),s2=len(i+1);if(s1>18||s2>18)continue;
+    const a=W[i],b=W[i+1],dx=b[0]-a[0],dn=b[1]-a[1],ang=Math.atan2(dn,dx),ix=-out*dn/L,inn=out*dx/L,dep=(s1+s2)/2+3.6;
+    const cx=(a[0]+b[0])/2+ix*(dep/2-1.8),cn=(a[1]+b[1])/2+inn*(dep/2-1.8);
+    if(T.length&&Math.hypot(T[T.length-1].x-cx,T[T.length-1].n-cn)<14)continue;
+    /* מגדל שהשער עובר בו (שער שכם, שער הפרחים) נבנה בקוד השער עצמו; כאן לא סוגרים את המעבר */
+    if(WGAPS.concat(Object.values(GATES).map(g=>[g,6])).some(q=>Math.hypot(q[0][0]-cx,q[0][1]-cn)<Math.max(L,dep)/2+q[1]+2))continue;/* מגדל פינה שנרשם בשתי חזיתות */
+    T.push({x:cx,n:cn,ang,w:L+3.6,d:dep,ix,inn})}
+  return wallTowers.T=T}

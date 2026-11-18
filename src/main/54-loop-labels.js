@@ -19,7 +19,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
     const sp=(keys.shift?15:6.5)*Math.min(0.5,rawdt)*(Math.hypot(JOY.x,JOY.y)>0.92?1.8:1),f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),rt=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
     const mvx=f.x*fwN*sp+rt.x*stN*sp,mvz=f.z*fwN*sp+rt.z*stN*sp,cp=camera.position;
     /* v100 · משימה 02: תתי־צעדים לאורך התנועה (עד 0.3 מ׳, לכל היותר 40). החסימה והרצפה נבדקות בכל תת־צעד, ולא רק בנקודת הסיום — צעד גדול בפריים איטי לא עובר קיר ולא נעצר מוקדם */
-    {const ml=Math.hypot(mvx,mvz),ns=Math.min(40,Math.max(1,Math.ceil(ml/0.3))),sx=mvx/ns,sz=mvz/ns;for(let i=0;i<ns;i++){const feet=groundAt(cp.x,cp.z);if(!blocked(cp.x+sx,cp.z+sz,feet)){cp.x+=sx;cp.z+=sz}else if(!blocked(cp.x+sx,cp.z,feet)){cp.x+=sx}else if(!blocked(cp.x,cp.z+sz,feet)){cp.z+=sz}else break}}
+    {const ml=Math.hypot(mvx,mvz),ns=Math.min(40,Math.max(1,Math.ceil(ml/0.3))),sx=mvx/ns,sz=mvz/ns;for(let i=0;i<ns;i++){if(canStep(cp.x,cp.z,cp.x+sx,cp.z+sz)){cp.x+=sx;cp.z+=sz}else if(canStep(cp.x,cp.z,cp.x+sx,cp.z)){cp.x+=sx}else if(canStep(cp.x,cp.z,cp.x,cp.z+sz)){cp.z+=sz}else break}}
     const gy=groundAt(camera.position.x,camera.position.z)+1.65;camera.position.y+=(gy-camera.position.y)*Math.min(1,dt*9);
     camera.rotation.order="YXZ";camera.rotation.set(pitch,yaw,0);}
   else{{const dd=camera.position.distanceTo(controls.target);controls.maxPolarAngle=dd>160?THREE.MathUtils.degToRad(80):Math.PI*0.497;const t=controls.target;t.x=Math.max(-1700,Math.min(1700,t.x));t.z=Math.max(-1500,Math.min(1500,t.z));t.y=Math.max(-60,Math.min(160,t.y))}

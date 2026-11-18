@@ -26,11 +26,18 @@ function groundAt(x,z){const n=-z;
       if(COMP.nst===10&&u>=137&&u<=143){const d=v<COMP.vmin?COMP.vmin-v:v>COMP.vmax?v-COMP.vmax:-1;if(d>=0&&d<=12)return(13.5-0.5*Math.ceil(d))*A}
       if(u>=98&&u<=203&&v>=COMP.vmin&&v<=COMP.vmax)return 13.56*A;if(u<=300&&v>=200&&v<=300)return 7.5*A;return 3.5*A}}
   {const tf=tunFloor(x,n);if(tf!=null)return tf}if(inPoly(x,n,MOUNT_S))return 0;{const g=S2G(x,n),dl=DUNG.lotY(g[0],g[1]);return dl!=null?dl:surfY(g[0],g[1])}}
+function inCompBox(x,z){if(!COMP)return false;const u=(x-COMP.X0)/A,v=(COMP.N0+z)/A;return u>=-3&&u<=503&&v>=-3&&v<=503}
+/* 125.3 (ביקורת ז27, עשרת המסלולים): צעד אחד בהליכה. חוץ מחסימה, מחוץ למתחם לא מטפסים על קיר (עלייה של יותר מ־1.2 מ׳ בתת־צעד של 0.3 מ׳ — שפת כביש או מדרגה גבוהה עוד עוברות)
+   ולא נופלים מקצה (ירידה של יותר מ־2.2 מ׳). מדרגות ושיפועים רגילים עולים פחות מזה. בתוך המתחם הכללים הקודמים נשארים בדיוק כמו שהם */
+function canStep(x0,z0,x1,z1){const feet=groundAt(x0,z0);if(blocked(x1,z1,feet))return false;if(inCompBox(x1,z1)&&inCompBox(x0,z0))return true;
+  const g=groundAt(x1,z1);if(!isFinite(g))return false;return !(g-feet>1.2||feet-g>2.2)}
 function blocked(x,z,feet){
   // Keep walking on the altar/ramp surface, not inside its solid tiers.
   // The 0.55 m drop limit also protects the ramp sides below altar-top height.
   if(COMP&&feet>7.5*A+0.55){const u=(x-COMP.X0)/A,v=(COMP.N0+z)/A;
     if(u>=232&&u<=268&&v>=232&&v<=300&&feet-groundAt(x,z)>0.55)return true}
+  /* 125.3 (ביקורת 30): מחוץ למתחם — בתי העיר, חומת העיר ומגדליה חוסמים */
+  if(!inCompBox(x,z)){const g=S2G(x,-z);if(cityHit(g[0],g[1],feet))return true}
   const r=0.6;for(const c of COL){if(x>c.x0-r&&x<c.x1+r&&z>c.z0-r&&z<c.z1+r&&c.y1>feet+0.55&&c.y0<feet+1.7)return true}
   /* v101 · משימה 08: דלתות השער הפנימי המזרחי — אותו מצב (EGATE.visible, לפי gateDoors: יום ושעה) קובע גם נראות וגם חסימה. דלת סגורה עוצרת את הגוף; פתוחה — מעבר חופשי */
   if(EGATE&&EGATE[0]&&EGATE[0].visible){if(!EGATE._c)EGATE._c=EGATE.map(m=>new THREE.Box3().setFromObject(m));for(const b of EGATE._c){if(x>b.min.x-r&&x<b.max.x+r&&z>b.min.z-r&&z<b.max.z+r&&b.max.y>feet+0.55&&b.min.y<feet+1.7)return true}}return false}
@@ -113,7 +120,7 @@ let OCCF=0,HUDF=0; // מכונות מצב: TOUR הישן לא קיבל ערך א
 function segHit(a,b){const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;let best=1;for(const c of COL){if(c.y1-c.y0<2.6||(c.x1-c.x0<1.6&&c.z1-c.z0<1.6))continue;if(a.x>c.x0-0.3&&a.x<c.x1+0.3&&a.z>c.z0-0.3&&a.z<c.z1+0.3&&a.y>c.y0-0.3&&a.y<c.y1+0.3)continue;let t0=0,t1=1;const sl=(o,d,lo,hi)=>{if(Math.abs(d)<1e-9)return o>=lo&&o<=hi;let u=(lo-o)/d,v=(hi-o)/d;if(u>v){const q=u;u=v;v=q}t0=Math.max(t0,u);t1=Math.min(t1,v);return t0<=t1};
   if(sl(a.x,dx,c.x0-0.25,c.x1+0.25)&&sl(a.y,dy,c.y0-0.25,c.y1+0.25)&&sl(a.z,dz,c.z0-0.25,c.z1+0.25)&&t0<best)best=t0}return best}
 try{__v6=Object.assign(__v6||{},{trees:TREECLEAR()})}catch(e){console.warn("trees",e)}
-function floorAt(x,z){let g=groundAt(x,z);const q=S2G(x,-z),b=bldTop(q[0],q[1]);return Math.max(g,b)}window.__GA={groundAt,mizY,blocked,floorAt,camAt,getA:()=>A,getCOMP:()=>COMP,getPLAN:()=>PLAN,getCam:()=>camera,getControls:()=>controls,getDAY:()=>DAY,setDay,setFest,sunAt,getHOUR:()=>HOUR,setHOUR:h=>{HOUR=h;applyTime()},getTIME:()=>TIME,getDOY:()=>DOY,gateDoors,egate:()=>!EGATE?null:{n:EGATE.length,visible:EGATE.filter(m=>m.visible).length,closed:EGATE.some(m=>m.visible),open:EGATE.every(m=>!m.visible)}};
+function floorAt(x,z){let g=groundAt(x,z);const q=S2G(x,-z),b=bldTop(q[0],q[1]);return Math.max(g,b)}window.__GA={groundAt,mizY,blocked,canStep,onStreet,floorAt,walkPose:(x,z,tx,tz)=>{startWalk();camera.position.set(x,groundAt(x,z)+1.65,z);yaw=Math.atan2(-(tx-x),-(tz-z));pitch=0.02;camera.rotation.set(pitch,yaw,0)},bldTop,onRoad,S2G,G2S,camAt,getA:()=>A,getCOMP:()=>COMP,getPLAN:()=>PLAN,getCam:()=>camera,getControls:()=>controls,getDAY:()=>DAY,setDay,setFest,sunAt,getHOUR:()=>HOUR,setHOUR:h=>{HOUR=h;applyTime()},getTIME:()=>TIME,getDOY:()=>DOY,gateDoors,egate:()=>!EGATE?null:{n:EGATE.length,visible:EGATE.filter(m=>m.visible).length,closed:EGATE.some(m=>m.visible),open:EGATE.every(m=>!m.visible)}};
 let camLim=1e9,camSaved=false;const camDesired=new THREE.Vector3();
 function fadeJump(fn){const f=document.getElementById("fade");f.classList.add("on");const off=()=>{if(f)f.classList.remove("on")};const delay=reduce?0:320;setTimeout(()=>{try{fn()}catch(e){}const t0=performance.now();let n=0;const wait=()=>{if(++n<12&&performance.now()-t0<700)requestAnimationFrame(wait);else off()};requestAnimationFrame(wait);setTimeout(off,800)},delay);setTimeout(off,delay+1400)}
 // #12: the old tour (TOUR_STEPS) never ran (the tour button starts STORIES.pilgrim); removed
