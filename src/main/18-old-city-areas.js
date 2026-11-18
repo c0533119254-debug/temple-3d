@@ -226,10 +226,35 @@ begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t
   faceWin(x,n,rot,w,d,0,(p,a,fw)=>{[-5,0,5].forEach(o=>{const q=off(p[0],p[1],a-Math.PI/2,o,0);archOn("dark",q[0],q[1],a,Y(9),1.6,4*vs,0.8,0.25);archOn("dark",q[0],q[1],a,o===0?g:Y(2),o===0?2.4:1.4,(o===0?4:3.4)*vs,0.8,0.25)})});
   const oc=new THREE.CylinderGeometry(6.6,6.6,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.4,8,1.4,3.4*vs);
   dome("lead",x,n,Y(21),6.1,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
-// ===== the Cardo: a row of Roman/Byzantine columns in the excavated street west of the Hurva =====
-begin({n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי. 📜 הקרדו החשוף נמוך בכמה מטרים מהרחוב של היום: יורדים אליו במדרגות, ומהרחוב רואים אותו מעבר למעקה. 💡 בהדמיה מוצגות רק שתי שורות העמודים, בגובה הרחוב. הירידה, שפת החפירה והמעקה לא מוצגים."});
-[-425.5,-410.5].forEach(cx=>{for(let n=-339;n<=-317;n+=3.6){const x=cx+(n+330)*0.03,g=G(x,n);A("light",wbox(0.9,0.5,0.9,2),x,g+0.25,n,0);A("light",new THREE.CylinderGeometry(0.32,0.36,4.2,12),x,g+0.5+2.1,n,0);A("light",wbox(0.95,0.45,0.95,2),x,g+4.9,n,0)}
-  const g=G(cx,-328);A("light",wbox(0.9,0.7,23,3),cx,g+5.47,-328,0.03)});
+// ===== the Cardo =====
+/* 125.7 (בדיקה חוזרת 35): הקרדו נבנה בפועל במפלס החפירה: בור מרוצף כ־3 מ׳ מתחת לרחוב הנמוך שלידו, קירות תמך, מעקה מסביב,
+   וגרם מדרגות מהרחוב בצד הצפוני. העמודים עומדים על רצפת הקרדו. הרחוב שמעל "נפתח" בעזרת מסכת עומק (cardoMask): החלקים של הבור מצוירים קודם,
+   והמסכה (בלי צבע) מסתירה את פני הרחוב שמעליהם. ההולך יורד במדרגות (cardoY בתוך groundAt), והקצוות חוסמים לפי חוק הצוק */
+{const C=cardoGeom();const inf={n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי, כמה מטרים מתחת לרחוב של היום. בהדמיה: ⚖️ החפירה נמוכה בכ־3 מ׳ מהרחוב הנמוך שלידה, עם קירות תמך ומעקה מסביב, ויורדים אליה במדרגות מהצד הצפוני. 💡 העומק, מקום המדרגות ומספר העמודים בהערכה, לפי תמונות המקום."};
+  const P=(u,v)=>[C.cx+u*C.ux+v*C.vx,C.cn+u*C.un+v*C.vn],rot=-Math.atan2(C.vx,C.vn),GS={pave:[],wall:[],light:[],iron:[]};
+  const put=(k,geo,u,v,y)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const q=P(u,v),m=new THREE.Matrix4().makeRotationY(rot);m.setPosition(q[0],y,-q[1]);geo.applyMatrix4(m);GS[k].push(geo)};
+  const fl=C.floor,hw=C.hw,hl=C.hl;
+  put("pave",wbox(2*hw,0.3,2*hl,3),0,0,fl-0.15);
+  // retaining walls up to the street, a stone coping and an iron railing (open at the top of the stairs)
+  const edge=(u0,v0,u1,v1,open)=>{const L=Math.hypot(u1-u0,v1-v0),n=Math.max(1,Math.ceil(L/2));for(let k=0;k<n;k++){const a=k/n,b=(k+1)/n,uu=u0+(u1-u0)*(a+b)/2,vv=v0+(v1-v0)*(a+b)/2,q=P(uu,vv),top=C.top(q[0],q[1]),len=L/n+0.02,horiz=Math.abs(v1-v0)<1e-6;
+      const W=(w,h,d)=>horiz?wbox(len,h,d,3):wbox(d,h,len,3);put("wall",W(0,top-fl+0.25,0.7),uu,vv,(top+fl)/2+0.12);put("light",W(0,0.18,0.9),uu,vv,top+0.34);
+      if(!(open&&open(uu,vv))){put("iron",W(0,0.06,0.06),uu,vv,top+1.15);put("iron",W(0,0.04,0.04),uu,vv,top+0.75);put("iron",new THREE.CylinderGeometry(0.03,0.03,0.75,6),uu,vv,top+0.8)}}};
+  const stairOpen=(u,v)=>Math.abs(u-C.su)<C.stw+0.3&&v>hl-0.5;
+  edge(-hw,-hl,hw,-hl);edge(-hw,hl,hw,hl,stairOpen);edge(-hw,-hl,-hw,hl);edge(hw,-hl,hw,hl);
+  // the stairs: risers of about 17 cm, from the street at the north edge down to the floor, with low side walls
+  {const n=Math.ceil((C.stTop-fl)/0.17),rise=(C.stTop-fl)/n,run=C.run/n;for(let k=0;k<n;k++){const v=hl-run*(k+0.5),y=C.stTop-rise*(k+1);put("light",wbox(2*C.stw,y-fl+rise,run+0.02,3),C.su,v,(y+rise+fl)/2)}
+    [-1,1].forEach(sd=>{for(let k=0;k<n;k+=2){const v=hl-run*(k+1),y=C.stTop-rise*(k+1)+1;put("wall",wbox(0.4,y-fl,run*2+0.02,3),C.su+sd*(C.stw+0.2),v,(y+fl)/2)}})}
+  // the two colonnades on the Cardo floor
+  [-7.5,7.5].forEach(u=>{for(let v=-hl+2;v<=hl-(Math.abs(u-C.su)<C.stw+1?C.run:1);v+=3.6){put("light",wbox(0.9,0.5,0.9,2),u,v,fl+0.25);put("light",new THREE.CylinderGeometry(0.32,0.36,4.2,12),u,v,fl+0.5+2.1);put("light",wbox(0.95,0.45,0.95,2),u,v,fl+4.9)}
+    put("light",wbox(0.9,0.7,2*hl-2,3),u,0,fl+5.47)});
+  const MATS={pave:M.pave||M.stoneL,wall:M.stone||M.stoneL,light:M.stoneL,iron:M.iron||new THREE.MeshStandardMaterial({color:0x2b2b2b,metalness:0.6,roughness:0.5})};
+  Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=-2;m.castShadow=k!=="pave";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)});
+  // the depth mask over the opening: a grid that follows the street just above it, drawn after the pit and before everything else
+  {const nu=Math.ceil(2*hw/1.5),nv=Math.ceil(2*hl/1.5),pos=[],idx=[];for(let j=0;j<=nv;j++)for(let i=0;i<=nu;i++){const u=-hw+0.35+(2*hw-0.7)*i/nu,v=-hl+0.35+(2*hl-0.7)*j/nv,q=P(u,v);pos.push(q[0],C.top(q[0],q[1])+0.32,-q[1])}
+    for(let j=0;j<nv;j++)for(let i=0;i<nu;i++){const a=j*(nu+1)+i,b=a+1,c=a+nu+1,d=c+1;idx.push(a,c,b,b,c,d)}
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);
+    const mk=new THREE.Mesh(g,new THREE.MeshBasicMaterial({colorWrite:false,side:THREE.DoubleSide}));mk.renderOrder=-1;mk.name="cardoMask";mk.frustumCulled=false;WG.add(mk)}
+}
 // ===== the Sephardi synagogues: small domes on their roofs (📜 the four are built low, under the street) =====
 begin({n:"ארבעת בתי הכנסת הספרדיים",r:"הרובע היהודי",t:"📜 ארבעה בתי כנסת צמודים של הקהילה הספרדית, מהמאה ה־16 וה־17. הם נבנו נמוך, כדי לא להיות גבוהים מהמסגדים, כפי שדרש החוק אז. 💡 מעליהם מוצגות כיפות קטנות."});
 [[-339,-336],[-333,-344],[-345,-344],[-327,-336]].forEach(d=>{const t=bldTop(d[0],d[1]),y=t>-1e3?t:G(d[0],d[1])+6;cyl("stone",d[0],d[1],y-0.3,2.4,1.1,16);dome("white",d[0],d[1],y+0.8,2.3,0.9)});
@@ -448,3 +473,11 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
   awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
 
 }catch(e){console.warn("shops",e)}})();
+
+/* 125.7 (בדיקה חוזרת 35): מידות הקרדו החפור, וגובה ההליכה בתוכו (קואורדינטות גאוגרפיות x מזרח, n צפון) */
+function cardoGeom(){if(cardoGeom.C)return cardoGeom.C;const cx=-418,cn=-329,L=Math.hypot(0.03,1),vx=0.03/L,vn=1/L,ux=vn,un=-vx,hw=10,hl=12,stw=2,su=3.6;
+  const top=(x,n)=>surfY(x,n);let mn=1e9;for(let u=-hw;u<=hw;u+=2)for(let v=-hl;v<=hl;v+=2){const x=cx+u*ux+v*vx,n=cn+u*un+v*vn;mn=Math.min(mn,top(x,n))}
+  const floor=Math.round((mn-3)*10)/10,sx=cx+su*ux+hl*vx,sn=cn+su*un+hl*vn,stTop=top(sx,sn),run=Math.max(6,(stTop-floor)/0.56);
+  return cardoGeom.C={cx,cn,ux,un,vx,vn,hw,hl,stw,su,floor,stTop,run,top}}
+function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-C.cn,u=dx*C.ux+dn*C.un,v=dx*C.vx+dn*C.vn;if(Math.abs(u)>C.hw||Math.abs(v)>C.hl)return null;
+  if(Math.abs(u-C.su)<=C.stw&&v>C.hl-C.run){const t=(v-(C.hl-C.run))/C.run;return C.floor+(C.stTop-C.floor)*t}return C.floor}

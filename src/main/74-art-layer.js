@@ -191,9 +191,17 @@ try{(function(){const $=id=>document.getElementById(id),d=$("dr-view");if(!d||$(
     sb.onclick=()=>{try{window.__UI.share()}catch(e){}};if(home&&home.nextSibling)hud.insertBefore(sb,home.nextSibling);else hud.appendChild(sb)}
   /* מגע: הסבר בלי מקלדת */
   const touch=matchMedia("(pointer: coarse)").matches&&!matchMedia("(pointer: fine)").matches;
-  if(touch){const h=$("dr-help"),ul=h&&h.querySelector("ul.plain");if(ul)ul.innerHTML="<li>אצבע אחת: הזזת המפה.</li><li>שתי אצבעות: מקרבים ומרחיקים, ומסובבים את המבט.</li><li>נגיעה על חלק במודל: השם, המקור והמידות.</li><li>הכפתור ⌂: חזרה למבט הכללי. המצפן: פנייה צפונה.</li>"}
+  const TL="<li>אצבע אחת: הזזת המפה.</li><li>שתי אצבעות: מקרבים ומרחיקים, ומסובבים את המבט.</li><li>נגיעה על חלק במודל: השם, המקור והמידות.</li><li>הכפתור ⌂: חזרה למבט הכללי. המצפן: פנייה צפונה.</li>";
+  if(touch){const h=$("dr-help"),ul=h&&h.querySelector("ul.plain");if(ul)ul.innerHTML=TL}
+  /* 125.7 (בדיקה חוזרת 40): מכשיר משולב — מגע וגם עכבר או מקלדת — מקבל את שתי ההוראות */
+  else{let hy=false;try{hy=matchMedia("(any-pointer: coarse)").matches}catch(e){}if(hy){const h=$("dr-help"),ul=h&&h.querySelector("ul.plain");if(ul&&!ul.dataset.hy){ul.dataset.hy=1;ul.insertAdjacentHTML("beforeend","<li><b>במסך מגע:</b></li>"+TL)}}}
 })()}catch(e){console.warn("adv",e)}
 
+/* 125.7 (בדיקה חוזרת, א): מקור נתונים אחד לסיורים. חלופת הקריאה (כשאין תלת־ממד) קוראת את tours/reading.json,
+   והקובץ נוצר מאותם STORIES בדיוק (tools/test/reading-dump.js). הבדיקה האוטומטית נכשלת אם הם לא זהים */
+window.__sukVis=()=>SUK&&SUK.vis?SUK.vis():null;
+window.__toursText=()=>{const v=x=>{try{return typeof x==="function"?x():x}catch(e){return ""}},str=x=>{x=v(x);return typeof x==="string"&&x.trim()?x.trim():undefined};
+  return Object.keys(STORIES).map(k=>{const S=STORIES[k];return{key:k,title:str(S.title)||k,steps:(S.steps||[]).map((st,i)=>{const o={n:i+1,title:str(st.title)||""};["cap","verse","verseRef","src","full"].forEach(f=>{const t=str(st[f]);if(t)o[f]=t});return o})}})};
 __DONE=true;__Q.splice(0).forEach(f=>{try{f()}catch(e){console.warn(e)}});
 frame();
 })();

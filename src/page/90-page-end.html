@@ -7,6 +7,6 @@ function mv(){var m=document.getElementById("temple-music-mute"),h=document.getE
 mv();try{new MutationObserver(mv).observe(st,{childList:true})}catch(e){}
 var b=document.createElement("button");b.type="button";b.id="modeExit";b.textContent="✕ יציאה";b.setAttribute("aria-label","יציאה מההליכה וחזרה למבט הכללי");
 var home=function(){var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
-addEventListener("keydown",function(e){if(e.key!=="Escape")return;var c=document.body.classList;if(!c.contains("busy3d")||c.contains("touring")||c.contains("drawer")||c.contains("pane"))return;var a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName))return;home()})})();
+/* 125.7: Escape ליציאה מהליכה עבר למטפל האחד ב־64-shell-ui */})();
 </script>
 </body></html>
