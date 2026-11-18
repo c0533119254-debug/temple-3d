@@ -75,6 +75,7 @@ composer.addPass(new THREE.RenderPass(scene,camera));
 const bloom=new THREE.UnrealBloomPass(new THREE.Vector2(512,512),0.9,0.5,0.82);composer.addPass(bloom);
 
 const sig=t=>1/(1+Math.exp(-t));
+function segFar(x,n,P,R){let b=P._bb;if(!b){b=P._bb=[1e9,-1e9,1e9,-1e9];for(const q of P){b[0]=Math.min(b[0],q[0]);b[1]=Math.max(b[1],q[0]);b[2]=Math.min(b[2],q[1]);b[3]=Math.max(b[3],q[1])}}return x<b[0]-R||x>b[1]+R||n<b[2]-R||n>b[3]+R}
 function segDist(px,pn,P){let best=1e9,dep=0;for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],vx=b[0]-a[0],vn=b[1]-a[1],L2=vx*vx+vn*vn;let t=((px-a[0])*vx+(pn-a[1])*vn)/L2;t=Math.max(0,Math.min(1,t));const dx=px-(a[0]+vx*t),dn=pn-(a[1]+vn*t),d=Math.hypot(dx,dn);if(d<best){best=d;dep=(a[2]||0)+((b[2]||0)-(a[2]||0))*t}}return[best,dep]}
 const KIDRON=GEO.KIDRON;
 const HINNOM=[[-960,-60,8],[-930,-350,30],[-820,-700,60],[-500,-860,85],[-200,-980,110],[-25,-1080,130]];
@@ -103,7 +104,8 @@ function Hsyn(x,n){
   if(n<-260)h-=Math.min(70,(-260-n)*0.07)*(1-0.75*w);
   if(n>350)h+=Math.min(22,(n-350)*0.03);
   h+=16*Math.exp(-Math.pow(Math.hypot(x+600,n+690)/190,2));
-  let r=segDist(x,n,KIDRON);h-=r[1]*Math.exp(-Math.pow(r[0]/80,2));
-  r=segDist(x,n,HINNOM);h-=r[1]*Math.exp(-Math.pow(r[0]/65,2));
-  r=segDist(x,n,TYRO);h-=r[1]*Math.exp(-Math.pow(r[0]/60,2));
+  /* 125.6 מהירות: רחוק מהעמק (יותר מפי 6 מרוחב ההשפעה) התוספת קטנה ממיליארדית המטר, אז לא מחשבים מרחק לכל קטע */
+  let r=segFar(x,n,KIDRON,480)?null:segDist(x,n,KIDRON);if(r)h-=r[1]*Math.exp(-Math.pow(r[0]/80,2));
+  r=segFar(x,n,HINNOM,390)?null:segDist(x,n,HINNOM);if(r)h-=r[1]*Math.exp(-Math.pow(r[0]/65,2));
+  r=segFar(x,n,TYRO,360)?null:segDist(x,n,TYRO);if(r)h-=r[1]*Math.exp(-Math.pow(r[0]/60,2));
   return h}

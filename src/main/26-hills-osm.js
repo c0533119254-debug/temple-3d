@@ -13,7 +13,7 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
     const sl=Math.hypot(H(xx+3,nn)-H(xx-3,nn),H(xx,nn+3)-H(xx,nn-3))/6;if(sl<0.16||sl>1)continue;
     if(noise(xx,nn)*0.8+sl*1.2<0.86||r()<0.6)continue;
     if(inPoly(xx,nn,MOUNT_BIG)||inPoly(xx,nn,OLD)||GR.has(gk(xx,nn))||!clearAt(xx,nn,2.5))continue;
-    if(nearEdge(xx,nn,MOUNT)[0]<4)continue;{let wd=1e9;for(let k=0;k<WALL_LINE.length-1;k++){const r=segDist(xx,nn,[WALL_LINE[k],WALL_LINE[k+1]]);if(r[0]<wd)wd=r[0]}if(wd<3.5)continue}
+    if(nearEdge(xx,nn,MOUNT)[0]<4)continue;/* 125.6 מהירות: אותו מרחק מקו החומה, בלי לבנות מערך חדש לכל קטע, ורק כשהנקודה קרובה לחומה */if(!segFar(xx,nn,WALL_LINE,3.5)&&segDist(xx,nn,WALL_LINE)[0]<3.5)continue;
     const s=0.7+Math.pow(r(),2)*2.2;R.push([xx,TY(xx,nn),nn,s,r()*6.28,r()<0.35])}
   if(!R.length)return;
   // two shapes: a round boulder and a flat ledge (nari crust), half buried
