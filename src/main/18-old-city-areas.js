@@ -469,10 +469,47 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     {const p=P(0,-0.04);d.position.set(p[0],f.g+Hh/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.12,Hh,W);d.updateMatrix();dark.setMatrixAt(i,d.matrix)}
     {const p=P(0,-0.08);d.position.set(p[0],f.g+Hh+0.2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.14,0.4,W+0.1);d.updateMatrix();shut.setMatrixAt(i,d.matrix)}
     for(let k=0;k<3;k++){const al=(k-1)*W/3,h=0.3+((f.o2*7+k*3)%1)*0.45,p=P(al,-0.25);d.position.set(p[0],f.g+h/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.4,h,W/3-0.15);d.updateMatrix();goods.setMatrixAt(gi,d.matrix);goods.setColorAt(gi,col.setHex(PAL[Math.floor(((f.o3*13+k*5)%1)*PAL.length)]));gi++}
-    if(f.o3<0.45&&f.w>=4){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
+    if(f.o3<(f.w>=4?0.45:0.3)&&f.w>=2.6){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
   awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
 
 }catch(e){console.warn("shops",e)}})();
+
+// ---- 126.3 (תמונות Mapillary): כיכר החורבה וכיכר עומר אל־חטאב ----
+// 📜 כיכר החורבה בתמונות: רחבה מרוצפת באבן בהירה עם פסים של אבן אדמדמה, עצים גדולים בערוגות אבן עגולות, ספסלים ופנסים. בדגם היה שם חול.
+// 📜 כיכר עומר אל־חטאב (בתוך שער יפו): רחבה מרוצפת, פנסים גבוהים ודקים, ושמשיות וסחורה לפני החנויות שבצד הצפוני.
+(function(){try{
+  const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const clear=(x,n,r)=>{for(let a=0;a<6.283;a+=0.785)if(inB(x+Math.cos(a)*r,n+Math.sin(a)*r))return false;return !inB(x,n)};
+  const d=new THREE.Object3D(),MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.85},o||{}));
+  const put=(list,mat,info,geo,shadow)=>{if(!list.length)return;const m=new THREE.InstancedMesh(geo||new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.rotation.set(0,q[3]||0,0);d.scale.set(q[4],q[5],q[6]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=shadow!==false;m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)};
+  const lampM=MAT(0x34383c,{metalness:0.5}),stoneM=M.stoneL||MAT(0xd8ccb2),woodM=MAT(0x6b4a2f),leafM=MAT(0x4f6b34,{roughness:0.95}),barkM=MAT(0x5a4632);
+  // 1) כיכר החורבה
+  {const HI={n:"כיכר החורבה",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 רחבה מרוצפת באבן בהירה, עם פסים של אבן אדמדמה, עצים גדולים בערוגות אבן, ספסלים ופנסים, כמו בתמונות. 💡 המקום המדויק של כל עץ, ספסל ופנס הוא השלמה."};
+    const X0=-405,X1=-350,N0=-314,N1=-280,free=(x,n)=>!inB(x,n)&&!onRoad(x,n),P=[],U=[],R=[];
+    for(let x=X0;x<X1;x+=1)for(let n=N0;n<N1;n+=1){const cx=x+0.5,cn=n+0.5;if(!free(cx,cn))continue;
+      const c=[[x,n],[x+1,n],[x+1,n+1],[x,n+1]].map(q=>[q[0],surfY(q[0],q[1])+0.05,q[1]]);
+      const red=((cx-X0)%8<0.9)||((cn-N0)%8<0.9),A=red?R:P;[0,1,2,0,2,3].forEach(k=>{A.push(c[k][0],c[k][1],-c[k][2])})}
+    [[P,M.pave||MAT(0xd9cdb4)],[R,MAT(0x9a5a44,{roughness:0.8})]].forEach(([A,mat])=>{if(!A.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(A,3));const uv=[];for(let i=0;i<A.length;i+=3)uv.push(A[i]/3,A[i+2]/3);g.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();const m=new THREE.Mesh(g,mat);m.receiveShadow=true;m.userData=HI;WG.add(m);PICK.push(m)});
+    const T=[];for(let x=X0+4;x<X1-3;x+=7)for(let n=N0+4;n<N1-3;n+=7){if(T.length>=6)break;if(!free(x,n)||!clear(x,n,4.5)||onRoad(x+3,n)||onRoad(x-3,n)||onRoad(x,n+3)||onRoad(x,n-3))continue;if(T.some(t=>Math.hypot(t[0]-x,t[1]-n)<8))continue;T.push([x,n,surfY(x,n)])}
+    const PL=[],TR=[],CN=[],BE=[],BL=[],LP=[],LH=[];
+    T.forEach(([x,n,g],i)=>{PL.push([x,g+0.25,n,0,2.8,0.5,2.8]);cwAdd(x,n,0,2.8,2.8,g-1,g+0.5);TR.push([x,g+1.9,n,0,0.35,3.3,0.35]);CN.push([x,g+4.6,n,i,4.2,3.2,4.2]);CN.push([x+0.9,g+5.6,n-0.6,i+1,2.8,2.4,2.8]);
+      const a=i*1.3;BE.push([x+Math.cos(a)*2.4,g+0.45,n+Math.sin(a)*2.4,-a,0.5,0.08,1.8]);BL.push([x+Math.cos(a)*2.4,g+0.22,n+Math.sin(a)*2.4,-a,0.45,0.44,0.12])});
+    const corners=[[X0+3,N0+3],[X1-3,N0+3],[X0+3,N1-3],[X1-3,N1-3],[(X0+X1)/2,(N0+N1)/2]];corners.forEach(([x0,n0])=>{let best=null;for(let r=0;r<8&&!best;r+=1)for(let a=0;a<6.283&&!best;a+=0.785){const x=x0+Math.cos(a)*r,n=n0+Math.sin(a)*r;if(free(x,n)&&clear(x,n,0.8)&&!T.some(t=>Math.hypot(t[0]-x,t[1]-n)<3))best=[x,n]}if(best){const g=surfY(best[0],best[1]);LP.push([best[0],g+2.25,best[1],0,0.12,4.5,0.12]);LH.push([best[0],g+4.6,best[1],0,0.45,0.35,0.45])}});
+    window.__SQ={trees:T.length,hlamps:LP.length};    put(PL,stoneM,HI,new THREE.CylinderGeometry(0.5,0.5,1,20));put(TR,barkM,HI,new THREE.CylinderGeometry(0.4,0.5,1,7));put(CN,leafM,HI,new THREE.IcosahedronGeometry(0.5,1));put(BE,woodM,HI,null,false);put(BL,lampM,HI,null,false);
+    put(LP,lampM,{n:"פנס רחוב",r:"תמונות רחוב (Mapillary)",t:"📜 פנסים בכיכר, כמו בתמונות. 💡 המקום של כל פנס הוא השלמה."});put(LH,MAT(0xf2e6c8,{emissive:0x332a18}),{n:"פנס רחוב",r:"תמונות רחוב (Mapillary)",t:"📜 פנסים בכיכר."})}
+  // 2) כיכר עומר אל־חטאב: פנסים לאורך הרחבה, ושמשיות לפני החנויות בצד הצפוני
+  {const OI={n:"כיכר עומר אל־חטאב",r:"תמונות רחוב (Mapillary, 2015–2023)",t:"📜 הרחבה שבתוך שער יפו: אבן מרוצפת, פנסים גבוהים ודקים, ושמשיות וסחורה לפני החנויות, כמו בתמונות. 📜 כמו בכל העיר העתיקה במודל, אין כאן נסיעה. 💡 המקום המדויק של כל פנס ושמשייה הוא השלמה."};
+    const L=[[-722,-160.5],[-708,-155.8],[-695.7,-151.9],[-685,-148],[-672,-145.5],[-660,-143.5]],LP=[],LH=[],UP=[],UC=[],RK=[];let lastU=null;
+    for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],len=Math.hypot(dx,dn),ux=dx/len,un=dn/len,px=-un,pn=ux;
+      for(let s=0;s<len;s+=3){const x=a[0]+ux*s,n=a[1]+un*s;
+        if(Math.round((i*len+s)/3)%4===0)[1,-1].forEach(sd=>{for(let q=7;q>=3;q-=0.5){const lx=x+px*q*sd,ln=n+pn*q*sd;if(onRoad(lx,ln)&&clear(lx,ln,0.6)){const g=surfY(lx,ln);LP.push([lx,g+3.5,ln,0,0.14,7,0.14]);LH.push([lx,g+7.05,ln,0,0.7,0.18,0.35]);break}}});
+        let fd=-1,sg=1;for(let q=2;q<=18&&fd<0;q+=0.5)for(const z of [1,-1])if(fd<0&&inB(x+px*q*z,n+pn*q*z)){fd=q;sg=z}if(fd<0)continue;const ux2=x+px*sg*(fd-2.2),un2=n+pn*sg*(fd-2.2);
+        if(!onRoad(ux2,un2)||!clear(ux2,un2,1.2)||(lastU&&Math.hypot(lastU[0]-ux2,lastU[1]-un2)<6.5)||UP.length>=6)continue;lastU=[ux2,un2];const g=surfY(ux2,un2);
+        UP.push([ux2,g+1.15,un2,0,0.06,2.3,0.06]);UC.push([ux2,g+2.3,un2,UP.length,2.6,0.5,2.6]);
+        const rx=x+px*sg*(fd-0.6),rn=n+pn*sg*(fd-0.6);RK.push([rx,surfY(rx,rn)+0.8,rn,Math.atan2(-ux,un),1.6,1.6,0.45])}}
+    put(LP,lampM,OI);put(LH,MAT(0x2a2d30,{metalness:0.5}),OI);put(UP,MAT(0xdddddd,{metalness:0.4}),OI,new THREE.CylinderGeometry(0.5,0.5,1,6),false);
+    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),OI,new THREE.ConeGeometry(0.5,1,8,1,true));put(RK,MAT(0xa8432f),OI);window.__SQ=Object.assign(window.__SQ||{},{lamps:LP.length,umb:UP.length})}
+}catch(e){console.warn("squares",e)}})();
 
 /* 126.1 (בדיקה חוזרת 35): מידות הקרדו החפור, וגובה ההליכה בתוכו (קואורדינטות גאוגרפיות x מזרח, n צפון) */
 function cardoGeom(){if(cardoGeom.C)return cardoGeom.C;const cx=-418,cn=-329,L=Math.hypot(0.03,1),vx=0.03/L,vn=1/L,ux=vn,un=-vx,hw=10,hl=12,stw=2,su=3.6;
