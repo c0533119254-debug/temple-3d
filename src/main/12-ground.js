@@ -3,7 +3,7 @@ function H(x,n){let h=Hsyn(x,n);const D=DEM,X1=D.x0+(D.nx-1.01)*D.st,N1=D.n0+(D.
   {let dm=demAt(cx,cn);if(dm!==null){
     if(out===0&&x>-200&&x<260&&n>-320&&n<330&&!inPoly(x,n,GEO.MOUNT)){const e=nearEdge(x,n,GEO.MOUNT);if(e[0]<55){const k=(55-e[0])/Math.max(e[0],0.5),o=demAt(x+(x-e[1])*k,n+(n-e[2])*k);if(o!==null){const f=1-e[0]/55;dm=Math.min(dm,o+(dm-o)*(1-f)-4*f)}}}
     if(out===0){if(!segFar(x,n,KIDRON,90)){const r=segDist(x,n,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2))}h=dm}
-    else{if(!segFar(cx,cn,KIDRON,90)){const r=segDist(cx,cn,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2))}const ss=q=>{q=Math.max(0,Math.min(1,q));return q*q*(3-2*q)},base=dm+(h-Hsyn(cx,cn))*ss(out/300);h=base+(h-base)*ss((out-300)/900)}}}
+    else{if(!segFar(cx,cn,KIDRON,90)){const r=segDist(cx,cn,KIDRON);dm-=3*Math.exp(-Math.pow(r[0]/14,2))}const ss=q=>{q=Math.max(0,Math.min(1,q));return q*q*(3-2*q)},base=dm+(h-Hsyn(cx,cn))*ss(out/300);h=base+(h-base)*ss((out-300)/900);/* 127.7: דרומה ומזרחה ל־DEM יש עכשיו מדידה (DEM2, עד מדבר יהודה). 250 מ׳ מקצה DEM2 עוברים בהדרגה לקרקע שהייתה */{const d2=dem2At(x,n);if(d2!==null){const D=DEM2,e=Math.min(x-D.x0,D.x0+(D.nx-1)*D.st-x,n-D.n0,D.n0+(D.nn-1)*D.st-n);let v=d2;if(!segFar(x,n,KEXT,60)){const r=segDist(x,n,KEXT);v-=2*Math.exp(-Math.pow(r[0]/12,2))}h=h+(v-h)*ss(e/250)}}}}}
   if(x>-240&&x<-40&&n>-300&&n<-70){let f;if(inPoly(x,n,PLAZA)||inPoly(x,n,KZ))f=1;else{let dmin=1e9;for(let i=0;i<PLAZA.length;i++){const r=segDist(x,n,[PLAZA[i],PLAZA[(i+1)%PLAZA.length]]);if(r[0]<dmin)dmin=r[0]}f=Math.max(0,1-dmin/35)}if(f>0){f=f*f*(3-2*f);h=h*(1-f)+PLZ*f}}
   /* 126.6 (סעיף ז): הטיילת משער האשפות אל הרחבה הדרומית עוברת כמעט במישור (בדגם הייתה שם גבעה של 10 מ׳ שלא קיימת במציאות). בתוך 10 מ׳ מהטיילת הקרקע בגובה הטיילת, ועד 24 מ׳ חוזרת בהדרגה */
   if(x>-180&&x<-80&&n>-370&&n<-240){const A=[-114,-344],B=[-150,-258],dx=B[0]-A[0],dn=B[1]-A[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-A[0])*dx+(n-A[1])*dn)/l2)),d=Math.hypot(x-A[0]-dx*t,n-A[1]-dn*t);if(d<24){const y=PLZ-0.9+0.9*t;let f=d<10?1:1-(d-10)/14;f=f*f*(3-2*f);h=h*(1-f)+y*f}}
@@ -334,7 +334,7 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
 
 // ---- terrain ----
 (function(){
-  const X0=-2200,X1=2400,N0=-1800,N1=2200,SX=260,SN=230;
+  const X0=-2200,X1=2400,N0=-3000,N1=2200,SX=260,SN=299;/* 127.7: הקרקע ממשיכה דרומה עד n=-3000 (מדבר יהודה, DEM2) */
   const g=new THREE.PlaneGeometry(X1-X0,N1-N0,SX,SN);g.rotateX(-Math.PI/2);
   const p=g.attributes.position,col=[],uv=g.attributes.uv;
   const cRock=new THREE.Color(0xb3a588),cDry=new THREE.Color(0xa59a74),cGreen=new THREE.Color(0x7f8556),cUrban=new THREE.Color(0xc4baa4);
@@ -354,7 +354,13 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
   const m=new THREE.Mesh(g,tm);m.name="terrain";m.receiveShadow=true;WG.add(m);const m2=new THREE.Mesh(g2,tm);m2.name="terrainIn";m2.receiveShadow=true;CITYSAT.add(m2);
 })();
 
-const RING=new THREE.Mesh(new THREE.RingGeometry(1750,55000,96,1),new THREE.MeshBasicMaterial({color:0x8a8a80}));RING.rotation.x=-Math.PI/2;RING.position.set(100,6,-200);scene.add(RING);
+/* 127.7: הטבעת הרחוקה (צבע הערפל, בגובה 6) כיסתה כל מה שמעבר ל־1750 מ׳. בכיוון מדבר יהודה הקרקע יורדת מתחת לגובה 6, והטבעת הסתירה את הנחל של יחזקאל. עכשיו יש בטבעת חור באזור DEM2 שבתוך רשת הקרקע, והקרקע האמיתית נראית שם */
+const RING=(function(){const R=[1750,1900,2100,2300,2550,2800,3100,3400,3700,4000,4500,6000,55000],NT=128,pos=[],idx=[],cx=100,cz=-200;
+  const hole=(wx,wz)=>{const g=S2G(wx,-wz);return g[0]>DEM2.x0+300&&g[0]<Math.min(2400,DEM2.x0+(DEM2.nx-1)*DEM2.st)-300&&g[1]>Math.max(-3000,DEM2.n0)+300&&g[1]<-700};
+  for(let r=0;r<R.length;r++)for(let t=0;t<NT;t++){const a=t/NT*Math.PI*2;pos.push(cx+Math.cos(a)*R[r],0,cz+Math.sin(a)*R[r])}
+  for(let r=0;r<R.length-1;r++)for(let t=0;t<NT;t++){const a=r*NT+t,b=r*NT+(t+1)%NT,c=a+NT,d=b+NT;const am=(t+0.5)/NT*Math.PI*2,rm=(R[r]+R[r+1])/2;if(R[r+1]<=6000&&hole(cx+Math.cos(am)*rm,cz+Math.sin(am)*rm))continue;idx.push(a,c,b,b,c,d)}
+  const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);g.computeVertexNormals();
+  const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:0x8a8a80,side:THREE.DoubleSide}));m.position.y=6;scene.add(m);return m})();
 // ---- satellite floor (Esri World Imagery, georeferenced corners) ----
 const satTex={};
 function loadSat(b){if(satTex[b.img])return satTex[b.img];const t=new THREE.TextureLoader().load(b.img,undefined,undefined,function(){/* v122.6: ניסיון חוזר לאריח לוויין אחרי תקלת רשת רגעית (502), כדי שהקרקע לא תישאר שחורה */[2500,8000].forEach(function(w){setTimeout(function(){if(t.image&&t.image.width)return;new THREE.ImageLoader().load(b.img,function(img){t.image=img;t.needsUpdate=true})},w)})});t.encoding=THREE.sRGBEncoding;t.anisotropy=renderer.capabilities.getMaxAnisotropy();t.wrapS=t.wrapT=THREE.ClampToEdgeWrapping;satTex[b.img]=t;return t}
