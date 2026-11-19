@@ -112,6 +112,20 @@ async function run(dev) {
     await shot("4-tour-next");
     return `תחנה ${n1} → ${n2}`;
   });
+  await step("מקור בסיור: גלוי, מושהה, פקדים פנויים וסגירה", async () => {
+    const pointer = async (sel) => { const r = await pg.locator(sel).boundingBox(); if (!r) throw new Error("missing " + sel); await pg.mouse.click(r.x+r.width/2,r.y+r.height/2); };
+    await pointer("#stSrc");
+    await until(() => { const c=document.getElementById("infocard");return !c.hidden&&getComputedStyle(c).display!=="none"&&window.__STORY.S.paused; },30000);
+    const r=await pg.evaluate(()=>{const c=document.getElementById("infocard"),b=document.getElementById("tbar");return {bottom:c.getBoundingClientRect().bottom,bar:b.getBoundingClientRect().top,text:document.getElementById("infobody").innerText}});
+    if(r.bottom>r.bar+2||!r.text.includes("📖"))throw new Error("source hidden, empty or covers controls: "+JSON.stringify(r));
+    await shot("4a-tour-source");
+    await pointer("#infoX");await until(()=>document.getElementById("infocard").hidden,15000);
+    await pointer("#stSrc");await until(()=>!document.getElementById("infocard").hidden,15000);
+    await pointer("#stPlay");await until(()=>document.getElementById("infocard").hidden&&!window.__STORY.S.paused,30000);
+    await pointer("#stSrc");await until(()=>!document.getElementById("infocard").hidden,15000);
+    await pointer("#stNext");await until(()=>document.getElementById("infocard").hidden,30000);
+    await shot("4b-tour-source-dismissed");
+  });
   await ovl("בתוך סיור");
   await step("יציאה מהסיור", async () => {
     await tap("#stX");
