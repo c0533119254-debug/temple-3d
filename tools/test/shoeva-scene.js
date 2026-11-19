@@ -28,7 +28,9 @@ const ARGS = { args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--
   await pg.waitForFunction(() => { const v = window.__sukVis && window.__sukVis(); return v && v.on && v.shoeva; }, null, { timeout: 60000 });
   await pg.waitForTimeout(1500);
   const shoe = await pg.evaluate(() => ({ v: window.__sukVis(), s: window.__SHOE && window.__SHOE() }));
-  if (!shoe.s || !(shoe.s.dancers > 0) || !(shoe.s.torches > 0)) throw new Error("סצנת השואבה לא נבנתה: " + JSON.stringify(shoe.s));
+  if (!shoe.s || !(shoe.s.dancers >= 40) || shoe.s.torches < shoe.s.dancers) throw new Error("סצנת השואבה לא נבנתה: " + JSON.stringify(shoe.s));
+  if (!(shoe.s.crowd >= 400)) throw new Error("הקהל דליל: " + shoe.s.crowd);
+  if (!(shoe.s.levites >= 24)) throw new Error("מעט לוויים: " + shoe.s.levites);
   if (shoe.s.lights > shoe.s.cap) throw new Error("יותר מדי אורות: " + shoe.s.lights + " > " + shoe.s.cap);
   await pg.screenshot({ path: OUT + "/shoeva.png" });
   await pg.evaluate(() => window.__STORY.go(3));
@@ -38,7 +40,7 @@ const ARGS = { args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--
   const phase = await pg.evaluate(() => window.__SHOE().phase);
   await pg.screenshot({ path: OUT + "/nisuch.png" });
   await browser.close();
-  const report = ["# שמחת בית השואבה", "", `- מרקדים: ${shoe.s.dancers}`, `- לוליינים: ${shoe.s.jugglers}`, `- אבוקות: ${shoe.s.torches}`, `- אורות: ${shoe.s.lights} / תקרה ${shoe.s.cap}`, `- שלב ניסוך: ${phase}`, `- שגיאות: ${errs.length ? errs.join(" | ") : "אין"}`, ""].join("\n");
+  const report = ["# שמחת בית השואבה", "", `- מרקדים: ${shoe.s.dancers}`, `- לוליינים: ${shoe.s.jugglers}`, `- אבוקות: ${shoe.s.torches}`, `- קהל: ${shoe.s.crowd}`, `- לוויים: ${shoe.s.levites}`, `- אורות: ${shoe.s.lights} / תקרה ${shoe.s.cap}`, `- שלב ניסוך: ${phase}`, `- שגיאות: ${errs.length ? errs.join(" | ") : "אין"}`, ""].join("\n");
   fs.writeFileSync(OUT + "/report.md", report);
   console.log(report);
   if (errs.length) { console.error(errs); process.exit(1); }

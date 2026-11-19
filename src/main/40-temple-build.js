@@ -675,7 +675,7 @@ function build(){
         lulav:I("לולב במקדש כל שבעה","סוכה ג, יב; רמב״ם, הלכות שופר וסוכה ולולב ז, יג","📜 \"בראשונה היה לולב ניטל במקדש שבעה, ובמדינה יום אחד\". ⚖️ הרמב״ם: \"ובמקדש לבדו נוטלין אותו בכל יום ויום משבעת ימי החג\". מוצג בימים ט״ו עד כ״א. 💡 צפיפות הקהל היא ערך תצוגה ולא נתון: בתוכנית 1.2 איש למ״ר ביום ו־2 בלילות השואבה, וכאן מוצגות פחות דמויות, לפי תקציב הדמויות. הדמויות הרחוקות מן המצלמה מצוירות בצורה פשוטה."),
         street:I("לולב ביד ברחובות העיר","רמב״ם, הלכות שופר וסוכה ולולב ז, כד","⚖️ \"כך היה המנהג בירושלים: יוצא אדם מביתו שחרית ולולבו בידו, ונכנס לבית הכנסת ומתפלל, והוא בידו, ויוצא לבקר חולים ולנחם אבלים והוא בידו\". מוצג בימים ט״ו עד כ״א."),
         gez:I("הגזוזטרא — נשים למעלה ואנשים למטה","סוכה נא ע״ב; רמב״ם, הלכות שופר וסוכה ולולב ח, יב","📜 \"תיקון גדול\": הקיפו את עזרת הנשים גזוזטרא, \"והתקינו שיהו נשים יושבות מלמעלה ואנשים מלמטה\". ⚖️ הרמב״ם: \"ערב יום טוב הראשון היו מתקנין במקדש מקום לנשים מלמעלה ולאנשים מלמטה, כדי שלא יתערבו אלו עם אלו\". ⚖️ לפי המלבי״ם (יחזקאל מ, יז) החצר החיצונה היא עזרת הנשים, ולכן הגזוזטרא מקיפה אותה כולה, עם פתח בכל שער. 💡 במודל של יחזקאל אין עזרת נשים נפרדת. הצורה, הגובה, המקום והנשים שעליה הם הצעה לתצוגה, והן מוצגות בכל ימי החג."),
-        lev:I("הלוויים בכלי שיר","סוכה ה, ד; רמב״ם, הלכות שופר וסוכה ולולב ח, יג","📜 \"והלוים בכנורות ובנבלים ובמצלתים ובחצוצרות ובכלי שיר בלא מספר, על חמש עשרה מעלות היורדות מעזרת ישראל לעזרת נשים\". 💡 ביחזקאל אין חמש עשרה מעלות, ולכן הלוויים עומדים כאן על שמונה מעלות השער הפנימי המזרחי (יחזקאל מ, לא), מול המנורות. 💡 איזה כלי ביד כל לוי הוא הצעה לתצוגה: הכתוב מונה כינורות, נבלים, מצלתיים, חצוצרות וכלי שיר בלא מספר, בלי לחלק אותם בין האנשים. מוצג בלילות ט״ז עד כ״א, חוץ משבת."),
+        lev:I("הלוויים בכלי שיר","סוכה ה, ד; רמב״ם, הלכות שופר וסוכה ולולב ח, יג; יחזקאל מ, לא","📜 \"והלוים בכנורות ובנבלים ובמצלתים ובחצוצרות ובכלי שיר בלא מספר\". 📜 ביחזקאל אין חמש עשרה מעלות, ולכן התזמורת עומדת על שמונה מעלות השער הפנימי (יחזקאל מ, לא), מול החצר. 💡 מספר הנגנים, ואיזה כלי ביד כל אחד, הם הצעה: הכתוב מונה את הכלים בלי לחלק אותם. מוצג בלילות ט״ז עד כ״א, חוץ משבת."),
         trump:I("שני כהנים בחצוצרות בשער העליון","סוכה ה, ד","📜 \"ועמדו שני כהנים בשער העליון שיורד מעזרת ישראל לעזרת נשים, ושתי חצוצרות בידיהן\". 💡 ביחזקאל אין חמש עשרה מעלות, ולכן הם עומדים בראש שמונה המעלות של השער הפנימי המזרחי. 💡 צורת החצוצרה היא הצעה לתצוגה."),
         city:Object.assign({noLOD:true},I("כל חצרות העיר מוארות","סוכה ה, ג","📜 \"ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה\". מוצג בלילות ט״ז עד כ״א, חוץ משבת. 💡 מספר האורות ומקומם הם הצעה לתצוגה.")),
         water:I("תהלוכת המים מן השילוח","סוכה ד, ט; מידות א, ד","📜 \"צלוחית של זהב מחזקת שלשת לוגים היה ממלא מן השילוח. הגיעו לשער המים, תקעו והריעו ותקעו\". המשנה אינה אומרת באיזה כלי תקעו, ולכן לא מוצג כאן שופר. 📜 שער המים נמנה במשנה בין שערי הדרום (מידות א, ד). 💡 ביחזקאל אין שער בשם הזה. במודל נבחר השער הפנימי הדרומי, כי השילוח מדרום למקדש. מוצג בבוקר, ט״ו עד כ״א. 💡 מספר המלווים הוא הצעה לתצוגה. 💡 הדרך מן השילוח: התהלוכה עולה ברחוב של עיר דוד, נכנסת בשער חולדה המזרחי, יוצאת אל רחבת ההר והולכת בדרך העולים אל השער. המסלול הזה הוא הצעה לתצוגה, בלי מקור."),
@@ -784,7 +784,10 @@ function build(){
         const NW=SMALL?90:260,wcol=[0x7a3b52,0x3e5c7a,0x8a6f3a,0x4b6b4f,0x6b4a7a,0xb59a6a,0x9a4a3a,0x2f4a66],wm=figset(gWom,NW,C.gez,i=>wcol[i%wcol.length]),ar=decks.map(d=>(d[2]-d[0])*(d[3]-d[1])),AT=ar.reduce((x,y)=>x+y,0);
         for(let i=0;i<NW;i++){let r=rs()*AT,k=0;while(k<decks.length-1&&r>ar[k]){r-=ar[k];k++}const d=decks[k],u=d[0]+0.8+rs()*(d[2]-d[0]-1.6),v=d[1]+0.8+rs()*(d[3]-d[1]-1.6),p=P3(u,v,GZ.y);wm.set(i,p.x,p.y,p.z,Math.atan2(-(250-v),250-u),0.9+rs()*0.08)}wm.done();WMF=wm}
       /* ---- 8. הלוויים על מעלות השער הפנימי המזרחי ---- */
-      const gLev=sub("levites"),LVN=18,lv=figset(gLev,LVN,C.lev),LVP=[];for(let i=0;i<LVN;i++)LVP.push([351.2+(i%3)*2.2,241.5+Math.floor(i/3)*3.4]);
+      /* תזמורת על שמונה המעלות: 💡 כמה נגנים בכל מעלה. הכלים מן המשנה, בלי שם לנגן */
+      const gLev=sub("levites"),LV_STEPS=8,LV_PER=SMALL?4:7,LVN=LV_STEPS*LV_PER,lv=figset(gLev,LVN,C.lev),LVP=[];
+      for(let s=0;s<LV_STEPS;s++)for(let i=0;i<LV_PER;i++)LVP.push([350.45+s,244.4+i*(11.2/(LV_PER-1))]);
+      const LEVP=[];
       const mkIns=(geo,mat)=>{const m=new THREE.InstancedMesh(geo,mat,LVN);m.frustumCulled=false;gLev.add(pick(m,C.lev));return m};
       const harp=mkIns(new THREE.BoxGeometry(0.06,0.42,0.3),M.wood),lyre=mkIns(new THREE.TorusGeometry(0.16,0.028,6,12),M.gold),cym=mkIns(new THREE.CylinderGeometry(0.13,0.13,0.02,10),M.gold),horn=mkIns(new THREE.ConeGeometry(0.045,0.4,7),M.gold);
       const INS=[harp,lyre,cym,horn];
@@ -803,12 +806,15 @@ function build(){
         const ff=new THREE.InstancedMesh(farG,farM,Math.max(1,nf));ff.userData=NL(info);cPick.push(ff);[fb,fh,ff].forEach(q=>{q.frustumCulled=false;q.castShadow=false;grp.add(q)});/* 121: צבע לכל מופע כבר ביצירה, ורשת ריקה מוסתרת, כדי שחומר משותף לא יקבל רשת בלי צבעים */fb.setColorAt(0,CC.setHex(0xffffff));ff.setColorAt(0,CC.setHex(0xffffff));if(!m)fb.visible=fh.visible=false;if(!nf)ff.visible=false;
         let fl=null,ffl=null;if(lgrp){fl=new THREE.InstancedMesh(pawnL,lulM,Math.max(1,m));fl.instanceMatrix=fb.instanceMatrix;ffl=new THREE.InstancedMesh(farL,farLM,Math.max(1,nf));ffl.instanceMatrix=ff.instanceMatrix;if(!m)fl.visible=false;if(!nf)ffl.visible=false;[fl,ffl].forEach(q=>{q.userData=NL(C.lulav);q.frustumCulled=false;q.castShadow=false;lgrp.add(q);cPick.push(q)});near.withLulav(lgrp);near.lul.userData=NL(C.lulav)}
         const idx=spots.map((_,i)=>i),dd=new Float32Array(Math.max(1,n)),last=new THREE.Vector3(1e9,0,0);
-        return{n,update(cam,force){if(!n||(!force&&cam.distanceToSquared(last)<9))return;last.copy(cam);for(let i=0;i<n;i++){const q=spots[i],dx=q[0]-cam.x,dy=q[1]-cam.y,dz=q[2]-cam.z;dd[i]=dx*dx+dy*dy+dz*dz}idx.sort((a,b)=>dd[a]-dd[b]);
+        return{n,near,update(cam,force){if(!n||(!force&&cam.distanceToSquared(last)<9))return;last.copy(cam);for(let i=0;i<n;i++){const q=spots[i],dx=q[0]-cam.x,dy=q[1]-cam.y,dz=q[2]-cam.z;dd[i]=dx*dx+dy*dy+dz*dz}idx.sort((a,b)=>dd[a]-dd[b]);
             for(let j=0;j<n;j++){const q=spots[idx[j]];if(j<k){near.set(j,q[0],q[1],q[2],q[3],q[4]);near.col(j,q[5])}else if(j<k+m){setI(fb,j-k,q[0],q[1],q[2],q[3],q[4]);fb.setColorAt(j-k,CC.setHex(q[5]))}else{setI(ff,j-k-m,q[0],q[1],q[2],q[3],q[4]);ff.setColorAt(j-k-m,CC.setHex(q[5]))}}
             near.fig.count=near.head.count=k;if(near.lul)near.lul.count=k;fb.count=fh.count=m;ff.count=nf;if(fl){fl.count=m;ffl.count=nf}near.done();[fb,ff].forEach(q=>{q.instanceMatrix.needsUpdate=true;if(q.instanceColor)q.instanceColor.needsUpdate=true})}}};
       const spotsOf=(sp,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],3.5);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
       const dayT=tiers(gCrowd,gLul,spotsOf(gscat(SMALL?900:10000,8,8,492,492,3.5,0.9,1.7),250,250,1.2,1),SMALL?140:260,C.lulav,SMALL?1e9:1500);
-      const nightT=tiers(gNight,null,spotsOf(gscat(SMALL?450:1800,GZ.u0+1,GZ.v0+GZ.dp+1,GZ.u1-GZ.dp-1,GZ.v1-GZ.dp-1,3.5,0.7,1.5).filter(q=>Math.hypot(q[0]-415,q[1]-250)>10.5&&![[390,222],[390,278],[440,222],[440,278]].some(c=>Math.hypot(q[0]-c[0],q[1]-c[1])<4.5)),415,250,0.5,3),SMALL?120:260,sbI);
+      /* קהל צפוף סביב הריקוד. 💡 הצפיפות והמספר הם הצעת תצוגה. רשתות מדורגות: קרובים דמות מלאה, רחוקים דמות פשוטה */
+      const pack=[];{const cell=SMALL?1.9:1.22,capC=SMALL?2200:6200;
+        for(let u=350;u<=486&&pack.length<capC;u+=cell)for(let v=168;v<=348&&pack.length<capC;v+=cell){const du=u-415,dv=v-250;if(du*du+dv*dv<30*30)continue;if(u<372&&v>228&&v<272)continue;if([[390,222],[390,278],[440,222],[440,278]].some(c=>Math.hypot(u-c[0],v-c[1])<5.5))continue;pack.push([u+(rs()-0.5)*0.35,v+(rs()-0.5)*0.35])}}
+      const nightT=tiers(gNight,null,spotsOf(pack,415,250,0.35,5),SMALL?70:220,sbI,SMALL?500:1100);
       /* ביכורים והקהל שייכים למצבים אחרים: בלילות השואבה מוצגות מ־FESTG רק המנורות והמרקדים */
       const BIK=FESTG.children.filter(o=>o!==BIMAHG&&((o.userData&&o.userData.n&&/ביכורים/.test(o.userData.n))||(o.material===oxM)||(o.geometry&&o.geometry.type==="TorusGeometry")));
       /* ---- גובה הרצפה מתחת לנקודה (מדרגות השערים): קרן מלמעלה אל המודל, פעם אחת ---- */
@@ -833,60 +839,71 @@ function build(){
         const arcAt=(u,v,y)=>{const e=P3(u,v,y);let bi=0,bd=1e9;pts.forEach((p,i)=>{const d=p.distanceToSquared(e);if(d<bd){bd=d;bi=i}});return WS.l[bi]};
         WS.stop=arcAt(250,302,7.5);WS.gate=arcAt(250,349,7);WS.ramp=arcAt(250,292,11);
         [[245.6,352.5],[254.4,352.5]].forEach((q,i)=>{const p=P3(q[0],q[1],3.5);gk.set(i,p.x,yAt(p.x,p.z,7.5),p.z,-Math.PI/2)});gk.done();
-        LVP.forEach((q,i)=>{const p=P3(q[0],q[1],3.5),y=yAt(p.x,p.z,7.5);lv.set(i,p.x,y,p.z,0);INS.forEach((m,k)=>setI(m,i,p.x+0.28,y+1.05,p.z,k===3?-0.7:0.2,k===(i%4)?1:0.0001))});lv.done();INS.forEach(m=>m.instanceMatrix.needsUpdate=true);
-        [[348.6,243.4],[348.6,256.6]].forEach((q,i)=>{const p=P3(q[0],q[1],3.5),y=yAt(p.x,p.z,7.5);gKoh.set(i,p.x,y,p.z,0);setI(kohT,i,p.x+0.24,y+1.28,p.z,-0.8,1)});gKoh.done();kohT.instanceMatrix.needsUpdate=true;RT=null};
+        LVP.forEach((q,i)=>{const p=P3(q[0],q[1],3.5),y=yAt(p.x,p.z,7.5);lv.set(i,p.x,y,p.z,0,0.92);LEVP[i]=[p.x,y,p.z];INS.forEach((m,k)=>setI(m,i,p.x+0.32,y+1.15,p.z,k===3?-0.9:0.15,k===(i%4)?1.15:0.0001))});lv.done();INS.forEach(m=>m.instanceMatrix.needsUpdate=true);
+        [[350.2,242.6],[350.2,257.4]].forEach((q,i)=>{const p=P3(q[0],q[1],3.5),y=yAt(p.x,p.z,7.5);gKoh.set(i,p.x,y,p.z,0);setI(kohT,i,p.x+0.28,y+1.32,p.z,-0.85,1.2)});gKoh.done();kohT.instanceMatrix.needsUpdate=true;RT=null};
       const watAt=s=>{s=Math.max(0,Math.min(WS.len,s));const L=WS.l;let i=0,j=L.length-1;while(j-i>1){const m=(i+j)>>1;if(L[m]<=s)i=m;else j=m}const a=WS.pts[i],b=WS.pts[j],f=(s-L[i])/((L[j]-L[i])||1);return[a.x+(b.x-a.x)*f,a.y+(b.y-a.y)*f,a.z+(b.z-a.z)*f,Math.atan2(-(b.z-a.z),b.x-a.x)]};
       /* ===== שמחת בית השואבה: מעגלי ריקוד, אבוקות, ולוליינים. אנימציית קודקודים על InstancedMesh.
          אור: ספרייטים וכתמי רצפה, ומעט אורות אמיתיים (תקרה). מספר המנורות נשאר 4: הבבלי נותן גובה בלבד. ===== */
       const gDnc=sub("dance");gDnc.visible=false;
-      C.dance=I("חסידים ואנשי מעשה מרקדים באבוקות","סוכה ה, ד; סוכה נג ע״א; ברטנורא סוכה ה, ד; רמב״ם, הלכות שופר וסוכה ולולב ח, יד","📜 \"חסידים ואנשי מעשה היו מרקדים לפניהם באבוקות של אור שבידיהן, ואומרים לפניהם דברי שירות ותשבחות\" (סוכה ה, ד). 📜 רבן שמעון בן גמליאל נטל שמונה אבוקות, זורק אחת ונוטל אחת, ואינן נוגעות זו בזו (סוכה נג ע״א). 📜 ברטנורא: \"בארבע אבוקות או בשמנה, זורק זו ומקבל זו\". ⚖️ הרמב״ם: גדולי החכמים והחסידים מרקדים, \"אבל כל העם האנשים והנשים כולן באין לראות ולשמוע\". 💡 מספר המרקדים, שלושת המעגלים, הידיים המורמות והקפיצה הם הצעה לתצוגה. 💡 שני לוליינים נוספים, כל אחד בארבע אבוקות, הם הצעה: המקור לזריקה הוא רבן שמעון בן גמליאל והברטנורא, לא כיתה של לוליינים. לוי, שמואל ואביי שבסוגיא הם אמוראים אחרי החורבן, ואינם מוצגים.");
+      C.dance=I("חסידים ואנשי מעשה מרקדים באבוקות","סוכה ה, ד; רמב״ם, הלכות שופר וסוכה ולולב ח, יד","📜 \"חסידים ואנשי מעשה היו מרקדים לפניהם באבוקות של אור שבידיהן, ואומרים לפניהם דברי שירות ותשבחות\" (סוכה ה, ד). ⚖️ הרמב״ם: גדולי החכמים והחסידים מרקדים, וכל העם בא לראות ולשמוע. 💡 מספר המרקדים, המעגלים, השורות, הידיים המורמות, הקפיצה, ומספר האבוקות שכל רקדן זורק — כולם הצעת תצוגה. אין כאן דמות בשם.");
       C.light=I("אור בית השואבה","סוכה ה, ב-ג; סוכה נב ע״ב","📜 מנורות של זהב, ובראש כל אחת ארבעה ספלים, ומבלאי מכנסי כהנים ואבנטיהם מדליקים, \"ולא היתה חצר בירושלים שאינה מאירה מאור בית השואבה\" (סוכה ה, ב-ג). 📜 הבבלי: \"גובהה של מנורה חמשים אמה\" — לשון יחיד, בלי מספר. באתר נשארות ארבע, כמו שהיו. 💡 עוצמת האור, הריצוד, כתם הרצפה, וזוהר החלונות בעיר הם הצעה לתצוגה. האורות האמיתיים מוגבלים: ארבעה במחשב, אחד בטלפון. השאר ספרייטים.");
       C.ladder=I("פרחי כהונה על הסולמות","סוכה ה, ב; סוכה נב ע״ב","📜 \"ארבעה סולמות לכל אחת ואחת, וארבעה ילדים מפרחי כהונה, ובידיהם כדים של מאה ועשרים לוג, שהן מטילין לכל ספל וספל\" (סוכה ה, ב). 📜 הבבלי מברר: שלושים לוג לכד, מאה ועשרים בסך הכול. 💡 תנועת העלייה והשפיכה היא הצעה לתצוגה. מי מדליק את הפתילות לא נאמר.");
       const GT=cvs(64,64,(x,w,h)=>{const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,"rgba(255,244,214,1)");gr.addColorStop(0.2,"rgba(255,205,115,.85)");gr.addColorStop(0.55,"rgba(255,150,50,.22)");gr.addColorStop(1,"rgba(255,140,40,0)");x.fillStyle=gr;x.fillRect(0,0,w,h)});
-      const rings=SMALL?[[8,10,0.36,1,1],[10,17,0.22,-1,2]]:[[12,9,0.38,1,1],[16,15.5,0.26,-1,2],[14,23,0.18,1,0]];
-      let ND=0,NTD=0;rings.forEach(r=>{ND+=r[0];NTD+=r[4]===1?r[0]:r[4]===2?Math.ceil(r[0]/2):0});
-      const JSPEC=SMALL?[[0,0,8]]:[[0,0,8],[7.2,1.1,4],[-6.4,2.4,4]];
-      const NJ=JSPEC.length,NTJ=JSPEC.reduce((s,q)=>s+q[2],0),NT=NTD+NTJ,C0=P3(415,250,3.5),MEN=[[390,222],[390,278],[440,222],[440,278]];
+      /* [count, radius, speed, dir] מעגלים. 💡 המספרים */
+      const rings=SMALL?[[10,8,0.4,1],[14,14,0.26,-1],[12,20,0.18,1]]:[[14,7,0.42,1],[20,12,0.3,-1],[26,17,0.24,1],[30,22,0.18,-1],[24,27,0.14,1]];
+      /* שורות קופצות. 💡 [count, u0, v, step] */
+      const lines=SMALL?[[10,398,272,1.55]]:[[18,388,276,1.4],[14,396,224,1.45]];
+      let ND=0;rings.forEach(r=>ND+=r[0]);lines.forEach(r=>ND+=r[0]);
+      const NTD=ND;
+      /* לוליינים אלמוניים בין המעגלים. 💡 כמה מהם, ו💡 ארבע אבוקות לכל אחד */
+      const NJ=SMALL?2:5,JT=4,NTJ=NJ*JT,NT=NTD+NTJ,C0=P3(415,250,3.5),MEN=[[390,222],[390,278],[440,222],[440,278]];
       const DMAT=(()=>{const m=FIG.mat(0xffffff);const head="attribute float lg;attribute float sk;attribute float idn;varying float vSk;attribute float iph;attribute float iam;attribute float isp;uniform float uT;\n";
-        const body="#include <begin_vertex>\nvSk=sk;float dn=idn;if(abs(lg)>0.5){float sd=sign(lg);bool arm=abs(lg)>1.5;float py=arm?1.32:0.52;float wave=sin(uT*6.2*isp+iph);float a;if(dn>1.5){a=arm?(sd>0.0?2.35+0.14*sin(uT*3.2+iph):0.35+0.15*wave):wave*0.22*sd;}else if(dn>0.5){a=arm?sd*(2.05+0.32*wave):wave*iam*0.7*sd;}else{a=sin(uT*7.0*isp+iph)*iam*(arm?-0.5:0.45)*sd;}transformed.y-=py;float c=cos(a),s=sin(a);transformed.xy=vec2(c*transformed.x-s*transformed.y,s*transformed.x+c*transformed.y);transformed.y+=py;}else if(dn>0.5&&dn<1.5){transformed.y+=abs(sin(uT*6.4*isp+iph))*0.055*iam;transformed.x+=sin(uT*3.1*isp+iph)*0.04*iam;}";
+        const body="#include <begin_vertex>\nvSk=sk;float dn=idn;if(abs(lg)>0.5){float sd=sign(lg);bool arm=abs(lg)>1.5;float py=arm?1.32:0.52;float wave=sin(uT*6.2*isp+iph);float a;if(dn>3.5){a=arm?sd*(0.95+0.42*sin(uT*9.0*isp+iph)):wave*0.1*sd;}else if(dn>2.5){a=arm?sd*(1.2+0.5*sin(uT*11.0*isp+iph)):wave*0.06*sd;}else if(dn>1.5){a=arm?(sd>0.0?2.35+0.14*sin(uT*3.2+iph):0.35+0.15*wave):wave*0.22*sd;}else if(dn>0.5){a=arm?sd*(2.05+0.32*wave):wave*iam*0.7*sd;}else{a=sin(uT*7.0*isp+iph)*iam*(arm?-0.5:0.45)*sd;}transformed.y-=py;float c=cos(a),s=sin(a);transformed.xy=vec2(c*transformed.x-s*transformed.y,s*transformed.x+c*transformed.y);transformed.y+=py;}else if(dn>2.5&&dn<3.5){transformed.y+=abs(sin(uT*11.0*isp+iph))*0.02*iam;}else if(dn>0.5&&dn<1.5){transformed.y+=abs(sin(uT*6.4*isp+iph))*0.06*iam;transformed.x+=sin(uT*3.1*isp+iph)*0.04*iam;}else if(dn>3.5){transformed.y+=abs(sin(uT*9.0*isp+iph))*0.02*iam;}";
         m.onBeforeCompile=sh=>{sh.uniforms.uT=FIG.U.uT;sh.vertexShader=head+sh.vertexShader.replace("#include <begin_vertex>",body);sh.fragmentShader="varying float vSk;\n"+sh.fragmentShader.replace("#include <color_fragment>","#include <color_fragment>\ndiffuseColor.rgb=mix(diffuseColor.rgb,vec3(0.72,0.53,0.4),vSk);")};m.customProgramCacheKey=()=>"fig-dance-shoeva";return m})();
       const withDance=fig=>{fig.material=DMAT;const n=fig.count,dn=new Float32Array(n);fig.geometry.setAttribute("idn",new THREE.InstancedBufferAttribute(dn,1));fig.setDance=(i,a)=>{dn[i]=a};fig.danceUp=()=>{fig.geometry.attributes.idn.needsUpdate=true};return fig};
       const dn=figset(gDnc,ND,C.dance,i=>[0xfbfaf4,0xe6dcc6,0xd8cdb2,0xf1ece0,0xcbb892][i%5]),jg=figset(gDnc,NJ,C.dance,()=>0xc9b27a),lk=figset(gDnc,4,C.ladder,()=>0xe9e4d0);
-      [dn,jg,lk].forEach(o=>withDance(o.fig));withDance(wt.fig);withDance(nisK.fig);withDance(callers.fig);
-      const flM=new THREE.MeshBasicMaterial({color:0xffb040,transparent:true,opacity:0.95,depthWrite:false,fog:false,toneMapped:false});
+      [dn,jg,lk].forEach(o=>withDance(o.fig));withDance(wt.fig);withDance(nisK.fig);withDance(callers.fig);withDance(lv.fig);withDance(gKoh.fig);if(nightT.near)withDance(nightT.near.fig);
+      for(let i=0;i<LVN;i++)lv.fig.setDance(i,3.8);lv.fig.danceUp();gKoh.fig.setDance(0,3.8);gKoh.fig.setDance(1,3.8);gKoh.fig.danceUp();
+      if(nightT.near){for(let i=0;i<nightT.near.fig.count;i++)nightT.near.fig.setDance(i,2.8);nightT.near.fig.danceUp()}
+      const flM=new THREE.MeshBasicMaterial({color:0xffd27a,transparent:true,opacity:1,depthWrite:false,fog:false,toneMapped:false});
       const tks=new THREE.InstancedMesh(new THREE.BoxGeometry(0.035,0.5,0.035),M.wood,NT),fls=new THREE.InstancedMesh(new THREE.SphereGeometry(0.1,8,6),flM,NT),jugs=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.11,0.09,0.32,8),M.gold,4);
       [tks,fls,jugs].forEach(m=>{m.frustumCulled=false;m.castShadow=false;pick(m,m===jugs?C.ladder:C.dance);gDnc.add(m)});
       const gpA=new Float32Array(NT*3),gpG=new THREE.BufferGeometry();gpG.setAttribute("position",new THREE.BufferAttribute(gpA,3));
-      const gpP=new THREE.Points(gpG,new THREE.PointsMaterial({map:GT,size:SMALL?3.2:4.2,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));gpP.frustumCulled=false;gpP.userData=C.light;gDnc.add(gpP);
+      const gpP=new THREE.Points(gpG,new THREE.PointsMaterial({map:GT,size:SMALL?4.2:5.4,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));gpP.frustumCulled=false;gpP.userData=C.light;gDnc.add(gpP);
       const spA=new Float32Array(NT*3*3),spG=new THREE.BufferGeometry();spG.setAttribute("position",new THREE.BufferAttribute(spA,3));
       const spP=new THREE.Points(spG,new THREE.PointsMaterial({map:GT,size:SMALL?1.6:2.1,sizeAttenuation:true,transparent:true,opacity:0.85,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));spP.frustumCulled=false;gDnc.add(spP);
       const NLIT=SMALL?1:4,shoeL=[];
-      for(let i=0;i<NLIT;i++){const L=new THREE.PointLight(0xffb15a,SMALL?1.35:0.95,SMALL?40:34,2);L.position.copy(P3(MEN[i][0],MEN[i][1],40));L.castShadow=false;gDnc.add(L);shoeL.push(L)}
+      for(let i=0;i<NLIT;i++){const L=new THREE.PointLight(0xffc070,SMALL?1.7:1.55,SMALL?46:52,2);L.position.copy(P3(MEN[i][0],MEN[i][1],42));L.castShadow=false;gDnc.add(L);shoeL.push(L)}
       const mps=MEN.map(([u,v])=>{const pa=new Float32Array(12);let k=0;[[2.3,0],[-2.3,0],[0,2.3],[0,-2.3]].forEach(([du,dv])=>{const p=P3(u+du,v+dv,51.6);pa[k++]=p.x;pa[k++]=p.y;pa[k++]=p.z});
-        const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.BufferAttribute(pa,3));const pt=new THREE.Points(gg,new THREE.PointsMaterial({map:GT,size:SMALL?14:16,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));pt.frustumCulled=false;pt.userData=C.light;gDnc.add(pt);return pt});
-      const halo=MEN.map(([u,v])=>{const pa=new Float32Array(3),p=P3(u,v,51.2);pa[0]=p.x;pa[1]=p.y;pa[2]=p.z;const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.BufferAttribute(pa,3));const pt=new THREE.Points(gg,new THREE.PointsMaterial({map:GT,size:SMALL?26:32,sizeAttenuation:true,transparent:true,opacity:0.7,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));pt.frustumCulled=false;gDnc.add(pt);return pt});
-      const plG=new THREE.PlaneGeometry(1,1);plG.rotateX(-Math.PI/2);const plM=new THREE.MeshBasicMaterial({map:GT,transparent:true,opacity:0.38,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,toneMapped:false});
-      MEN.forEach(([u,v])=>{const m=new THREE.Mesh(plG,plM),p=P3(u,v,3.62);m.position.copy(p);m.scale.setScalar(90*A);m.renderOrder=2;gDnc.add(m)});
-      {const m=new THREE.Mesh(plG,plM.clone()),p=P3(415,250,3.58);m.position.copy(p);m.scale.setScalar(200*A);m.material.opacity=0.1;m.renderOrder=2;gDnc.add(m)}
+        const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.BufferAttribute(pa,3));const pt=new THREE.Points(gg,new THREE.PointsMaterial({map:GT,size:SMALL?18:22,sizeAttenuation:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));pt.frustumCulled=false;pt.userData=C.light;gDnc.add(pt);return pt});
+      const halo=MEN.map(([u,v])=>{const pa=new Float32Array(3),p=P3(u,v,51.2);pa[0]=p.x;pa[1]=p.y;pa[2]=p.z;const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.BufferAttribute(pa,3));const pt=new THREE.Points(gg,new THREE.PointsMaterial({map:GT,size:SMALL?34:42,sizeAttenuation:true,transparent:true,opacity:0.8,depthWrite:false,blending:THREE.AdditiveBlending,fog:false,toneMapped:false}));pt.frustumCulled=false;gDnc.add(pt);return pt});
+      const plG=new THREE.PlaneGeometry(1,1);plG.rotateX(-Math.PI/2);const plM=new THREE.MeshBasicMaterial({map:GT,transparent:true,opacity:0.48,blending:THREE.AdditiveBlending,depthWrite:false,fog:false,toneMapped:false});
+      MEN.forEach(([u,v])=>{const m=new THREE.Mesh(plG,plM),p=P3(u,v,3.62);m.position.copy(p);m.scale.setScalar(100*A);m.renderOrder=2;gDnc.add(m)});
+      {const m=new THREE.Mesh(plG,plM.clone()),p=P3(415,250,3.58);m.position.copy(p);m.scale.setScalar(230*A);m.material.opacity=0.16;m.renderOrder=2;gDnc.add(m)}
       {const m=new THREE.Mesh(plG,plM.clone()),p=P3(250,250,7.55);m.position.copy(p);m.scale.setScalar(70*A);m.material.opacity=0.07;m.renderOrder=2;gDnc.add(m)}
       let glowOn=false;
       const shoeGlow=on=>{glowOn=!!on;const night=TIME==="night";
-        if(M.win)M.win.emissiveIntensity=on?4.1:(night?2.2:0);if(M.win2)M.win2.emissiveIntensity=on?1.9:(night?1.05:0);
-        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(q=>{if(q)q.emissiveIntensity=on?2.25:1.3})}
-        if(SUKC.lit&&SUKC.lit.material)SUKC.lit.material.size=on?(SMALL?13:12):(SMALL?10:9);
-        if(typeof bloom!=="undefined"&&bloom){if(on){bloom.strength=0.62;bloom.threshold=0.7}else if(night){bloom.strength=0.55;bloom.threshold=0.75}else{bloom.strength=0.12;bloom.threshold=0.96}}};
+        if(M.win)M.win.emissiveIntensity=on?5.4:(night?2.2:0);if(M.win2)M.win2.emissiveIntensity=on?2.4:(night?1.05:0);
+        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(q=>{if(q)q.emissiveIntensity=on?2.7:1.3})}
+        if(SUKC.lit&&SUKC.lit.material)SUKC.lit.material.size=on?(SMALL?16:15):(SMALL?10:9);
+        if(typeof bloom!=="undefined"&&bloom){if(on){bloom.strength=0.72;bloom.threshold=0.64}else if(night){bloom.strength=0.55;bloom.threshold=0.75}else{bloom.strength=0.12;bloom.threshold=0.96}}};
       const SUKX=(()=>{let t=0,sh=false,ST=null;const stat=()=>{if(ST||!FESTG)return ST||[];ST=[];FESTG.traverse(o=>{if(o.isInstancedMesh&&o.userData&&o.userData.n==="שמחת בית השואבה")ST.push(o);if(o.userData&&o.userData.sbTorch)ST.push(o)});return ST};
         const torch=(k,x,y,z,fl)=>{setI(tks,k,x,y-0.12,z,0,1);setI(fls,k,x,y+0.22,z,0,[1,1.45+fl*0.35,1]);gpA[k*3]=x;gpA[k*3+1]=y+0.22;gpA[k*3+2]=z};
+        const hand=(p,yaw,hop)=>{const ox=Math.sin(yaw)*0.42,oz=Math.cos(yaw)*0.42;return[p.x+ox,p.y+hop+1.82,p.z+oz]};
         const place=t=>{
           let di=0,ti=0;
-          for(let r=0;r<rings.length;r++){const n=rings[r][0],rad=rings[r][1],sp=rings[r][2],dir=rings[r][3],tm=rings[r][4];
-            for(let i=0;i<n;i++,di++){const th=dir*t*sp+i*Math.PI*2/n+r*0.55,tx=-dir*Math.sin(th),tz=dir*Math.cos(th),p=P3(415+rad*Math.cos(th),250+rad*Math.sin(th),3.5),yaw=Math.atan2(-tz,tx),hop=Math.abs(Math.sin(t*6.1+di*0.65))*0.34;
-              dn.set(di,p.x,p.y+hop,p.z,yaw,0.9+(di%5)*0.02);dn.fig.setAmp(di,1);dn.fig.setSp(di,1.05+(di%4)*0.12);dn.fig.setDance(di,1);
-              if(tm===1||(tm===2&&i%2===0)){const ox=Math.sin(yaw)*0.46,oz=Math.cos(yaw)*0.46;torch(ti++,p.x+ox,p.y+hop+1.78,p.z+oz,Math.sin(t*17+di))}}}
+          for(let r=0;r<rings.length;r++){const n=rings[r][0],rad=rings[r][1],sp=rings[r][2],dir=rings[r][3];
+            for(let i=0;i<n;i++,di++){const th=dir*t*sp+i*Math.PI*2/n+r*0.4,tx=-dir*Math.sin(th),tz=dir*Math.cos(th),p=P3(415+rad*Math.cos(th),250+rad*Math.sin(th),3.5),yaw=Math.atan2(-tz,tx),hop=Math.abs(Math.sin(t*(5.2+r*0.35)+di*0.7))*(r%2?0.42:0.28);
+              dn.set(di,p.x,p.y+hop,p.z,yaw,0.9+(di%5)*0.02);dn.fig.setAmp(di,1);dn.fig.setSp(di,1.05+(di%4)*0.15);dn.fig.setDance(di,1);
+              const h=hand(p,yaw,hop);torch(ti++,h[0],h[1],h[2],Math.sin(t*17+di))}}
+          for(let r=0;r<lines.length;r++){const n=lines[r][0],u0=lines[r][1],v=lines[r][2],st=lines[r][3];
+            for(let i=0;i<n;i++,di++){const slide=Math.sin(t*0.7+r)*1.2,p=P3(u0+i*st+slide,v,3.5),yaw=Math.atan2(-(250-v),415-(u0+i*st)),hop=Math.abs(Math.sin(t*7.4+i*0.8))*0.38;
+              dn.set(di,p.x,p.y+hop,p.z,yaw,0.92);dn.fig.setAmp(di,1);dn.fig.setSp(di,1.3);dn.fig.setDance(di,1);
+              const h=hand(p,yaw,hop);torch(ti++,h[0],h[1],h[2],Math.sin(t*15+i))}}
           dn.fig.danceUp();dn.done();
-          for(let j=0;j<NJ;j++){const spec=JSPEC[j],p=P3(415+spec[0],250+spec[1],3.5),hop=Math.abs(Math.sin(t*2.5+j))*0.14,nj=spec[2];
-            jg.set(j,p.x,p.y+hop,p.z,j*0.6);jg.fig.setAmp(j,0.9);jg.fig.setSp(j,1.25);jg.fig.setDance(j,1);
-            for(let k=0;k<nj;k++){const ang=((t*0.85)+k/nj)*Math.PI*2,spread=(k-(nj-1)/2)*0.15;torch(ti++,p.x+spread+Math.sin(ang)*0.12,p.y+hop+1.28+Math.sin(ang)*1.22,p.z+Math.cos(ang)*0.48,Math.sin(t*19+k))}}
+          for(let j=0;j<NJ;j++){const th=t*0.22+j*Math.PI*2/NJ,rad=9+ (j%2)*6,p=P3(415+rad*Math.cos(th),250+rad*Math.sin(th),3.5),hop=Math.abs(Math.sin(t*2.8+j))*0.16;
+            jg.set(j,p.x,p.y+hop,p.z,th);jg.fig.setAmp(j,0.85);jg.fig.setSp(j,1.2);jg.fig.setDance(j,1);
+            for(let k=0;k<JT;k++){const ang=((t*0.9)+k/JT)*Math.PI*2,spread=(k-(JT-1)/2)*0.16;torch(ti++,p.x+spread+Math.sin(ang)*0.1,p.y+hop+1.25+Math.sin(ang)*1.15,p.z+Math.cos(ang)*0.42,Math.sin(t*19+k))}}
           jg.fig.danceUp();jg.done();
           for(let k=0;k<4;k++){const c=((t+k*9)%36)/36;let h,pour=false,mv=true;if(c<0.6)h=5+39*(c/0.6);else if(c<0.78){h=44;pour=true;mv=false}else h=44-39*((c-0.78)/0.22);
             const p=P3(MEN[k][0]+3.35,MEN[k][1],h);lk.set(k,p.x,p.y,p.z,Math.PI);lk.fig.setAmp(k,mv?0.6:0);lk.fig.setSp(k,1.2);lk.fig.setDance(k,mv?0:2);setI(jugs,k,p.x-0.3,p.y+(pour?1.95:1.2),p.z,0,1)}
@@ -894,10 +911,11 @@ function build(){
           tks.instanceMatrix.needsUpdate=fls.instanceMatrix.needsUpdate=true;gpG.attributes.position.needsUpdate=true;
           for(let i=0;i<NT;i++){const x=gpA[i*3],y=gpA[i*3+1],z=gpA[i*3+2];for(let k=0;k<3;k++){const o=i*3+k,ph=((t*1.6)+k*0.33)%1;spA[o*3]=x+Math.sin(t*3+o)*0.07;spA[o*3+1]=y+0.08+ph*0.9;spA[o*3+2]=z+Math.cos(t*2.2+o)*0.07}}
           spG.attributes.position.needsUpdate=true};
-        const flick=tt=>{plM.opacity=0.34+0.06*Math.sin(tt*11);mps.forEach((p,i)=>{p.material.size=(SMALL?14:16)*(1+0.08*Math.sin(tt*9+i*1.9))});halo.forEach((p,i)=>{p.material.size=(SMALL?26:32)*(1+0.06*Math.sin(tt*7+i))});flM.opacity=0.85+0.12*Math.sin(tt*31);shoeL.forEach((L,i)=>{L.intensity=(SMALL?1.35:0.95)*(0.9+0.1*Math.sin(tt*8+i))})};
+        const flick=tt=>{plM.opacity=0.42+0.08*Math.sin(tt*11);mps.forEach((p,i)=>{p.material.size=(SMALL?18:22)*(1+0.08*Math.sin(tt*9+i*1.9))});halo.forEach((p,i)=>{p.material.size=(SMALL?34:42)*(1+0.06*Math.sin(tt*7+i))});flM.opacity=0.9+0.1*Math.sin(tt*31);shoeL.forEach((L,i)=>{L.intensity=(SMALL?1.7:1.55)*(0.9+0.1*Math.sin(tt*8+i))})};
+        const playLev=tt=>{if(!LEVP.length)return;for(let i=0;i<LVN;i++){const q=LEVP[i];if(!q)continue;const bob=Math.sin(tt*8+i*0.7)*0.07;INS.forEach((m,k)=>{if(k!==i%4)return;setI(m,i,q[0]+0.32,q[1]+1.15+bob,q[2],k===3?-0.9:0.15+bob,1.15)});lv.fig.setAmp(i,0.45)}INS.forEach(m=>m.instanceMatrix.needsUpdate=true)};
         return{apply(s){sh=!!s.shoeva;stat().forEach(o=>{o.visible=!sh});shoeGlow(sh);if(sh){t=0;place(0);flick(0)}},
-          tick(dt,tt,still,s){if(!s.shoeva)return;shoeGlow(true);if(!still){t+=dt;place(t);flick(tt);for(let i=0;i<LVN;i++)lv.fig.setAmp(i,0.28);if(WMF)for(let i=0;i<Math.min(WMF.n,SMALL?40:120);i++)WMF.fig.setAmp(i,0.22)}else flick(0)},
-          meta:{dancers:ND,jugglers:NJ,torches:NT,lights:shoeL.length,cap:NLIT}}})();
+          tick(dt,tt,still,s){if(!s.shoeva)return;shoeGlow(true);if(!still){t+=dt;place(t);flick(tt);playLev(tt);if(WMF)for(let i=0;i<Math.min(WMF.n,SMALL?40:120);i++)WMF.fig.setAmp(i,0.22)}else flick(0)},
+          meta:{dancers:ND,jugglers:NJ,torches:NT,lights:shoeL.length,cap:NLIT,crowd:pack.length,levites:LVN}}})();
       /* ---- מצב: מה מוצג בכל יום ובכל שעה ---- */
       const BULLS={15:13,16:12,17:11,18:10,19:9,20:8,21:7,22:1},DN_={15:"ט״ו בתשרי · יום טוב ראשון",16:"ט״ז בתשרי · חול המועד",17:"י״ז בתשרי · חול המועד",18:"י״ח בתשרי · חול המועד",19:"י״ט בתשרי · חול המועד",20:"כ׳ בתשרי · חול המועד",21:"כ״א בתשרי · הושענא רבה",22:"כ״ב בתשרי · שמיני עצרת"};
       let sig="",hud=document.getElementById("sukHud");if(!hud){hud=document.createElement("div");hud.id="sukHud";hud.hidden=true;hud.setAttribute("dir","rtl");hud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(hud)}
@@ -953,7 +971,7 @@ function build(){
             if(T.n===1&&typeof STORY_API!=="undefined"){const S=STORY_API.S;if(S&&!S.move&&(typeof tween==="undefined"||!tween)&&!S.paused){const ih=SUKC.heads&&SUKC.heads[0];if(ih){if(T.k<0)T.k=walker();if(T.k>=0){const e=ih.instanceMatrix.array,i=T.k*16,wp=new THREE.Vector3(e[i+12],e[i+13],e[i+14]);let fx=e[i],fz=e[i+2];const fl=Math.hypot(fx,fz)||1;fx/=fl;fz/=fl;
               const cp=wp.clone().add(new THREE.Vector3(-fx*3.4-fz*1.0,1.9,-fz*3.4+fx*1.0)),tg=wp.clone().add(new THREE.Vector3(fx*0.8,1.15,fz*0.8)),k=Math.min(1,dt*3);WG.localToWorld(cp);WG.localToWorld(tg);camera.position.lerp(cp,k);controls.target.lerp(tg,k);camera.lookAt(controls.target)}}}}}};
         return o})();
-      window.__SHOE=()=>({dancers:SUKX.meta.dancers,jugglers:SUKX.meta.jugglers,torches:SUKX.meta.torches,lights:SUKX.meta.lights,cap:SUKX.meta.cap,phase:NIS.phase});
+      window.__SHOE=()=>({dancers:SUKX.meta.dancers,jugglers:SUKX.meta.jugglers,torches:SUKX.meta.torches,lights:SUKX.meta.lights,cap:SUKX.meta.cap,crowd:SUKX.meta.crowd,levites:SUKX.meta.levites,phase:NIS.phase});
       /* ---- העיר: סוכות על הגגות, אורות בלילות השואבה, ולולב ביד ברחובות. נבנה פעם אחת, בפעם הראשונה שבוחרים סוכות ---- */
       if(!SUKC.apply){SUKC.apply=s=>{if(s.week&&!SUKC.g){const R0=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<1150),cap=SMALL?450:2200,sd=Math.max(1,Math.ceil(R0.length/cap)),GS=[];let R=R0.filter((q,i)=>i%sd===0);const g=new THREE.Group();
             /* גרסה 121: סוכות גם בחצרות הבתים ובשתי רחבות (נחמיה ח, טז: "ובחצרתיהם... וברחוב שער המים וברחוב שער אפרים"). 💡 המקומות והכמות הם הצעה לתצוגה */
