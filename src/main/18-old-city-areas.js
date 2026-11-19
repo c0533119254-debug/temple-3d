@@ -701,3 +701,11 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
   __AFTER(()=>{try{const q=G2S(cx,(P.n0+P.n1)/2);label("בריכת הסולטן",q[0],TY(cx,(P.n0+P.n1)/2)+10,-q[1],null,INFP);const v=[-700,-1000],q2=G2S(v[0],v[1]);label("גיא בן הינום",q2[0],TY(v[0],v[1])+16,-q2[1],null,INFV)}catch(e){console.warn("hinnom label",e)}});
   window.__HIN11={lamps:LP.length,benches,trees:nT,orchard:OL,terraces:WL.length};
 }catch(e){console.warn("hinnom",e)}})();
+/* 129.7: משכנות שאננים וימין משה, לפי תמונות Mapillary והלוויין: מעקה משונן על הגג השטוח של השורה הארוכה, ושמות לשכונות */
+(function(){try{const INFM={n:"משכנות שאננים",r:"📜 היסטוריה; תמונות Mapillary ולוויין",t:"📜 השכונה הראשונה מחוץ לחומות העיר העתיקה, נבנתה בשנת 1860 ביוזמת משה מונטיפיורי. שורה ארוכה של דירות בקומה אחת עם גג שטוח ומעקה משונן, מול הר ציון."},
+  INFY={n:"ימין משה",r:"📜 היסטוריה; תמונות Mapillary ולוויין",t:"📜 שכונה שנבנתה בשנות ה־90 של המאה ה־19 ליד משכנות שאננים, על שם משה מונטיפיורי. בתים נמוכים מאבן עם גגות רעפים אדומים, וסמטאות מדרגות מרוצפות בין הגינות."};
+  const MER=[];YM12.M.forEach(B=>{const p=B.pts;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.floor(L/1.6);for(let j=0;j<k;j++){const t=(j+0.5)/k;MER.push([a[0]+(b[0]-a[0])*t,B.y,a[1]+(b[1]-a[1])*t,Math.atan2(b[1]-a[1],b[0]-a[0])])}}});
+  if(MER.length){const d=new THREE.Object3D(),m=new THREE.InstancedMesh(new THREE.BoxGeometry(0.75,0.7,0.45),new THREE.MeshStandardMaterial({color:0xd9ccb0,roughness:0.9}),MER.length);
+    MER.forEach((q,i)=>{d.rotation.set(0,q[3],0);d.position.set(q[0],q[1]+0.3,-q[2]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.castShadow=true;m.receiveShadow=true;m.userData=INFM;WG.add(m);PICK.push(m)}
+  __AFTER(()=>{try{const a=[-993,-760],q=G2S(a[0],a[1]);label("משכנות שאננים",q[0],TY(a[0],a[1])+12,-q[1],null,INFM);const b=[-1015,-640],q2=G2S(b[0],b[1]);label("ימין משה",q2[0],TY(b[0],b[1])+16,-q2[1],null,INFY)}catch(e){console.warn("ym label",e)}});
+  window.__YM12={mish:YM12.M.length,merlons:MER.length}}catch(e){console.warn("yemin moshe",e)}})();
