@@ -570,7 +570,19 @@ function build(){
         const t4=pad(ue+24,212,ue+30,218,0,null,pc);cyl(ue+27,215,t4,t4+2,0.9,0.7,M.stoneL,pc,16);cyl(ue+27,215,t4+2,t4+2.3,1.3,1.3,M.stoneL,pc,16);
         CL("מרכז טהרה",ue+20,208,t1+12,pc,false);
         const sp=I("מקום שריפת הפרה","פרה ג, ז-ט; מידות ב, ד","⚖️ בהר המשחה, מול פתח ההיכל, שורפים את הפרה האדומה, ומשליכים לתוך שריפתה עץ ארז, אזוב ושני תולעת. 📜 הכהן עומד \"ומכוין ורואה כנגד פתחו של היכל\" (מידות ב, ד). 💡 המקום המדויק הוא הצעה, על הקו של ציר הבית.");
-        const pu=ue+24,g1=GY(pu,250);cyl(pu,250,g1-0.5,g1+0.7,3.2,3.4,M.stone2,sp,18);cyl(pu,250,g1+0.6,g1+0.8,2.6,2.6,M.ash,sp,18);CL("מקום שריפת הפרה",pu,250,g1+6,sp,true)}}
+        const pu=ue+24,g0=GY(pu,250),g1=Math.max(g0,GY(pu-10,240),GY(pu+10,240),GY(pu-10,260),GY(pu+10,260),GY(pu,240),GY(pu,260),GY(pu-10,250),GY(pu+10,250))+0.2;
+        /* 126.9: מתחם השריפה לפי משנה פרה ג. משטח אבן; המערכה "כמין מגדל" עם חלונות (פרה ג, ח); מקום העמידה של הכהן במערב, מול פתח ההיכל (מידות ב, ד); בית טבילה (פרה ג, ז); ובית לשליש האפר שנשאר בהר המשחה (פרה ג, יא) */
+        box(pu-10,240,pu+10,260,gmin(pu-10,240,pu+10,260)-1,g1+0.6,M.stoneL,sp);
+        /* מדרגות מהשביל של הכבש אל המשטח, בצד המערבי מצפון למקום העמידה */{const gs=GY(pu-11,254),rise=g1+0.6-gs;if(rise>0.35){const n=Math.ceil(rise/0.33),tr=0.6;for(let k=0;k<n;k++){const u1=pu-10-k*tr;box(u1-tr,252.5,u1,256,gs-0.6,g1+0.6-(k+1)*rise/n+rise/n,M.stoneL,sp,{noCol:true})}}}
+        for(let k=0;k<8;k++){const y=g1+0.6+k*0.7;[-1,1].forEach(s2=>{if(k%2===0)box(pu-2.3,250+s2*1.9-0.35,pu+2.3,250+s2*1.9+0.35,y,y+0.62,M.wood,sp,{noCol:true});else box(pu+s2*1.9-0.35,247.7,pu+s2*1.9+0.35,252.3,y,y+0.62,M.wood,sp,{noCol:true})})}
+        cyl(pu,250,g1+0.6,g1+0.75,1.5,1.5,M.ash,sp,18);
+        const kh=I("מקום העמידה של הכהן השורף","מידות ב, ד; פרה ג, ט","⚖️ \"הכהן השורף את הפרה עומד בראש הר המשחה, ומתכוין ורואה בפתחו של היכל בשעת הזאת הדם\" (מידות ב, ד). ⚖️ לכן כל הכתלים גבוהים, חוץ מהכותל המזרחי. 📜 הכהן מזה מן הדם שבע פעמים \"כנגד בית קדשי הקדשים\" (פרה ג, ט). 💡 במודל הקו מכאן אל פתח ההיכל פנוי: אין עליו בניינים ועצים.");
+        box(pu-9.6,248.3,pu-7,251.7,g1+0.6,g1+1.3,M.stone2,kh);CL("מקום העמידה של הכהן",pu-8.3,250,g1+5,kh,true);
+        const bt=I("בית הטבילה של שריפת הפרה","פרה ג, ז","⚖️ \"ובית טבילה היה שם\" (פרה ג, ז): הכהן השורף טובל שם לפני השריפה. 💡 הגודל והצורה הם הצעה.");
+        box(pu+3,241,pu+9.5,246.5,g1+0.6,g1+1.0,M.stoneL,bt);box(pu+3.6,241.6,pu+8.9,245.9,g1+0.75,g1+1.05,M.water,bt,{noCol:true,cast:false});CL("בית הטבילה של הפרה",pu+6.2,243.7,g1+5,bt,true);
+        const af=I("מקום שליש האפר בהר המשחה","פרה ג, יא","⚖️ \"ונותנין אותו לשלשה חלקים: אחד ניתן בחיל, ואחד בהר המשחה, ואחד מתחלק לכל המשמרות\" (פרה ג, יא). 💡 החלק של הר המשחה נשמר כאן, בבית אבן קטן וסגור. הצורה היא הצעה.");
+        box(pu+2.5,253,pu+9,259,g1+0.6,g1+6,M.stoneL,af);cyl(pu+5.75,256,g1+6,g1+7.2,2.4,2.8,M.stone2,af,16);box(pu+4.9,252.9,pu+6.6,253,g1+0.6,g1+3.8,M.dark,null,{noCol:true,cast:false});CL("מקום האפר",pu+5.75,256,g1+11,af,true);
+        CL("מקום שריפת הפרה",pu,250,g1+9,sp,true)}}
     // -- outside the holy area (💡 modern state) --
     {const svc=I("שירותים, מים וצל","💡 הצעה","💡 ליד כל כניסה להר: שירותים, ברזיות של מים קרים, וסטיו של אבן לצל לממתינים, כמו הסטווים שהקיפו את ההר (פסחים יג, ב: \"סטיו לפנים מסטיו\"). הם עומדים מחוץ לחומה, מחוץ לשטח המקודש.");
       const sec=I("שביל חירום","💡 הצעה","💡 שביל פנוי, מרוצף באבן בהירה, מהשער אל הרחוב, לאמבולנס ולכבאית, וגם לניהול העומס בחגים. הוא מחוץ לשטח המקודש.");
@@ -864,7 +876,7 @@ function build(){
           roofPose(){const R=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<700),r0=WGp(-90,250,3.5);let b=null,bd=1e9;R.forEach(q=>{const d=Math.hypot(q[0]-r0.x,q[2]-r0.z);if(d<bd){bd=d;b=q}});if(!b)return VP("city")();const h=b[1]-surfY(b[0],b[2]);return GP(b[0]-22,b[2]-26,h+13,b[0]+2,b[2],h+1)()},
           roofEnd(){const R=SUKC.roofs.filter(q=>Math.hypot(q[0],q[2])<700),r0=WGp(-90,250,3.5);let b=null,bd=1e9;R.forEach(q=>{const d=Math.hypot(q[0]-r0.x,q[2]-r0.z);if(d<bd){bd=d;b=q}});if(!b)return VP("city")();const h=b[1]-surfY(b[0],b[2]);return GP(b[0]+24,b[2]+18,h+12,b[0]+44,b[2]+30,h+2)()},
           walkPose(){const k=walker();if(k<0)return VP("city")();const e=SUKC.heads[0].instanceMatrix.array,x=e[k*16+12],y=e[k*16+13],z=e[k*16+14];return GP(x-3,-z-3,y+3.6-surfY(x,-z),x,-z,y-surfY(x,-z)-0.4)()},
-          poolPose(){const pc=SUKC.pool;if(!pc)return GP(160,-430,80,40,-600,10)();const y0=surfY(pc[0],pc[1]);return GP(pc[0]-9,pc[1]-12,6.5,pc[0],pc[1],0.6)()},
+          poolPose(){const pc=SUKC.pool;if(!pc)return GP(160,-430,80,40,-600,10)();if(typeof COD8!=="undefined"&&COD8.pool.y0!=null){const Q=COD8.pool;return GP(pc[0]-Q.U[0]*30-Q.A[0]*18,pc[1]-Q.U[1]*30-Q.A[1]*18,14,pc[0],pc[1],-1)()}const y0=surfY(pc[0],pc[1]);return GP(pc[0]-9,pc[1]-12,6.5,pc[0],pc[1],0.6)()},
           tick(dt,tt,still){if(T.n<0)return;
             if(TIME!==TM[T.n]&&performance.now()-(T.ck||0)>2500){T.ck=performance.now();document.getElementById(TB[TM[T.n]]).click()}
             if(T.n===2&&!T.set&&WS&&SUKC.asc){WS.ph=0;WS.c=0;WS.wait=0;T.set=true}
@@ -897,8 +909,10 @@ function build(){
             SUKC.g=g;SUKC.lit=lit;WG.add(g,lit);
             /* ---- גרסה 119: הדרך מן השילוח אל שער חולדה המזרחי. 💡 המסלול (רחוב עיר דוד, המדרגות הדרומיות) ומקום הבריכה הם הצעה לתצוגה ---- */
             try{const nr=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1])<8,fr=(a,b)=>{for(const rd of ROADS){const p=rd.p,e=p[p.length-1],hh=rd.hc||rd.h;if(!hh)continue;if(nr(p[0],a)&&nr(e,b))return p.map((q,i)=>[q[0],q[1],hh[i]]);if(nr(p[0],b)&&nr(e,a))return p.map((q,i)=>[q[0],q[1],hh[i]]).reverse()}return null};
-              const r1=fr([-33,-898],[-109,-770]),r2=fr([-109,-770],[13,-348]);
-              if(r1&&r2){let bi=0,bd=1e9;r1.forEach((q,i)=>{const d=Math.hypot(q[0]+46,q[1]+888);if(d<bd){bd=d;bi=i}});const road=r1.slice(bi).concat(r2.slice(1)),P=[];
+              /* 126.8: רחוב העולים של עיר דוד הוא עכשיו מדרחוב, והתהלוכה יוצאת מבריכת השילוח הקבועה ועולה בו */
+              const CODR=(typeof COD8!=="undefined"&&COD8.pool.y0!=null)?(L=>{const o=[];for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],m=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/2));for(let j=0;j<m;j++){const x=a[0]+(b[0]-a[0])*j/m,n=a[1]+(b[1]-a[1])*j/m;o.push([x,n,surfY(x,n)])}}const e=L[L.length-1];o.push([e[0],e[1],surfY(e[0],e[1])]);return o})(COD8.way.concat([[4.1,-412.9],[6.3,-407.4],[8.3,-399.8],[10.1,-391.3],[11,-384.8],[10.8,-379.4],[11.3,-370.3],[11.6,-361.6],[13.1,-348]])):null;
+              const r1=CODR?null:fr([-33,-898],[-109,-770]),r2=CODR?null:fr([-109,-770],[13,-348]);
+              if(CODR||(r1&&r2)){let road;if(CODR)road=CODR;else{let bi=0,bd=1e9;r1.forEach((q,i)=>{const d=Math.hypot(q[0]+46,q[1]+888);if(d<bd){bd=d;bi=i}});road=r1.slice(bi).concat(r2.slice(1))}const P=[];
                 /* הולכים בצד הרחוב ולא באמצעו */road.forEach((q,i)=>{const a=road[Math.max(0,i-1)],b=road[Math.min(road.length-1,i+1)],dx=b[0]-a[0],dn=b[1]-a[1],l=Math.hypot(dx,dn)||1;P.push([q[0]+dn/l*2.6,q[1]-dx/l*2.6,q[2]+0.06])});
                 const RL2a=[];WG.traverse(o=>{if(o.isMesh&&!o.isInstancedMesh&&o.visible&&o!==f&&o!==k)RL2a.push(o)});WG.updateMatrixWorld(true);
                 /* 123.8: קרני הבדיקה (בריכה ומסלול) רצו על כל מיליון המשולשים של העיר וחסמו את המסך כמה שניות. עכשיו הן רצות רק על המשולשים שבאזור הדרך (אותם משולשים בדיוק, אותה תוצאה) */
@@ -912,14 +926,14 @@ function build(){
                 const af=FIG.mesh(AN,FIG.mat(0xffffff)),ah=new THREE.InstancedMesh(FIG.head(),skinM,AN),fk=new THREE.Mesh(new THREE.SphereGeometry(0.11,10,8),M.gold);fk.scale.y=1.5;[af,ah].forEach(m=>{m.frustumCulled=false;m.castShadow=false});af.userData=C.water;fk.userData=C.water;PICK.push(af,fk);
                 for(let i=0;i<AN;i++)af.setColorAt(i,CC.setHex(i?[0xfbfaf4,0xe6dcc6,0xd8cdb2][i%3]:0xfbfaf4));
                 const ag=new THREE.Group();ag.name="SUKASC";ag.add(af,ah,fk);ag.visible=false;WG.add(ag);
-                /* הבריכה 💡: מחפשים לידה מקום שאין בו בניין */const clr=(x,n)=>{const gyv=surfY(x,n);v3.set(x,0,-n);WG.localToWorld(v3);rc.set(new THREE.Vector3(v3.x,gyv+45,v3.z),dn3);rc.far=70;const hh=rc.intersectObjects(RL2.at(v3.x,v3.z),false)[0];return !hh||hh.point.y<gyv+1.3};/* גרסה 121: בוחרים ליד תחילת הדרך את המקום הישר ביותר שאין בו בניין, והבריכה שקועה בו עם קיר תומך מאבן בצד הנמוך */
+                if(CODR){SUKC.pool=COD8.pool.c;SUKC.poolSp=0}else{/* הבריכה 💡: מחפשים לידה מקום שאין בו בניין */const clr=(x,n)=>{const gyv=surfY(x,n);v3.set(x,0,-n);WG.localToWorld(v3);rc.set(new THREE.Vector3(v3.x,gyv+45,v3.z),dn3);rc.far=70;const hh=rc.intersectObjects(RL2.at(v3.x,v3.z),false)[0];return !hh||hh.point.y<gyv+1.3};/* גרסה 121: בוחרים ליד תחילת הדרך את המקום הישר ביותר שאין בו בניין, והבריכה שקועה בו עם קיר תומך מאבן בצד הנמוך */
                 const PW=12,PD=8,cor=[[0,0],[PW/2,PD/2],[PW/2,-PD/2],[-PW/2,PD/2],[-PW/2,-PD/2]];let best=null;
                 for(const i0 of [0,6,12,20,30,42,56,70])for(const d of [9,-9,13,-13,18,-18,24,-24]){const a0=P[i0],a1=P[i0+3];if(!a1)continue;const dx=a1[0]-a0[0],dn=a1[1]-a0[1],l=Math.hypot(dx,dn)||1,c=[a0[0]+dn/l*d,a0[1]-dx/l*d],pts=cor.map(o=>[c[0]+dx/l*o[0]+dn/l*o[1],c[1]+dn/l*o[0]-dx/l*o[1]]),hs=pts.map(q=>surfY(q[0],q[1])),lo=Math.min(...hs),hi=Math.max(...hs);/* 123.8: קודם בודקים שטיחות (זול), ורק מועמד טוב יותר מהקיים עובר בדיקת קרניים (יקרה). אותה תוצאה בדיוק, בלי תקיעה של כמה שניות */if(best&&hi-lo>=best.sp)continue;if(!pts.every(q=>clr(q[0],q[1])))continue;if(!best||hi-lo<best.sp)best={c,sp:hi-lo,hi,lo,ang:Math.atan2(dn,dx)}}
                 if(!best){const a0=P[0],a1=P[3],dx=a1[0]-a0[0],dn=a1[1]-a0[1],l=Math.hypot(dx,dn)||1,c=[a0[0]+dn/l*9,a0[1]-dx/l*9],y0=surfY(c[0],c[1]);best={c,sp:1.5,hi:y0+0.7,lo:y0-0.7,ang:Math.atan2(dn,dx)}}
                 const pc=best.c;SUKC.pool=pc;SUKC.poolSp=best.sp;const py=best.hi+0.2,ang=best.ang,dep=best.sp+1.6;
                 const pg=new THREE.Group();pg.position.set(pc[0],py,-pc[1]);pg.rotation.y=ang;const stM=M.wall||M.pave||std(0xb9a985,{roughness:0.95}),stP=M.pave||stM,pb=(w,h,d,x,y,z,mt)=>{const q=new THREE.Mesh(mt&&mt.isBasic?new THREE.BoxGeometry(w,h,d):wbox(w,h,d,4),mt||stM);q.position.set(x,y,z);q.userData=C.pool;q.receiveShadow=true;q.castShadow=true;PICK.push(q);pg.add(q)};
                 [[PW,PD,0,0],[PW-1.4,PD-1.4,-0.3,1],[PW-2.8,PD-2.8,-0.6,2]].forEach(([w,d,top,i])=>{const t=0.7,h=i?0.3:dep,mt=i?stP:stM;pb(w,h,t,0,top-h/2,d/2-t/2,mt);pb(w,h,t,0,top-h/2,-d/2+t/2,mt);pb(t,h,d-2*t,w/2-t/2,top-h/2,0,mt);pb(t,h,d-2*t,-w/2+t/2,top-h/2,0,mt)});
-                pb(PW-4.2,0.5,PD-4.2,0,-1.1,0,stP);{const wm=std(0x3f7f8f,{roughness:0.15,metalness:0.1});wm.isBasic=true;pb(PW-4.2,0.06,PD-4.2,0,-0.82,0,wm)}g.add(pg);
+                pb(PW-4.2,0.5,PD-4.2,0,-1.1,0,stP);{const wm=std(0x3f7f8f,{roughness:0.15,metalness:0.1});wm.isBasic=true;pb(PW-4.2,0.06,PD-4.2,0,-0.82,0,wm)}g.add(pg);}
                 const at=t=>{t=Math.max(0,Math.min(len,t));let i=0,j=L.length-1;while(j-i>1){const m=(i+j)>>1;if(L[m]<=t)i=m;else j=m}const a=P[i],b=P[j],fq=(t-L[i])/((L[j]-L[i])||1);return[a[0]+(b[0]-a[0])*fq,a[2]+(b[2]-a[2])*fq,-(a[1]+(b[1]-a[1])*fq),Math.atan2(b[1]-a[1],b[0]-a[0])]};
                 SUKC.asc={len,P,show(b){ag.visible=b},pose(c){for(let i=0;i<AN;i++){const t=c-i*1.25,q=at(t),sc=t>=len?0.0001:1,mv=t>0&&t<len;setI(af,i,q[0],q[1],q[2],q[3],sc);setI(ah,i,q[0],q[1]+1.56,q[2],q[3],sc);af.setAmp(i,mv?1:0);if(!i){fk.visible=t<len;fk.position.set(q[0]+Math.cos(q[3])*0.3,q[1]+1.12,q[2]-Math.sin(q[3])*0.3)}}af.instanceMatrix.needsUpdate=ah.instanceMatrix.needsUpdate=true}}}}catch(e){console.warn("sukAsc",e)}
             SUKC.lul=(SUKC.heads||[]).map(h=>{const lg=lulG.clone();lg.translate(0,-1.56,0);const l=new THREE.InstancedMesh(lg,lulM,h.count);l.instanceMatrix=h.instanceMatrix;FIG.LOD.follow(h,l);l.frustumCulled=false;l.castShadow=false;l.userData=C.street;PICK.push(l);WG.add(l);return[l,h]})}
