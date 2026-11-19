@@ -19,7 +19,8 @@ const tower=(x,n,w,d,h,rot,k,pass)=>{let lo=1e9,hi=-1e9;[[-1,-1],[1,-1],[1,1],[-
   {const ph=pass?0:2.2;add(k||"wall",wbox(w+1.6,hi-base+ph,d+1.6,6),x,(base+hi+ph)/2,n,rot)} // battered plinth
   [[0,d/2-0.4,w],[0,-d/2+0.4,w]].forEach(e=>{const p=off(x,n,rot,0,e[1]);crenel(p[0],p[1],rot,e[2],top,0,k)});
   [[w/2-0.4],[-w/2+0.4]].forEach(e=>{const p=off(x,n,rot,e[0],0);crenel(p[0],p[1],rot+Math.PI/2,d-1.6,top,0,k)});
-  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f),p=off(x,n,rot,i*w*0.22,0);add("dark",new THREE.BoxGeometry(0.45,1.5,d+0.3),p[0],yy,p[1],rot);const p2=off(x,n,rot,0,i*d*0.22);add("dark",new THREE.BoxGeometry(w+0.3,1.5,0.45),p2[0],yy,p2[1],rot)}
+  /* 128.8: arrow slits are thin plates on each face. They used to be one dark bar right through the tower, and in a gate tower with a passage (שער יפו) the bar hung in mid-air inside the arch */
+  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f);for(const sd of[-1,1]){const p=off(x,n,rot,i*w*0.22,sd*(d/2-0.1));add("dark",new THREE.BoxGeometry(0.45,1.5,0.5),p[0],yy,p[1],rot);const p2=off(x,n,rot,sd*(w/2-0.1),i*d*0.22);add("dark",new THREE.BoxGeometry(0.5,1.5,0.45),p2[0],yy,p2[1],rot)}}
   return{top,base,hi}};
 // --- the Citadel: an enclosure with towers around a courtyard (💡 simplified plan after the real walls) ---
 const P=[[-731,-173],[-700,-161],[-676,-156],[-662,-168],[-666,-190],[-667,-222],[-678,-242],[-686,-252],[-718,-262],[-733,-258],[-728,-205]];
