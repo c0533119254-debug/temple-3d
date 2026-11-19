@@ -4,7 +4,7 @@
 (function(){
 const AMB={on:true,ready:false,loading:false,lv:{},why:""};window.__AMB=AMB;
 try{AMB.on=localStorage.getItem("tm_amb")!=="0"}catch(e){}
-const FILES={city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",steps:"sfx/steps.mp3",coins:"sfx/coins.mp3"};
+const FILES={city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",steps:"sfx/steps.mp3",sheep:"sfx/sheep.mp3",coins:"sfx/coins.mp3"};
 const LOOPS=["city","market","quiet","stream","birds","night","steps"];
 /* נקודות הנקישה בקובץ המטבעות (שניות: התחלה, אורך) */
 const CLINKS=[[0,1.5],[1.6,1.5],[3.2,1.5],[4.8,1.5],[6.4,1.5]];
@@ -32,9 +32,16 @@ function mktD(x,n){NP=null;/* השווקים המקורים: מלבן; מחוץ 
 function rivD(x,z){const P=window.__RIVPTS;if(!P||typeof SHOW_RIVER!=="undefined"&&!SHOW_RIVER)return 1e9;let d=1e9;NP=null;for(let i=0;i<P.length-1;i+=2){const a=P[i],b=P[Math.min(i+2,P.length-1)],e=segD(x,z,[a[0],a[2]],[b[0],b[2]]);if(e<d){d=e;NP=segD.p}}return d}
 /* השולחנים (שקלים א, ג): שש שולחנות בהר הבית, מרכז השורה u 220, v 58.8 בשרטוט הצפוני, שמשתקף לדרום (v -> 500-v) */
 function changersXZ(){if(!COMP)return null;return[COMP.X0+220*A,-(COMP.N0-(500-58.8)*A)]}
-let nextClink=0;
+let nextClink=0,nextBaa=0;
+/* 130.3: עולי הרגל והכבשים שהולכים במודל (24-transport). כמה עולים יש עד 30 מ׳, והכבש הקרוב (בעולם: x, z) */
+const BAAS=[[0,0.9],[1.0,1.0],[2.1,1.7],[3.9,1.9]];
+function pilgrims(x,n){const M=window.__PGM;if(!M)return{c:0,sd:1e9,sp:null};let c=0,sd=1e9,sp=null;
+  const scan=(m,f)=>{const a=m.instanceMatrix.array,N=m.count,w=m.matrixWorld.elements;for(let i=0;i<N;i++){const o=i*16;if(Math.hypot(a[o],a[o+1],a[o+2])<0.05)continue;const lx=a[o+12],ly=a[o+13],lz=a[o+14],px=w[0]*lx+w[4]*ly+w[8]*lz+w[12],pz=w[2]*lx+w[6]*ly+w[10]*lz+w[14],d=Math.hypot(px-x,pz-n);if(d<30)f(d,px,pz)}};
+  try{scan(M.b,d=>{c+=d<10?1:0.5});scan(M.s,(d,px,pn)=>{if(d<sd){sd=d;sp=[px,pn]}})}catch(e){}
+  return{c,sd,sp}}
+function baa(vol,pan){if(!bufs.sheep||!ctx)return;const c=BAAS[Math.floor(Math.random()*BAAS.length)];if(c[0]+c[1]>bufs.sheep.duration)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.sheep;s.playbackRate.value=0.9+Math.random()*0.2;g.gain.value=vol;s.connect(g);if(p){p.pan.value=pan;g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],c[1])}
 function clink(vol){if(!bufs.coins||!ctx)return;const c=CLINKS[Math.floor(Math.random()*CLINKS.length)];if(c[0]+c[1]>bufs.coins.duration)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.coins;s.playbackRate.value=0.92+Math.random()*0.16;g.gain.value=vol;s.connect(g);if(p){p.pan.value=Math.max(-1,Math.min(1,((AMB.pan&&AMB.pan.market)||0)+Math.random()*0.4-0.2));g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],c[1])}
-function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0,steps:0};
+function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0,steps:0,sheep:0};
   const cp=P||camera.position;let gy=0;try{gy=groundAt(cp.x,cp.z)}catch(e){}if(!isFinite(gy))gy=0;
   const h=Math.max(1,cp.y-gy);if(!P)AMB.h=h;
   /* גובה: עד 30 מ׳ מלא, מעל 250 מ׳ שקט, וביניהם בהדרגה (לוגריתמית) 💡 */
@@ -74,6 +81,8 @@ function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coi
   const ch=changersXZ();if(ch&&!shab&&!fest&&!night){const d=Math.hypot(cp.x-ch[0],cp.z-ch[1]);if(!P)SRC.coins=[ch,d];L.coins=near(d,4,32);L.market=Math.max(L.market,L.coins*0.45)}
   /* 130.1: במצב הליכה — צעדים על אבן כשהולכים (לא כשעומדים). מהר יותר = חזק יותר 💡 */
   if(!P&&WALK){const sp=AMB.spd||0;L.steps=sat((sp-0.15)/0.8)*(inHouse?0.6:1)}
+  /* 130.3: עולי רגל בדרך להר: ההמולה לפי כמה עולים הולכים ליד המצלמה. הכבשים לקרבן (📜 שמות יב, ג-ו; ⚖️ פסחים ה) פועים מדי פעם */
+  {const pg=pilgrims(cp.x,cp.z);L.city=Math.max(L.city,0.75*sat(pg.c/14)*(night?0.3:1));if(pg.sp&&!night){L.sheep=near(pg.sd,3,30);if(!P)SRC.sheep=[pg.sp,pg.sd]}}
   for(const k in L)L[k]*=hf;
   if(inHouse)for(const k in L)L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 */
   return L}
@@ -95,6 +104,7 @@ function tick(){if(!AMB.on||!ctx){return}
   {const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,cp=camera.position;
    for(const k in pans){const S=SRC[k==="market"&&L.coins>L.market*0.9?"coins":k];let v=0;if(S&&S[0]){const dx=S[0][0]-cp.x,dz=S[0][1]-cp.z,dl=Math.hypot(dx,dz);if(dl>0.5)v=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-3)/20)}AMB.pan=AMB.pan||{};AMB.pan[k]=v;pans[k].pan.setTargetAtTime(v,now,0.25)}}
   LOOPS.forEach(k=>{if(gains[k])gains[k].gain.setTargetAtTime(L[k]*BASE[k],now,k==="steps"?0.2:0.6)});
+  if(L.sheep>0.05&&performance.now()>nextBaa){const S=SRC.sheep;let pn=0;if(S&&S[0]){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pn=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-2)/10)}baa(0.55*L.sheep,pn);nextBaa=performance.now()+3500+Math.random()*7000}
   if(L.coins>0.02&&performance.now()>nextClink){clink(0.5*L.coins);nextClink=performance.now()+1800+Math.random()*4200}}
 setInterval(tick,250);
 AMB.set=v=>{AMB.on=!!v;try{localStorage.setItem("tm_amb",v?"1":"0")}catch(e){}if(v){unlock();tick()}else if(ctx&&out){out.gain.setTargetAtTime(0,ctx.currentTime,0.15)}};
