@@ -19,7 +19,8 @@ const tower=(x,n,w,d,h,rot,k,pass)=>{let lo=1e9,hi=-1e9;[[-1,-1],[1,-1],[1,1],[-
   {const ph=pass?0:2.2;add(k||"wall",wbox(w+1.6,hi-base+ph,d+1.6,6),x,(base+hi+ph)/2,n,rot)} // battered plinth
   [[0,d/2-0.4,w],[0,-d/2+0.4,w]].forEach(e=>{const p=off(x,n,rot,0,e[1]);crenel(p[0],p[1],rot,e[2],top,0,k)});
   [[w/2-0.4],[-w/2+0.4]].forEach(e=>{const p=off(x,n,rot,e[0],0);crenel(p[0],p[1],rot+Math.PI/2,d-1.6,top,0,k)});
-  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f),p=off(x,n,rot,i*w*0.22,0);add("dark",new THREE.BoxGeometry(0.45,1.5,d+0.3),p[0],yy,p[1],rot);const p2=off(x,n,rot,0,i*d*0.22);add("dark",new THREE.BoxGeometry(w+0.3,1.5,0.45),p2[0],yy,p2[1],rot)}
+  /* 128.8: arrow slits are thin plates on each face. They used to be one dark bar right through the tower, and in a gate tower with a passage (שער יפו) the bar hung in mid-air inside the arch */
+  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f);for(const sd of[-1,1]){const p=off(x,n,rot,i*w*0.22,sd*(d/2-0.1));add("dark",new THREE.BoxGeometry(0.45,1.5,0.5),p[0],yy,p[1],rot);const p2=off(x,n,rot,sd*(w/2-0.1),i*d*0.22);add("dark",new THREE.BoxGeometry(0.5,1.5,0.45),p2[0],yy,p2[1],rot)}}
   return{top,base,hi}};
 // --- the Citadel: an enclosure with towers around a courtyard (💡 simplified plan after the real walls) ---
 const P=[[-731,-173],[-700,-161],[-676,-156],[-662,-168],[-666,-190],[-667,-222],[-678,-242],[-686,-252],[-718,-262],[-733,-258],[-728,-205]];
@@ -220,17 +221,19 @@ begin({n:"הצריח שליד הרמב״ן",r:"הרובע היהודי",t:"📜 
   A("stone",new THREE.CylinderGeometry(1.5,1.7,hh*0.2,8),x,g+hh*0.82+0.25,n,0);dome("lead",x,n,g+hh*0.92+0.25,1.6,1.2);
   [0,1,2,3].forEach(i=>{const a=i*Math.PI/2-0.06,p=[x+Math.cos(a)*1.9,n+Math.sin(a)*1.9];archOn("dark",p[0],p[1],a,g+hh*0.55,0.9,1.8*s+0.4,0.6,0.25)})}
 // ===== Tiferet Yisrael, shown finished (💡 by Vered's choice) =====
-begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t:"📜 בית הכנסת של החסידים, שנחנך בשנת 1872 ונהרס ב־1948. 💡 כאן הוא מוצג גמור, כפי שביקשת: בניין מרובע עם תוף מתומן וכיפה."});
-{const x=-198.5,n=-259,rot=0.13,w=19,d=21,lo=lowAt([[-187,-271],[-190,-246],[-210,-249],[-208,-265]])-2,g=G(x,n),vs=Math.min(1,(LCAP-g)/27),Y=v=>g+v*vs;
+/* 128.9: 📜 במקום האמיתי ובמידות האמיתיות. קודם עמד כ־97 מ׳ מזרחה, ליד הכניסה לרחבת הכותל. עכשיו לפי טביעת הרגל ב־OpenStreetMap (14.6 × 20.3 מ׳, מרכז ‎-291.3,-289.6)
+   ובגובה של מדידת העירייה (26.5 מ׳ עד ראש הכיפה). בניין הדגם של העירייה במקום הזה (שטוח, 26.5 מ׳) לא נבנה, כדי שלא יהיו שניים */
+begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי; OpenStreetMap; מדידת עיריית ירושלים",t:"📜 בית הכנסת של החסידים (״ניסן ב״ק״), שנחנך בשנת 1872 ונהרס ב־1948, ונבנה מחדש בימינו באותו מקום. 📜 המקום והמידות לפי המפה: כ־14.6 על 20.3 מ׳, ובגובה כ־26.5 מ׳ עד ראש הכיפה. 💡 הוא מוצג גמור: בניין מרובע עם שתי שורות חלונות מקושתים, תוף מתומן וכיפה. פרטי החזית בפשטות."});
+{const x=-291.3,n=-289.6,rot=0.102,w=14.6,d=20.3,lo=lowAt([[-285.1,-278.8],[-299.7,-280.3],[-297.6,-300.5],[-283,-299]])-2,g=G(x,n),vs=Math.min(26.5/27.4,(LCAP-g)/27.4),Y=v=>g+v*vs;
   A("stone",wbox(w,Y(15)-lo,d,4),x,(lo+Y(15))/2,n,rot);A("light",wbox(w+0.8,0.6,d+0.8,4),x,Y(15)+0.3,n,rot);A("light",wbox(w+0.5,0.4,d+0.5,4),x,Y(7.5),n,rot);
-  faceWin(x,n,rot,w,d,0,(p,a,fw)=>{[-5,0,5].forEach(o=>{const q=off(p[0],p[1],a-Math.PI/2,o,0);archOn("dark",q[0],q[1],a,Y(9),1.6,4*vs,0.8,0.25);archOn("dark",q[0],q[1],a,o===0?g:Y(2),o===0?2.4:1.4,(o===0?4:3.4)*vs,0.8,0.25)})});
-  const oc=new THREE.CylinderGeometry(6.6,6.6,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.4,8,1.4,3.4*vs);
-  dome("lead",x,n,Y(21),6.1,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
+  faceWin(x,n,rot,w,d,0,(p,a,fw)=>{(fw<17?[-4,0,4]:[-6,-2,2,6]).forEach(o=>{const q=off(p[0],p[1],a-Math.PI/2,o,0);archOn("dark",q[0],q[1],a,Y(9),1.6,4*vs,0.8,0.25);archOn("dark",q[0],q[1],a,o===0?g:Y(2),o===0?2.4:1.4,(o===0?4:3.4)*vs,0.8,0.25)})});
+  const oc=new THREE.CylinderGeometry(6.2,6.2,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.0,8,1.4,3.4*vs);
+  dome("lead",x,n,Y(21),5.8,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
 // ===== the Cardo =====
 /* 126.1 (בדיקה חוזרת 35): הקרדו נבנה בפועל במפלס החפירה: בור מרוצף כ־3 מ׳ מתחת לרחוב הנמוך שלידו, קירות תמך, מעקה מסביב,
    וגרם מדרגות מהרחוב בצד הצפוני. העמודים עומדים על רצפת הקרדו. הרחוב שמעל "נפתח" בעזרת מסכת עומק (cardoMask): החלקים של הבור מצוירים קודם,
    והמסכה (בלי צבע) מסתירה את פני הרחוב שמעליהם. ההולך יורד במדרגות (cardoY בתוך groundAt), והקצוות חוסמים לפי חוק הצוק */
-{const C=cardoGeom();const inf={n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי, כמה מטרים מתחת לרחוב של היום. בהדמיה: ⚖️ החפירה נמוכה בכ־3 מ׳ מהרחוב הנמוך שלידה, עם קירות תמך ומעקה מסביב, ויורדים אליה במדרגות מהצד הצפוני. 💡 העומק, מקום המדרגות ומספר העמודים בהערכה, לפי תמונות המקום."};
+{const C=cardoGeom();const inf={n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 לכל עמוד בסיס, גוף שמצטמצם כלפי מעלה, וכותרת בצורת פעמון (כמו קורינתית) עם לוח מרובע מעליה. 💡 עלי הכותרת לא מגולפים, רק הצורה. 📜 חלק ממנו נחשף ברובע היהודי, כמה מטרים מתחת לרחוב של היום. בהדמיה: ⚖️ החפירה נמוכה בכ־3 מ׳ מהרחוב הנמוך שלידה, עם קירות תמך ומעקה מסביב, ויורדים אליה במדרגות מהצד הצפוני. 💡 העומק, מקום המדרגות ומספר העמודים בהערכה, לפי תמונות המקום."};
   const P=(u,v)=>[C.cx+u*C.ux+v*C.vx,C.cn+u*C.un+v*C.vn],rot=-Math.atan2(C.vx,C.vn),GS={pave:[],wall:[],light:[],iron:[]};
   const put=(k,geo,u,v,y)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const q=P(u,v),m=new THREE.Matrix4().makeRotationY(rot);m.setPosition(q[0],y,-q[1]);geo.applyMatrix4(m);GS[k].push(geo)};
   const fl=C.floor,hw=C.hw,hl=C.hl;
@@ -245,7 +248,7 @@ begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t
   {const n=Math.ceil((C.stTop-fl)/0.17),rise=(C.stTop-fl)/n,run=C.run/n;for(let k=0;k<n;k++){const v=hl-run*(k+0.5),y=C.stTop-rise*(k+1);put("light",wbox(2*C.stw,y-fl+rise,run+0.02,3),C.su,v,(y+rise+fl)/2)}
     [-1,1].forEach(sd=>{for(let k=0;k<n;k+=2){const v=hl-run*(k+1),y=C.stTop-rise*(k+1)+1;put("wall",wbox(0.4,y-fl,run*2+0.02,3),C.su+sd*(C.stw+0.2),v,(y+fl)/2)}})}
   // the two colonnades on the Cardo floor
-  [-7.5,7.5].forEach(u=>{for(let v=-hl+2;v<=hl-(Math.abs(u-C.su)<C.stw+1?C.run:1);v+=3.6){put("light",wbox(0.9,0.5,0.9,2),u,v,fl+0.25);put("light",new THREE.CylinderGeometry(0.32,0.36,4.2,12),u,v,fl+0.5+2.1);put("light",wbox(0.95,0.45,0.95,2),u,v,fl+4.9)}
+  [-7.5,7.5].forEach(u=>{for(let v=-hl+2;v<=hl-(Math.abs(u-C.su)<C.stw+1?C.run:1);v+=3.6){/* 129.0: 📜 the parts of a classical column, as on the Cardo columns: a square plinth, a round base (torus), a shaft that narrows upward, a bell-shaped capital (Corinthian type) and a square abacus. 💡 the leaves of the capital are not carved, only its outline */put("light",wbox(0.9,0.3,0.9,2),u,v,fl+0.15);put("light",new THREE.CylinderGeometry(0.42,0.46,0.2,12),u,v,fl+0.4);put("light",new THREE.CylinderGeometry(0.30,0.35,3.9,12),u,v,fl+0.5+1.95);{const bell=new THREE.CylinderGeometry(0.52,0.33,0.55,12);put("light",bell,u,v,fl+4.4+0.275)}put("light",wbox(1.1,0.17,1.1,2),u,v,fl+4.95+0.085)}
     put("light",wbox(0.9,0.7,2*hl-2,3),u,0,fl+5.47)});
   const MATS={pave:M.pave||M.stoneL,wall:M.stone||M.stoneL,light:M.stoneL,iron:M.iron||new THREE.MeshStandardMaterial({color:0x2b2b2b,metalness:0.6,roughness:0.5})};
   Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=-2;m.castShadow=k!=="pave";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)});
@@ -455,6 +458,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
         /* החזית צריכה להיות ישרה כאן: גם 1 מ׳ לכל צד עדיין קיר */
         if(!inB(fx+px*0.3+ux*1.1,fn+pn*0.3+un*1.1)||!inB(fx+px*0.3-ux*1.1,fn+pn*0.3-un*1.1))return;
         F.push({w:rd.w,x:fx,n:fn,g:surfY(fx-px*0.4,fn-pn*0.4),a:Math.atan2(pn,px),o:r(),o2:r(),o3:r()})})}}});
+  /* 130.0: החנויות הן גם מקור ההמולה של השוק (66-ambient-sound) */window.__MKTP=F.map(f=>[f.x,f.n]);
   if(!F.length)return;
   const N=F.length,d=new THREE.Object3D(),col=new THREE.Color();
   const mk=(geo,mat,cnt)=>{const m=new THREE.InstancedMesh(geo,mat,cnt);m.castShadow=false;m.receiveShadow=true;return m};
@@ -669,11 +673,11 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
   window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length,cafeChairs};
 }catch(e){console.warn("mamilla",e)}})();
 // ---- 127.8: גיא בן הינום — בריכת הסולטן, שביל בקרקעית הגיא, חורשה לפי צילום הלוויין וטרסות בגיא התחתון ----
-// 📜 ירמיהו לא, לט: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
+// 📜 ירמיהו לא, מ: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
 (function(){try{
   const C=HIN11,P=C.P,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{})),r=rng(1278);
   const INFP={n:"בריכת הסולטן",r:"צילום לוויין; מודל גובה",t:"בריכה עתיקה בקרקעית גיא בן הינום. הסכר בצדה הדרומי, שהדרך לחברון עוברת עליו, נבנה מחדש בימי סולימאן (1536). היום הבריכה יבשה וקרקעיתה מדשאה, וכך היא בדגם"};
-  const INFV={n:"גיא בן הינום",r:"ירמיהו לא, לט; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, לט). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
+  const INFV={n:"גיא בן הינום",r:"ירמיהו לא, מ; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, מ). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const GS={stone:[],light:[],dark:[],wood:[]},MATS={stone:M.stoneL||M.stone,light:M.stone||M.stoneL,dark:MAT(0x3a3530,{roughness:0.95}),wood:MAT(0x6b4a2f,{roughness:0.9})};
   const add=(k,geo,x,y,n,ro)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4().makeRotationY(ro||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);GS[k].push(geo)};
@@ -703,3 +707,21 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
   __AFTER(()=>{try{const q=G2S(cx,(P.n0+P.n1)/2);label("בריכת הסולטן",q[0],TY(cx,(P.n0+P.n1)/2)+10,-q[1],null,INFP);const v=[-700,-1000],q2=G2S(v[0],v[1]);label("גיא בן הינום",q2[0],TY(v[0],v[1])+16,-q2[1],null,INFV)}catch(e){console.warn("hinnom label",e)}});
   window.__HIN11={lamps:LP.length,benches,trees:nT,orchard:OL,terraces:WL.length};
 }catch(e){console.warn("hinnom",e)}})();
+/* 129.7: משכנות שאננים וימין משה, לפי תמונות Mapillary והלוויין: מעקה משונן על הגג השטוח של השורה הארוכה, ושמות לשכונות */
+(function(){try{const INFM={n:"משכנות שאננים",r:"📜 היסטוריה; תמונות Mapillary ולוויין",t:"📜 השכונה הראשונה מחוץ לחומות העיר העתיקה, נבנתה בשנת 1860 ביוזמת משה מונטיפיורי. שורה ארוכה של דירות בקומה אחת עם גג שטוח ומעקה משונן, מול הר ציון."},
+  INFY={n:"ימין משה",r:"📜 היסטוריה; תמונות Mapillary ולוויין",t:"📜 שכונה שנבנתה בשנות ה־90 של המאה ה־19 ליד משכנות שאננים, על שם משה מונטיפיורי. בתים נמוכים מאבן עם גגות רעפים אדומים, וסמטאות מדרגות מרוצפות בין הגינות."};
+  const MER=[];YM12.M.forEach(B=>{const p=B.pts;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.floor(L/1.6);for(let j=0;j<k;j++){const t=(j+0.5)/k;MER.push([a[0]+(b[0]-a[0])*t,B.y,a[1]+(b[1]-a[1])*t,Math.atan2(b[1]-a[1],b[0]-a[0])])}}});
+  if(MER.length){const d=new THREE.Object3D(),m=new THREE.InstancedMesh(new THREE.BoxGeometry(0.75,0.7,0.45),new THREE.MeshStandardMaterial({color:0xd9ccb0,roughness:0.9}),MER.length);
+    MER.forEach((q,i)=>{d.rotation.set(0,q[3],0);d.position.set(q[0],q[1]+0.3,-q[2]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.castShadow=true;m.receiveShadow=true;m.userData=INFM;WG.add(m);PICK.push(m)}
+  /* טחנת הרוח של מונטיפיורי (1857): מגדל אבן עגול, גג כיפה כהה וארבע כנפיים. המיקום לפי ויקישיתוף (31.771555, 35.224177) והצל של המגדל בלוויין. 💡 הכיוון של הכנפיים משוער */
+  const INFW={n:"טחנת הרוח של מונטיפיורי",r:"📜 היסטוריה; ויקישיתוף ולוויין",t:"📜 טחנת קמח שבנה משה מונטיפיורי בשנת 1857 ליד משכנות שאננים, כדי לתת פרנסה לתושבים. מגדל אבן עגול, גג כהה מסתובב וארבע כנפיים. 💡 הכיוון של הכנפיים משוער."};
+  {const [mx,mn]=YM12.mill,g=new THREE.Group(),y=TY(mx,mn),st=new THREE.MeshStandardMaterial({color:0xc9b48e,roughness:0.95}),dk=new THREE.MeshStandardMaterial({color:0x4a4640,roughness:0.7}),wd=new THREE.MeshStandardMaterial({color:0x6b5137,roughness:0.85});
+    const tw=new THREE.Mesh(new THREE.CylinderGeometry(3.0,3.6,12,20),st);tw.position.y=5.5;g.add(tw);
+    const cap=new THREE.Mesh(new THREE.SphereGeometry(3.15,20,10,0,Math.PI*2,0,Math.PI/2),dk);cap.position.y=11.5;cap.scale.y=0.75;g.add(cap);
+    const hub=new THREE.Group();hub.position.set(0,11.6,3.5);g.add(hub);
+    for(let i=0;i<4;i++){const arm=new THREE.Group();arm.rotation.z=Math.PI/4+i*Math.PI/2;const sp=new THREE.Mesh(new THREE.BoxGeometry(0.25,8.5,0.2),wd);sp.position.y=4.3;arm.add(sp);const sl=new THREE.Mesh(new THREE.BoxGeometry(1.6,6.2,0.08),new THREE.MeshStandardMaterial({color:0x8a7356,roughness:0.9,transparent:true,opacity:0.85}));sl.position.set(0.85,5.2,0);arm.add(sl);hub.add(arm)}
+    const dr=new THREE.Mesh(new THREE.BoxGeometry(1.3,2.3,0.3),wd);dr.position.set(0,1.15,3.5);g.add(dr);
+    [[4.5,0],[8,Math.PI/2],[8,-Math.PI/2]].forEach(([wy,a])=>{const w=new THREE.Mesh(new THREE.BoxGeometry(0.7,1.1,0.3),dk);w.position.set(Math.sin(a)*3.25,wy,Math.cos(a)*3.25);w.rotation.y=a;g.add(w)});
+    g.rotation.y=Math.PI/2/* הכנפיים לכיוון מזרח, אל העיר העתיקה */;g.position.set(mx,y,-mn);g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.userData=INFW}});WG.add(g);g.traverse(o=>{if(o.isMesh)PICK.push(o)})}
+  __AFTER(()=>{try{const a=[-993,-760],q=G2S(a[0],a[1]);label("משכנות שאננים",q[0],TY(a[0],a[1])+12,-q[1],null,INFM);const b=[-1015,-640],q2=G2S(b[0],b[1]);label("ימין משה",q2[0],TY(b[0],b[1])+16,-q2[1],null,INFY);const c=YM12.mill,q3=G2S(c[0],c[1]);label("טחנת הרוח",q3[0],TY(c[0],c[1])+17,-q3[1],null,INFW)}catch(e){console.warn("ym label",e)}});
+  window.__YM12={mish:YM12.M.length,merlons:MER.length}}catch(e){console.warn("yemin moshe",e)}})();
