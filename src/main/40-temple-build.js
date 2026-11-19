@@ -1370,7 +1370,7 @@ function build(){
       for(let a=0;a<16;a++){const an=a/16*Math.PI*2,dx=Math.cos(an),dn=Math.sin(an),x=cur[0]+dx*5,n=cur[1]+dn*5;if(inPoly(x,n,MOUNT_BIG))continue;const g2=G2S(x,n),hh=H(x,n)+(1-(dx*dir[0]+dn*dir[1]))*(it<10?40:3)+(inPoly(g2[0]+0,g2[1],MOUNT_S)?1e6:0);if(hh<bh){bh=hh;best=[x,n,dx,dn]}}
       if(!best)break;cur=[best[0],best[1]];dir=[dir[0]*0.5+best[2]*0.5,dir[1]*0.5+best[3]*0.5];const l=Math.hypot(dir[0],dir[1])||1;dir=[dir[0]/l,dir[1]/l];gp.push(cur.slice())}
     let bi=0,bd=1e9;for(let i=0;i<KIDRON.length;i++){const d2=Math.hypot(KIDRON[i][0]-cur[0],KIDRON[i][1]-cur[1]);if(d2<bd&&KIDRON[i][1]<=cur[1]+10){bd=d2;bi=i}}
-    for(let i=bi;i<KIDRON.length&&KIDRON[i][1]>-1150;i++)gp.push([KIDRON[i][0],KIDRON[i][1]]);
+    for(let i=bi;i<KIDRON.length&&KIDRON[i][1]>-1100;i++)gp.push([KIDRON[i][0],KIDRON[i][1]]);/* 127.7: משם הנחל ממשיך בקו התחתית של עמק קדרון לפי DEM2 (KEXT), עד שעובר 4000 אמה ועוד כ־350 מ׳, ולכן כל סמן עומק עומד במרחק האמיתי */{let L=0;for(let i=1;i<gp.length;i++)L+=Math.hypot(gp[i][0]-gp[i-1][0],gp[i][1]-gp[i-1][1]);for(let i=0;i<KEXT.length&&L<4000*A+350;i++){const a=gp[gp.length-1];L+=Math.hypot(KEXT[i][0]-a[0],KEXT[i][1]-a[1]);gp.push(KEXT[i].slice())}}
     let P=gp;for(let it=0;it<3;it++){const q=[P[0]];for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1];q.push([a[0]*0.75+b[0]*0.25,a[1]*0.75+b[1]*0.25],[a[0]*0.25+b[0]*0.75,a[1]*0.25+b[1]*0.75])}q.push(P[P.length-1]);P=q}
     const R=[P[0]];let acc=0;for(let i=1;i<P.length;i++){const a=R[R.length-1],b=P[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(l>=4)R.push(b)}
     const pts=[],wid=[],AC=[];acc=0;R.forEach((q,i)=>{if(i)acc+=Math.hypot(q[0]-R[i-1][0],q[1]-R[i-1][1]);const sq=G2S(q[0],q[1]);pts.push([sq[0],H(q[0],q[1]),-sq[1]]);AC.push(acc);wid.push(2.6+24*(1-Math.exp(-acc/(1600*A))))});
@@ -1409,6 +1409,9 @@ function build(){
       if(gs.length){const BU=THREE.BufferGeometryUtils,mg=BU&&BU.mergeBufferGeometries(gs);if(mg){const m=new THREE.Mesh(mg,M.stone2);m.castShadow=true;m.receiveShadow=true;m.userData=bi;cPick.push(m);group.add(m)}}
       window.__BRIDGES=X.map(c=>({x:+c.x.toFixed(1),n:+c.n.toFixed(1),sx:c.sx,sz:c.sz,len:c.len,y:c.y,w:c.w}))}
     const nearBr=(x,z)=>BRS.some(b=>Math.hypot(x-b[0],z-b[1])<b[2]);
+    /* 127.7: בסוף הקטע המצויר — הנחל ממשיך אל ים המלח (יחזקאל מ״ז, ח-י) */
+    {const e=pts[pts.length-1],inf=I("הנחל ממשיך אל ים המלח","יחזקאל מ״ז, ח-י","📜 \"המים האלה יוצאים אל הגלילה הקדמונה, וירדו על הערבה, ובאו הימה... ונרפאו המים\" (מ״ז, ח). 📜 \"ועמדו עליו דוגים מעין גדי ועד עין עגלים, משטוח לחרמים יהיו\" (מ״ז, י). 💡 כאן נגמר הקטע המצויר, כ־"+Math.round(AC[AC.length-1]/A)+" אמה מהמעיין. משם הנחל ממשיך בעמק קדרון, דרך מדבר יהודה, עד ים המלח.");
+      __AFTER(()=>{try{if(!labels.some(l=>l.txt==="הנחל ממשיך אל ים המלח"))label("הנחל ממשיך אל ים המלח",e[0],e[1]+14,e[2],null,inf)}catch(err){console.warn("river end label",err)}});window.__RIVER={len:Math.round(AC[AC.length-1]),amot:Math.round(AC[AC.length-1]/A),pts:pts.length}}
     // the four measures of Ezekiel 47:3-5
     {const MS=[[1000,"מי אפסים","\"ויעברני במים, מי אפסים\" — המים מגיעים עד הקרסוליים."],[2000,"מים ברכים","\"ויעברני במים, מים ברכים\" — עד הברכיים."],[3000,"מי מתנים","\"ויעברני, מי מתנים\" — עד המותניים."],[4000,"נחל שלא עוברים","\"נחל אשר לא אוכל לעבר, כי גאו המים, מי שחו\" — צריך לשחות."]];
       MS.forEach(([am,t,tx],mi)=>{const d=am*A;let k=AC.findIndex(a=>a>=d),beyond=false;/* 125.2 (ביקורת ו12): סמן שהנחל המצויר קצר ממנו עומד בסוף הקטע המצויר, ולא נעלם */if(k<0&&pts.length>3){k=pts.length-2-(mi%2);beyond=true}if(k<1)return;const p=pts[k],q=pts[Math.min(k+1,pts.length-1)],dx=q[0]-p[0],dz=q[2]-p[2],l=Math.hypot(dx,dz)||1,sg=beyond&&mi%2?-1:1,off=(wid[k]/2+3)*sg,x=p[0]-dz/l*off,z=p[2]+dx/l*off,g=S2G(x,-z),hy=H(g[0],g[1]);
