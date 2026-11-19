@@ -1,6 +1,6 @@
 {
  "quick": [
-  null,
+  "quick_01.mp3",
   "pilgrim_04.mp3",
   "pilgrim_06.mp3",
   "pilgrim_08.mp3",
@@ -32,7 +32,7 @@
   "tamid_08.mp3",
   "tamid_09.mp3",
   "tamid_10.mp3",
-  null,
+  "tamid_11b.mp3",
   "tamid_11.mp3",
   "tamid_12.mp3",
   "tamid_13.mp3"
@@ -89,5 +89,14 @@
   "hakhel_05.mp3",
   "hakhel_06.mp3",
   "hakhel_07.mp3"
+ ],
+ "shavuot": [
+  "shavuot_01.mp3",
+  "shavuot_02.mp3",
+  "shavuot_03.mp3",
+  "shavuot_04.mp3",
+  "shavuot_05.mp3",
+  "shavuot_06.mp3",
+  "shavuot_07.mp3"
  ]
 }
