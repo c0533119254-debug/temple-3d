@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.5"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -583,14 +583,6 @@ body.busy3d:not(.touring) #modeExit{display:block}
   body.pane #verTag,body.touring #verTag,body.busy3d #verTag,body:has(#intro:not([hidden])) #verTag{display:none!important}
   .walkhint{top:118px}
   #modeExit{bottom:calc(78px + env(safe-area-inset-bottom,0px));height:32px;padding:0 14px;font-size:13px}
-  /* 128.2: כפתור ״מהר״ ישב מתחת ל״יציאה״, והרמז של ההליכה כיסה את עמודת הכפתורים משמאל */
-  .fastb{left:auto!important;right:12px;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;height:32px;padding:0 12px}
-  .walkhint{left:70px!important;right:12px!important;max-width:none!important}
-  #cta .map span,#cta .sec span{display:inline}
-  #cta{gap:2px}#cta button{padding:0 8px!important;gap:5px!important;font-size:13.5px!important}
-}
-@media (max-width:379px){#cta .sec span,#cta .map span{display:none!important}#cta button{padding:0 11px!important}}
-@media (max-width:700px){
   /* 125.0 (ביקורת 22): כתובית הסיור בטלפון קטנה יותר, כדי שהדמות והפעולה יישארו גלויות. הפסוק נפתח בלחיצה על ▴ */
   #stText{font-size:15px!important;line-height:1.45!important;max-height:13.5vh!important;overflow-y:auto}
   .story:not(.open) #stVerse{display:none!important}
