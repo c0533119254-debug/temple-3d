@@ -1513,9 +1513,11 @@ function build(){
       for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(len<0.2){continue}const m=Math.max(1,Math.ceil(len/3)),ux=(b[0]-a[0])/len,un=(b[1]-a[1])/len;
         for(let k=0;k<m;k++){const t0=k/m*len,t1=(k+1)/m*len,xm=a[0]+ux*(t0+t1)/2,nm=a[1]+un*(t0+t1)/2;if(inC(xm,nm)){continue}if(GOP.some(q=>Math.abs((xm-q.x)*q.fx+(nm-q.n)*q.fn)<q.h&&Math.abs((xm-q.x)*q.ox+(nm-q.n)*q.on)<4)){continue}
           let nx=-un,nn=ux;if(!inPoly(xm+nx*1.5,nm+nn*1.5,P)){nx=-nx;nn=-nn}const g=HS(xm-nx*3,nm-nn*3);if(g>-0.3)continue;const y0=Math.min(g,0)-0.6,y1=1.04;
-          const xa=a[0]+ux*t0-nx*0.3,na=a[1]+un*t0-nn*0.3,xb=a[0]+ux*t1-nx*0.3,nb=a[1]+un*t1-nn*0.3,ua=(acc+t0)/16,ub=(acc+t1)/16,b0=pos.length/3;
-          pos.push(xa,y0,-na, xb,y0,-nb, xb,y1,-nb, xa,y1,-na);uv.push(ua,(y0+30)/32, ub,(y0+30)/32, ub,(y1+30)/32, ua,(y1+30)/32);
-          const cr=(xb-xa)*(-nn)-(nb-na)*(-nx);idx.push(...(cr>0?[b0,b0+1,b0+2,b0,b0+2,b0+3]:[b0,b0+2,b0+1,b0,b0+3,b0+2]))}
+          const xa=a[0]+ux*t0-nx*0.3,na=a[1]+un*t0-nn*0.3,xb=a[0]+ux*t1-nx*0.3,nb=a[1]+un*t1-nn*0.3,ua=(acc+t0)/16,ub=(acc+t1)/16,cr=(xb-xa)*(-nn)-(nb-na)*(-nx);
+          /* 128.6: below −30 the face is cut into pieces of 23 m, each mapped onto the Herodian band of the texture (−7 → −30), so the deep south wall shows only Herodian courses */
+          for(let k=0,top=y1;top>y0+0.001;k++){const lo=Math.max(y0,-30-23*k),o=23*k,b0=pos.length/3;
+            pos.push(xa,lo,-na, xb,lo,-nb, xb,top,-nb, xa,top,-na);uv.push(ua,(lo+o+30)/32, ub,(lo+o+30)/32, ub,(top+o+30)/32, ua,(top+o+30)/32);
+            idx.push(...(cr>0?[b0,b0+1,b0+2,b0,b0+2,b0+3]:[b0,b0+2,b0+1,b0,b0+3,b0+2]));top=lo}}
         acc+=len}
       if(pos.length){const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));gg.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));gg.setIndex(idx);gg.computeVertexNormals();
         if(!M.mwall){M.mwall=new THREE.MeshStandardMaterial({map:T.mwC,normalMap:T.mwN,roughness:0.92,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2})}
