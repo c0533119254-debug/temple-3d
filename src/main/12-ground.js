@@ -296,7 +296,9 @@ const ROADS=(function(){const __r=(function(){const raw=[{"c":2,"w":8,"b":0,"p":
    for(let i=raw.length-1;i>=0;i--){const rd=raw[i];if(rd.c!==0&&rd.c!==4)continue;const k=rd.p.filter(q=>inPoly(q[0],q[1],Z2)).length;if(k<rd.p.length*0.5)continue;if(rd.p.some(q=>{const t=kstAt(q[0],q[1]);return t&&t.d<4}))continue;raw.splice(i,1)}
    raw.push({c:4,w:14,b:0,tidy:1,p:[[-114,-344],[-126,-322],[-138,-298],[-146,-276],[-150,-258]]});
    raw.push({c:4,w:12,b:0,tidy:1,p:[[-110,-343],[-80,-337],[-45,-326],[-12,-312],[2,-299],[4,-287]]});
-   raw.push({c:4,w:6,b:0,tidy:1,p:[[-134,-262],[-105,-266],[-82,-271],[-58,-277],[-46,-281]]})}
+   raw.push({c:4,w:6,b:0,tidy:1,p:[[-134,-262],[-105,-266],[-82,-271],[-58,-277],[-46,-281]]});
+   /* 127.1 (תוכנית רחבת הכותל, כניסה 5): הקטע של רחוב הגיא בין n=-29 לרחוב השלשלת חסר ב־OSM. המסלול לפי מיקומי 50 תמונות Mapillary שצולמו לאורכו. הבתים שמעליו ב־OSM נשארים, והקטע הוא מעבר מקורה כמו בשאר הרחוב */
+   raw.push({c:4,w:4,b:0,tidy:1,p:[[-208,-29],[-205,-45],[-202,-66],[-200,-80],[-197,-99],[-195,-114]]})}
   raw.forEach(rd=>{const P=[];for(let i=0;i<rd.p.length-1;i++){const a=rd.p[i],b=rd.p[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.ceil(L/2.5));for(let k=0;k<m;k++)P.push([a[0]+(b[0]-a[0])*k/m,a[1]+(b[1]-a[1])*k/m])}P.push(rd.p[rd.p.length-1]);
     // keep the parts outside the Old City walls and off the Temple Mount
     /* 126.0: כביש רכב קטן בתוך החומה (כמו רחוב הפטריארכיה הארמנית משער ציון) לא נמחק. בתמונות Mapillary הוא רחוב סלול, ובדגם נשארה שם קרקע חשופה. עכשיו הוא רחוב מרוצף להולכי רגל, בלי מכוניות */
