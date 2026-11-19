@@ -245,7 +245,7 @@ card.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)retur
   if(a==="fly"&&CUR.pt){const L=CUR.pt._L;if(L)goLabel(L);else flyToPoint(CUR.pt,20);CUR.dist0=0}
   else if(a==="in"){const k=/קודש הקודשים/.test(CUR.d.n)?"vKd":"vIn";$(k).click()}
   else if(a==="near"&&CUR.pt){const box=card.querySelector(".ic-near");box.hidden=!box.hidden;if(!box.hidden){box.innerHTML=I("near")+'<div><b>בסביבה</b></div>';const w=box.lastChild;near(CUR.pt,6).forEach(([L,dd])=>{const q=mk("button",null,esc(L.txt)+' <small class="ch">(<bdi class="n">'+Math.round(dd/A)+'</bdi> אמה)</small>');q.type="button";q.onclick=()=>pickLabel(L);w.appendChild(q)})}}
-  else if(a==="walk"&&CUR.pt){const pt=CUR.pt.clone();try{closeInfo()}catch(e){}startWalk(pt)}
+  else if(a==="walk"&&CUR.pt){const pt=CUR.pt.clone();try{closeInfo()}catch(e){}/* 128.4: «התחל הליכה כאן» — ההולך עומד ליד המקום */fadeJump(()=>startPerson(pt))}
   else if(a==="share")share()});
 // click on the sky closes the panel
 const tv=new THREE.Vector3();

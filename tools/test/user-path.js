@@ -223,6 +223,40 @@ async function run(dev) {
   });
   await ovl("אחרי הליכה");
 
+  // 128.2–128.4: כפתור «מפה» (מבט מלמעלה, הצפון למעלה) ו«הולך» (דמות ומצלמה מאחוריה)
+  await step("כפתור «מפה»: מבט מלמעלה", async () => {
+    await tap("#ctaMap");
+    await pg.waitForTimeout(3500);
+    const v = (await cam()).replace("v=", "").split(",").map(Number);
+    const h = v[1] - v[4], hz = Math.hypot(v[0] - v[3], v[2] - v[5]);
+    if (!(h > 60 && hz < h * 0.3)) throw new Error(`המבט לא מלמעלה (גובה ${h.toFixed(0)}, מרחק אופקי ${hz.toFixed(0)})`);
+    await shot("7-map");
+    return `גובה ${h.toFixed(0)} מ׳`;
+  });
+  await step("«הולך»: הדמות הולכת, נגיעה בקרקע ויציאה", async () => {
+    await tap("#cta .sec");
+    await until(() => window.__PERSON && window.__PERSON.on(), 30000);
+    await pg.waitForTimeout(2500);
+    const a = await pg.evaluate(() => window.__PERSON.state());
+    if (!a.vis) throw new Error("הדמות לא נראית");
+    if (a.cd < 1) throw new Error(`המצלמה צמודה לדמות (${a.cd} מ׳)`);
+    await pg.evaluate(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "w" })));
+    await pg.waitForTimeout(3000);
+    await pg.evaluate(() => window.dispatchEvent(new KeyboardEvent("keyup", { key: "w" })));
+    const b = await pg.evaluate(() => window.__PERSON.state());
+    const walked = Math.hypot(b.x - a.x, b.z - a.z);
+    await shot("8-person");
+    // נגיעה בקרקע: יעד 6 מ׳ מהדמות, בכל כיוון שפנוי
+    const g = await pg.evaluate(() => { const s = window.__PERSON.state(), G = window.__GA; for (let k = 0; k < 16; k++) { const t = k * Math.PI / 8, x = s.x + Math.cos(t) * 6, z = s.z + Math.sin(t) * 6; let ok = true; for (let i = 1; i <= 20 && ok; i++) { const f0 = (i - 1) / 20, f1 = i / 20; ok = G.canStep(s.x + (x - s.x) * f0, s.z + (z - s.z) * f0, s.x + (x - s.x) * f1, s.z + (z - s.z) * f1); } if (ok) { window.__PERSON.goal(x, z); return [x, z]; } } return null; });
+    let reached = "אין יעד פנוי";
+    if (g) { await until(() => !window.__PERSON.hasGoal(), 40000); const c = await pg.evaluate(() => window.__PERSON.state()); const d = Math.hypot(c.x - g[0], c.z - g[1]); if (d > 1) throw new Error(`הדמות לא הגיעה ליעד (${d.toFixed(1)} מ׳ ממנו)`); reached = `הגיעה ליעד`; }
+    await tap("#modeExit");
+    await until(() => !window.__PERSON.on() && !document.body.classList.contains("busy3d"), 30000);
+    if (walked < 0.5) throw new Error(`מקש W לא הזיז את הדמות (${walked.toFixed(1)} מ׳)`);
+    return `הלכה ${walked.toFixed(1)} מ׳ · ${reached}`;
+  });
+  await ovl("אחרי הולך");
+
   if (dev === "desktop") await step("בלי תלת־ממד: הודעה וקריאת הסיורים", async () => {
     const c2 = await browser.newContext({ viewport: { width: 1000, height: 700 }, locale: "he-IL" });
     await c2.route(/youtube\.com|ytimg\.com|googlevideo\.com/, (r) => r.abort());
