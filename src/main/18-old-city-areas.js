@@ -667,11 +667,11 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
   window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length};
 }catch(e){console.warn("mamilla",e)}})();
 // ---- 127.8: גיא בן הינום — בריכת הסולטן, שביל בקרקעית הגיא, חורשה לפי צילום הלוויין וטרסות בגיא התחתון ----
-// 📜 ירמיהו לא, לט: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
+// 📜 ירמיהו לא, מ: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
 (function(){try{
   const C=HIN11,P=C.P,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{})),r=rng(1278);
   const INFP={n:"בריכת הסולטן",r:"צילום לוויין; מודל גובה",t:"בריכה עתיקה בקרקעית גיא בן הינום. הסכר בצדה הדרומי, שהדרך לחברון עוברת עליו, נבנה מחדש בימי סולימאן (1536). היום הבריכה יבשה וקרקעיתה מדשאה, וכך היא בדגם"};
-  const INFV={n:"גיא בן הינום",r:"ירמיהו לא, לט; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, לט). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
+  const INFV={n:"גיא בן הינום",r:"ירמיהו לא, מ; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, מ). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const GS={stone:[],light:[],dark:[],wood:[]},MATS={stone:M.stoneL||M.stone,light:M.stone||M.stoneL,dark:MAT(0x3a3530,{roughness:0.95}),wood:MAT(0x6b4a2f,{roughness:0.9})};
   const add=(k,geo,x,y,n,ro)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4().makeRotationY(ro||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);GS[k].push(geo)};
