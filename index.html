@@ -13898,7 +13898,7 @@ function droneTick(dt){const cp=camera.position;
 renderer.domElement.addEventListener("touchstart",e=>{if(DRONE&&e.touches.length===2)D.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)},{passive:true});
 renderer.domElement.addEventListener("touchmove",e=>{if(DRONE&&e.touches.length===2&&D.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);D.h=Math.max(8,Math.min(60,D.h*D.pinch/d));D.pinch=d}},{passive:true});
 document.getElementById("fastB").addEventListener("click",e=>{D.fast=!D.fast;e.currentTarget.setAttribute("aria-pressed",D.fast?"true":"false")});
-function stopWalk(){if(!WALK)return;WALK=false;if(PER.on){PER.on=false;if(PER.g)PER.g.visible=false;clearTimeout(PER.ht)}controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
+function stopWalk(){if(!WALK)return;WALK=false;if(PER.on){PER.on=false;if(PER.g)PER.g.visible=false;clearTimeout(PER.ht);perGoalClear()}controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
 window.addEventListener("keydown",e=>{if(!WALK&&!DRONE)return;const k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d","shift"].includes(k)){keys[k]=true;e.preventDefault()}});
 window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
 (function(){const pad=document.getElementById("pad"),knob=document.getElementById("knob");let id=null;
@@ -13925,7 +13925,7 @@ function startPerson(at){const intro=document.getElementById("intro");if(intro)i
   camSaved=false;endModes(true);try{closeDr()}catch(e){}try{closeInfo()}catch(e){}perMesh();WALK=true;PER.on=true;controls.enabled=false;clearGoal();
   PER.p.set(sp[0],groundAt(sp[0],sp[1]),sp[1]);yaw=Math.atan2(-fw.x,-fw.z);pitch=0;PER.hd=Math.atan2(Math.cos(yaw),-Math.sin(yaw));PER.D=PER.cd=4.5;camera.rotation.order="YXZ";
   document.getElementById("pad").hidden=false;D.fast=false;{const fb=document.getElementById("fastB");fb.hidden=false;fb.setAttribute("aria-pressed","false")}
-  const wh=document.getElementById("walkhint");wh.textContent=isTouchUI()?"העיגול — הליכה (עד הסוף — ריצה) · גרירה — סיבוב המצלמה · צביטה — קרוב או רחוק":"W A S D או החצים — הליכה · Shift — ריצה · גרירה — סיבוב המצלמה · גלגלת — קרוב או רחוק";wh.dataset.base=wh.textContent;wh.hidden=false;clearTimeout(PER.ht);PER.ht=setTimeout(()=>{if(PER.on)wh.hidden=true},9000);
+  const wh=document.getElementById("walkhint");wh.textContent=isTouchUI()?"העיגול — הליכה (עד הסוף — ריצה) · נגיעה בקרקע — הולכים לשם · גרירה — סיבוב המצלמה · צביטה — קרוב או רחוק":"W A S D או החצים — הליכה · Shift — ריצה · לחיצה על הקרקע — הולכים לשם · גרירה — סיבוב המצלמה · גלגלת — קרוב או רחוק";wh.dataset.base=wh.textContent;wh.hidden=false;clearTimeout(PER.ht);PER.ht=setTimeout(()=>{if(PER.on)wh.hidden=true},9000);
   syncWalkHud();perTick(0.016,0.016)}
 PER.rc=new THREE.Raycaster();let PCL=null;
 function perCols(){const now=performance.now();if(PCL&&now-PCL.t<4000)return PCL.a;const a=[];scene.traverseVisible(o=>{if(!o.isMesh||o===PER.b||o===PER.h||o.isSkinnedMesh)return;const g=o.geometry,m=o.material;if(!g||!g.attributes||!g.attributes.position||g.attributes.lg||!m||Array.isArray(m))return;if((m.transparent&&m.opacity<0.6)||m.colorWrite===false||m.depthWrite===false)return;const n=g.attributes.position.count;if(o.isInstancedMesh?n>300:n>6000)return;a.push(o)});PCL={t:now,a};return a}
@@ -13933,10 +13933,15 @@ function perCamHit(q){const fl=floorAt(q.x,q.z);if(q.y<fl+0.25)return true;for(c
   if(!inCompBox(q.x,q.z)){const g=S2G(q.x,-q.z);if(cityHit(g[0],g[1],q.y-1.2))return true}return false}
 function perTick(dt,rawdt){const fwI=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),stI=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
   const nm=Math.hypot(fwI,stI),fwN=nm>1?fwI/nm:fwI,stN=nm>1?stI/nm:stI,run=keys.shift||D.fast||Math.hypot(JOY.x,JOY.y)>0.92,sp=(run?6.5:2.5)*Math.min(0.5,rawdt);
-  const mvx=(-Math.sin(yaw)*fwN+Math.cos(yaw)*stN)*sp,mvz=(-Math.cos(yaw)*fwN-Math.sin(yaw)*stN)*sp,p=PER.p,x0=p.x,z0=p.z;
+  let mvx=(-Math.sin(yaw)*fwN+Math.cos(yaw)*stN)*sp,mvz=(-Math.cos(yaw)*fwN-Math.sin(yaw)*stN)*sp;const p=PER.p,x0=p.x,z0=p.z;
+  /* 128.4: נגיעה בקרקע — הדמות הולכת לשם בעצמה. העיגול או מקש מבטלים. אם נתקעה (קיר בדרך) — עוצרת ואומרת */
+  let auto=false;if(PER.goal&&nm>0.05)perGoalClear();
+  if(PER.goal&&nm<=0.05){const G=PER.goal,dx=G.x-p.x,dz=G.z-p.z,L=Math.hypot(dx,dz);if(L<0.5)perGoalClear();else{const v0=(L>35?6.5:2.5)*Math.min(0.5,rawdt),k=Math.min(L,v0)/L;mvx=dx*k;mvz=dz*k;auto=true;
+      let ty=Math.atan2(-dx,-dz),dy=ty-yaw;while(dy>Math.PI)dy-=2*Math.PI;while(dy<-Math.PI)dy+=2*Math.PI;if(!look)yaw+=dy*Math.min(1,dt*1.2);
+      const now=performance.now();G.n=(G.n||0)+1;if(now-G.ct>900&&G.n>=12){G.n=0;if(Math.hypot(p.x-G.cx,p.z-G.cz)<0.3){perGoalClear();toast("יש קיר או בית בדרך. אפשר ללכת עם העיגול.")}else{G.ct=now;G.cx=p.x;G.cz=p.z}}}}
   {const ml=Math.hypot(mvx,mvz),ns=Math.min(40,Math.max(1,Math.ceil(ml/0.3))),sx=mvx/ns,sz=mvz/ns;for(let i=0;i<ns;i++){if(canStep(p.x,p.z,p.x+sx,p.z+sz)){p.x+=sx;p.z+=sz}else if(canStep(p.x,p.z,p.x+sx,p.z)){p.x+=sx}else if(canStep(p.x,p.z,p.x,p.z+sz)){p.z+=sz}else break}}
   const moved=Math.hypot(p.x-x0,p.z-z0),v=rawdt>0?moved/rawdt:0;
-  if(nm>0.05){const want=Math.atan2(-mvz,mvx);let d=want-PER.hd;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;PER.hd+=d*Math.min(1,dt*10)}
+  if(nm>0.05||auto){const want=Math.atan2(-mvz,mvx);let d=want-PER.hd;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;PER.hd+=d*Math.min(1,dt*10)}
   const gy=groundAt(p.x,p.z);p.y+=(gy-p.y)*Math.min(1,dt*9);if(Math.abs(gy-p.y)>3)p.y=gy;
   const b=PER.b,h=PER.h,o=PER.o;b.setAmp(0,moved>0.002?1:0);b.setSp(0,Math.max(1,v));o.position.copy(p);o.rotation.set(0,PER.hd,0);o.scale.setScalar(1);o.updateMatrix();b.setMatrixAt(0,o.matrix);b.instanceMatrix.needsUpdate=true;o.position.y+=1.56;o.updateMatrix();h.setMatrixAt(0,o.matrix);h.instanceMatrix.needsUpdate=true;
   if(PER.D<0.8){PER.g.visible=false;camera.position.set(p.x,p.y+1.65,p.z);camera.rotation.set(pitch,yaw,0);return}
@@ -13946,13 +13951,21 @@ function perTick(dt,rawdt){const fwI=Math.max(-1,Math.min(1,(keys.w||keys.arrowu
   if((PER.f=(PER.f||0)+1)%2===0||PER.rh==null){PER.rc.set(head,dir);PER.rc.far=DW+0.4;const hs=PER.rc.intersectObjects(perCols(),false);PER.rh=hs.length?hs[0].distance:1e9}if(PER.rh<1e8)dd=Math.min(dd,Math.max(0.35,PER.rh-0.4));
   PER.cd=dd<PER.cd?dd:PER.cd+(dd-PER.cd)*Math.min(1,dt*2.5);camera.position.copy(head).addScaledVector(dir,PER.cd);camera.lookAt(head.x,head.y+0.6,head.z);
   PER.g.visible=PER.cd>0.6}
-function perExit(){if(!PER.on){const h=document.getElementById("homeB");if(h)h.click();return}const p=PER.p.clone(),f=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));stopWalk();
+function perGoalClear(){if(PER.goal){PER.goal=null;if(PER.gm)PER.gm.visible=false}}
+function perGoal(g){if(!PER.gm){const m=new THREE.Mesh(new THREE.RingGeometry(0.45,0.7,32),new THREE.MeshBasicMaterial({color:0xC9A24B,transparent:true,opacity:0.85,depthWrite:false,side:THREE.DoubleSide}));m.rotation.x=-Math.PI/2;m.renderOrder=6;scene.add(m);PER.gm=m}
+  PER.goal={x:g.x,z:g.z,ct:performance.now(),cx:PER.p.x,cz:PER.p.z};PER.gm.position.set(g.x,floorAt(g.x,g.z)+0.06,g.z);PER.gm.visible=true}
+/* מעבר מיידי של הדמות למקום (מהמפה הקטנה) */
+function perJump(w){const sp=perSpot(w);if(!sp)return;fadeJump(()=>{perGoalClear();PER.p.set(sp[0],groundAt(sp[0],sp[1]),sp[1]);PER.cd=0.5})}
+{let tp=null;const el=renderer.domElement;el.addEventListener("pointerdown",e=>{tp=PER.on&&e.isPrimary?[e.clientX,e.clientY,e.timeStamp]:null});
+  el.addEventListener("pointerup",e=>{if(!PER.on||!tp||!e.isPrimary)return;const d=Math.hypot(e.clientX-tp[0],e.clientY-tp[1]);tp=null;if(d>8||PER.pinch)return;
+    let g=null;try{g=window.__NAV.groundHit(window.__NAV.rayAt(e.clientX,e.clientY))}catch(_){}if(!g||Math.hypot(g.x-PER.p.x,g.z-PER.p.z)>150)return;/* נגיעה בקיר או בבית (לא בקרקע) פותחת את הכרטיס שלו, ולא שולחת את הדמות */if(g.y-groundAt(g.x,g.z)>1)return;try{const r=window.__NAV.rayAt(e.clientX,e.clientY);PER.rc.set(r.origin,r.direction);PER.rc.far=r.origin.distanceTo(g)-0.5;const h=PER.rc.intersectObjects(perCols(),false)[0];if(h&&h.point.y-groundAt(h.point.x,h.point.z)>0.3)return}catch(_){}perGoal(g);PER.tapT=e.timeStamp})}
+function perExit(){perGoalClear();if(!PER.on){const h=document.getElementById("homeB");if(h)h.click();return}const p=PER.p.clone(),f=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));stopWalk();
   const t=p.clone();t.y+=1;const np=p.clone().addScaledVector(f,55);np.y=p.y+55;try{safeCam(np,t)}catch(e){}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:np,t1:t,start:performance.now(),dur:reduce?1:1400}}
 renderer.domElement.addEventListener("wheel",e=>{if(!PER.on)return;e.preventDefault();const dy=e.deltaMode===1?e.deltaY*33:e.deltaY;let d=PER.D;if(d<0.8&&dy>0)d=1.2;else d=d*Math.exp(Math.max(-200,Math.min(200,dy))*0.0018);PER.D=d<0.9?0:Math.min(9,d)},{passive:false});
 renderer.domElement.addEventListener("touchstart",e=>{if(PER.on&&e.touches.length===2){PER.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);look=null}},{passive:true});
 renderer.domElement.addEventListener("touchmove",e=>{if(PER.on&&e.touches.length===2&&PER.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);let v=PER.D<0.8?(d<PER.pinch?1.2:0):PER.D*PER.pinch/d;PER.D=v<0.9?0:Math.min(9,v);PER.pinch=d}},{passive:true});
 renderer.domElement.addEventListener("touchend",e=>{if(e.touches.length<2)PER.pinch=0},{passive:true});
-window.__PERSON={start:startPerson,exit:perExit,on:()=>PER.on,state:()=>({x:+PER.p.x.toFixed(2),y:+PER.p.y.toFixed(2),z:+PER.p.z.toFixed(2),D:PER.D,cd:+PER.cd.toFixed(2),vis:!!(PER.g&&PER.g.visible),cam:camera.position.toArray().map(v=>+v.toFixed(1))})};
+window.__PERSON={start:startPerson,exit:perExit,goal:(x,z)=>perGoal(new THREE.Vector3(x,0,z)),hasGoal:()=>!!PER.goal,on:()=>PER.on,state:()=>({x:+PER.p.x.toFixed(2),y:+PER.p.y.toFixed(2),z:+PER.p.z.toFixed(2),D:PER.D,cd:+PER.cd.toFixed(2),vis:!!(PER.g&&PER.g.visible),cam:camera.position.toArray().map(v=>+v.toFixed(1))})};
 // #18 B1: OrbitControls holds the camera at most 80° from straight up when far (over 160 m) and just under level when near (core/31).
 // A pose past that limit was pulled up by the controls the moment a flight ended (olives 34 m, city 56 m). Here the pose itself is moved to the limit, keeping its distance.
 function fixPhi(p,t){const o=p.clone().sub(t),L=o.length();if(L<1e-6)return[p,t];const lim=L>160?THREE.MathUtils.degToRad(79.5):Math.PI*0.495,phi=Math.acos(Math.max(-1,Math.min(1,o.y/L)));
@@ -14035,7 +14048,7 @@ const MAPR=2000,MAPS=2048,MAPK=MAPS/(2*MAPR),MAPC=(function(){const c=document.c
   lab("הר הזיתים",[900,80]);return c})();
 const MB=SATB.old;const MINIV={cx:0,cy:0,span:0};
 function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);const nW=new THREE.Vector3(0,0,-1).applyAxisAngle(new THREE.Vector3(0,1,0),-THETA);const ang=Math.atan2(fw.x*nW.z-fw.z*nW.x,fw.x*nW.x+fw.z*nW.z);document.getElementById("needle").style.transform="rotate("+(ang*180/Math.PI)+"deg)";
-  const c=document.getElementById("mini");if(c.hidden)return;const x=c.getContext("2d"),l=WG.worldToLocal(camera.position.clone()),gx=l.x,gn=-l.z,S=c.width,span=1600*MAPK;
+  const c=document.getElementById("mini");if(c.hidden)return;const x=c.getContext("2d"),l=WG.worldToLocal((PER.on?PER.p:camera.position).clone()),gx=l.x,gn=-l.z,S=c.width,span=1600*MAPK;
   const px0=(gx+MAPR)*MAPK,py0=(MAPR-gn)*MAPK,cx=Math.max(span/2,Math.min(MAPS-span/2,px0)),cy=Math.max(span/2,Math.min(MAPS-span/2,py0));MINIV.cx=cx;MINIV.cy=cy;MINIV.span=span;const M2=q=>[(q[0]-cx)/span*S+S/2,(q[1]-cy)/span*S+S/2];
   x.save();x.beginPath();x.arc(S/2,S/2,S/2,0,7);x.clip();x.drawImage(MAPC,cx-span/2,cy-span/2,span,span,0,0,S,S);
   // the Temple compound, drawn from the model itself
@@ -14054,7 +14067,7 @@ function hudTick(){const fw=new THREE.Vector3();camera.getWorldDirection(fw);con
     if(e.key==="Enter"||e.key===" "){e.preventDefault();e.stopPropagation();MINIV.kb=true;goMini(MINIV.kx,MINIV.ky);MINIV.kx=MINIV.ky=0.5}});
   const goMini=(sx,sy)=>{if(!MINIV.span)return;
     const px=MINIV.cx+(sx-0.5)*MINIV.span,py=MINIV.cy+(sy-0.5)*MINIV.span,gx=px/MAPK-MAPR,gn=MAPR-py/MAPK,w=WG.localToWorld(new THREE.Vector3(gx,0,-gn));w.y=groundAt(w.x,w.z);
-    try{window.__flyToPoint(w,60)}catch(err){console.warn(err)}};
+    /* 128.4: בהולך — הדמות עוברת לשם */if(PER.on){perJump(w);return}try{window.__flyToPoint(w,60)}catch(err){console.warn(err)}};
   mc.addEventListener("click",e=>{const r=mc.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;if(Math.hypot(sx-0.5,sy-0.5)>0.5)return;goMini(sx,sy)})}
 document.getElementById("homeB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="home"?"true":"false"));flyTo("home",1600)});
 document.getElementById("exitB").addEventListener("click",()=>{endModes();document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.v==="court"?"true":"false"));flyTo("court",1600)});
@@ -14107,6 +14120,7 @@ const ray=new THREE.Raycaster(),mv=new THREE.Vector2();let down=null;
 renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY];if(STORY&&STORY.pause)STORY.pause()});
 document.addEventListener("click",e=>{if(STORY&&e.target.closest&&e.target.closest("#facSeg button,#locSeg button,#amahSeg button,#gateSeg button,#floorSeg button,#optSeg button[data-o=people]"))STORY.stop()},true);
 renderer.domElement.addEventListener("pointerup",e=>{
+  /* 128.4: בהולך, נגיעה בקרקע שולחת את הדמות — בלי לפתוח כרטיס */if(PER.on&&PER.tapT===e.timeStamp){down=null;return}
   if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>5)return;down=null;{const el=document.elementFromPoint(e.clientX,e.clientY);if(el&&el.closest&&el.closest(".lbl,.story,.infocard,.hud,#sbox,#rail,.dr,#intro"))return}
   const r=renderer.domElement.getBoundingClientRect();mv.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);
   ray.setFromCamera(mv,camera);const shown=o=>{for(let q=o;q;q=q.parent){if(!q.visible&&!q.userData.hid)return false}return true};const hit=ray.intersectObjects(cPick.concat(PICK),false).find(h=>h.object.userData&&h.object.userData.n&&shown(h.object));
@@ -15606,7 +15620,7 @@ card.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)retur
   if(a==="fly"&&CUR.pt){const L=CUR.pt._L;if(L)goLabel(L);else flyToPoint(CUR.pt,20);CUR.dist0=0}
   else if(a==="in"){const k=/קודש הקודשים/.test(CUR.d.n)?"vKd":"vIn";$(k).click()}
   else if(a==="near"&&CUR.pt){const box=card.querySelector(".ic-near");box.hidden=!box.hidden;if(!box.hidden){box.innerHTML=I("near")+'<div><b>בסביבה</b></div>';const w=box.lastChild;near(CUR.pt,6).forEach(([L,dd])=>{const q=mk("button",null,esc(L.txt)+' <small class="ch">(<bdi class="n">'+Math.round(dd/A)+'</bdi> אמה)</small>');q.type="button";q.onclick=()=>pickLabel(L);w.appendChild(q)})}}
-  else if(a==="walk"&&CUR.pt){const pt=CUR.pt.clone();try{closeInfo()}catch(e){}startWalk(pt)}
+  else if(a==="walk"&&CUR.pt){const pt=CUR.pt.clone();try{closeInfo()}catch(e){}/* 128.4: «התחל הליכה כאן» — ההולך עומד ליד המקום */fadeJump(()=>startPerson(pt))}
   else if(a==="share")share()});
 // click on the sky closes the panel
 const tv=new THREE.Vector3();
