@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -583,6 +583,10 @@ body.busy3d:not(.touring) #modeExit{display:block}
   body.pane #verTag,body.touring #verTag,body.busy3d #verTag,body:has(#intro:not([hidden])) #verTag{display:none!important}
   .walkhint{top:118px}
   #modeExit{bottom:calc(78px + env(safe-area-inset-bottom,0px));height:32px;padding:0 14px;font-size:13px}
+  /* 128.2: כפתור ״מהר״ ישב מתחת ל״יציאה״, והרמז של ההליכה כיסה את עמודת הכפתורים משמאל */
+  .fastb{left:auto!important;right:12px;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;height:32px;padding:0 12px}
+  .walkhint{left:70px!important;right:12px!important;max-width:none!important}
+  #cta .map span{display:inline}
   /* 125.0 (ביקורת 22): כתובית הסיור בטלפון קטנה יותר, כדי שהדמות והפעולה יישארו גלויות. הפסוק נפתח בלחיצה על ▴ */
   #stText{font-size:15px!important;line-height:1.45!important;max-height:13.5vh!important;overflow-y:auto}
   .story:not(.open) #stVerse{display:none!important}
@@ -14236,11 +14240,50 @@ el.addEventListener("dblclick",e=>{if(busy())return;e.preventDefault();const p=s
   document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
   if(reduce){camAt(np,p);return}tween={p0:cp.clone(),t0:controls.target.clone(),p1:np,t1:p,start:performance.now(),dur:1500,arc:true}});
 // first-drag hint
-{let shown=false;el.addEventListener("pointerdown",()=>{if(shown||busy())return;shown=true;try{if(localStorage.getItem("tm_navhint"))return;localStorage.setItem("tm_navhint","1")}catch(e){}setTimeout(()=>toast("גרירה מזיזה את המפה. לסיבוב: גרירה ימנית, Ctrl וגרירה, או שתי אצבעות. לחיצה כפולה טסה אל המקום."),400)})}
+{let shown=false;el.addEventListener("pointerdown",()=>{if(shown||busy())return;shown=true;try{if(localStorage.getItem("tm_navhint"))return;localStorage.setItem("tm_navhint","1")}catch(e){}setTimeout(()=>toast(isTouchUI()?"כמו בגוגל מפות: אצבע אחת מזיזה, צביטה מקרבת, סיבוב שתי אצבעות מסובב, ושתי אצבעות למעלה או למטה מטות את המבט. נגיעה כפולה טסה אל המקום.":"גרירה מזיזה את המפה. לסיבוב: גרירה ימנית, או Ctrl וגרירה. גלגלת מקרבת. לחיצה כפולה טסה אל המקום."),400)})}
+/* 128.2 (שמואל: "שיטוט רגיל כמו בגוגל מפות"): צביטה מקרבת, סיבוב האצבעות מסובב את המפה, והמקום שבין האצבעות נשאר מתחתן.
+   שתי אצבעות שזזות יחד למעלה או למטה מטות את המבט (בדיוק כמו בגוגל מפות; שמואל: "תעשה את הדבר הכי אינטואיטיבי"). קודם גרירה בשתי אצבעות סובבה והטתה יחד, וזה בלבל */
+controls.touches.TWO=-1; // OrbitControls לא נוגע בשתי אצבעות; הכול כאן
+{const T={on:false},AX=new THREE.Vector3(0,1,0);
+  const ad=(a,b)=>{let d=a-b;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;return d};
+  const geo=e=>{const a=e.touches[0],b=e.touches[1];return{d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),a:Math.atan2(b.clientY-a.clientY,b.clientX-a.clientX),m:[(a.clientX+b.clientX)/2,(a.clientY+b.clientY)/2],y0:a.clientY,y1:b.clientY}};
+  const planeAt=(cx,cy,y)=>{const r=rayAt(cx,cy);if(Math.abs(r.direction.y)<1e-4)return null;const k=(y-r.origin.y)/r.direction.y;return k>0?r.origin.clone().addScaledVector(r.direction,k):null};
+  el.addEventListener("touchstart",e=>{if(e.touches.length!==2||busy()||!controls.enabled){T.on=false;return}tween=null;if(STORY&&STORY.pause)STORY.pause();const g=geo(e);T.P=groundHit(rayAt(g.m[0],g.m[1]))||controls.target.clone();T.on=true;T.mode=null;T.g0=g;T.last=g},{passive:true});
+  el.addEventListener("touchmove",e=>{if(!T.on||e.touches.length!==2||busy())return;e.preventDefault();const g=geo(e),L=T.last;
+    if(!T.mode){const dy0=g.y0-T.g0.y0,dy1=g.y1-T.g0.y1,dd=Math.abs(g.d-T.g0.d),da=Math.abs(ad(g.a,T.g0.a)),dm=Math.hypot(g.m[0]-T.g0.m[0],g.m[1]-T.g0.m[1]);
+      if(Math.abs(dy0)>10&&Math.abs(dy1)>10&&Math.sign(dy0)===Math.sign(dy1)&&dd<18&&da<0.12&&Math.abs(g.m[0]-T.g0.m[0])<Math.abs(g.m[1]-T.g0.m[1]))T.mode="tilt";else if(dd>12||da>0.08||dm>12)T.mode="zoom";else return}
+    T.last=g;const cp=camera.position,t=controls.target;
+    if(T.mode==="tilt"){const off=cp.clone().sub(t),s=new THREE.Spherical().setFromVector3(off);s.phi=Math.max(0.02,Math.min(controls.maxPolarAngle,s.phi-(g.m[1]-L.m[1])*0.006));off.setFromSpherical(s);cp.copy(t).add(off)}
+    else{const P=T.P,da=ad(g.a,L.a);if(da){cp.sub(P).applyAxisAngle(AX,da).add(P);t.sub(P).applyAxisAngle(AX,da).add(P)}
+      let f=L.d>1&&g.d>1?L.d/g.d:1;const dist=cp.distanceTo(P);if(f<1&&dist*f<3)f=Math.min(1,3/dist);if(f>1&&cp.distanceTo(t)*f>controls.maxDistance)f=1;
+      if(f!==1){cp.sub(P).multiplyScalar(f).add(P);t.sub(P).multiplyScalar(f).add(P)}
+      controls.update();camera.updateMatrixWorld();const Q=planeAt(g.m[0],g.m[1],P.y);if(Q&&Q.distanceTo(P)<2000){const dx=P.x-Q.x,dz=P.z-Q.z;cp.x+=dx;cp.z+=dz;t.x+=dx;t.z+=dz}}
+    const gy=floorAt(cp.x,cp.z);if(cp.y<gy+1.6)cp.y=gy+1.6;camSaved=false;camLim=1e9;controls.update()},{passive:false});
+  el.addEventListener("touchend",e=>{if(e.touches.length<2)T.on=false},{passive:true});el.addEventListener("touchcancel",()=>{T.on=false},{passive:true})}
+/* 128.2: כפתור ״מפה״ — מבט מלמעלה, הצפון למעלה, מעל המקום שבמרכז המסך. לחיצה נוספת כשכבר מלמעלה — חזרה למבט באלכסון */
+function mapView(){try{if(STORY)STORY.stop()}catch(e){}try{endModes()}catch(e){}try{closeInfo()}catch(e){}
+  const t=controls.target.clone(),cp=camera.position,off=cp.clone().sub(t),s=new THREE.Spherical().setFromVector3(off);t.y=Math.max(t.y,floorAt(t.x,t.z));
+  const top=s.phi<0.3,d=Math.max(top?120:180,Math.min(900,off.length()*(top?1:1.15)));let p;
+  if(top){s.radius=d;s.phi=0.95;p=t.clone().add(new THREE.Vector3().setFromSpherical(s))}
+  else{const nW=new THREE.Vector3(0,0,1).applyAxisAngle(AXY,-THETA),phi=0.12;p=t.clone().addScaledVector(nW,d*Math.sin(phi));p.y=t.y+d*Math.cos(phi)}
+  document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));
+  if(reduce){camAt(p,t);return}tween={p0:cp.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:1200}}
+const AXY=new THREE.Vector3(0,1,0);
+/* 128.2: גרירת המצפן בעיגול מסובבת את המפה סביב מרכז המסך (גם באצבע אחת); נגיעה בלי גרירה עדיין מחזירה את הצפון למעלה */
+const freeOK=()=>!busy()&&controls.enabled;
+function orbitBy(dAz,dPhi){const cp=camera.position,t=controls.target;tween=null;if(STORY&&STORY.pause)STORY.pause();if(dAz)cp.sub(t).applyAxisAngle(AXY,dAz).add(t);
+  if(dPhi){const off=cp.clone().sub(t),s=new THREE.Spherical().setFromVector3(off);s.phi=Math.max(0.02,Math.min(controls.maxPolarAngle,s.phi+dPhi));off.setFromSpherical(s);cp.copy(t).add(off)}
+  const gy=floorAt(cp.x,cp.z);if(cp.y<gy+1.6)cp.y=gy+1.6;camSaved=false;camLim=1e9;controls.update()}
+{const cmp=document.getElementById("compass");
+  if(cmp){let cd=null;const ang=e=>{const r=cmp.getBoundingClientRect();return Math.atan2(e.clientY-(r.top+r.height/2),e.clientX-(r.left+r.width/2))};
+    cmp.addEventListener("pointerdown",e=>{if(!freeOK())return;cd={id:e.pointerId,a:ang(e),x:e.clientX,y:e.clientY,moved:false};try{cmp.setPointerCapture(e.pointerId)}catch(_){}});
+    cmp.addEventListener("pointermove",e=>{if(!cd||e.pointerId!==cd.id)return;if(!cd.moved&&Math.hypot(e.clientX-cd.x,e.clientY-cd.y)<6)return;cd.moved=true;const a=ang(e);let d=a-cd.a;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;cd.a=a;orbitBy(d,0)});
+    const cEnd=e=>{if(!cd||e.pointerId!==cd.id)return;if(cd.moved){const stop=ev=>{ev.stopImmediatePropagation();ev.preventDefault()};cmp.addEventListener("click",stop,{capture:true,once:true});setTimeout(()=>cmp.removeEventListener("click",stop,{capture:true}),400)}cd=null};
+    cmp.addEventListener("pointerup",cEnd);cmp.addEventListener("pointercancel",cEnd);cmp.style.touchAction="none"}}
 let last=performance.now();
 function navTick(){requestAnimationFrame(navTick);const now=performance.now(),dt=Math.min(0.1,(now-last)/1000);last=now;if(busy()){zAcc=0;return}zoomTick(dt);keyTick(dt)}
 requestAnimationFrame(navTick);
-window.__NAV={groundHit,sceneHit,rayAt};
+window.__NAV={groundHit,sceneHit,rayAt,mapView};
 })();
 
 // ==== v59 phase C: Voyager-style tours — station strip, slow orbit at each stop, three new festival tours ====
@@ -15853,7 +15896,8 @@ try{(function(){const st=document.getElementById("stage");if(!st||document.getEl
   const mp=el("div","gl ui dim",'<div class="bt"><b>והראנו בבניינו</b><small>הדמיית המקדש בירושלים</small></div><div class="row"><button type="button" id="mpTime" aria-label="שעה ביום"></button></div>');mp.id="mplate";st.appendChild(mp);
   const curT=()=>{const b=document.querySelector('#timeSeg button[aria-pressed="true"]');return b?b.dataset.t:"morning"};
   mp.querySelector("#mpTime").onclick=()=>{const n=TO[(TO.indexOf(curT())+1)%4],b=document.querySelector('#timeSeg button[data-t="'+n+'"]');if(b)b.click()};
-  const cta=el("div","gl ui dim",'<button type="button" class="pri"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></svg>סיור מודרך</button><button type="button" class="sec"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="2"/><path d="M12 7.5v6M12 13.5l-3.2 6.5M12 13.5l3.2 6.5M8 10.2l4-1.6 4 1.6"/></svg><span>הליכה במקדש</span></button>');cta.id="cta";st.appendChild(cta);
+  const cta=el("div","gl ui dim",'<button type="button" class="pri"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></svg>סיור מודרך</button><button type="button" class="sec"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="2"/><path d="M12 7.5v6M12 13.5l-3.2 6.5M12 13.5l3.2 6.5M8 10.2l4-1.6 4 1.6"/></svg><span>הליכה במקדש</span></button><button type="button" class="map" id="ctaMap" aria-label="מפה: מבט מלמעלה כמו בגוגל מפות"><svg viewBox="0 0 24 24"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>מפה</span></button>');cta.id="cta";st.appendChild(cta);
+  /* 128.2: כפתור ״מפה״ — מבט מלמעלה כמו בגוגל מפות (60-navigation) */cta.querySelector(".map").onclick=()=>{try{window.__NAV.mapView()}catch(e){console.warn("map",e)}};
   cta.querySelector(".pri").onclick=()=>{const b=document.querySelector("#rail button");if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
   cta.querySelector(".sec").onclick=()=>{const b=document.getElementById("vWalk");if(b)b.click()};
   let sig="";const sync=()=>{let t="morning",pl="ez",busy=false;try{t=curT();busy=!!(WALK||DRONE||(TRN&&TRN.riding))}catch(e){}
