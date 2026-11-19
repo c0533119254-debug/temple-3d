@@ -15980,7 +15980,7 @@ function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coi
   /* 130.1: במצב הליכה — צעדים על אבן כשהולכים (לא כשעומדים). מהר יותר = חזק יותר 💡 */
   if(!P&&WALK){const sp=AMB.spd||0;L.steps=sat((sp-0.15)/0.8)*(inHouse?0.6:1)}
   /* 130.3: עולי רגל בדרך להר: ההמולה לפי כמה עולים הולכים ליד המצלמה. הכבשים לקרבן (📜 שמות יב, ג-ו; ⚖️ פסחים ה) פועים מדי פעם */
-  {const pg=pilgrims(cp.x,cp.z);L.city=Math.max(L.city,0.75*sat(pg.c/14)*(night?0.3:1));if(pg.sp&&!night){L.sheep=near(pg.sd,3,30);if(!P)SRC.sheep=[pg.sp,pg.sd]}}
+  {const pg=pilgrims(cp.x,cp.z),pv=0.75*sat(pg.c/14)*(night?0.3:1);/* ⚖️ על הר הבית גם עולי הרגל רק בהמולה שקטה */if(mount>0.5)L.quiet=Math.max(L.quiet,pv*0.85);else L.city=Math.max(L.city,pv*(1-mount));if(pg.sp&&!night){L.sheep=near(pg.sd,3,30);if(!P)SRC.sheep=[pg.sp,pg.sd]}}
   for(const k in L)L[k]*=hf;
   if(inHouse)for(const k in L)L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 */
   return L}
