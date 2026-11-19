@@ -134,7 +134,7 @@ instBlocks({count:620,seed:11,area:[-110,560,-1050,-360],test:(x,n)=>segDist(x,n
 instBlocks({count:900,seed:13,area:[-2200,-980,-1500,1700],test:(x,n)=>segDist(x,n,HINNOM)[0]>70,size:[16,40],ht:[10,34],tint:[0xe6dfd0,0xddd6c6,0xeae4d6,0xd4ccb9],rot:0.05});
 instBlocks({count:700,seed:17,area:[-950,260,660,1700],test:(x,n)=>segDist(x,n,KIDRON)[0]>60&&!inPoly(x,n,OLD),size:[14,34],ht:[8,26],tint:[0xe6dfd0,0xddd6c6,0xeae4d6],rot:-0.08});
 instBlocks({count:260,seed:19,area:[720,1450,-700,1100],test:(x,n)=>x>750,size:[10,24],ht:[6,15],tint:tints,domes:0.15});
-instBlocks({count:280,seed:23,area:[-860,-420,-920,-590],test:(x,n)=>segDist(x,n,HINNOM)[0]>55&&!inPoly(x,n,OLD)&&!HIN11.inPool(x,n,8)&&!HIN11.onPath(x,n),size:[10,22],ht:[6,12],tint:tints,domes:0.2});
+instBlocks({count:280,seed:23,area:[-860,-420,-920,-590],test:(x,n)=>segDist(x,n,HINNOM)[0]>55&&!inPoly(x,n,OLD)&&!HIN11.onPath(x,n),size:[10,22],ht:[6,12],tint:tints,domes:0.2});
 (function(){
   const r=rng(31),cnt=SMALL?1100:2600,can=new THREE.InstancedMesh(new THREE.SphereGeometry(1,7,5),M.leaf,cnt),trk=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.25,0.35,1,5),M.trunk,cnt),d=new THREE.Object3D();let k=0,tries=0;
   while(k<cnt&&tries<cnt*10){tries++;const x=215+r()*600,n=-1000+r()*2200;if(inPoly(x,n,OLD)||nearMount(x,n)||!satOK(x,n)||!clearAt(x,n,2))continue;if(segDist(x,n,KIDRON)[0]<8)continue;if(x>760&&r()<0.6)continue;
