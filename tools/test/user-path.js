@@ -114,6 +114,7 @@ async function run(dev) {
   });
   await step("מקור בסיור גלוי מושהה פקדים פנויים וסגירה", async () => {
     const pointer = async (sel) => { const r = await pg.evaluate(sel=>{const e=document.querySelector(sel);if(!e)throw new Error("missing "+sel);e.scrollIntoView({block:"nearest",inline:"center",behavior:"instant"});const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};},sel); if (!r.width||!r.height) throw new Error("hidden " + sel); await pg.mouse.click(r.x+r.width/2,r.y+r.height/2); };
+    const before = await pg.evaluate(()=>({i:window.__STORY.S.i,paused:window.__STORY.S.paused}));
     await pointer("#stSrc");
     await until(() => { const c=document.getElementById("infocard");return !c.hidden&&getComputedStyle(c).display!=="none"&&window.__STORY.S.paused; },30000);
     const r=await pg.evaluate(()=>{const c=document.getElementById("infocard"),b=document.getElementById("tbar");return {bottom:c.getBoundingClientRect().bottom,bar:b.getBoundingClientRect().top,text:document.getElementById("infobody").innerText}});
@@ -125,6 +126,12 @@ async function run(dev) {
     await pointer("#stSrc");await until(()=>!document.getElementById("infocard").hidden,60000);
     await pointer("#stNext");await until(()=>document.getElementById("infocard").hidden,30000);
     await shot("4b-tour-source-dismissed");
+    // Leave later tests at exactly the original station and playback state.
+    await pointer("#stPrev");
+    await until(i=>window.__STORY.S.i===i&&document.getElementById("infocard").hidden,30000,before.i);
+    const paused = await pg.evaluate(()=>window.__STORY.S.paused);
+    if(paused!==before.paused) await pointer("#stPlay");
+    await until(p=>window.__STORY.S.paused===p,30000,before.paused);
   });
   await ovl("בתוך סיור");
   await step("יציאה מהסיור", async () => {
@@ -252,7 +259,7 @@ async function run(dev) {
     await until(() => window.__PERSON && window.__PERSON.on(), 30000);
     await pg.waitForTimeout(2500);
     const a = await pg.evaluate(() => window.__PERSON.state());
-    if (!a.vis) throw new Error("הדמות לא נראית");
+    if (!a.vis) throw new Error("הדמות לא נראית "+JSON.stringify(a));
     if (a.cd < 1) throw new Error(`המצלמה צמודה לדמות (${a.cd} מ׳)`);
     await pg.evaluate(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "w" })));
     await pg.waitForTimeout(3000);
