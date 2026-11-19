@@ -20,6 +20,7 @@ main/54-loop-labels.js	// ---- loop ----\nlet lastW=0,lastH=0;function resize(){
 main/60-navigation.js	// ==== v59 phase B: Earth-style navigation — drag pans, right/Ctrl drag turns, zoom to cursor, keys, double-click fly =
 main/62-tours-ui.js	// ==== v59 phase C: Voyager-style tours — station strip, slow orbit at each stop, three new festival tours ====
 main/64-shell-ui.js	// ==== v61: Google Maps / Earth style shell — search pill, icon rail, place panel, chips that light up the model, share
+main/66-ambient-sound.js	// ==== 130.0: קולות רקע — המולה שעולה כשמתקרבים לרחובות, לשוק, לכותל ולהר הבית (תוכנית: ambient-sound/תוכנית-קולות-רקע.
 main/70-lod-quality.js	// ==== v60: distance LOD for big instanced crowds (trees, people, graves, lamps): near = full, far = a box, small parts
 main/72-review-mode.js	// ==== v77: review mode ("מצב בדיקה") — low quality + a fixed-camera tour of every gate, opening and room ====
 main/74-art-layer.js	// ==== v114 · שכבת האמנות: אור, אבן וזהב ====

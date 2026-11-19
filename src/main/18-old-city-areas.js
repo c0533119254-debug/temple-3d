@@ -455,6 +455,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
         /* החזית צריכה להיות ישרה כאן: גם 1 מ׳ לכל צד עדיין קיר */
         if(!inB(fx+px*0.3+ux*1.1,fn+pn*0.3+un*1.1)||!inB(fx+px*0.3-ux*1.1,fn+pn*0.3-un*1.1))return;
         F.push({w:rd.w,x:fx,n:fn,g:surfY(fx-px*0.4,fn-pn*0.4),a:Math.atan2(pn,px),o:r(),o2:r(),o3:r()})})}}});
+  /* 130.0: החנויות הן גם מקור ההמולה של השוק (66-ambient-sound) */window.__MKTP=F.map(f=>[f.x,f.n]);
   if(!F.length)return;
   const N=F.length,d=new THREE.Object3D(),col=new THREE.Color();
   const mk=(geo,mat,cnt)=>{const m=new THREE.InstancedMesh(geo,mat,cnt);m.castShadow=false;m.receiveShadow=true;return m};

@@ -174,6 +174,10 @@ DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEac
     sw2.querySelector("#shvSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-sd2]");if(!b)return;pickD(b.dataset.sd2==="tash"?(SHVDAY[0]==="t"?SHVDAY:"t7"):b.dataset.sd2)});
     sw2.querySelector("#shvSub").addEventListener("click",e=>{const b=e.target.closest("button[data-st]");if(!b)return;pickD(b.dataset.st)});
     fw.querySelector("#festSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-fest]");if(!b)return;SHVPICK=b.dataset.fest==="shavuot";shvUI()});shvUI();window.__shvUI=shvUI}
+  /* 130.0: קולות רקע (66-ambient-sound). הבחירה נשמרת */
+  {let on=true;try{on=localStorage.getItem("tm_amb")!=="0"}catch(e){}
+   const aw=mk("div","ctl",'<div class="cl">קולות רקע</div><div class="seg tap" id="ambSeg" role="group" aria-label="קולות רקע"><button type="button" data-amb="1" aria-pressed="'+(on?"true":"false")+'">🔊 פועל</button><button type="button" data-amb="0" aria-pressed="'+(on?"false":"true")+'">🔇 כבוי</button></div><div class="hcap" style="font-size:11.5px;opacity:.75;line-height:1.35">המולה שעולה כשמתקרבים לרחובות, לשוק, לכותל ולהר הבית. הקלטות חופשיות מוויקישיתוף: <a href="sfx/CREDITS.md" target="_blank" rel="noopener" style="color:inherit">קרדיטים ורישיונות</a></div>');d.appendChild(aw);
+   aw.querySelector("#ambSeg").addEventListener("click",e=>{const b=e.target.closest("button[data-amb]");if(!b)return;aw.querySelectorAll("#ambSeg button").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));try{window.__AMB&&window.__AMB.set(b.dataset.amb==="1")}catch(er){}})}
   const ts=$("timeSeg");if(ts)ts.closest(".ctl").style.display="none";
   const v=[...document.querySelectorAll(".controls .cgroup")].find(g=>g.querySelector("#floorSeg"));if(v)v.querySelectorAll(".ctl").forEach(c=>{if(!c.querySelector("#timeSeg"))d.appendChild(c)})}
 // help drawer
