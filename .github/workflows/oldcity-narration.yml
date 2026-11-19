@@ -1,0 +1,22 @@
+# שמונת קבצי קריינות העיר העתיקה: קיימים, נטענים, והאורך בתוך המניפסט.
+# לא מפרסם. הפרסום נשאר ב-pages.yml, רק אחרי מיזוג ל-main.
+name: קריינות העיר העתיקה
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  oldcity-audio:
+    name: שמונה קבצים נטענים והאורך במניפסט
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: ffmpeg לפענוח
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - name: קיום, טעינה, ואורך מול המניפסט
+        run: python3 audio/check-oldcity.py
