@@ -1,0 +1,33 @@
+{
+  "name": "Prepare missing tour recordings integration",
+  "on": {
+    "push": {
+      "branches": [
+        "instinct/audio-v2b-20261119"
+      ],
+      "paths": [
+        ".github/workflows/audio-v2b-integration.yml"
+      ]
+    }
+  },
+  "permissions": {
+    "contents": "write"
+  },
+  "jobs": {
+    "prepare": {
+      "runs-on": "ubuntu-latest",
+      "steps": [
+        {
+          "uses": "actions/checkout@v4",
+          "with": {
+            "fetch-depth": 0
+          }
+        },
+        {
+          "name": "Copy verified assets and captions",
+          "run": "mkdir -p /tmp/v2b-incoming\ngit fetch origin audio-v2-preview\ngit archive 9aed4b6 audio-v2b | tar -x -C /tmp/v2b-incoming\npython3 - <<'PYCODE'\nimport json,pathlib,shutil,subprocess\nroot=pathlib.Path('.');inc=pathlib.Path('/tmp/v2b-incoming/audio-v2b')\nif not inc.exists():inc=pathlib.Path('/tmp/incoming-audio-v2b/audio-v2b')\ncs=json.load(open(inc/'captions-v2b.json'));m=json.load(open(inc/'manifest.json'));reading=json.load(open('tours/reading.json'));tours={t['key']:t for t in reading['tours']}\nfor k,c in cs.items():\n item=m['items'][k];tour=item['tour'];i=item['stepIndex'];old=tours[tour]['steps'][i]['cap'];f={'tamid':'40-temple-build.js','shavuot':'62-tours-ui.js','quick':'74-art-layer.js'}[tour];p=root/'src/main'/f;s=p.read_text();o='cap:'+json.dumps(old,ensure_ascii=False);n='cap:'+json.dumps(c,ensure_ascii=False);assert s.count(o)==1,(k,s.count(o));p.write_text(s.replace(o,n,1));tours[tour]['steps'][i]['cap']=c;shutil.copyfile(inc/item['file'],root/'audio'/item['file'])\np=root/'audio/index.json';idx=json.load(open(p));assert idx['tamid'][10] is None;assert idx['quick'][0] is None;idx['tamid'][10]='tamid_11b.mp3';idx['quick'][0]='quick_01.mp3';idx['shavuot']=[f'shavuot_{i:02}.mp3'for i in range(1,8)];p.write_text(json.dumps(idx,ensure_ascii=False,indent=1)+'\\n')\np=root/'audio/manifest.json';m0=json.load(open(p));assert not(set(cs)&set(m0['items']));m0['items'].update(m['items']);m0['charsSent']+=m['charsSent'];p.write_text(json.dumps(m0,ensure_ascii=False,indent=2)+'\\n')\npathlib.Path('tours/reading.json').write_text(json.dumps(reading,ensure_ascii=False,indent=1)+'\\n')\nsubprocess.run(['python3','tools/templesrc.py','build'],check=True);subprocess.run(['python3','tools/templesrc.py','check'],check=True)\nPYCODE\ngit rm .github/workflows/audio-v2b-integration.yml\ngit config user.name github-actions[bot]\ngit config user.email 41898282+github-actions[bot]@users.noreply.github.com\ngit add audio src index.html tours/reading.json\ngit commit -m 'Integrate nine approved missing tour recordings and matching captions'\ngit push origin HEAD:instinct/audio-v2b-20261119"
+        }
+      ]
+    }
+  }
+}
