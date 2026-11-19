@@ -109,3 +109,32 @@ jobs:
           name: usage-matrix-screens
           path: matrix-out
           retention-days: 14
+
+  shoeva:
+    name: שמחת בית השואבה נטענת
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: התקנת דפדפן לבדיקה
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: הסצנה
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 2
+          node tools/test/shoeva-scene.js http://localhost:8765/ shoeva-out
+      - name: דוח
+        if: always()
+        run: cat shoeva-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: צילומי מסך
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shoeva-screens
+          path: shoeva-out
+          retention-days: 14
