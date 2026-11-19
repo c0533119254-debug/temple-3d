@@ -708,9 +708,66 @@
   "tamid": {
     "credit": "«ותערב» · לחן: שלמה יהודה רכניץ (YouTube)",
     "segs": {"main": {"v": "Hz1wM-uxnwo", "at": 38, "vol": 70, "fadeIn": 4000}},
-    "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
-           {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
-           {"seg": "main"}, {"seg": "main", "lv": 0.35}, {"seg": "main", "lv": 1.15}]
+    "st": [
+      {
+        "topic": "לילה — השומרים והמפתחות",
+        "seg": "main"
+      },
+      {
+        "topic": "הפיס הראשון",
+        "seg": "main"
+      },
+      {
+        "topic": "תרומת הדשן",
+        "seg": "main"
+      },
+      {
+        "topic": "סידור המערכה",
+        "seg": "main"
+      },
+      {
+        "topic": "הפיס השני — 13 כהנים",
+        "seg": "main"
+      },
+      {
+        "topic": "ברקאי — האיר המזרח",
+        "seg": "main"
+      },
+      {
+        "topic": "השחיטה והזריקה",
+        "seg": "main"
+      },
+      {
+        "topic": "דישון המזבח הפנימי והמנורה",
+        "seg": "main"
+      },
+      {
+        "topic": "הולכת האיברים לכבש",
+        "seg": "main"
+      },
+      {
+        "topic": "קריאת שמע בלשכת הגזית",
+        "seg": "main"
+      },
+      {
+        "topic": "הפיס השלישי והרביעי",
+        "seg": "main"
+      },
+      {
+        "topic": "הקטורת",
+        "seg": "main"
+      },
+      {
+        "topic": "ברכת כהנים",
+        "seg": "main",
+        "lv": 0.35
+      },
+      {
+        "topic": "ניסוך, שיר ותקיעות",
+        "seg": "main",
+        "lv": 1.15
+      }
+    ]
   },
   "yk": {
     "credit": "«והכהנים» · ישעיהו גופין; «מראה כהן» · אברהם פריד (YouTube)",
@@ -973,8 +1030,15 @@
     }
   }
 
-  function startTour(id) {
+  function startTour(id, topics) {
     var def = TOUR_MAP[id];
+    // Tamid station topics survive insertions without shifting music levels.
+    if (id === "tamid" && def && Array.isArray(topics)) {
+      var plan = def.st;
+      def = Object.assign({}, def, {st: topics.map(function(topic) {
+        return plan.find(function(st) { return st.topic === topic; }) || {seg: null};
+      })});
+    }
     endTourNow();
     if (!def) return;
     TR.id = id; TR.def = def; TR.idx = 0; TR.cur = null; TR.duck = 1; TR.duckTw = null; TR.paused = false;

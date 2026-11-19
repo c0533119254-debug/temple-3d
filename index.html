@@ -12155,7 +12155,7 @@ const STORIES={};
     S.pending=st;S.narrDone=false;if("speechSynthesis" in window)speechSynthesis.cancel();const tx=$("stText");if(tx)tx.textContent="";settleNarr()};
   const api={start(key){const d=STORIES[key];if(!d)return;
       if(WALK)stopWalk();if(DRONE)stopDrone();if(TRN&&TRN.riding)TRN.stopRide();closeInfo();const introEl=document.getElementById("intro");if(introEl)introEl.hidden=true;
-      document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));S.def=d;S.key=key;S.paused=false;$("stTitle").textContent=d.title;$("stLearn").hidden=!d.learn;box.hidden=false;STORY=api;try{window.TempleMusic&&(TempleMusic.endLoading(),TempleMusic.startTour(key))}catch(e){}SND.init();if(d.open)d.open();go(0)},
+      document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));S.def=d;S.key=key;S.paused=false;$("stTitle").textContent=d.title;$("stLearn").hidden=!d.learn;box.hidden=false;STORY=api;try{window.TempleMusic&&(TempleMusic.endLoading(),TempleMusic.startTour(key,d.steps.map(st=>st.title)))}catch(e){}SND.init();if(d.open)d.open();go(0)},
     pause(){if(!STORY||S.paused)return;S.paused=true;try{window.TempleMusic&&TempleMusic.pauseTour()}catch(e){}S.user=true;S.move=null;clearTimeout(S.timer);if("speechSynthesis" in window)speechSynthesis.pause();$("stPlay").textContent="▶ המשך סיור"},
     stop(){if(!STORY)return;STORY=null;try{window.TempleMusic&&TempleMusic.endTour()}catch(e){}S.token++;clearTimeout(S.timer);if("speechSynthesis" in window)speechSynthesis.cancel();box.hidden=true;closeInfo();LEARN=false;S.user=false;$("stLearn").setAttribute("aria-pressed","false");$("stPlay").textContent="⏸";SND.stopAll();if(S.def&&S.def.close)S.def.close();S.move=null;if(camera){camera.fov=40;camera.updateProjectionMatrix()}controls.update()},
     next(){go(S.i+1)},prev(){go(S.i-1)},
@@ -15301,6 +15301,10 @@ const TOURFIGS=(function(){
     }
     if(key==="tamid"){
       const gz=310,gv=295.2,gy=7.56;
+      // Bind existing scenes to station topics, never to the old 13-stop ordinal.
+      const topics=["לילה — השומרים והמפתחות", "הפיס הראשון", "תרומת הדשן", "סידור המערכה", "הפיס השני — 13 כהנים", "ברקאי — האיר המזרח", "השחיטה והזריקה", "דישון המזבח הפנימי והמנורה", "הולכת האיברים לכבש", "קריאת שמע בלשכת הגזית", "הקטורת", "ברכת כהנים", "ניסוך, שיר ותקיעות"];
+      const topic=STORIES.tamid.steps[i]&&STORIES.tamid.steps[i].title;
+      if(topic==="הפיס השלישי והרביעי")return [{kind:K,u:gz,v:gv,y:gy,fu:gz+1,fv:gv,clip:"Idle"},{ring:1,n:8,u:gz,v:gv,y:gy,r:2.8,kind:K,clip:"Idle",fu:gz,fv:gv}];
       return [
         {line:1,n:8,u0:222,v0:186,u1:238,v1:186,y:3.5,kind:K,clip:"Idle",fu:230,fv:175},
         [{kind:K,u:gz,v:gv,y:gy,fu:gz+1,fv:gv,clip:"Idle"},{ring:1,n:8,u:gz,v:gv,y:gy,r:2.8,kind:K,clip:"Idle",fu:gz,fv:gv}],
@@ -15320,7 +15324,7 @@ const TOURFIGS=(function(){
         [{line:1,n:7,u0:203.5,v0:241,u1:203.5,v1:259,y:11.5,kind:K,clip:"HandsUp",fu:240,fv:250}],
         [{kind:K,u:238,v:262,y:16.5,fu:234,fv:266,clip:"Working"},{kind:K,u:240.5,v:263,y:16.5,fu:250,fv:280,clip:"Idle"},{kind:L,u:239.3,v:268.2,y:8.6,fu:250,fv:268,clip:"Idle"},{kind:L,u:239.3,v:270.4,y:8.6,fu:250,fv:268,clip:"Idle"},
          {path:1,kind:K,clip:"WalkCarry",prop:"limb",period:10,path:[[247,286,ramp(286)],[247,270,ramp(270)]],u:247,v:280,y:ramp(280),fu:250,fv:262}]
-      ][i]||[];
+      ][topics.indexOf(topic)]||[];
     }
     if(key==="pilgrim"){
       return [
@@ -15421,15 +15425,17 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
     STORIES.yk.close=function(){if(c)c.call(this);TOURFIGS.clear()};
   }
   /* 117: סיורי החגים נשארים בדיוק כמו ב-116, בלי הבמאי האוטומטי */for(const k of ["pesach","shavuot","sukkot","hakhel"])if(STORIES[k]&&STORIES[k].steps)STORIES[k].steps.forEach(x=>{x.nofc=true});const tm=STORIES.tamid&&STORIES.tamid.steps;if(tm){
-    tm[7].nofc=tm[10].nofc=true;tm[1].pose=AP(328,306,12.2,310,295.2,8);tm[1].fov=34;
-    tm[2].pose=AP(268,292,18.5,250,262,16.5);tm[2].fov=34;
-    tm[3].pose=AP(228,292,20,250,252,16.5);tm[3].fov=34;
-    tm[4].pose=AP(318,286,12.8,310,295,8);tm[4].fov=34;
-    tm[6].pose=AP(256,206,11.2,244,216,8);tm[6].fov=32;
-    tm[7].pose=AP(172,251.5,16.2,152.0,254.5,15.15);tm[7].fov=32;tm[7].subjects=["המנורה","מזבח הזהב"];
-    tm[8].pose=AP(266,298,13.8,247,286.5,10.4);tm[8].fov=34;tm[8].subjects=["כבש"];
-    tm[9].pose=AP(300,308,11.4,292,295,7.8);tm[9].fov=34;
-    tm[11].pose=AP(228,258,14.0,204,250,12.4);tm[11].fov=38;
+    const byTopic=title=>tm.find(st=>st.title===title);
+    byTopic("דישון המזבח הפנימי והמנורה").nofc=byTopic("הקטורת").nofc=true;byTopic("הפיס הראשון").pose=AP(328,306,12.2,310,295.2,8);byTopic("הפיס הראשון").fov=34;
+    byTopic("תרומת הדשן").pose=AP(268,292,18.5,250,262,16.5);byTopic("תרומת הדשן").fov=34;
+    byTopic("סידור המערכה").pose=AP(228,292,20,250,252,16.5);byTopic("סידור המערכה").fov=34;
+    byTopic("הפיס השני — 13 כהנים").pose=AP(318,286,12.8,310,295,8);byTopic("הפיס השני — 13 כהנים").fov=34;
+    byTopic("השחיטה והזריקה").pose=AP(256,206,11.2,244,216,8);byTopic("השחיטה והזריקה").fov=32;
+    byTopic("דישון המזבח הפנימי והמנורה").pose=AP(172,251.5,16.2,152.0,254.5,15.15);byTopic("דישון המזבח הפנימי והמנורה").fov=32;byTopic("דישון המזבח הפנימי והמנורה").subjects=["המנורה","מזבח הזהב"];
+    byTopic("הולכת האיברים לכבש").pose=AP(266,298,13.8,247,286.5,10.4);byTopic("הולכת האיברים לכבש").fov=34;byTopic("הולכת האיברים לכבש").subjects=["כבש"];
+    byTopic("קריאת שמע בלשכת הגזית").pose=AP(300,308,11.4,292,295,7.8);byTopic("קריאת שמע בלשכת הגזית").fov=34;
+    byTopic("ברכת כהנים").pose=AP(228,258,14.0,204,250,12.4);byTopic("ברכת כהנים").fov=38;
+    byTopic("הפיס השלישי והרביעי").pose=AP(328,306,12.2,310,295.2,8);byTopic("הפיס השלישי והרביעי").fov=34;
     const c=STORIES.tamid.close;
     STORIES.tamid.close=function(){if(c)c.call(this);TOURFIGS.clear()};
   }
