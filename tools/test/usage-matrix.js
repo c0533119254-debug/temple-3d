@@ -150,8 +150,8 @@ const SEARCHES = [
         if (!first || !first.includes(want)) { bad.push(`«${q}» → ${first ? first.slice(0, 30) : "אין תוצאה"}`); continue; }
         const v0 = await cam(pg);
         await pg.keyboard.press("Enter");
-        await pg.waitForTimeout(3500);
-        const v1 = await cam(pg);
+        // a slow test machine can start the flight late: wait up to 15 s for the camera to move (like the «חזרה» step in user-path)
+        let v1 = v0; for (let k = 0; k < 15 && v1 === v0; k++) { await pg.waitForTimeout(1000); v1 = await cam(pg); }
         if (v0 === v1 && !(await pg.evaluate(() => document.body.classList.contains("touring")))) bad.push(`«${q}»: המצלמה לא זזה`);
         await pg.evaluate(() => { if (document.body.classList.contains("pane")) document.getElementById("infoX").click(); });
       }

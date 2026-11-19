@@ -936,7 +936,7 @@ function build(){
                 pb(PW-4.2,0.5,PD-4.2,0,-1.1,0,stP);{const wm=std(0x3f7f8f,{roughness:0.15,metalness:0.1});wm.isBasic=true;pb(PW-4.2,0.06,PD-4.2,0,-0.82,0,wm)}g.add(pg);}
                 const at=t=>{t=Math.max(0,Math.min(len,t));let i=0,j=L.length-1;while(j-i>1){const m=(i+j)>>1;if(L[m]<=t)i=m;else j=m}const a=P[i],b=P[j],fq=(t-L[i])/((L[j]-L[i])||1);return[a[0]+(b[0]-a[0])*fq,a[2]+(b[2]-a[2])*fq,-(a[1]+(b[1]-a[1])*fq),Math.atan2(b[1]-a[1],b[0]-a[0])]};
                 SUKC.asc={len,P,show(b){ag.visible=b},pose(c){for(let i=0;i<AN;i++){const t=c-i*1.25,q=at(t),sc=t>=len?0.0001:1,mv=t>0&&t<len;setI(af,i,q[0],q[1],q[2],q[3],sc);setI(ah,i,q[0],q[1]+1.56,q[2],q[3],sc);af.setAmp(i,mv?1:0);if(!i){fk.visible=t<len;fk.position.set(q[0]+Math.cos(q[3])*0.3,q[1]+1.12,q[2]-Math.sin(q[3])*0.3)}}af.instanceMatrix.needsUpdate=ah.instanceMatrix.needsUpdate=true}}}}catch(e){console.warn("sukAsc",e)}
-            SUKC.lul=(SUKC.heads||[]).map(h=>{const lg=lulG.clone();lg.translate(0,-1.56,0);const l=new THREE.InstancedMesh(lg,lulM,h.count);l.instanceMatrix=h.instanceMatrix;l.frustumCulled=false;l.castShadow=false;l.userData=C.street;PICK.push(l);WG.add(l);return[l,h]})}
+            SUKC.lul=(SUKC.heads||[]).map(h=>{const lg=lulG.clone();lg.translate(0,-1.56,0);const l=new THREE.InstancedMesh(lg,lulM,h.count);l.instanceMatrix=h.instanceMatrix;FIG.LOD.follow(h,l);l.frustumCulled=false;l.castShadow=false;l.userData=C.street;PICK.push(l);WG.add(l);return[l,h]})}
           SUKC.week=s.week;if(SUKC.g){SUKC.g.visible=s.week;SUKC.lit.visible=s.shoeva}SUKC.sync()};
         SUKC.sync=()=>{(SUKC.lul||[]).forEach(([l,h])=>{l.visible=!!SUKC.week&&h.visible&&(!h.parent||h.parent.visible);l.count=h.count})}}
       /* ===== גרסה 121 · משימה 2: פסח במצב רגיל (בלי סיור) =====
@@ -1449,7 +1449,7 @@ function build(){
     const bm=FIG.mesh(list.length,FIG.mat(0xffffff)),hm=new THREE.InstancedMesh(headG,M.people,list.length),d=new THREE.Object3D(),c=new THREE.Color(),WKR=[];
     const pal=[0x6b5b4a,0x3e4a5c,0x8a7a62,0x5c3f3a,0xa89a84,0x2f3a2e,0x7b6c8a];
     list.forEach((p,i)=>{const w=W(p[0],p[1]);let rot=r()*6.28;if(p[4]!=null){const c0=W(p[4],p[5]);rot=Math.atan2(c0[0]-w[0],c0[1]-w[1])+(r()-0.5)*0.6}d.rotation.set(0,rot,0);d.position.set(w[0],p[2]*A,w[1]);d.updateMatrix();bm.setMatrixAt(i,d.matrix);bm.setAmp(i,0);if(!p[3]&&p[4]==null&&r()<0.45){WKR.push({i,x:w[0],z:w[1],y:p[2]*A,R:2+r()*5,w:(0.6+r()*0.3)*(r()<0.5?1:-1),a:r()*6.28,go:r()<0.6,tm:2+r()*10});bm.setAmp(i,1)}c.setHex(p[3]?0xf6f4ee:pal[i%pal.length]);bm.setColorAt(i,c);d.position.y=p[2]*A+1.52;d.updateMatrix();hm.setMatrixAt(i,d.matrix);c.setHex(p[3]?0xfbfaf6:0xb38b6d);hm.setColorAt(i,c)});
-    bm.castShadow=false;group.add(bm);group.add(hm);window.__CRW=[bm,hm];bm.frustumCulled=hm.frustumCulled=false;bm.userData.noLOD=hm.userData.noLOD=true; /* v101 · משימה 06: גוף וראש של קהל נע — מחוץ ל-LOD הסטטי */
+    bm.castShadow=false;group.add(bm);group.add(hm);window.__CRW=[bm,hm];bm.frustumCulled=hm.frustumCulled=false;bm.userData.noLOD=hm.userData.noLOD=true;FIG.LOD.add([bm,hm]); /* v101 · משימה 06: גוף וראש של קהל נע — מחוץ ל-LOD הסטטי */
     /* v101 · משימה 07: מסלול מעגלי מאושר רק אם כל 16 נקודות המעגל פנויות (blocked) ובאותו מפלס (groundAt, סטייה עד 0.3 מ׳); אחרת הדמות עומדת במקומה */
     let wkOK=false;const wkCheck=()=>{wkOK=true;for(let j=WKR.length-1;j>=0;j--){const o=WKR[j];let ok=true;for(let q=0;q<16&&ok;q++){const a=q/16*6.2832,x=o.x+Math.cos(o.a+a)*o.R,z=o.z+Math.sin(o.a+a)*o.R;if(blocked(x,z,o.y)||Math.abs(groundAt(x,z)-o.y)>0.3)ok=false}if(!ok){bm.setAmp(o.i,0);WKR.splice(j,1)}}};
     CROWDT=(dt)=>{if(!wkOK)wkCheck();WKR.forEach(o=>{/* v114: הולכים, נעצרים, וממשיכים — לא סיבוב אינסופי */o.tm-=dt;if(o.tm<=0){o.go=!o.go;o.tm=o.go?5+Math.random()*9:4+Math.random()*12;if(o.go&&Math.random()<0.35)o.w=-o.w}if(!o.sp1){o.sp1=1;bm.setSp(o.i,o.w)}bm.setAmp(o.i,o.go?1:0);if(!o.go)return;const na=o.a+o.w*dt/o.R*1.0,x=o.x+Math.cos(na)*o.R,z=o.z+Math.sin(na)*o.R,gy=groundAt(x,z);
@@ -1459,7 +1459,7 @@ function build(){
     for(let k=0,t=0;k<260&&t<4000;t++){const x=-182+r2()*96,n=-248+r2()*133;if(!inPoly(x,n,PLAZA))continue;const q=G2S(x,n);pl.push([q[0],PLZ+0.4,q[1]]);k++}
     const b2=FIG.mesh(pl.length,FIG.mat(0xffffff)),h2=new THREE.InstancedMesh(headG,M.people,pl.length);
     pl.forEach((p,i)=>{b2.setAmp(i,0);d.rotation.set(0,r2()*6.28,0);d.position.set(p[0],p[1],-p[2]);d.updateMatrix();b2.setMatrixAt(i,d.matrix);c.setHex(pal[(i*3)%pal.length]);b2.setColorAt(i,c);d.position.y=p[1]+1.52;d.updateMatrix();h2.setMatrixAt(i,d.matrix);c.setHex(0xb38b6d);h2.setColorAt(i,c)});
-    group.add(b2);group.add(h2);window.__CRW.push(b2,h2);
+    group.add(b2);group.add(h2);FIG.LOD.add([b2,h2]);window.__CRW.push(b2,h2);
   }
   ACTS=buildActors(W);
   const findI=k=>{const o=cPick.find(m=>m.userData&&m.userData.n===k)||cPick.find(m=>m.userData&&m.userData.n&&m.userData.n.indexOf(k)>=0);return o?o.userData:{n:k,r:"",t:""}};
