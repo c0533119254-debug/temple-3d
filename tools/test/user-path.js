@@ -113,7 +113,7 @@ async function run(dev) {
     return `תחנה ${n1} → ${n2}`;
   });
   await step("מקור בסיור: גלוי, מושהה, פקדים פנויים וסגירה", async () => {
-    const pointer = async (sel) => { const r = await pg.locator(sel).boundingBox(); if (!r) throw new Error("missing " + sel); await pg.mouse.click(r.x+r.width/2,r.y+r.height/2); };
+    const pointer = async (sel) => { await pg.locator(sel).evaluate(e=>e.scrollIntoView({block:"nearest",inline:"center"})); const r = await pg.locator(sel).boundingBox(); if (!r) throw new Error("missing " + sel); await pg.mouse.click(r.x+r.width/2,r.y+r.height/2); };
     await pointer("#stSrc");
     await until(() => { const c=document.getElementById("infocard");return !c.hidden&&getComputedStyle(c).display!=="none"&&window.__STORY.S.paused; },30000);
     const r=await pg.evaluate(()=>{const c=document.getElementById("infocard"),b=document.getElementById("tbar");return {bottom:c.getBoundingClientRect().bottom,bar:b.getBoundingClientRect().top,text:document.getElementById("infobody").innerText}});
