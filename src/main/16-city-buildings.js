@@ -116,18 +116,35 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
   Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],{n:TREES5.NAMES[k],r:"OpenStreetMap (natural=tree, landuse=forest/orchard)",t:"עץ במקום שלו לפי OpenStreetMap. 💡 המין משוער לפי סוג השטח (יער, מטע, גינה) עד שיגיעו נתוני המינים."}));
   // 126.9: במקום שורות הקברים (שמואל: אין קברים, כי תחיית המתים), השטח של בתי הקברות של היום הוא מטע זיתים על טרסות אבן.
   // 📜 הר הזיתים; 💡 הטרסות (קיר אבן נמוך בכל 3.5 מ׳ של גובה) והמטע הם הצעה. העצים לא עומדים על קו הראייה של הפרה (מידות ב, ד)
-  {const OL=[],WL=[],ocap=SMALL?700:1800,wcap=SMALL?2500:6000,st=2.5;F.cem.forEach(cm=>{let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;cm.p.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
+  {const OL=[],OL2=[],WL=[],st=2.5;/* 129.6: הר הזיתים (השטח הגדול) והשאר מקבלים מכסה נפרדת. עד עכשיו בית הקברות של הר הזיתים מילא את כל המכסה, ובהר ציון ובשאר בתי הקברות נשארו מדשאה ושבילים בלי עצים */
+    const big=cm=>{let a=0;const p=cm.p;for(let k=0;k<p.length;k++){const q=p[k],o=p[(k+p.length-1)%p.length];a+=q[0]*o[1]-o[0]*q[1]}return Math.abs(a)/2>100000},CAP=[{o:SMALL?700:1800,w:SMALL?2500:6000,cw:[],co:[]},{o:SMALL?700:1600,w:SMALL?1600:4000,cw:[],co:[]}];
+    F.cem.forEach(cm=>{const K=CAP[big(cm)?0:1];let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;cm.p.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
       for(let x=xa;x<xb;x+=st)for(let n=na;n<nb;n+=st){if(!inPoly(x,n,cm.p)||!free(x,n)||PARA9.near(x,n))continue;const h=TY(x,n),lv=Math.floor(h/3.5);
-        [[st,0],[0,st]].forEach(([dx,dn])=>{if(WL.length>=wcap)return;const x2=x+dx,n2=n+dn;if(!inPoly(x2,n2,cm.p))return;const h2=TY(x2,n2);if(Math.floor(h2/3.5)===lv)return;const gx=TY(x+0.5,n)-TY(x-0.5,n),gn=TY(x,n+0.5)-TY(x,n-0.5),ang=Math.atan2(gn,gx)+Math.PI/2,mx=(x+x2)/2,mn=(n+n2)/2;WL.push([mx,Math.min(h,h2),mn,ang,Math.abs(h2-h)])});
-        if(OL.length<ocap&&Math.round(x/st)%3===0&&Math.round(n/st)%3===0&&r()<0.8)OL.push([x+(r()-0.5)*2,TY(x,n),-(n+(r()-0.5)*2),0.75+r()*0.35,r()*6.28])}});
+        [[st,0],[0,st]].forEach(([dx,dn])=>{const x2=x+dx,n2=n+dn;if(!inPoly(x2,n2,cm.p))return;const h2=TY(x2,n2);if(Math.floor(h2/3.5)===lv)return;const gx=TY(x+0.5,n)-TY(x-0.5,n),gn=TY(x,n+0.5)-TY(x,n-0.5),ang=Math.atan2(gn,gx)+Math.PI/2,mx=(x+x2)/2,mn=(n+n2)/2;K.cw.push([mx,Math.min(h,h2),mn,ang,Math.abs(h2-h),Math.min(lv,Math.floor(h2/3.5))])});
+        if(Math.round(x/st)%3===0&&Math.round(n/st)%3===0&&r()<0.8)K.co.push([x+(r()-0.5)*2,TY(x,n),-(n+(r()-0.5)*2),0.75+r()*0.35,r()*6.28])}});
+    /* 129.6: דילול אחיד לפי המכסה (עצים באקראי, טרסות לפי קומות שלמות כדי שלא ייראו שבורות), כך שכל בית קברות מקבל חלק לפי השטח שלו ולא רק הראשונים ברשימה */
+    CAP.forEach((K,i)=>{const OUT=i?OL2:OL,po=Math.min(1,K.o/Math.max(1,K.co.length)),pw=Math.min(1,K.w/Math.max(1,K.cw.length));K.co.forEach(t=>{if(r()<po)OUT.push(t)});const sk=Math.ceil(1/pw);K.cw.forEach(w=>{if(((w[5]%sk)+sk)%sk===0)WL.push(w)})});
     if(OL.length)TREES5.plant(WG,"olive",OL,{n:"מטע זיתים בהר הזיתים",r:"זכריה יד, ד; 💡 הצעה",t:"📜 \"הר הזיתים אשר על פני ירושלים מקדם\" (זכריה יד, ד). 💡 בשטח של בתי הקברות של היום אין קברים (אחרי תחיית המתים), ובמקומם מטע זיתים על טרסות אבן. מספר העצים והטרסות הוא הצעה."});
+    if(OL2.length)TREES5.plant(WG,"olive",OL2,{n:"מטע זיתים על טרסות",r:"💡 הצעה",t:"💡 בשטח של בית הקברות של היום אין קברים (אחרי תחיית המתים), ובמקומם מטע זיתים על טרסות אבן, כמו בהר הזיתים. מספר העצים והטרסות הוא הצעה."});
     if(WL.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:0xcbbd9f,roughness:0.95,envMapIntensity:0.3}),WL.length);
       WL.forEach((w,i)=>{const hh=Math.min(1.6,Math.max(0.6,w[4]+0.4));d.rotation.set(0,w[3],0);d.position.set(w[0],w[1]+hh/2-0.2,-w[2]);d.scale.set(3.1,hh,0.55);d.updateMatrix();wm.setMatrixAt(i,d.matrix);c.setRGB(0.95+r()*0.05,0.92+r()*0.06,0.86+r()*0.06);wm.setColorAt(i,c)});d.rotation.set(0,0,0);
-      wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"טרסות הזיתים בהר הזיתים",r:"💡 הצעה",t:"💡 קירות אבן נמוכים בכל 3.5 מ׳ של גובה, ועליהם מטע זיתים. בהר הזיתים של היום יש כאן בתי קברות. במודל של העתיד, אחרי תחיית המתים, אין קברים."};WG.add(wm);PICK.push(wm)}
-    window.__OLV9={trees:OL.length,walls:WL.length}}
+      wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"טרסות זיתים",r:"💡 הצעה",t:"💡 קירות אבן נמוכים בכל 3.5 מ׳ של גובה, ועליהם מטע זיתים. בהר הזיתים, בהר ציון ובמקומות אחרים יש היום בתי קברות. במודל של העתיד, אחרי תחיית המתים, אין קברים."};WG.add(wm);PICK.push(wm)}
+    window.__OLV9={trees:OL.length,trees2:OL2.length,walls:WL.length}}
   // terrace and garden walls
   const WS=[];F.walls.forEach(w=>{for(let i=0;i<w.length-1;i++){const a=w[i],b=w[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)/* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0])])}});
   if(WS.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,2.5,0.6),M.wall,WS.length);WS.forEach((w,i)=>{d.rotation.set(0,w[3],0);d.position.set(w[0],TY(w[0],w[1])+1.05,-w[1]);d.scale.set(w[2]+0.3,1,1);d.updateMatrix();wm.setMatrixAt(i,d.matrix)});wm.castShadow=true;wm.receiveShadow=true;WG.add(wm)}
+  /* 129.6 הר ציון: בתמונות Mapillary החצרות ובתי הקברות סגורים בחומות אבן גבוהות (כ-3 מ׳), והסמטאות עוברות ביניהן. ב-OSM מסומנות רק חלק מהחומות, אז משלימים חומה לאורך גבול החצר, רק במקום פנוי ורק איפה שאין כבר חומה */
+  {const ZB=c=>{let x=0,n=0;c.p.forEach(q=>{x+=q[0];n+=q[1]});x/=c.p.length;n/=c.p.length;return x>-760&&x<-380&&n>-920&&n<-500},
+    OW=[];F.walls.forEach(w=>{for(let i=0;i<w.length-1;i++)OW.push([w[i],w[i+1]])}),
+    dS=(x,n,a,b)=>{const vx=b[0]-a[0],vn=b[1]-a[1],L2=vx*vx+vn*vn||1,t=Math.max(0,Math.min(1,((x-a[0])*vx+(n-a[1])*vn)/L2));return Math.hypot(x-a[0]-t*vx,n-a[1]-t*vn)},ZW=[];
+   F.cem.filter(ZB).forEach(cm=>{const p=cm.p;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/3));if(L<0.5)continue;
+     for(let j=0;j<k;j++){const x0=a[0]+(b[0]-a[0])*j/k,n0=a[1]+(b[1]-a[1])*j/k,x1=a[0]+(b[0]-a[0])*(j+1)/k,n1=a[1]+(b[1]-a[1])*(j+1)/k,mx=(x0+x1)/2,mn=(n0+n1)/2;
+       if(OW.some(([u,v])=>dS(mx,mn,u,v)<2))continue;const ux=-(n1-n0)/(L/k),un=(x1-x0)/(L/k),sg=inPoly(mx+ux,mn+un,p)?1:-1;/* אם הסמטה צמודה לגבול, החומה זזה פנימה לחצר */
+       for(const o of[0,1.2,2.4]){const ox=ux*sg*o,on=un*sg*o;if(clearAt(mx+ox,mn+on,0.6)&&clearAt(x0+ox,n0+on,0.3)&&clearAt(x1+ox,n1+on,0.3)){ZW.push([mx+ox,mn+on,L/k,Math.atan2(n1-n0,x1-x0)]);break}}}}});
+   if(ZW.length){const zm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,0.7),M.wall,ZW.length);ZW.forEach((w,i)=>{const cx=Math.cos(w[3])*w[2]/2,cn=Math.sin(w[3])*w[2]/2,g=[TY(w[0]-cx,w[1]-cn),TY(w[0],w[1]),TY(w[0]+cx,w[1]+cn)],lo=Math.min(...g)-0.6,hi=Math.max(...g)+2.8;/* החומה שקועה באדמה ועולה כ-3 מ׳ מעל הנקודה הגבוהה, כדי שבמדרון לא יהיו חורים */
+     d.rotation.set(0,w[3],0);d.position.set(w[0],(lo+hi)/2,-w[1]);d.scale.set(w[2]+0.4,hi-lo,1);d.updateMatrix();zm.setMatrixAt(i,d.matrix)});d.rotation.set(0,0,0);
+     zm.castShadow=true;zm.receiveShadow=true;zm.userData={n:"חומות החצרות בהר ציון",r:"תמונות Mapillary",t:"בהר ציון החצרות סגורות בחומות אבן גבוהות, והסמטאות עוברות ביניהן, כמו שרואים בתמונות הרחוב של היום."};WG.add(zm);PICK.push(zm)}
+   window.__ZW9=ZW.length}
 })();
 
 // ---- road surfaces, curbs, markings and street lights ----
