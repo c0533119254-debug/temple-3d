@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.6"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9358,24 +9358,46 @@ function marbleCanvases(){const W=256,Hh=512,r=rng(9);
   const hg=cv(W,Hh,(x)=>{x.fillStyle="#d0d0d0";x.fillRect(0,0,W,Hh);x.fillStyle="#808080";for(let j=0;j<4;j++)x.fillRect(0,j*128,W,3);x.fillRect(0,0,2,Hh);x.fillRect(128,0,2,Hh)});
   return{col,nrm:normalFrom(hg,1.2)};}
 function palmCanvas(){return cv(128,512,(x,w,h)=>{x.fillStyle="#d9ccb0";x.fillRect(0,0,w,h);x.strokeStyle="#a8977a";x.lineWidth=5;x.beginPath();x.moveTo(64,h-10);x.lineTo(64,140);x.stroke();for(let i=0;i<7;i++){const a=-1.2+i*0.4;x.beginPath();x.moveTo(64,140);x.quadraticCurveTo(64+Math.cos(a)*30,80+Math.sin(a)*10,64+Math.cos(a-0.6)*58,110-Math.sin(-a)*55);x.stroke()}for(let k=0;k<20;k++){x.beginPath();x.moveTo(52,h-20-k*17);x.lineTo(76,h-28-k*17);x.stroke()}})}
-function mountWallCanvases(){const W=SMALL?512:1024,Hh=W*2,s=W/1024,ppm=W/16,r=rng(4242);
-  const col=cv(W,Hh,x=>{x.fillStyle="#b9a888";x.fillRect(0,0,W,Hh)}),hg=cv(W,Hh,x=>{x.fillStyle="#202020";x.fillRect(0,0,W,Hh)});
+function mountWallCanvases(){const W=SMALL?512:1024,Hh=W*2,s=W/1024,ppm=W/16;let r=rng(4242);
+  /* 128.6 · אבני הורדוס (רעיון של גרוק): 📜 כמו בכותל היום. למטה שורות גדולות מימי בית שני, בגובה כמטר, באורך של 1–5 מ׳ ולפעמים יותר,
+     עם שוליים מסותתים (כ־10–15 ס״מ) ובליטה שטוחה באמצע, בגוון זהוב; מעליהן ארבע שורות גדולות בלי שוליים (התקופה האומיית); ובראש אבנים קטנות מתקופות מאוחרות.
+     הגבולות בגובה קבוע לאורך כל החומה, כמו השורות האמיתיות. רצועת הורדוס (מ־7- עד 30-) חוזרת על עצמה בדיוק כלפי מטה, כדי שבחומה הדרומית העמוקה יהיו רק אבני הורדוס. בלי צמחים ובלי טחב בחריצים. */
+  const col=cv(W,Hh,x=>{x.fillStyle="#a8977a";x.fillRect(0,0,W,Hh)}),hg=cv(W,Hh,x=>{x.fillStyle="#1c1c1c";x.fillRect(0,0,W,Hh)});
   const cx=col.getContext("2d"),hx=hg.getContext("2d");const Y=y=>(2-y)*ppm;
-  const band=(y0,y1,ch,lmin,lmax,drafted,base,var_)=>{let y=y1;while(y-ch>=y0-0.01){const py=Y(y),h=ch*ppm;let xx=-r()*lmax*ppm;while(xx<W){const bw=(lmin+r()*(lmax-lmin))*ppm,sh=base*(0.9+r()*var_);
-      const draw=(ox)=>{const x0=ox+1.5*s,y0p=py+1.5*s,w=bw-3*s,hh=h-3*s;const c=new THREE.Color("#e6d2a6").multiplyScalar(sh);c.r=Math.min(1,c.r);c.g=Math.min(1,c.g);c.b=Math.min(1,c.b);
-        cx.fillStyle="#"+c.getHexString();cx.fillRect(x0,y0p,w,hh);hx.fillStyle="#707070";hx.fillRect(x0,y0p,w,hh);
-        if(drafted){const m=Math.max(4*s,0.09*ppm);hx.fillStyle="#9a9a9a";hx.fillRect(x0+m,y0p+m,w-2*m,hh-2*m);hx.fillStyle="#b0b0b0";hx.fillRect(x0+m+2*s,y0p+m+2*s,w-2*m-4*s,hh-2*m-4*s);
-          cx.fillStyle="rgba(255,250,232,.10)";cx.fillRect(x0+m,y0p+m,w-2*m,3*s);cx.fillStyle="rgba(60,45,25,.10)";cx.fillRect(x0+m,y0p+hh-m-3*s,w-2*m,3*s);
-          cx.strokeStyle="rgba(90,75,50,.10)";cx.lineWidth=0.8*s;cx.beginPath();for(let k=x0+2*s;k<x0+w;k+=3*s){cx.moveTo(k,y0p+1);cx.lineTo(k,y0p+m*0.8);cx.moveTo(k,y0p+hh-m*0.8);cx.lineTo(k,y0p+hh-1)}cx.stroke()}
-        else{hx.fillStyle="#8c8c8c";hx.fillRect(x0+2*s,y0p+2*s,w-4*s,hh-4*s)}
-        const g=cx.createLinearGradient(0,y0p,0,y0p+hh);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(60,45,25,"+(0.05+r()*0.08)+")");cx.fillStyle=g;cx.fillRect(x0,y0p,w,hh)};
-      draw(xx);if(xx+bw>W)draw(xx-W);xx+=bw}y-=ch}};
-  band(-6,2,0.42,0.5,1.1,false,1.0,0.12);   // late small stones at the top
-  band(-12,-6,0.85,1.0,2.6,false,0.96,0.12);  // medium courses
-  band(-30,-12,1.08,2.0,6.5,true,0.93,0.14);    // Herodian courses, drafted margins
-  for(let k=0;k<26;k++){const sx=r()*W,sw=(4+r()*14)*s,g=cx.createLinearGradient(0,0,0,Hh);g.addColorStop(0,"rgba(70,60,45,0)");g.addColorStop(0.6,"rgba(70,60,45,"+(0.03+r()*0.05)+")");g.addColorStop(1,"rgba(70,60,45,0)");cx.fillStyle=g;cx.fillRect(sx,0,sw,Hh)}
-  for(let k=0;k<30;k++){const px=r()*W,py=Y(-12)+r()*(Y(-30)-Y(-12)),rr=(3+r()*6)*s;cx.fillStyle="rgba(95,110,60,"+(0.10+r()*0.12)+")";cx.beginPath();cx.arc(px,py,rr,0,7);cx.fill()}
-  noiseFill(cx,W,Hh,10,77);noiseFill(hx,W,Hh,12,78);return{col,nrm:normalFrom(hg,1.4*s)}}
+  const tone=(sh,warm)=>{const c=new THREE.Color(warm?"#e9d6aa":"#e2d4b4").multiplyScalar(sh);c.r=Math.min(1,c.r);c.g=Math.min(1,c.g);c.b=Math.min(1,c.b);return"#"+c.getHexString()};
+  const stone=(x0,y0,w,hh,sh,kind,warm)=>{const J=(kind==="h"?1.6:1.3)*s;x0+=J;y0+=J;w-=2*J;hh-=2*J;if(w<2||hh<2)return;
+    cx.fillStyle=tone(sh,warm);cx.fillRect(x0,y0,w,hh);hx.fillStyle="#6a6a6a";hx.fillRect(x0,y0,w,hh);
+    if(kind==="h"){const m=Math.max(3*s,(0.1+r()*0.05)*ppm),bx=x0+m,by=y0+m*0.85,bw=w-2*m,bh=hh-m*1.85;
+      // the drafted margin: a flat band, finely combed and a touch lighter than the boss
+      cx.fillStyle="rgba(255,246,222,.26)";cx.fillRect(x0,y0,w,hh);
+      cx.strokeStyle="rgba(110,90,60,.18)";cx.lineWidth=0.7*s;cx.beginPath();
+      for(let k=x0+1.5*s;k<x0+w-1;k+=2.4*s){cx.moveTo(k,y0);cx.lineTo(k+(r()-0.5)*s,y0+m*0.8);cx.moveTo(k,y0+hh-m*0.8);cx.lineTo(k+(r()-0.5)*s,y0+hh)}
+      for(let k=y0+m;k<y0+hh-m;k+=2.4*s){cx.moveTo(x0,k);cx.lineTo(x0+m*0.8,k);cx.moveTo(x0+w-m*0.8,k);cx.lineTo(x0+w,k)}cx.stroke();
+      if(bw>4*s&&bh>4*s){hx.fillStyle="#8e8e8e";hx.fillRect(x0+1.5*s,y0+1.5*s,w-3*s,hh-3*s);
+        for(let k=0;k<4;k++){const v=165+k*22,d=k*1.3*s;hx.fillStyle="rgb("+v+","+v+","+v+")";hx.fillRect(bx+d,by+d,bw-2*d,bh-2*d)}
+        cx.fillStyle=tone(sh*0.97,warm);cx.fillRect(bx,by,bw,bh);
+        // sun from above: a light lip on the top edge of the boss, a soft shadow under it and on its far side
+        cx.fillStyle="rgba(255,250,235,.38)";cx.fillRect(bx,by,bw,2.2*s);cx.fillStyle="rgba(70,52,28,.42)";cx.fillRect(bx,by+bh-2.6*s,bw,2.6*s);cx.fillStyle="rgba(70,52,28,.24)";cx.fillRect(bx+bw-2*s,by,2*s,bh);cx.fillStyle="rgba(255,250,235,.16)";cx.fillRect(bx,by,2*s,bh);
+        // pick-dressing on the boss
+        const np=Math.floor(bw*bh/(30*s*s));for(let k=0;k<np;k++){const dk=r()<0.55;cx.fillStyle=dk?"rgba(85,66,40,"+(0.05+r()*0.06)+")":"rgba(255,248,228,"+(0.05+r()*0.06)+")";const z=(0.6+r()*1.3)*s;cx.fillRect(bx+r()*bw,by+r()*bh,z,z)}
+        // weathered patches: grey patina and a few softened, pitted areas, as on the lower courses today
+        const npt=r()<0.7?1+Math.floor(r()*3):0;for(let k=0;k<npt;k++){const px=bx+r()*bw,py=by+r()*bh,rr=(0.15+r()*0.45)*ppm,g=cx.createRadialGradient(px,py,0,px,py,rr);const gr=r()<0.6;g.addColorStop(0,gr?"rgba(120,115,105,.22)":"rgba(160,120,70,.16)");g.addColorStop(1,"rgba(0,0,0,0)");cx.fillStyle=g;cx.fillRect(px-rr,py-rr,2*rr,2*rr)}}}
+    else{const n=Math.floor(w*hh/(55*s*s));for(let k=0;k<n;k++){cx.fillStyle=r()<0.5?"rgba(85,66,40,.06)":"rgba(255,248,228,.06)";const z=(0.6+r()*1.2)*s;cx.fillRect(x0+r()*w,y0+r()*hh,z,z)}
+      hx.fillStyle="#8a8a8a";hx.fillRect(x0+1.5*s,y0+1.5*s,w-3*s,hh-3*s);cx.fillStyle="rgba(255,250,235,.18)";cx.fillRect(x0,y0,w,1.2*s);cx.fillStyle="rgba(60,45,25,.18)";cx.fillRect(x0,y0+hh-1.4*s,w,1.4*s)}
+    // dirt gathers at the foot of each stone
+    const g=cx.createLinearGradient(0,y0,0,y0+hh);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(0.7,"rgba(60,45,25,0)");g.addColorStop(1,"rgba(60,45,25,"+(0.06+r()*0.08)+")");cx.fillStyle=g;cx.fillRect(x0,y0,w,hh)};
+  // one course: stones laid end to end; they wrap round the tile edge so the 16 m tile repeats without a seam
+  const course=(yTop,ch,lmin,lmax,big,kind,base,var_)=>{const py=Y(yTop),h=ch*ppm;let xx=-r()*lmax*ppm;while(xx<W){let L=lmin+r()*(lmax-lmin);if(big&&r()<big)L=lmax+r()*lmax*0.8;const bw=L*ppm,sh=base*(0.9+r()*var_),warm=r()<0.6;
+      const sd=r()*1e9|0,dr=(ox)=>{const keep=r;let q=sd;const rr=()=>{q=(q*1664525+1013904223)%4294967296;return q/4294967296};r=rr;stone(ox,py,bw,h,sh,kind,warm);r=keep};
+      dr(xx);if(xx+bw>W)dr(xx-W);if(xx<0)dr(xx+W);xx+=bw}};
+  // small late courses at the top (2 → −4), then four large plain courses (−4 → −7)
+  {let y=2;while(y>-4+0.01){const ch=Math.min(0.42+r()*0.08,y+4);course(y,ch,0.45,1.0,0,"s",1.0,0.14);y-=ch}}
+  {let y=-4;for(let k=0;k<4;k++){const ch=0.75;course(y,ch,0.9,2.4,0.1,"u",0.97,0.12);y-=ch}}
+  // Herodian: 23 m in 21 courses of uneven height (0.95–1.25 m), summing exactly to 23 m so the band repeats downward
+  {const hs=[];for(let k=0;k<21;k++)hs.push(0.95+r()*0.3);const f=23/hs.reduce((a,b)=>a+b,0);let y=-7;hs.forEach(h=>{const ch=h*f;course(y,ch,1.2,4.2,0.12,"h",0.95,0.14);y-=ch})}
+  // faint rain streaks running down the face (no moss or plants: the model shows the walls in the Temple era)
+  for(let k=0;k<22;k++){const sx=r()*W,sw=(4+r()*12)*s,g=cx.createLinearGradient(0,0,0,Hh);g.addColorStop(0,"rgba(70,60,45,0)");g.addColorStop(0.6,"rgba(70,60,45,"+(0.02+r()*0.04)+")");g.addColorStop(1,"rgba(70,60,45,0)");cx.fillStyle=g;cx.fillRect(sx,0,sw,Hh)}
+  noiseFill(cx,W,Hh,9,77);noiseFill(hx,W,Hh,10,78);return{col,nrm:normalFrom(hg,1.5*s)}}
 const T={};
 (function(){
   const a1=ashlarCanvases("#dccfb2",11),a2=ashlarCanvases("#d3c39f",21),a3=ashlarCanvases("#e3dac6",31),pv=paverCanvases(),mb=marbleCanvases();
@@ -13636,9 +13658,11 @@ function build(){
       for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length],len=Math.hypot(b[0]-a[0],b[1]-a[1]);if(len<0.2){continue}const m=Math.max(1,Math.ceil(len/3)),ux=(b[0]-a[0])/len,un=(b[1]-a[1])/len;
         for(let k=0;k<m;k++){const t0=k/m*len,t1=(k+1)/m*len,xm=a[0]+ux*(t0+t1)/2,nm=a[1]+un*(t0+t1)/2;if(inC(xm,nm)){continue}if(GOP.some(q=>Math.abs((xm-q.x)*q.fx+(nm-q.n)*q.fn)<q.h&&Math.abs((xm-q.x)*q.ox+(nm-q.n)*q.on)<4)){continue}
           let nx=-un,nn=ux;if(!inPoly(xm+nx*1.5,nm+nn*1.5,P)){nx=-nx;nn=-nn}const g=HS(xm-nx*3,nm-nn*3);if(g>-0.3)continue;const y0=Math.min(g,0)-0.6,y1=1.04;
-          const xa=a[0]+ux*t0-nx*0.3,na=a[1]+un*t0-nn*0.3,xb=a[0]+ux*t1-nx*0.3,nb=a[1]+un*t1-nn*0.3,ua=(acc+t0)/16,ub=(acc+t1)/16,b0=pos.length/3;
-          pos.push(xa,y0,-na, xb,y0,-nb, xb,y1,-nb, xa,y1,-na);uv.push(ua,(y0+30)/32, ub,(y0+30)/32, ub,(y1+30)/32, ua,(y1+30)/32);
-          const cr=(xb-xa)*(-nn)-(nb-na)*(-nx);idx.push(...(cr>0?[b0,b0+1,b0+2,b0,b0+2,b0+3]:[b0,b0+2,b0+1,b0,b0+3,b0+2]))}
+          const xa=a[0]+ux*t0-nx*0.3,na=a[1]+un*t0-nn*0.3,xb=a[0]+ux*t1-nx*0.3,nb=a[1]+un*t1-nn*0.3,ua=(acc+t0)/16,ub=(acc+t1)/16,cr=(xb-xa)*(-nn)-(nb-na)*(-nx);
+          /* 128.6: below −30 the face is cut into pieces of 23 m, each mapped onto the Herodian band of the texture (−7 → −30), so the deep south wall shows only Herodian courses */
+          for(let k=0,top=y1;top>y0+0.001;k++){const lo=Math.max(y0,-30-23*k),o=23*k,b0=pos.length/3;
+            pos.push(xa,lo,-na, xb,lo,-nb, xb,top,-nb, xa,top,-na);uv.push(ua,(lo+o+30)/32, ub,(lo+o+30)/32, ub,(top+o+30)/32, ua,(top+o+30)/32);
+            idx.push(...(cr>0?[b0,b0+1,b0+2,b0,b0+2,b0+3]:[b0,b0+2,b0+1,b0,b0+3,b0+2]));top=lo}}
         acc+=len}
       if(pos.length){const gg=new THREE.BufferGeometry();gg.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));gg.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));gg.setIndex(idx);gg.computeVertexNormals();
         if(!M.mwall){M.mwall=new THREE.MeshStandardMaterial({map:T.mwC,normalMap:T.mwN,roughness:0.92,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2})}
