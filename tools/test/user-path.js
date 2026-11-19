@@ -55,7 +55,7 @@ async function run(dev) {
   await ctx.route(/youtube\.com|ytimg\.com|googlevideo\.com/, (r) => r.abort());
   const shot = (n) => pg.screenshot({ path: path.join(OUT, `${dev}-${n}.png`), timeout: 180000 }).catch(() => {});
   const ovl = async (where) => { const b = await overlaps(pg); log(dev, b.length === 0, `אין חפיפות: ${where}`, b.join("; ")); };
-  const step = async (name, fn) => { try { const note = await fn(); log(dev, true, name, note); return true; } catch (e) { log(dev, false, name, String(e.message || e).split("\n")[0].slice(0, 200)); await shot("fail-" + name.replace(/\s+/g, "_")); return false; } };
+  const step = async (name, fn) => { try { const note = await fn(); log(dev, true, name, note); return true; } catch (e) { log(dev, false, name, String(e.message || e).split("\n")[0].slice(0, 200)); await shot("fail-" + name.replace(/[\s:<>"|*?\r\n]+/g, "_")); return false; } };
 
   const t0 = Date.now();
   await step("טעינה עד כפתור הכניסה", async () => {
@@ -111,6 +111,27 @@ async function run(dev) {
     const n2 = await stNum();
     await shot("4-tour-next");
     return `תחנה ${n1} → ${n2}`;
+  });
+  await step("מקור בסיור גלוי מושהה פקדים פנויים וסגירה", async () => {
+    const pointer = async (sel) => { const r = await pg.evaluate(sel=>{const e=document.querySelector(sel);if(!e)throw new Error("missing "+sel);e.scrollIntoView({block:"nearest",inline:"center",behavior:"instant"});const r=e.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height};},sel); if (!r.width||!r.height) throw new Error("hidden " + sel); await pg.mouse.click(r.x+r.width/2,r.y+r.height/2); };
+    const before = await pg.evaluate(()=>({i:window.__STORY.S.i,paused:window.__STORY.S.paused}));
+    await pointer("#stSrc");
+    await until(() => { const c=document.getElementById("infocard");return !c.hidden&&getComputedStyle(c).display!=="none"&&window.__STORY.S.paused; },30000);
+    const r=await pg.evaluate(()=>{const c=document.getElementById("infocard"),b=document.getElementById("tbar");return {bottom:c.getBoundingClientRect().bottom,bar:b.getBoundingClientRect().top,text:document.getElementById("infobody").innerText}});
+    if(r.bottom>r.bar+2||!r.text.includes("📖"))throw new Error("source hidden, empty or covers controls: "+JSON.stringify(r));
+    await shot("4a-tour-source");
+    await pointer("#infoX");await until(()=>document.getElementById("infocard").hidden,60000);
+    await pointer("#stSrc");await until(()=>!document.getElementById("infocard").hidden,60000);
+    await pointer("#stPlay");await until(()=>document.getElementById("infocard").hidden&&!window.__STORY.S.paused,30000);
+    await pointer("#stSrc");await until(()=>!document.getElementById("infocard").hidden,60000);
+    await pointer("#stNext");await until(()=>document.getElementById("infocard").hidden,30000);
+    await shot("4b-tour-source-dismissed");
+    // Leave later tests at exactly the original station and playback state.
+    await pointer("#stPrev");
+    await until(i=>window.__STORY.S.i===i&&document.getElementById("infocard").hidden,30000,before.i);
+    const paused = await pg.evaluate(()=>window.__STORY.S.paused);
+    if(paused!==before.paused) await pointer("#stPlay");
+    await until(p=>window.__STORY.S.paused===p,30000,before.paused);
   });
   await ovl("בתוך סיור");
   await step("יציאה מהסיור", async () => {
@@ -238,7 +259,7 @@ async function run(dev) {
     await until(() => window.__PERSON && window.__PERSON.on(), 30000);
     await pg.waitForTimeout(2500);
     const a = await pg.evaluate(() => window.__PERSON.state());
-    if (!a.vis) throw new Error("הדמות לא נראית");
+    if (!a.vis) throw new Error("הדמות לא נראית "+JSON.stringify(a));
     if (a.cd < 1) throw new Error(`המצלמה צמודה לדמות (${a.cd} מ׳)`);
     await pg.evaluate(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "w" })));
     await pg.waitForTimeout(3000);

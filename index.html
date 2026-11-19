@@ -318,7 +318,9 @@ body.pane .exitb{left:420px!important}
 #stStrip button{flex:none;border:1px solid var(--ln);background:rgba(255,255,255,.05);color:var(--cr2);border-radius:16px;padding:0 12px;height:32px;font:600 12.5px var(--f-body);cursor:pointer;white-space:nowrap}
 #stStrip button.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
 body.touring #chips,body.touring #rail,body.touring .dr{display:none!important}
-body.touring .infocard{display:none!important}
+/* Keep the requested source card above the tour controls, including on phones. */
+body.touring .infocard{bottom:88px!important;height:calc(100% - 88px)!important;transform:none!important;overflow-y:auto!important;touch-action:pan-y}
+@media(max-width:700px){body.touring .infocard{top:64px!important;height:calc(100% - 152px)!important}}
 #resume{position:absolute;left:50%;bottom:90px;transform:translateX(-50%);z-index:26;height:44px;padding:0 20px;border-radius:22px;border:0;background:var(--gold);color:#1a1408;font:700 15px var(--f-body);cursor:pointer;box-shadow:var(--sh)}
 #resume[hidden]{display:none}
 /* intro */
@@ -12220,7 +12222,7 @@ const STORIES={};
     for(const f of[1,0.8,1.25,0.6,1.6])for(const dy of[0,4,8,14,22,32])for(const an of[0,0.35,-0.35,0.7,-0.7,1.05,-1.05,1.4,-1.4,2.1,-2.1,2.8,-2.8,Math.PI])C.push({f,dy,an,cost:Math.abs(an)*2+Math.abs(Math.log(f))*3+dy/10});
     C.sort((a,b)=>a.cost-b.cost);for(const c of C){const q=t.clone().add(off.clone().applyAxisAngle(Y,c.an).multiplyScalar(c.f));q.y+=c.dy;if(ok(q)){p.copy(q);return}}};
   const settleNarr=()=>{if(!S.pending||(S.move&&performance.now()-S.move.t0<Math.min(900,S.move.dur*0.4))||tween||S.paused)return;const st=S.pending;S.pending=null;speak(st);/* 125.3 (ביקורת, שיפור 7): בטלפון הכרטיס מתקפל לבד אחרי כמה שניות, כדי שהפעולה והדמות ייראו; בתחנה הבאה הוא נפתח שוב, ו־▴ פותח אותו בכל רגע */try{clearTimeout(S.foldT);const ph=matchMedia("(pointer:coarse)").matches&&!matchMedia("(pointer:fine)").matches&&Math.min(innerWidth,innerHeight)<600;if(ph&&!box.classList.contains("open")){const tok=S.token;S.foldT=setTimeout(()=>{if(STORY&&S.token===tok&&!S.paused&&!LEARN&&!box.classList.contains("open")&&!box.classList.contains("fold")){box.classList.add("fold","autof");$("stFold").textContent="▴"}},4500)}}catch(e){}if(st.snd)st.snd();if(window.__storyLearnShow)window.__storyLearnShow()};
-  const go=(i)=>{const d=S.def;if(i<0)i=0;if(i>=d.steps.length){api.stop();return}S.i=i;clearTimeout(S.timer);clearTimeout(S.foldT);if(box.classList.contains("autof")){box.classList.remove("fold","autof");$("stFold").textContent="▾"}try{window.TempleMusic&&TempleMusic.onStation(Object.keys(STORIES).find(q=>STORIES[q]===d),i)}catch(e){}const st=d.steps[i];
+  const go=(i)=>{const d=S.def;if(i<0)i=0;if(i>=d.steps.length){api.stop();return}S.i=i;closeInfo();clearTimeout(S.timer);clearTimeout(S.foldT);if(box.classList.contains("autof")){box.classList.remove("fold","autof");$("stFold").textContent="▾"}try{window.TempleMusic&&TempleMusic.onStation(Object.keys(STORIES).find(q=>STORIES[q]===d),i)}catch(e){}const st=d.steps[i];
     $("stNum").textContent=(i+1)+"/"+d.steps.length;$("stProg").style.width=((i+1)/d.steps.length*100)+"%";
     if(st.enter)try{st.enter()}catch(e){}
     try{if((window.__sN||0)>=40){const av=window.__sT/window.__sN;if(av>1/28&&PR>0.7){PR=Math.max(0.7,PR-0.15);window.__prD=(window.__prD||0)+1;window.__prT=performance.now()}}window.__sT=0;window.__sN=0}catch(e){}const pose=st.pose();safeCam(pose[0],pose[1]);clearPose(pose[0],pose[1]);try{if(!st.nofc)frameClear(pose[0],pose[1],st.fov!=null?st.fov:40)}catch(e){}S.fov0=camera.fov;S.fov1=(st.fov!=null)?st.fov:40;const mv=camPath(pose[0],pose[1],st.via?st.via():null);if(mv){tween=null;S.move=mv}else{S.move=null;camera.fov=S.fov1;camera.updateProjectionMatrix()}if(window.__TOURFIG&&window.__TOURFIG.onStep)try{window.__TOURFIG.onStep(d,i,st)}catch(e){}
@@ -12239,7 +12241,7 @@ const STORIES={};
   $("stSpeed").onchange=e=>{SPEED=parseFloat(e.target.value)};pickVoice();$("stVoiceSel").onchange=e=>{const v=HEV.find(x=>x.name===e.target.value);if(v){voice=v;try{localStorage.setItem("tm_voice",v.name)}catch(er){}if(STORY&&VOICE)speak(S.def.steps[S.i])}};
   $("stVoice").onclick=e=>{VOICE=!VOICE;e.currentTarget.setAttribute("aria-pressed",VOICE?"true":"false");e.currentTarget.innerHTML=(VOICE?"🔊":"🔇")+"<span class='lbl2'> קריינות</span>";if(STORY)speak(S.def.steps[S.i])};
   $("stSnd").onclick=e=>{SND.on=!SND.on;e.currentTarget.setAttribute("aria-pressed",SND.on?"true":"false")};
-  $("stSrc").onclick=()=>{const st=S.def&&S.def.steps[S.i];if(st)showInfo({n:"📖 "+(st.title||"מקור"),r:st.src||"",t:st.full||st.src||""})};
+  $("stSrc").onclick=()=>{const st=S.def&&S.def.steps[S.i];if(st){api.pause();showInfo({n:"📖 "+(st.title||"מקור"),r:st.src||"",t:st.full||st.src||""});$("infocard").classList.add("full")}};
   $("stLearn").onclick=e=>{LEARN=!LEARN;e.currentTarget.setAttribute("aria-pressed",LEARN?"true":"false");if(LEARN){const st=S.def.steps[S.i];showInfo({n:"📚 "+(st.title||""),r:st.src||"",t:st.full||st.cap})}};
   window.__storyLearnShow=()=>{if(LEARN&&S.def){const st=S.def.steps[S.i];showInfo({n:"📚 "+(st.title||""),r:st.src||"",t:st.full||st.cap})}};
   api.go=go;api.S=S;STORY_API=api;window.__STORY=api})();
