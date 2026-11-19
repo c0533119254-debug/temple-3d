@@ -130,7 +130,7 @@ const SEARCHES = [
       await pg.waitForTimeout(1500);
       await pg.evaluate(() => { const c = [...document.querySelectorAll(".dr *")].filter((e) => e.offsetParent && e.textContent.trim().startsWith("המקדש בשתי דקות")); const el = c[c.length - 1]; (el.closest("button,[role=button],li,div") || el).click(); });
       await pg.waitForFunction(() => document.body.classList.contains("touring"), null, { timeout: 60000 });
-      const snap = () => pg.evaluate(() => { const t = document.getElementById("stText"); return [t.innerText.trim(), t.innerHTML.length, (document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/) || [])[1]]; });
+      const snap = () => pg.evaluate(() => { const t = document.getElementById("stText"); return [t.innerText.trim(), t.innerHTML, (document.getElementById("story").innerText.match(/(\d+)\s*\/\s*\d+/) || [])[1]]; });
       await pg.waitForTimeout(2500); const a = await snap();
       // each caption piece stays length×70 ms (a long sentence can pass 10 s), so wait up to 25 s for the first change
       let b = a; for (let t = 0; t < 25 && b[0] === a[0] && b[1] === a[1] && b[2] === a[2]; t++) { await pg.waitForTimeout(1000); b = await snap(); }
@@ -150,8 +150,8 @@ const SEARCHES = [
         if (!first || !first.includes(want)) { bad.push(`«${q}» → ${first ? first.slice(0, 30) : "אין תוצאה"}`); continue; }
         const v0 = await cam(pg);
         await pg.keyboard.press("Enter");
-        await pg.waitForTimeout(3500);
-        const v1 = await cam(pg);
+        // a slow test machine can start the flight late: wait up to 15 s for the camera to move (like the «חזרה» step in user-path)
+        let v1 = v0; for (let k = 0; k < 15 && v1 === v0; k++) { await pg.waitForTimeout(1000); v1 = await cam(pg); }
         if (v0 === v1 && !(await pg.evaluate(() => document.body.classList.contains("touring")))) bad.push(`«${q}»: המצלמה לא זזה`);
         await pg.evaluate(() => { if (document.body.classList.contains("pane")) document.getElementById("infoX").click(); });
       }
