@@ -19,7 +19,8 @@ const tower=(x,n,w,d,h,rot,k,pass)=>{let lo=1e9,hi=-1e9;[[-1,-1],[1,-1],[1,1],[-
   {const ph=pass?0:2.2;add(k||"wall",wbox(w+1.6,hi-base+ph,d+1.6,6),x,(base+hi+ph)/2,n,rot)} // battered plinth
   [[0,d/2-0.4,w],[0,-d/2+0.4,w]].forEach(e=>{const p=off(x,n,rot,0,e[1]);crenel(p[0],p[1],rot,e[2],top,0,k)});
   [[w/2-0.4],[-w/2+0.4]].forEach(e=>{const p=off(x,n,rot,e[0],0);crenel(p[0],p[1],rot+Math.PI/2,d-1.6,top,0,k)});
-  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f),p=off(x,n,rot,i*w*0.22,0);add("dark",new THREE.BoxGeometry(0.45,1.5,d+0.3),p[0],yy,p[1],rot);const p2=off(x,n,rot,0,i*d*0.22);add("dark",new THREE.BoxGeometry(w+0.3,1.5,0.45),p2[0],yy,p2[1],rot)}
+  /* 128.8: arrow slits are thin plates on each face. They used to be one dark bar right through the tower, and in a gate tower with a passage (שער יפו) the bar hung in mid-air inside the arch */
+  for(let f=0;f<2;f++)for(let i=-1;i<=1;i+=2){const yy=hi+(top-hi)*(0.4+0.25*f);for(const sd of[-1,1]){const p=off(x,n,rot,i*w*0.22,sd*(d/2-0.1));add("dark",new THREE.BoxGeometry(0.45,1.5,0.5),p[0],yy,p[1],rot);const p2=off(x,n,rot,sd*(w/2-0.1),i*d*0.22);add("dark",new THREE.BoxGeometry(0.5,1.5,0.45),p2[0],yy,p2[1],rot)}}
   return{top,base,hi}};
 // --- the Citadel: an enclosure with towers around a courtyard (💡 simplified plan after the real walls) ---
 const P=[[-731,-173],[-700,-161],[-676,-156],[-662,-168],[-666,-190],[-667,-222],[-678,-242],[-686,-252],[-718,-262],[-733,-258],[-728,-205]];
@@ -220,17 +221,19 @@ begin({n:"הצריח שליד הרמב״ן",r:"הרובע היהודי",t:"📜 
   A("stone",new THREE.CylinderGeometry(1.5,1.7,hh*0.2,8),x,g+hh*0.82+0.25,n,0);dome("lead",x,n,g+hh*0.92+0.25,1.6,1.2);
   [0,1,2,3].forEach(i=>{const a=i*Math.PI/2-0.06,p=[x+Math.cos(a)*1.9,n+Math.sin(a)*1.9];archOn("dark",p[0],p[1],a,g+hh*0.55,0.9,1.8*s+0.4,0.6,0.25)})}
 // ===== Tiferet Yisrael, shown finished (💡 by Vered's choice) =====
-begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t:"📜 בית הכנסת של החסידים, שנחנך בשנת 1872 ונהרס ב־1948. 💡 כאן הוא מוצג גמור, כפי שביקשת: בניין מרובע עם תוף מתומן וכיפה."});
-{const x=-198.5,n=-259,rot=0.13,w=19,d=21,lo=lowAt([[-187,-271],[-190,-246],[-210,-249],[-208,-265]])-2,g=G(x,n),vs=Math.min(1,(LCAP-g)/27),Y=v=>g+v*vs;
+/* 128.9: 📜 במקום האמיתי ובמידות האמיתיות. קודם עמד כ־97 מ׳ מזרחה, ליד הכניסה לרחבת הכותל. עכשיו לפי טביעת הרגל ב־OpenStreetMap (14.6 × 20.3 מ׳, מרכז ‎-291.3,-289.6)
+   ובגובה של מדידת העירייה (26.5 מ׳ עד ראש הכיפה). בניין הדגם של העירייה במקום הזה (שטוח, 26.5 מ׳) לא נבנה, כדי שלא יהיו שניים */
+begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי; OpenStreetMap; מדידת עיריית ירושלים",t:"📜 בית הכנסת של החסידים (״ניסן ב״ק״), שנחנך בשנת 1872 ונהרס ב־1948, ונבנה מחדש בימינו באותו מקום. 📜 המקום והמידות לפי המפה: כ־14.6 על 20.3 מ׳, ובגובה כ־26.5 מ׳ עד ראש הכיפה. 💡 הוא מוצג גמור: בניין מרובע עם שתי שורות חלונות מקושתים, תוף מתומן וכיפה. פרטי החזית בפשטות."});
+{const x=-291.3,n=-289.6,rot=0.102,w=14.6,d=20.3,lo=lowAt([[-285.1,-278.8],[-299.7,-280.3],[-297.6,-300.5],[-283,-299]])-2,g=G(x,n),vs=Math.min(26.5/27.4,(LCAP-g)/27.4),Y=v=>g+v*vs;
   A("stone",wbox(w,Y(15)-lo,d,4),x,(lo+Y(15))/2,n,rot);A("light",wbox(w+0.8,0.6,d+0.8,4),x,Y(15)+0.3,n,rot);A("light",wbox(w+0.5,0.4,d+0.5,4),x,Y(7.5),n,rot);
-  faceWin(x,n,rot,w,d,0,(p,a,fw)=>{[-5,0,5].forEach(o=>{const q=off(p[0],p[1],a-Math.PI/2,o,0);archOn("dark",q[0],q[1],a,Y(9),1.6,4*vs,0.8,0.25);archOn("dark",q[0],q[1],a,o===0?g:Y(2),o===0?2.4:1.4,(o===0?4:3.4)*vs,0.8,0.25)})});
-  const oc=new THREE.CylinderGeometry(6.6,6.6,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.4,8,1.4,3.4*vs);
-  dome("lead",x,n,Y(21),6.1,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
+  faceWin(x,n,rot,w,d,0,(p,a,fw)=>{(fw<17?[-4,0,4]:[-6,-2,2,6]).forEach(o=>{const q=off(p[0],p[1],a-Math.PI/2,o,0);archOn("dark",q[0],q[1],a,Y(9),1.6,4*vs,0.8,0.25);archOn("dark",q[0],q[1],a,o===0?g:Y(2),o===0?2.4:1.4,(o===0?4:3.4)*vs,0.8,0.25)})});
+  const oc=new THREE.CylinderGeometry(6.2,6.2,Y(21)-Y(15),8);oc.rotateY(Math.PI/8);A("stone",oc,x,(Y(15)+Y(21))/2,n,0);slits(x,n,Y(16.2),6.0,8,1.4,3.4*vs);
+  dome("lead",x,n,Y(21),5.8,1.0*vs);cyl("light",x,n,Y(21)+6.1*vs,0.9,1.4,10)}
 // ===== the Cardo =====
 /* 126.1 (בדיקה חוזרת 35): הקרדו נבנה בפועל במפלס החפירה: בור מרוצף כ־3 מ׳ מתחת לרחוב הנמוך שלידו, קירות תמך, מעקה מסביב,
    וגרם מדרגות מהרחוב בצד הצפוני. העמודים עומדים על רצפת הקרדו. הרחוב שמעל "נפתח" בעזרת מסכת עומק (cardoMask): החלקים של הבור מצוירים קודם,
    והמסכה (בלי צבע) מסתירה את פני הרחוב שמעליהם. ההולך יורד במדרגות (cardoY בתוך groundAt), והקצוות חוסמים לפי חוק הצוק */
-{const C=cardoGeom();const inf={n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 חלק ממנו נחשף ברובע היהודי, כמה מטרים מתחת לרחוב של היום. בהדמיה: ⚖️ החפירה נמוכה בכ־3 מ׳ מהרחוב הנמוך שלידה, עם קירות תמך ומעקה מסביב, ויורדים אליה במדרגות מהצד הצפוני. 💡 העומק, מקום המדרגות ומספר העמודים בהערכה, לפי תמונות המקום."};
+{const C=cardoGeom();const inf={n:"הקרדו",r:"הרובע היהודי",t:"📜 הרחוב הראשי של ירושלים הביזנטית (המאה ה־6), ברוחב של כ־22 מ׳, עם עמודים משני הצדדים. 📜 לכל עמוד בסיס, גוף שמצטמצם כלפי מעלה, וכותרת בצורת פעמון (כמו קורינתית) עם לוח מרובע מעליה. 💡 עלי הכותרת לא מגולפים, רק הצורה. 📜 חלק ממנו נחשף ברובע היהודי, כמה מטרים מתחת לרחוב של היום. בהדמיה: ⚖️ החפירה נמוכה בכ־3 מ׳ מהרחוב הנמוך שלידה, עם קירות תמך ומעקה מסביב, ויורדים אליה במדרגות מהצד הצפוני. 💡 העומק, מקום המדרגות ומספר העמודים בהערכה, לפי תמונות המקום."};
   const P=(u,v)=>[C.cx+u*C.ux+v*C.vx,C.cn+u*C.un+v*C.vn],rot=-Math.atan2(C.vx,C.vn),GS={pave:[],wall:[],light:[],iron:[]};
   const put=(k,geo,u,v,y)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const q=P(u,v),m=new THREE.Matrix4().makeRotationY(rot);m.setPosition(q[0],y,-q[1]);geo.applyMatrix4(m);GS[k].push(geo)};
   const fl=C.floor,hw=C.hw,hl=C.hl;
@@ -245,7 +248,7 @@ begin({n:"בית הכנסת תפארת ישראל",r:"הרובע היהודי",t
   {const n=Math.ceil((C.stTop-fl)/0.17),rise=(C.stTop-fl)/n,run=C.run/n;for(let k=0;k<n;k++){const v=hl-run*(k+0.5),y=C.stTop-rise*(k+1);put("light",wbox(2*C.stw,y-fl+rise,run+0.02,3),C.su,v,(y+rise+fl)/2)}
     [-1,1].forEach(sd=>{for(let k=0;k<n;k+=2){const v=hl-run*(k+1),y=C.stTop-rise*(k+1)+1;put("wall",wbox(0.4,y-fl,run*2+0.02,3),C.su+sd*(C.stw+0.2),v,(y+fl)/2)}})}
   // the two colonnades on the Cardo floor
-  [-7.5,7.5].forEach(u=>{for(let v=-hl+2;v<=hl-(Math.abs(u-C.su)<C.stw+1?C.run:1);v+=3.6){put("light",wbox(0.9,0.5,0.9,2),u,v,fl+0.25);put("light",new THREE.CylinderGeometry(0.32,0.36,4.2,12),u,v,fl+0.5+2.1);put("light",wbox(0.95,0.45,0.95,2),u,v,fl+4.9)}
+  [-7.5,7.5].forEach(u=>{for(let v=-hl+2;v<=hl-(Math.abs(u-C.su)<C.stw+1?C.run:1);v+=3.6){/* 129.0: 📜 the parts of a classical column, as on the Cardo columns: a square plinth, a round base (torus), a shaft that narrows upward, a bell-shaped capital (Corinthian type) and a square abacus. 💡 the leaves of the capital are not carved, only its outline */put("light",wbox(0.9,0.3,0.9,2),u,v,fl+0.15);put("light",new THREE.CylinderGeometry(0.42,0.46,0.2,12),u,v,fl+0.4);put("light",new THREE.CylinderGeometry(0.30,0.35,3.9,12),u,v,fl+0.5+1.95);{const bell=new THREE.CylinderGeometry(0.52,0.33,0.55,12);put("light",bell,u,v,fl+4.4+0.275)}put("light",wbox(1.1,0.17,1.1,2),u,v,fl+4.95+0.085)}
     put("light",wbox(0.9,0.7,2*hl-2,3),u,0,fl+5.47)});
   const MATS={pave:M.pave||M.stoneL,wall:M.stone||M.stoneL,light:M.stoneL,iron:M.iron||new THREE.MeshStandardMaterial({color:0x2b2b2b,metalness:0.6,roughness:0.5})};
   Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=-2;m.castShadow=k!=="pave";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)});
