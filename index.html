@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 127.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 127.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -10798,7 +10798,7 @@ const FIG=(function(){const U={uT:{value:0}};
       g.setAttribute("iph",new THREE.InstancedBufferAttribute(ph,1));g.setAttribute("iam",new THREE.InstancedBufferAttribute(am,1));g.setAttribute("isp",new THREE.InstancedBufferAttribute(sp,1));const m=new THREE.InstancedMesh(g,material||shared,count);
       m.setAmp=(i,a)=>{if(am[i]!==a){am[i]=a;g.attributes.iam.needsUpdate=true}};/* v114: קצב הצעדים לפי מהירות ההליכה (מ׳ לשנייה; מחזור צעדים = כמטר) */m.setSp=(i,v)=>{const q=Math.max(0.25,Math.min(1.8,0.9*Math.abs(v)));if(sp[i]!==q){sp[i]=q;g.attributes.isp.needsUpdate=true}};return m}}})();
 
-/* 127.1 · מהירות בטלפון: אנשים רחוקים. קבוצת אנשים נעה (גוף + ראש + חפץ) נרשמת כאן. בכל ציור: מי שמחוץ למסך לא מצויר; מי שקרוב מצויר כמו קודם; מי שרחוק מצויר כדמות פשוטה אחת (כ־40 משולשים במקום כ־330, וקריאת ציור אחת במקום שתיים). המערכים של הסימולציה לא משתנים: מחליפים אותם רק לזמן הציור ומחזירים מיד אחריו */
+/* 127.4 · מהירות בטלפון: אנשים רחוקים. קבוצת אנשים נעה (גוף + ראש + חפץ) נרשמת כאן. בכל ציור: מי שמחוץ למסך לא מצויר; מי שקרוב מצויר כמו קודם; מי שרחוק מצויר כדמות פשוטה אחת (כ־40 משולשים במקום כ־330, וקריאת ציור אחת במקום שתיים). המערכים של הסימולציה לא משתנים: מחליפים אותם רק לזמן הציור ומחזירים מיד אחריו */
 FIG.LOD=(function(){const G=[],RN=SMALL?60:130,fr=new THREE.Frustum(),pm=new THREE.Matrix4(),lc=new THREE.Vector3(),sp=new THREE.Sphere(new THREE.Vector3(),1.4);let farG=null,on=!/[?&]flod=0/.test(location.search);
   const farGeo=()=>{if(farG)return farG;const U=THREE.BufferGeometryUtils,b=FIG.mesh(1).geometry,h=FIG.head();b.computeBoundingBox();h.computeBoundingBox();const bb=b.boundingBox,hb=h.boundingBox,H=bb.max.y-bb.min.y,R=Math.max(bb.max.x-bb.min.x,bb.max.z-bb.min.z)/2;
     const body=new THREE.LatheGeometry([[0.62,0],[0.7,0.62],[0.8,0.86],[0.66,0.95],[0.2,1]].map(q=>new THREE.Vector2(q[0]*R*0.62,bb.min.y+q[1]*H)),6).toNonIndexed();
@@ -15483,7 +15483,7 @@ function tick(){requestAnimationFrame(tick);const now=performance.now();if(now-t
 requestAnimationFrame(tick);
 window.__ILOD=E;
 })();
-/* 127.1: אנשים רחוקים (FIG.LOD) — רק בציור של המצלמה הראשית */
+/* 127.4: אנשים רחוקים (FIG.LOD) — רק בציור של המצלמה הראשית */
 {const R0=renderer.render.bind(renderer);renderer.render=function(s,c){const go=s===scene&&c===camera;if(go)try{FIG.LOD.pre(c)}catch(e){console.warn("flod",e)}try{R0(s,c)}finally{if(go)FIG.LOD.post()}};window.__FLOD=FIG.LOD}
 // ==== v60: quality setting (auto / high / saver) in the View drawer, Shift+P perf box ====
 (function(){const $=id=>document.getElementById(id);const d=$("dr-view");if(!d)return;

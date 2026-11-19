@@ -46,7 +46,7 @@ function tick(){requestAnimationFrame(tick);const now=performance.now();if(now-t
 requestAnimationFrame(tick);
 window.__ILOD=E;
 })();
-/* 127.1: אנשים רחוקים (FIG.LOD) — רק בציור של המצלמה הראשית */
+/* 127.4: אנשים רחוקים (FIG.LOD) — רק בציור של המצלמה הראשית */
 {const R0=renderer.render.bind(renderer);renderer.render=function(s,c){const go=s===scene&&c===camera;if(go)try{FIG.LOD.pre(c)}catch(e){console.warn("flod",e)}try{R0(s,c)}finally{if(go)FIG.LOD.post()}};window.__FLOD=FIG.LOD}
 // ==== v60: quality setting (auto / high / saver) in the View drawer, Shift+P perf box ====
 (function(){const $=id=>document.getElementById(id);const d=$("dr-view");if(!d)return;
