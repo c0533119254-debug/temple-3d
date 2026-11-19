@@ -103,6 +103,15 @@ function build(){
   function dframe(ax,f,sg,c,w,y,h){const P=(d0,d1,a0,a1,y0,y1,m)=>{const p0=Math.min(f+sg*d0,f+sg*d1),p1=Math.max(f+sg*d0,f+sg*d1);if(ax==="u")box(p0,a0,p1,a1,y0,y1,m,null,{noCol:true,cast:false});else box(a0,p0,a1,p1,y0,y1,m,null,{noCol:true,cast:false})};
     P(0,0.4,c-w/2-0.5,c-w/2,y,y+h,M.stoneL);P(0,0.4,c+w/2,c+w/2+0.5,y,y+h,M.stoneL);P(0,0.55,c-w/2-0.8,c+w/2+0.8,y+h,y+h+0.6,M.stone2)}
   function cyl(u,v,y0,y1,r0,r1,mat,info,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1*A,r0*A,(y1-y0)*A,seg||20),mat);const p=W(u,v);m.position.set(p[0],(y0+y1)/2*A,p[1]);m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m);return m}
+  /* 130.5: שולחן שנראה כמו שולחן, במקום קובייה מלאה. המידות והמקום נשארים בדיוק: המשטח הוא כל השטח שנתון, ומתחתיו בסיס אבן צר יותר, או ארבע רגליים ומסגרת (legs) */
+  function tbl(u0,v0,u1,v1,y0,y1,mat,info,o){o=o||{};const h=y1-y0,th=o.th||Math.min(0.28,h*0.24),lm=o.legM||mat;
+    box(u0,v0,u1,v1,y1-th,y1,mat,info,{noCol:true});
+    if(o.legs){const lg=o.lg||0.13,e=0.07,ap=Math.min(0.2,h*0.13);[[u0+e,v0+e],[u1-e-lg,v0+e],[u0+e,v1-e-lg],[u1-e-lg,v1-e-lg]].forEach(([a,b])=>box(a,b,a+lg,b+lg,y0,y1-th,lm,info,{noCol:true,cast:false}));
+      box(u0+e,v0+e,u1-e,v0+e+0.05,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});box(u0+e,v1-e-0.05,u1-e,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});
+      box(u0+e,v0+e,u0+e+0.05,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});box(u1-e-0.05,v0+e,u1-e,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});return}
+    const iu=(u1-u0)*0.2,iv=(v1-v0)*0.2,pl=Math.min(0.15,h*0.12);
+    box(u0+iu*0.6,v0+iv*0.6,u1-iu*0.6,v1-iv*0.6,y0,y0+pl,mat,info,{noCol:true});box(u0+iu,v0+iv,u1-iu,v1-iv,y0+pl,y1-th,mat,info,{noCol:true});
+    box(u0+iu*0.75,v0+iv*0.75,u1-iu*0.75,v1-iv*0.75,y1-th-0.08,y1-th,mat,null,{noCol:true,cast:false})}
   {
   // floors
   box(0,0,500,500,0,3.5,M.pave,I("החצר החיצונה","יחזקאל מ׳, יז-יט","📜 החצר שבה עומד העם, גבוהה ב־7 מדרגות מהר הבית. 📜 לאורך החומה רצפה, ועליה 30 לשכות. 💡 בתוכנית: עד 10–15 אלף איש בבת אחת. 💡 צורת אבני הריצוף, מידותיהן וצבען הן בחירה חזותית בלבד."),{cast:false,tile:9});
@@ -350,8 +359,10 @@ function build(){
     const lt=new THREE.PointLight(0xffb45c,1.5,26*a*3,2);lt.position.set(p[0],(fl+3.6)*A,p[1]);group.add(lt);MENL=lt;
     // stage 6: soft flames — "להעלות נר תמיד", pure olive oil (Exodus 27:20); the group is turned a quarter, so local x runs along -z
     const LMP=[-6,-4,-2,0,2,4,6].map(x=>{const xl=(x+(x===0?0:-Math.sign(x)*0.25))*t;return{x:p[0],y:fl*A+18.72*t,z:p[1]-xl,rx:0.006,s:0.06}});group.add(makePFX(LMP.length*(SMALL?8:12),true,LMP,{seed:71}))})();
-  const sI=I("שולחן לחם הפנים","שמות כ״ה, כג-ל; מנחות צו ע״א","📜 שולחן מצופה זהב בצפון ההיכל: אורך 2 אמות, רוחב אמה, גובה אמה וחצי (כ־80 ס״מ — גובה של שולחן רגיל). עליו 12 חלות בשתי מערכות של 6. \"החלות ארכן עשרה ורחבן חמשה וקרנותיהן שבע אצבעות\" (מנחות יא, ד): לפי רבי יהודה החלה מונחת לרוחב השולחן, ושני קצותיה מקופלים כלפי מעלה, כמו \"תיבה פרוצה\". בין חלה לחלה קנים של זהב, שהאוויר יעבור, ו־4 סניפין (עמודים) של זהב מחזיקים את הקנים. בין המערכות שני בזיכי לבונה. בקצרה: 📜 קיומו מהתורה (שמות כ״ה, כג). ⚖️ צורתו לפי המשנה (מנחות יא). ⚖️ מקומו בצפון ההיכל (שמות כ״ו, לה).");
+  const sI=I("שולחן לחם הפנים","שמות כ״ה, כג-ל; מנחות צו ע״א","📜 שולחן מצופה זהב בצפון ההיכל: אורך 2 אמות, רוחב אמה, גובה אמה וחצי (כ־80 ס״מ — גובה של שולחן רגיל). עליו 12 חלות בשתי מערכות של 6. \"החלות ארכן עשרה ורחבן חמשה וקרנותיהן שבע אצבעות\" (מנחות יא, ד): לפי רבי יהודה החלה מונחת לרוחב השולחן, ושני קצותיה מקופלים כלפי מעלה, כמו \"תיבה פרוצה\". בין חלה לחלה קנים של זהב, שהאוויר יעבור, ו־4 סניפין (עמודים) של זהב מחזיקים את הקנים. בין המערכות שני בזיכי לבונה. בקצרה: 📜 קיומו מהתורה (שמות כ״ה, כג). ⚖️ צורתו לפי המשנה (מנחות יא). ⚖️ מקומו בצפון ההיכל (שמות כ״ו, לה). 📜 \"ועשית לו זר זהב סביב. ועשית לו מסגרת טפח סביב\" (שמות כה, כד–כה): שפה של זהב מסביב למשטח, ומסגרת ברוחב טפח. 💡 המסגרת מוצגת מתחת למשטח, בין הרגליים.");
   (function(){const RRT=(GATE==="high"),su=RRT?143:150,sv=243,TH=RRT?3:1.5,sI2=RRT?I("השולחן","יחזקאל מ״א, כב; רש״י שם; משכני עליון לרמח״ל","📜 \"המזבח עץ שלוש אמות גבה, וארכו שתים אמות... וידבר אלי זה השלחן אשר לפני ה׳\" (מ״א, כב). ⚖️ לפי רש״י והרמח״ל זה שולחן לחם הפנים: אורך 2 אמות, רוחב אמה וגובה 3 אמות. הוא בצפון ההיכל, 5 אמות מקיר קודש הקודשים. עליו 12 חלות בשתי מערכות (ויקרא כד, ה-ו)."):sI;box(su-1,sv-0.5,su+1,sv+0.5,fl+TH-0.15,fl+TH,M.gold,sI2);[[-0.9,-0.4],[0.9,-0.4],[-0.9,0.4],[0.9,0.4]].forEach(o=>box(su+o[0]-0.06,sv+o[1]-0.06,su+o[0]+0.06,sv+o[1]+0.06,fl,fl+TH-0.15,M.gold,sI2,{cast:false}));
+    /* 130.5: 📜 זר זהב סביב המשטח, ומסגרת טפח בין הרגליים (שמות כה, כד–כה) */{const yt=fl+TH,ym=yt-0.15,z=0.04,tp=1/6;box(su-1-z,sv-0.5-z,su+1+z,sv-0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su-1-z,sv+0.5,su+1+z,sv+0.5+z,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su-1-z,sv-0.5,su-1,sv+0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su+1,sv-0.5,su+1+z,sv+0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});
+      box(su-0.9,sv-0.42,su+0.9,sv-0.38,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su-0.9,sv+0.38,su+0.9,sv+0.42,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su-0.92,sv-0.4,su-0.88,sv+0.4,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su+0.88,sv-0.4,su+0.92,sv+0.4,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false})}
     {const t=1/6,top=fl+TH,step=2.1*t;[-3.5*t,3.5*t].forEach(o=>{const u=su+o;for(let k=0;k<6;k++){const y=top+k*step;
       box(u-2.5*t,sv-3*t,u+2.5*t,sv+3*t,y,y+0.5*t,M.bread,sI,{cast:false,noCol:true});[-1,1].forEach(sd=>box(u-2.5*t,sv+sd*3*t-(sd>0?0.5*t:0),u+2.5*t,sv+sd*3*t+(sd<0?0.5*t:0),y,y+2*t,M.bread,sI,{cast:false,noCol:true}));
       if(k<5)for(let q=-1;q<=1;q++){if(k===4&&q===0)continue;const cc=new THREE.Mesh(new THREE.CylinderGeometry(0.06*t*A,0.06*t*A,6.2*t*A,6),M.altarGold);const pp=W(u+q*1.6*t,sv);cc.position.set(pp[0],(y+step-0.08*t)*A,pp[1]);cc.rotation.x=Math.PI/2;group.add(cc)}}});
@@ -430,12 +441,15 @@ function build(){
     hroom(263,150,272,160,3.5,11,M.stoneL,lw,{side:"v0",c:266,nm:"הדחת העולה · לשכת המדיחין"});box(262.7,149.7,272.3,160.3,11,11.6,M.stone2,null);
     cyl(268.5,148.3,3.5,4.6,1.1,1.25,M.stone2,lw,16);cyl(268.5,148.3,4.45,4.62,0.95,0.95,M.water,null,16);CL("הדחת העולה · לשכת המדיחין",267.5,155,14,lw)}
   const tb=I("שולחנות השחיטה","יחזקאל מ׳, לט-מג","📜 \"ארבעה שלחנות מפה וארבעה שלחנות מפה לכתף השער\", ועוד ארבעה שולחנות של אבני גזית לכלים (יחזקאל מ, לט–מג). כאן שוחטים את העולה, החטאת והאשם. ⚖️ המלבי״ם (מ, מא) מונה כאן 16 שולחנות לשחיטה, וארבעת שולחנות הגזית לכלים בנפרד. בהדמיה מוצגים כל ה־16: 📜 ארבעה באולם השער (מ, לט), ⚖️ ארבעה מחוץ לשער משני צדי המעלות (מ, מ), ⚖️ ושמונה לכתף השער, ארבעה מכל צד (מ, מא). 💡 מידות השולחנות ומקומם המדויק בהערכה.");
-  [229,269].forEach(u=>{for(let k=0;k<4;k++)box(u,162+k*7,u+2,163.5+k*7,3.5,4.5,M.stoneL,tb,{noCol:true})});
+  [229,269].forEach(u=>{for(let k=0;k<4;k++)tbl(u,162+k*7,u+2,163.5+k*7,3.5,4.5,M.stoneL,tb)});
   /* 126.1 (בדיקה חוזרת 6): ארבעת השולחנות של יחזקאל מ, מ — "ואל הכתף מחוצה לעולה לפתח שער הצפונה שנים שלחנות, ואל הכתף האחרת אשר לאולם השער שנים שלחנות" */
   {const t40=I("השולחנות שליד מעלות השער","יחזקאל מ׳, מ; מלבי״ם שם","📜 \"ואל הכתף מחוצה לעולה לפתח שער הצפונה שנים שלחנות, ואל הכתף האחרת אשר לאולם השער שנים שלחנות\" — ⚖️ לפי המלבי״ם אלה ארבעה שולחנות לשחיטה מחוץ לשער, בחצר החיצונה, שניים מכל צד של העולה במעלות. יחד עם ארבעת שולחנות האולם ושמונת שולחנות הכתף הם 16 (מלבי״ם מ, מא). 💡 המידות והמרחק מהמעלות בהערכה.");
-    [[237.6,142.6],[237.6,146.4],[260.4,142.6],[260.4,146.4]].forEach(c=>box(c[0],c[1],c[0]+2,c[1]+1.5,3.5,4.5,M.stoneL,t40,{noCol:true}))}
-  {const tg=I("שולחנות אבני גזית","יחזקאל מ׳, מב-מג","📜 \"ושלחנות ארבעה לעולה אבני גזית, ארך אמה אחת וחצי ורחב אמה אחת וחצי וגבה אמה אחת\" — כ־80 × 80 ס״מ וגובה כ־50 ס״מ. עליהם מניחים את כלי השחיטה. \"והשפתים טפח אחד\" — ⚖️ לפי התרגום והמפרשים \"השפתיים\" הם אונקלאות, ווים באורך טפח לתליית הבשר.");
-    [231,235.5,263,267.5].forEach(u=>box(u,203,u+1.5,204.5,7.5,8.5,M.marble,tg,{noCol:true}))}
+    [[237.6,142.6],[237.6,146.4],[260.4,142.6],[260.4,146.4]].forEach(c=>tbl(c[0],c[1],c[0]+2,c[1]+1.5,3.5,4.5,M.stoneL,t40))}
+  {const tg=I("שולחנות אבני גזית","יחזקאל מ׳, מב-מג","📜 \"ושלחנות ארבעה לעולה אבני גזית, ארך אמה אחת וחצי ורחב אמה אחת וחצי וגבה אמה אחת\" — כ־80 × 80 ס״מ וגובה כ־50 ס״מ. עליהם מניחים את כלי השחיטה. \"והשפתים טפח אחד\" — ⚖️ לפי התרגום והמפרשים \"השפתיים\" הם אונקלאות, ווים באורך טפח לתליית הבשר. 📜 \"ויניחו את הכלים אשר ישחטו את העולה בם\" (מ, מב) — לכן מונחים עליהם סכינים. 💡 מספר הווים והסכינים ומקומם הם השלמה.");
+    [231,235.5,263,267.5].forEach(u=>{tbl(u,203,u+1.5,204.5,7.5,8.5,M.marble,tg);
+      /* 130.5: ⚖️ ווים של טפח בשפת השולחן, ו־📜 "ויניחו את הכלים אשר ישחטו את העולה בם": שני סכינים על המשטח */
+      [0.3,0.75,1.2].forEach(a=>[203,204.5].forEach(v=>{const sg=v>204?1:-1;box(u+a-0.025,v+sg*0.01-0.025,u+a+0.025,v+sg*0.01+0.025,8.3,8.5,M.bronze,tg,{noCol:true,cast:false});box(u+a-0.025,v+sg*0.01-0.025+sg*0.04,u+a+0.025,v+sg*0.01+0.025+sg*0.04,8.3,8.35,M.bronze,null,{noCol:true,cast:false})}));
+      [[0.45,203.55],[0.95,203.95]].forEach(([a,v])=>{box(u+a-0.32,v-0.04,u+a+0.12,v+0.04,8.5,8.52,M.white,tg,{noCol:true,cast:false});box(u+a+0.12,v-0.05,u+a+0.34,v+0.05,8.5,8.55,M.wood,tg,{noCol:true,cast:false})})})}
   }
   const SG=new THREE.Group(),colS=COL.length,grpS=group,sgL=cLabels.length;;
   {const sg=I("לשכת המשוררים ולשכת שומרי משמרת הבית","יחזקאל מ׳, מד-מה; מלבי״ם שם","📜 \"ומחוצה לשער הפנימי לשכות שרים בחצר הפנימית, אשר אל כתף שער הצפון ופניהם דרך הדרום\" — לשכה ליד השער הצפוני, פונה לדרום, לכהנים \"שמרי משמרת הבית\". 💡 הגובה בהערכה.");
@@ -445,7 +459,7 @@ function build(){
     hroom(212,292,234,300,7.5,15,M.stoneL,sp,{side:"v0",c:223,nm:"לשכת שומרי משמרת המזבח"});box(211.7,291.7,234.3,300.3,15,15.6,M.stone2,null);
     }
     const tv=I("השולחנות שבאולם השער","יחזקאל מ׳, לט; מלבי״ם שם","📜 \"ובאולם השער שנים שלחנות מפו ושנים שלחנות מפה, לשחוט אליהם העולה והחטאת והאשם\" — ארבעה שולחנות של אבן בתוך אולם השער הצפוני הפנימי. 💡 המידות לא מפורשות.");
-    [[245.3,153.2],[245.3,156.4],[253.5,153.2],[253.5,156.4]].forEach(c=>box(c[0],c[1],c[0]+1.2,c[1]+2,7.5,8.6,M.marble,tv,{noCol:true}))}
+    [[245.3,153.2],[245.3,156.4],[253.5,153.2],[253.5,156.4]].forEach(c=>tbl(c[0],c[1],c[0]+1.2,c[1]+2,7.5,8.6,M.marble,tv))}
   // ---- stage 7: the Sanhedrin and the courts of 23 (Sanhedrin 11:2; Middot 5:4) ----
   {let MIR=false;const SEAT=new Map(),STAND=new Map(),add=(mp,info,p)=>{if(MIR){p.a=Math.PI-p.a;p.v=500-p.v}if(!mp.has(info))mp.set(info,[]);mp.get(info).push(p)};
     const face=(u,v,fu,fv)=>Math.atan2(fu-u,fv-v);
@@ -524,7 +538,13 @@ function build(){
       CL("בית המדרש",12,125,19,st,true)}
     // -- the money changers (Shekalim 1:3) --
     {const sh=I("השולחנים — מחליפי הכסף","שקלים א, ג; ב, א","📜 \"בעשרים וחמשה בו ישבו במקדש\" — בחודש אדר ישבו כאן שולחנים, מחליפי כסף, וגבו את מחצית השקל. ⚖️ מי שאין לו מטבע של חצי שקל מחליף אצלם ומשלם קלבון, תוספת קטנה. 💡 היום אפשר להוסיף על השולחנות עמדות תשלום בכרטיס.");
-      for(let k=0;k<6;k++){const u=206+k*5;box(u,58,u+3.2,59.6,Y3,Y3+1.6,M.wood,sh,{noCol:true});box(u+2.3,58.5,u+2.8,59,Y3+1.6,Y3+2.05,M.dark,sh,{noCol:true,cast:false});cyl(u+0.8,58.8,Y3+1.6,Y3+1.8,0.18,0.18,M.gold,null,10);cyl(u+1.3,58.9,Y3+1.6,Y3+1.9,0.18,0.18,M.white,null,10);
+      /* 130.5: שולחן עבודה רגיל במקום קובייה: משטח ורגליים, מפה ירוקה שיורדת לצד הקונה, קופסת מטבעות, ערימות מטבעות, ו־💡 מסוף לתשלום בכרטיס */
+      const CLOTH=M.cloth||(M.cloth=new THREE.MeshStandardMaterial({color:0x2f5a46,roughness:0.95})),SCR=M.scr||(M.scr=new THREE.MeshStandardMaterial({color:0x9fc3d6,emissive:0x1c3442,roughness:0.4}));
+      for(let k=0;k<6;k++){const u=206+k*5,yt=Y3+1.6;tbl(u,58,u+3.2,59.6,Y3,yt,M.wood,sh,{legs:1,th:0.12,lg:0.12});
+        box(u+0.2,58.1,u+3.0,59.66,yt,yt+0.02,CLOTH,sh,{noCol:true,cast:false});box(u+0.2,59.64,u+3.0,59.68,yt-0.55,yt+0.02,CLOTH,sh,{noCol:true,cast:false});
+        box(u+2.3,58.4,u+2.85,58.95,yt+0.02,yt+0.32,M.dark,sh,{noCol:true,cast:false});box(u+2.33,58.43,u+2.82,58.92,yt+0.32,yt+0.34,M.wood,null,{noCol:true,cast:false});
+        cyl(u+0.8,58.8,yt+0.02,yt+0.2,0.16,0.16,M.gold,null,10);cyl(u+1.3,58.9,yt+0.02,yt+0.3,0.16,0.16,M.white,null,10);cyl(u+1.05,59.25,yt+0.02,yt+0.12,0.16,0.16,M.gold,null,10);cyl(u+0.55,59.2,yt+0.02,yt+0.08,0.16,0.16,M.bronze,null,10);
+        box(u+1.75,58.95,u+2.05,59.35,yt+0.02,yt+0.1,M.dark,sh,{noCol:true,cast:false});box(u+1.78,58.98,u+2.02,59.16,yt+0.1,yt+0.105,SCR,null,{noCol:true,cast:false});
         add(SEAT,sh,{u:u+1.6,v:57,y:Y3,a:0,c:[0xa58f6e,0x8e8a7c,0xb7a181][k%3]});add(STAND,sh,{u:u+1.6,v:61.4,y:Y3,a:Math.PI,c:[0xc2b59a,0x9ea6ad,0xb9a48c][k%3]})}
       CL("השולחנים",221,59,9,sh,true)}
     // -- the passage down to the mikveh (Tamid 1:1) --
@@ -1371,8 +1391,9 @@ function build(){
   {const kv=I("הכיור והמוכני","שמות ל, יז-כא; מידות ג, ו; יומא לז ע״א","⚖️ כיור נחושת שממנו הכהנים מקדשים ידיים ורגליים לפני העבודה. \"הכיור היה בין האולם ולמזבח, ומשוך כלפי הדרום\". בן קטין עשה לו 12 דדים (ברזים), כדי ש־12 כהנים יקדשו בבת אחת, ומוכני — גלגל שמשקיע אותו במים בלילה. 💡 הגודל לא מפורש; כאן קוטר של כ־3 אמות. בקצרה: 📜 קיומו מהתורה (שמות ל, יח). ⚖️ מקומו בין האולם למזבח, משוך לדרום (מידות ג, ו). 💡 צורתו וגודלו הם הצעה.");
     const u=222,v=263;cyl(u,v,7.5,9.5,0.9,0.7,M.bronze,kv,16);cyl(u,v,9.5,11,1.6,1.9,M.bronze,kv,24);
     for(let k=0;k<12;k++){const an=k/12*Math.PI*2,q=W(u+Math.cos(an)*1.85,v+Math.sin(an)*1.85),sp=new THREE.Mesh(new THREE.CylinderGeometry(0.035*A,0.035*A,0.35*A,6),M.bronze);sp.position.set(q[0],10.2*A,q[1]);sp.rotation.z=Math.PI/2;sp.rotation.y=-an;group.add(sp)}}
-  {const ts=I("שולחנות השיש והכסף","שקלים ו, ד; תמיד ג","⚖️ שני שולחנות במערב הכבש: של שיש, עליו נותנים את איברי הקרבן, ושל כסף, עליו כלי השרת.");
-    box(238.5,268,240.5,269.2,7.5,8.6,M.marble,ts,{noCol:true});box(238.5,276,240.5,277.2,7.5,8.6,M.white,ts,{noCol:true})}
+  {const ts=I("שולחנות השיש והכסף","שקלים ו, ד; תמיד ג","⚖️ שני שולחנות במערב הכבש: של שיש, עליו נותנים את איברי הקרבן, ושל כסף, עליו כלי השרת. 💡 צורת הכלים על שולחן הכסף היא הצעה.");
+    tbl(238.5,268,240.5,269.2,7.5,8.6,M.marble,ts,{legs:1,th:0.2});tbl(238.5,276,240.5,277.2,7.5,8.6,M.white,ts,{legs:1,th:0.12,lg:0.1});
+    /* 130.5: על שולחן הכסף כלי השרת (שקלים ו, ד). 💡 שלושה מזרקים קטנים */[239,239.5,240].forEach(u=>cyl(u,276.6,8.6,8.78,0.13,0.2,M.white,ts,12))}
   {const bm=I("בית המטבחיים","מידות ג, ה; תמיד ג","⚖️ בצפון המזבח: 24 טבעות ברצפה (ארבע שורות של שש) לקשירת הבהמות בשעת השחיטה, ושמונה עמודים נמוכים (\"ננסין\") עם קורות ארז וּווים של ברזל לתליית הבשר והפשטתו, ושמונה שולחנות שיש להדחת הקרביים.");
     // stage 5: each ring stands up on a hinge, so the neck of the animal goes through it (Middot 3:5; Tamid 3:3, 4:1)
     const rg=new THREE.TorusGeometry(0.24*A,0.05*A,6,14);for(let r=0;r<4;r++)for(let c=0;c<6;c++){const q=W(238+c*2.4,212+r*2.6),m=new THREE.Mesh(rg,M.iron);m.position.set(q[0],7.5*A+0.24*A,q[1]);m.rotation.y=0.3*((r+c)%3-1);m.userData=bm;cPick.push(m);group.add(m);
@@ -1390,7 +1411,7 @@ function build(){
   ;
   // ulam: tables of marble and of gold (Menachot 99b)
   {const ut=I("שני השולחנות שבאולם","מנחות צט ע״ב; שקלים ו, ד","⚖️ \"על שולחן של שיש נותנין לחם הפנים בכניסתו, ועל של זהב ביציאתו, שמעלין בקודש ולא מורידין\".");
-    box(187,243,189,244,13.56,15.06,M.marble,ut,{noCol:true});box(187,256,189,257,13.56,15.06,M.altarGold,ut,{noCol:true})}
+    tbl(187,243,189,244,13.56,15.06,M.marble,ut,{legs:1,th:0.2});tbl(187,256,189,257,13.56,15.06,M.altarGold,ut,{legs:1,th:0.14,lg:0.1})}
   // golden vine over the heikhal entrance (Middot 3:8)
   {const gv=I("גפן של זהב","מידות ג, ח","⚖️ \"וגפן של זהב היתה עומדת על פתחו של היכל ומודלה על גבי כלונסות. כל מי שהוא מתנדב עלה, או גרגיר, או אשכול — מביא ותולה בה\".");
     box(183.02,243,183.2,257,33.6,34.0,M.altarGold,gv,{cast:false,noCol:true});const r=rng(33);for(let k=0;k<26;k++){const q=W(183.25,243.4+r()*13.2),b=new THREE.Mesh(new THREE.SphereGeometry((0.12+r()*0.1)*A,8,6),M.altarGold);b.position.set(q[0],(33.2+r()*1.2)*A,q[1]);b.userData=gv;cPick.push(b);group.add(b)}}
