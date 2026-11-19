@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 130.0"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 130.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -15826,8 +15826,8 @@ window.__UI={buildIndex,run,toggleDr,showIntro,share,shareURL,restore,closeDr,ch
 (function(){
 const AMB={on:true,ready:false,loading:false,lv:{},why:""};window.__AMB=AMB;
 try{AMB.on=localStorage.getItem("tm_amb")!=="0"}catch(e){}
-const FILES={city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",coins:"sfx/coins.mp3"};
-const LOOPS=["city","market","quiet","stream","birds","night"];
+const FILES={city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",steps:"sfx/steps.mp3",coins:"sfx/coins.mp3"};
+const LOOPS=["city","market","quiet","stream","birds","night","steps"];
 /* נקודות הנקישה בקובץ המטבעות (שניות: התחלה, אורך) */
 const CLINKS=[[0,1.5],[1.6,1.5],[3.2,1.5],[4.8,1.5],[6.4,1.5]];
 let ctx=null,out=null,bufs={},gains={},started=false;
@@ -15854,7 +15854,7 @@ function rivD(x,z){const P=window.__RIVPTS;if(!P||typeof SHOW_RIVER!=="undefined
 function changersXZ(){if(!COMP)return null;return[COMP.X0+220*A,-(COMP.N0-(500-58.8)*A)]}
 let nextClink=0;
 function clink(vol){if(!bufs.coins||!ctx)return;const c=CLINKS[Math.floor(Math.random()*CLINKS.length)];if(c[0]+c[1]>bufs.coins.duration)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.coins;s.playbackRate.value=0.92+Math.random()*0.16;g.gain.value=vol;s.connect(g);if(p){p.pan.value=Math.random()*1.2-0.6;g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],c[1])}
-function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0};
+function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0,steps:0};
   const cp=P||camera.position;let gy=0;try{gy=groundAt(cp.x,cp.z)}catch(e){}if(!isFinite(gy))gy=0;
   const h=Math.max(1,cp.y-gy);if(!P)AMB.h=h;
   /* גובה: עד 30 מ׳ מלא, מעל 250 מ׳ שקט, וביניהם בהדרגה (לוגריתמית) 💡 */
@@ -15890,13 +15890,17 @@ function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coi
   L.city=city;L.market=market;L.quiet=quiet;L.stream=stream;L.birds=birds;L.night=nightL;
   /* השולחנים: נקישות מטבעות ומיקוח, עד כ־30 מ׳. לא בשבת ולא בחג ⚖️ */
   const ch=changersXZ();if(ch&&!shab&&!fest&&!night){const d=Math.hypot(cp.x-ch[0],cp.z-ch[1]);L.coins=near(d,4,32);L.market=Math.max(L.market,L.coins*0.45)}
+  /* 130.1: במצב הליכה — צעדים על אבן כשהולכים (לא כשעומדים). מהר יותר = חזק יותר 💡 */
+  if(!P&&WALK){const sp=AMB.spd||0;L.steps=sat((sp-0.15)/0.8)*(inHouse?0.6:1)}
   for(const k in L)L[k]*=hf;
   if(inHouse)for(const k in L)L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 */
   return L}
 /* עוצמת בסיס לכל קובץ (אחרי נרמול), כדי שהשכבות יישבו יחד 💡 */
-const BASE={city:0.5,market:0.6,quiet:0.45,stream:0.55,birds:0.35,night:0.3};
+const BASE={city:0.5,market:0.6,quiet:0.45,stream:0.55,birds:0.35,night:0.3,steps:0.55};
 function tick(){if(!AMB.on||!ctx){return}
   if(typeof camera==="undefined"||!camera||!window.__LOADT)return;
+  /* מהירות ההולך: הדמות במצב «הולך», אחרת המצלמה. קפיצה או טיסה (מעל 8 מ׳ לשנייה) אינה הליכה */
+  {const cp=(typeof PER!=="undefined"&&PER.on&&PER.p)?PER.p:camera.position,t=performance.now(),H=AMB._hist||(AMB._hist=[]);H.push([t,cp.x,cp.z]);while(H.length>2&&t-H[1][0]>=1000)H.shift();/* מהירות לאורך כשנייה, כי בטלפון איטי הדמות זזה רק בכל פריים */const o=H[0],dt=(t-o[0])/1000,v=dt>0.2?Math.hypot(cp.x-o[1],cp.z-o[2])/dt:0;AMB.spd=v>8?0:v}
   let L;try{L=levels()}catch(e){AMB.why=String(e);return}AMB.lv=L;
   const any=Object.values(L).some(v=>v>0.01);
   if(any&&!AMB.loading)load();
@@ -15905,7 +15909,7 @@ function tick(){if(!AMB.on||!ctx){return}
   /* בסיור הקריינות קודמת: הרקע יורד ל־40% */
   const duck=(typeof STORY!=="undefined"&&STORY)?0.4:1;
   out.gain.setTargetAtTime(0.9*duck,now,0.3);
-  LOOPS.forEach(k=>{if(gains[k])gains[k].gain.setTargetAtTime(L[k]*BASE[k],now,0.6)});
+  LOOPS.forEach(k=>{if(gains[k])gains[k].gain.setTargetAtTime(L[k]*BASE[k],now,k==="steps"?0.2:0.6)});
   if(L.coins>0.02&&performance.now()>nextClink){clink(0.5*L.coins);nextClink=performance.now()+1800+Math.random()*4200}}
 setInterval(tick,250);
 AMB.set=v=>{AMB.on=!!v;try{localStorage.setItem("tm_amb",v?"1":"0")}catch(e){}if(v){unlock();tick()}else if(ctx&&out){out.gain.setTargetAtTime(0,ctx.currentTime,0.15)}};
