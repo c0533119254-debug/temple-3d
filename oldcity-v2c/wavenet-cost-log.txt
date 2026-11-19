@@ -1,0 +1,8 @@
+2026-11-20T01:48:17 +02:00	voice=he-IL-Wavenet-D	id=oldcity_01	chars=2159	usd_est=0.03454
+2026-11-20T01:48:20 +02:00	voice=he-IL-Wavenet-D	id=oldcity_02	chars=1507	usd_est=0.02411
+2026-11-20T01:48:22 +02:00	voice=he-IL-Wavenet-D	id=oldcity_03	chars=1657	usd_est=0.02651
+2026-11-20T01:48:25 +02:00	voice=he-IL-Wavenet-D	id=oldcity_04	chars=1373	usd_est=0.02197
+2026-11-20T01:48:27 +02:00	voice=he-IL-Wavenet-D	id=oldcity_05	chars=1598	usd_est=0.02557
+2026-11-20T01:48:30 +02:00	voice=he-IL-Wavenet-D	id=oldcity_06	chars=1666	usd_est=0.02666
+2026-11-20T01:48:32 +02:00	voice=he-IL-Wavenet-D	id=oldcity_07	chars=1390	usd_est=0.02224
+2026-11-20T01:48:35 +02:00	voice=he-IL-Wavenet-D	id=oldcity_08	chars=2547	usd_est=0.04075
