@@ -84,7 +84,7 @@ function droneTick(dt){const cp=camera.position;
 renderer.domElement.addEventListener("touchstart",e=>{if(DRONE&&e.touches.length===2)D.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)},{passive:true});
 renderer.domElement.addEventListener("touchmove",e=>{if(DRONE&&e.touches.length===2&&D.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);D.h=Math.max(8,Math.min(60,D.h*D.pinch/d));D.pinch=d}},{passive:true});
 document.getElementById("fastB").addEventListener("click",e=>{D.fast=!D.fast;e.currentTarget.setAttribute("aria-pressed",D.fast?"true":"false")});
-function stopWalk(){if(!WALK)return;WALK=false;controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
+function stopWalk(){if(!WALK)return;WALK=false;if(PER.on){PER.on=false;if(PER.g)PER.g.visible=false;clearTimeout(PER.ht)}controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
 window.addEventListener("keydown",e=>{if(!WALK&&!DRONE)return;const k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d","shift"].includes(k)){keys[k]=true;e.preventDefault()}});
 window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
 (function(){const pad=document.getElementById("pad"),knob=document.getElementById("knob");let id=null;
@@ -96,8 +96,49 @@ window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
   const release=()=>{for(const k in keys)keys[k]=false;id=null;JOY.x=JOY.y=0;knob.style.transform=""};
   window.addEventListener("blur",release);window.addEventListener("pagehide",release);document.addEventListener("visibilitychange",()=>{if(document.hidden)release()});pad.addEventListener("lostpointercapture",end)})();
 let look=null;renderer.domElement.addEventListener("pointerdown",e=>{if(WALK||DRONE){look=[e.clientX,e.clientY,yaw,pitch,e.pointerId]}});
-renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
+renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)&&!(PER.pinch&&e.pointerType==="touch")){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
 window.addEventListener("pointerup",e=>{if(look&&e.pointerId===look[4])look=null});
+/* 128.3 · הולך (שמואל: "בגובה בן אדם בכל המודל, כמו GTA"): דמות שהולכת, ומצלמה מאחוריה. משתמש באותה הליכה (WALK): אותם מקשים, אותו עיגול, אותם כללי חסימה (canStep).
+   ההבדל: העיגול מזיז את הדמות ביחס לכיוון המצלמה, הדמות פונה לכיוון ההליכה, וגרירה מסובבת את המצלמה סביבה. גלגלת או צביטה: מצלמה קרובה או רחוקה, עד מבט מהעיניים.
+   קיר בין המצלמה לדמות מקרב את המצלמה, כדי שהיא לא תיכנס לתוך קיר או בית */
+const PER={on:false,p:new THREE.Vector3(),hd:0,D:4.5,cd:4.5,g:null,b:null,h:null,pinch:0,o:new THREE.Object3D()};
+function perMesh(){if(PER.g)return;const g=new THREE.Group(),b=FIG.mesh(1,FIG.mat(0xffffff)),h=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),1);
+  b.setColorAt(0,new THREE.Color(0x3e5c7a));h.setColorAt(0,new THREE.Color(0xc99a74));b.frustumCulled=h.frustumCulled=false;b.userData.noLOD=h.userData.noLOD=true;b.castShadow=h.castShadow=true;g.add(b,h);g.visible=false;scene.add(g);PER.g=g;PER.b=b;PER.h=h}
+function perSpot(at){for(const r of[0,1.5,3,5,8,12,17,24,34,48,66])for(let k=0;k<(r?16:1);k++){const a=k*Math.PI/8,x=at.x+Math.cos(a)*r,z=at.z+Math.sin(a)*r,g=groundAt(x,z);if(isFinite(g)&&!blocked(x,z,g))return[x,z]}return null}
+function startPerson(at){const intro=document.getElementById("intro");if(intro)intro.hidden=true;const fw=new THREE.Vector3();camera.getWorldDirection(fw);
+  if(!at){try{const r=renderer.domElement.getBoundingClientRect(),N=window.__NAV;at=N.groundHit(N.rayAt(r.left+r.width/2,r.top+r.height*0.55))}catch(e){}if(!at)at=controls.target.clone()}
+  let sp=perSpot(at);if(!sp&&COMP)sp=[COMP.X0+250*A,-(COMP.N0+30*A)];if(!sp)sp=[100,-300];
+  camSaved=false;endModes(true);try{closeDr()}catch(e){}try{closeInfo()}catch(e){}perMesh();WALK=true;PER.on=true;controls.enabled=false;clearGoal();
+  PER.p.set(sp[0],groundAt(sp[0],sp[1]),sp[1]);yaw=Math.atan2(-fw.x,-fw.z);pitch=0;PER.hd=Math.atan2(Math.cos(yaw),-Math.sin(yaw));PER.D=PER.cd=4.5;camera.rotation.order="YXZ";
+  document.getElementById("pad").hidden=false;D.fast=false;{const fb=document.getElementById("fastB");fb.hidden=false;fb.setAttribute("aria-pressed","false")}
+  const wh=document.getElementById("walkhint");wh.textContent=isTouchUI()?"העיגול — הליכה (עד הסוף — ריצה) · גרירה — סיבוב המצלמה · צביטה — קרוב או רחוק":"W A S D או החצים — הליכה · Shift — ריצה · גרירה — סיבוב המצלמה · גלגלת — קרוב או רחוק";wh.dataset.base=wh.textContent;wh.hidden=false;clearTimeout(PER.ht);PER.ht=setTimeout(()=>{if(PER.on)wh.hidden=true},9000);
+  syncWalkHud();perTick(0.016,0.016)}
+PER.rc=new THREE.Raycaster();let PCL=null;
+function perCols(){const now=performance.now();if(PCL&&now-PCL.t<4000)return PCL.a;const a=[];scene.traverseVisible(o=>{if(!o.isMesh||o===PER.b||o===PER.h||o.isSkinnedMesh)return;const g=o.geometry,m=o.material;if(!g||!g.attributes||!g.attributes.position||g.attributes.lg||!m||Array.isArray(m))return;if((m.transparent&&m.opacity<0.6)||m.colorWrite===false||m.depthWrite===false)return;const n=g.attributes.position.count;if(o.isInstancedMesh?n>300:n>6000)return;a.push(o)});PCL={t:now,a};return a}
+function perCamHit(q){const fl=floorAt(q.x,q.z);if(q.y<fl+0.25)return true;for(const c of COL){if(q.x>c.x0-0.25&&q.x<c.x1+0.25&&q.z>c.z0-0.25&&q.z<c.z1+0.25&&q.y>c.y0-0.25&&q.y<c.y1+0.25)return true}
+  if(!inCompBox(q.x,q.z)){const g=S2G(q.x,-q.z);if(cityHit(g[0],g[1],q.y-1.2))return true}return false}
+function perTick(dt,rawdt){const fwI=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),stI=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
+  const nm=Math.hypot(fwI,stI),fwN=nm>1?fwI/nm:fwI,stN=nm>1?stI/nm:stI,run=keys.shift||D.fast||Math.hypot(JOY.x,JOY.y)>0.92,sp=(run?6.5:2.5)*Math.min(0.5,rawdt);
+  const mvx=(-Math.sin(yaw)*fwN+Math.cos(yaw)*stN)*sp,mvz=(-Math.cos(yaw)*fwN-Math.sin(yaw)*stN)*sp,p=PER.p,x0=p.x,z0=p.z;
+  {const ml=Math.hypot(mvx,mvz),ns=Math.min(40,Math.max(1,Math.ceil(ml/0.3))),sx=mvx/ns,sz=mvz/ns;for(let i=0;i<ns;i++){if(canStep(p.x,p.z,p.x+sx,p.z+sz)){p.x+=sx;p.z+=sz}else if(canStep(p.x,p.z,p.x+sx,p.z)){p.x+=sx}else if(canStep(p.x,p.z,p.x,p.z+sz)){p.z+=sz}else break}}
+  const moved=Math.hypot(p.x-x0,p.z-z0),v=rawdt>0?moved/rawdt:0;
+  if(nm>0.05){const want=Math.atan2(-mvz,mvx);let d=want-PER.hd;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;PER.hd+=d*Math.min(1,dt*10)}
+  const gy=groundAt(p.x,p.z);p.y+=(gy-p.y)*Math.min(1,dt*9);if(Math.abs(gy-p.y)>3)p.y=gy;
+  const b=PER.b,h=PER.h,o=PER.o;b.setAmp(0,moved>0.002?1:0);b.setSp(0,Math.max(1,v));o.position.copy(p);o.rotation.set(0,PER.hd,0);o.scale.setScalar(1);o.updateMatrix();b.setMatrixAt(0,o.matrix);b.instanceMatrix.needsUpdate=true;o.position.y+=1.56;o.updateMatrix();h.setMatrixAt(0,o.matrix);h.instanceMatrix.needsUpdate=true;
+  if(PER.D<0.8){PER.g.visible=false;camera.position.set(p.x,p.y+1.65,p.z);camera.rotation.set(pitch,yaw,0);return}
+  PER.g.visible=true;const head=new THREE.Vector3(p.x,p.y+1.55,p.z),e=Math.max(-0.3,Math.min(1.3,0.22-pitch)),DW=PER.D*(camera.aspect<1?1.35:1),dir=new THREE.Vector3(Math.sin(yaw)*Math.cos(e),Math.sin(e),Math.cos(yaw)*Math.cos(e)),q=new THREE.Vector3();
+  let dd=DW;for(let s=0.35;s<=DW+0.01;s+=0.25){q.copy(head).addScaledVector(dir,s);if(perCamHit(q)){dd=Math.max(0.35,s-0.3);break}}
+  /* גם קרן אמיתית אל המבנים המצוירים (חומות, מגדלים, בתים קטנים), כי לא לכל מבנה יש תיבת חסימה. כל פריים שני, רק עצמים קטנים ותיבות מרובות (לא הרשתות הגדולות המאוחדות) */
+  if((PER.f=(PER.f||0)+1)%2===0||PER.rh==null){PER.rc.set(head,dir);PER.rc.far=DW+0.4;const hs=PER.rc.intersectObjects(perCols(),false);PER.rh=hs.length?hs[0].distance:1e9}if(PER.rh<1e8)dd=Math.min(dd,Math.max(0.35,PER.rh-0.4));
+  PER.cd=dd<PER.cd?dd:PER.cd+(dd-PER.cd)*Math.min(1,dt*2.5);camera.position.copy(head).addScaledVector(dir,PER.cd);camera.lookAt(head.x,head.y+0.6,head.z);
+  PER.g.visible=PER.cd>0.6}
+function perExit(){if(!PER.on){const h=document.getElementById("homeB");if(h)h.click();return}const p=PER.p.clone(),f=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));stopWalk();
+  const t=p.clone();t.y+=1;const np=p.clone().addScaledVector(f,55);np.y=p.y+55;try{safeCam(np,t)}catch(e){}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:np,t1:t,start:performance.now(),dur:reduce?1:1400}}
+renderer.domElement.addEventListener("wheel",e=>{if(!PER.on)return;e.preventDefault();const dy=e.deltaMode===1?e.deltaY*33:e.deltaY;let d=PER.D;if(d<0.8&&dy>0)d=1.2;else d=d*Math.exp(Math.max(-200,Math.min(200,dy))*0.0018);PER.D=d<0.9?0:Math.min(9,d)},{passive:false});
+renderer.domElement.addEventListener("touchstart",e=>{if(PER.on&&e.touches.length===2){PER.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);look=null}},{passive:true});
+renderer.domElement.addEventListener("touchmove",e=>{if(PER.on&&e.touches.length===2&&PER.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);let v=PER.D<0.8?(d<PER.pinch?1.2:0):PER.D*PER.pinch/d;PER.D=v<0.9?0:Math.min(9,v);PER.pinch=d}},{passive:true});
+renderer.domElement.addEventListener("touchend",e=>{if(e.touches.length<2)PER.pinch=0},{passive:true});
+window.__PERSON={start:startPerson,exit:perExit,on:()=>PER.on,state:()=>({x:+PER.p.x.toFixed(2),y:+PER.p.y.toFixed(2),z:+PER.p.z.toFixed(2),D:PER.D,cd:+PER.cd.toFixed(2),vis:!!(PER.g&&PER.g.visible),cam:camera.position.toArray().map(v=>+v.toFixed(1))})};
 // #18 B1: OrbitControls holds the camera at most 80° from straight up when far (over 160 m) and just under level when near (core/31).
 // A pose past that limit was pulled up by the controls the moment a flight ended (olives 34 m, city 56 m). Here the pose itself is moved to the limit, keeping its distance.
 function fixPhi(p,t){const o=p.clone().sub(t),L=o.length();if(L<1e-6)return[p,t];const lim=L>160?THREE.MathUtils.degToRad(79.5):Math.PI*0.495,phi=Math.acos(Math.max(-1,Math.min(1,o.y/L)));
