@@ -633,3 +633,33 @@ function cardoGeom(){if(cardoGeom.C)return cardoGeom.C;const cx=-418,cn=-329,L=M
   return cardoGeom.C={cx,cn,ux,un,vx,vn,hw,hl,stw,su,floor,stTop,run,top}}
 function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-C.cn,u=dx*C.ux+dn*C.un,v=dx*C.vx+dn*C.vn;if(Math.abs(u)>C.hw||Math.abs(v)>C.hl)return null;
   if(Math.abs(u-C.su)<=C.stw&&v>C.hl-C.run){const t=(v-(C.hl-C.run))/C.run;return C.floor+(C.stTop-C.floor)*t}return C.floor}
+
+// ---- 127.5: מדרחוב ממילא — משער יפו צפון־מערבה, בין שתי שורות חנויות (תמונות Mapillary, CC BY-SA 4.0) ----
+(function(){try{
+  const C=MAM10,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{}));
+  const INF={n:"מדרחוב ממילא",r:"💡 תמונות רחוב Mapillary (CC BY-SA 4.0); צילום לוויין",t:"מדרחוב אבן רחב בין ממילא לשער יפו. משני הצדדים שורות חנויות מאבן ירושלמית, עם פתחים מקושתים בקומת הרחוב. לאורך הרחוב יש פנסים, עצים באדניות ובתי קפה עם שמשיות, ובריצוף יש עיגולי אבן גדולים. 💡 בדגם כאן מתחילה דרך העולים מממילא אל שער השלשלת: מי שבא מהמערב עובר במדרחוב, נכנס בשער יפו ועולה ברחוב דוד אל הר הבית."};
+  const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const P=(s,o)=>[C.a[0]+C.ux*s+C.un*o,C.a[1]+C.un*s-C.ux*o],rot=Math.atan2(C.un,C.ux),top=(x,n)=>surfY(x,n);
+  const GS={stone:[],dark:[],glass:[],ring:[],wood:[]},MATS={stone:M.stoneL||M.stone,dark:MAT(0x3a3530,{roughness:0.95}),glass:MAT(0x221e1a,{roughness:0.8,metalness:0}),ring:MAT(0xb9a98c,{roughness:0.9,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-4}),wood:MAT(0x6b4a2f,{roughness:0.9})};
+  const add=(k,geo,x,y,n,r)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4().makeRotationY(r===undefined?rot:r);m.setPosition(x,y,-n);geo.applyMatrix4(m);GS[k].push(geo)};
+  // 1) חזיתות: פתחי חנויות מקושתים בקומת הרחוב, בקיר הבניין הקרוב בכל צד
+  const arch=(()=>{const s=new THREE.Shape();s.moveTo(-1.5,0);s.lineTo(-1.5,2.6);s.absarc(0,2.6,1.5,Math.PI,0,true);s.lineTo(1.5,0);s.lineTo(-1.5,0);return s})();
+  let shops=0;for(const sd of [1,-1])for(let s=4;s<C.L-3;s+=5.5){let fd=-1;for(let q=2.5;q<=10&&fd<0;q+=0.25){const p=P(s,sd*q);if(inB(p[0],p[1]))fd=q}if(fd<0)continue;{let lo=fd-0.25,hi=fd;for(let it=0;it<8;it++){const m=(lo+hi)/2,q=P(s,sd*m);if(inB(q[0],q[1]))hi=m;else lo=m}fd=lo}
+    const p=P(s,sd*(fd-0.07)),g=top(p[0],p[1]),ag=new THREE.ExtrudeGeometry(arch,{depth:0.12,bevelEnabled:false});ag.translate(0,0,-0.06);add("glass",ag,p[0],g,p[1],rot+(sd>0?Math.PI:0));
+    const f=P(s,sd*(fd-0.2));add("stone",wbox(3.6,0.35,0.5,2),f[0],g+4.35,f[1]);shops++}
+  // 2) עיגולי אבן בריצוף (כמו בתמונות), פנסים, אדניות עם עצים, ספסלים
+  const LP=[],LH=[],TR=[],r=rng(1272);let rings=0;
+  for(let s=14;s<C.L-8;s+=32){const p=P(s,0),g=top(p[0],p[1]);add("ring",new THREE.CylinderGeometry(2.7,2.7,0.04,40),p[0],g+0.04,p[1],0);add("stone",new THREE.CylinderGeometry(1.8,1.8,0.05,40),p[0],g+0.05,p[1],0);add("ring",new THREE.CylinderGeometry(0.8,0.8,0.06,24),p[0],g+0.06,p[1],0);rings++}
+  for(let s=4;s<C.L;s+=13)for(const sd of [1,-1]){const p=P(s+(sd>0?0:6.5),sd*2.95);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);LP.push([p[0],g+2.1,p[1],0.12,4.2,0.12]);LH.push([p[0],g+4.35,p[1],0.4,0.5,0.4])}
+  for(let s=8;s<C.L-4;s+=19){const sd=(Math.round(s/19)%2)?1:-1,p=P(s,sd*2.3);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);add("stone",wbox(1.6,0.6,1.6,2),p[0],g+0.3,p[1]);TR.push([p[0],g+0.6,-p[1],0.75+r()*0.2,r()*6.28]);cwAdd(p[0],p[1],rot,1.6,1.6,g-1,g+0.7);
+    const b=P(s+4,sd*2.95);add("wood",wbox(1.8,0.12,0.5,1),b[0],top(b[0],b[1])+0.46,b[1]);add("stone",wbox(0.3,0.42,0.45,1),b[0],top(b[0],b[1])+0.21,b[1])}
+  if(TR.length)TREES5.plant(WG,"olive",TR,INF);
+  // 3) בתי קפה: שמשיות ושולחנות בשלושה מקומות לאורך הרחוב
+  const UP=[],UC=[],TB=[];[0.18,0.5,0.82].forEach((t,i)=>{const sd=i%2?1:-1;for(let j=0;j<3;j++){const p=P(C.L*t+(j-1)*3.4,sd*1.9);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);UP.push([p[0],g+1.2,p[1],0.06,2.4,0.06]);UC.push([p[0],g+2.4,p[1],2.4,0.55,2.4]);TB.push([p[0],g+0.74,p[1],0.8,0.05,0.8])}});
+  Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.castShadow=k!=="ring";m.receiveShadow=true;m.userData=INF;WG.add(m);PICK.push(m)});
+  {const d=new THREE.Object3D(),put=(list,mat,geo)=>{if(!list.length)return;const m=new THREE.InstancedMesh(geo||new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.scale.set(q[3],q[4],q[5]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=INF;WG.add(m)};
+    put(LP,MAT(0x2a2d30,{metalness:0.5}));put(LH,MAT(0xf2e6c8,{emissive:0x332a18}));put(UP,MAT(0xdddddd,{metalness:0.4}),new THREE.CylinderGeometry(0.5,0.5,1,6));
+    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),new THREE.ConeGeometry(0.5,1,8,1,true));put(TB,MAT(0x8a8378),new THREE.CylinderGeometry(0.5,0.5,1,12))}
+  __AFTER(()=>{try{const p=P(C.L*0.45,0),q=G2S(p[0],p[1]);label("מדרחוב ממילא",q[0],top(p[0],p[1])+9,-q[1],null,INF)}catch(e){console.warn("mamilla label",e)}});
+  window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length};
+}catch(e){console.warn("mamilla",e)}})();
