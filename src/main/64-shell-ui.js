@@ -97,7 +97,7 @@ window.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented)re
   if(closeDr(true))return;
   const ic=document.getElementById("infocard");if(ic&&!ic.hidden){closeInfo();return}
   if(STORY){STORY_API.stop();return}
-  if(WALK||DRONE||(TRN&&TRN.riding)){const h=document.getElementById("homeB");if(h)h.click()}});
+  if(PER.on){perExit();return}if(WALK||DRONE||(TRN&&TRN.riding)){const h=document.getElementById("homeB");if(h)h.click()}});
 const grabSwipe=(g,el,close)=>{let y0=null;g.addEventListener("pointerdown",e=>{y0=e.clientY;g.setPointerCapture(e.pointerId)});g.addEventListener("pointerup",e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;if(dy>40){if(el.classList.contains("full"))el.classList.remove("full");else close()}else if(dy<-40)el.classList.add("full");else el.classList.toggle("full")})};
 Object.values(DR).forEach(x=>grabSwipe(x.d.querySelector(".grab"),x.d,closeDr));
 // tours drawer: cards with picture tile, length and stations
