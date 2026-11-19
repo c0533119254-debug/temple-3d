@@ -6,7 +6,7 @@
 function mv(){var m=document.getElementById("temple-music-mute"),h=document.getElementById("hud");if(m&&h&&m.parentElement!==h){m.classList.add("hb");h.appendChild(m)}}
 mv();try{new MutationObserver(mv).observe(st,{childList:true})}catch(e){}
 var b=document.createElement("button");b.type="button";b.id="modeExit";b.textContent="✕ יציאה";b.setAttribute("aria-label","יציאה מההליכה וחזרה למבט הכללי");
-var home=function(){var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
+var home=function(){/* 128.3: יציאה מ״הולך״ — מבט מלמעלה על המקום שבו הדמות עמדה */if(window.__PERSON&&window.__PERSON.on()){window.__PERSON.exit();return}var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
 /* 126.1: Escape ליציאה מהליכה עבר למטפל האחד ב־64-shell-ui */})();
 </script>
 </body></html>

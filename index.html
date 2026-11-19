@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 128.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -586,7 +586,11 @@ body.busy3d:not(.touring) #modeExit{display:block}
   /* 128.2: כפתור ״מהר״ ישב מתחת ל״יציאה״, והרמז של ההליכה כיסה את עמודת הכפתורים משמאל */
   .fastb{left:auto!important;right:12px;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;height:32px;padding:0 12px}
   .walkhint{left:70px!important;right:12px!important;max-width:none!important}
-  #cta .map span{display:inline}
+  #cta .map span,#cta .sec span{display:inline}
+  #cta{gap:2px}#cta button{padding:0 8px!important;gap:5px!important;font-size:13.5px!important}
+}
+@media (max-width:379px){#cta .sec span,#cta .map span{display:none!important}#cta button{padding:0 11px!important}}
+@media (max-width:700px){
   /* 125.0 (ביקורת 22): כתובית הסיור בטלפון קטנה יותר, כדי שהדמות והפעולה יישארו גלויות. הפסוק נפתח בלחיצה על ▴ */
   #stText{font-size:15px!important;line-height:1.45!important;max-height:13.5vh!important;overflow-y:auto}
   .story:not(.open) #stVerse{display:none!important}
@@ -13862,7 +13866,7 @@ function droneTick(dt){const cp=camera.position;
 renderer.domElement.addEventListener("touchstart",e=>{if(DRONE&&e.touches.length===2)D.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)},{passive:true});
 renderer.domElement.addEventListener("touchmove",e=>{if(DRONE&&e.touches.length===2&&D.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);D.h=Math.max(8,Math.min(60,D.h*D.pinch/d));D.pinch=d}},{passive:true});
 document.getElementById("fastB").addEventListener("click",e=>{D.fast=!D.fast;e.currentTarget.setAttribute("aria-pressed",D.fast?"true":"false")});
-function stopWalk(){if(!WALK)return;WALK=false;controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
+function stopWalk(){if(!WALK)return;WALK=false;if(PER.on){PER.on=false;if(PER.g)PER.g.visible=false;clearTimeout(PER.ht)}controls.enabled=true;syncWalkHud();const f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));controls.target.copy(camera.position).addScaledVector(f,25);controls.update();document.getElementById("pad").hidden=true;document.getElementById("fastB").hidden=true;D.fast=false;document.getElementById("walkhint").hidden=true}
 window.addEventListener("keydown",e=>{if(!WALK&&!DRONE)return;const k=e.key.toLowerCase();if(["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d","shift"].includes(k)){keys[k]=true;e.preventDefault()}});
 window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
 (function(){const pad=document.getElementById("pad"),knob=document.getElementById("knob");let id=null;
@@ -13874,8 +13878,49 @@ window.addEventListener("keyup",e=>{keys[e.key.toLowerCase()]=false});
   const release=()=>{for(const k in keys)keys[k]=false;id=null;JOY.x=JOY.y=0;knob.style.transform=""};
   window.addEventListener("blur",release);window.addEventListener("pagehide",release);document.addEventListener("visibilitychange",()=>{if(document.hidden)release()});pad.addEventListener("lostpointercapture",end)})();
 let look=null;renderer.domElement.addEventListener("pointerdown",e=>{if(WALK||DRONE){look=[e.clientX,e.clientY,yaw,pitch,e.pointerId]}});
-renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
+renderer.domElement.addEventListener("pointermove",e=>{if((WALK||DRONE)&&look&&e.pointerId===look[4]&&!(DRONE&&D.pinch&&e.pointerType==="touch"&&e.isPrimary===false)&&!(PER.pinch&&e.pointerType==="touch")){yaw=look[2]+(e.clientX-look[0])*0.005;pitch=Math.max(-1.1,Math.min(1.1,look[3]+(e.clientY-look[1])*0.004))}});
 window.addEventListener("pointerup",e=>{if(look&&e.pointerId===look[4])look=null});
+/* 128.3 · הולך (שמואל: "בגובה בן אדם בכל המודל, כמו GTA"): דמות שהולכת, ומצלמה מאחוריה. משתמש באותה הליכה (WALK): אותם מקשים, אותו עיגול, אותם כללי חסימה (canStep).
+   ההבדל: העיגול מזיז את הדמות ביחס לכיוון המצלמה, הדמות פונה לכיוון ההליכה, וגרירה מסובבת את המצלמה סביבה. גלגלת או צביטה: מצלמה קרובה או רחוקה, עד מבט מהעיניים.
+   קיר בין המצלמה לדמות מקרב את המצלמה, כדי שהיא לא תיכנס לתוך קיר או בית */
+const PER={on:false,p:new THREE.Vector3(),hd:0,D:4.5,cd:4.5,g:null,b:null,h:null,pinch:0,o:new THREE.Object3D()};
+function perMesh(){if(PER.g)return;const g=new THREE.Group(),b=FIG.mesh(1,FIG.mat(0xffffff)),h=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),1);
+  b.setColorAt(0,new THREE.Color(0x3e5c7a));h.setColorAt(0,new THREE.Color(0xc99a74));b.frustumCulled=h.frustumCulled=false;b.userData.noLOD=h.userData.noLOD=true;b.castShadow=h.castShadow=true;g.add(b,h);g.visible=false;scene.add(g);PER.g=g;PER.b=b;PER.h=h}
+function perSpot(at){for(const r of[0,1.5,3,5,8,12,17,24,34,48,66])for(let k=0;k<(r?16:1);k++){const a=k*Math.PI/8,x=at.x+Math.cos(a)*r,z=at.z+Math.sin(a)*r,g=groundAt(x,z);if(isFinite(g)&&!blocked(x,z,g))return[x,z]}return null}
+function startPerson(at){const intro=document.getElementById("intro");if(intro)intro.hidden=true;const fw=new THREE.Vector3();camera.getWorldDirection(fw);
+  if(!at){try{const r=renderer.domElement.getBoundingClientRect(),N=window.__NAV;at=N.groundHit(N.rayAt(r.left+r.width/2,r.top+r.height*0.55))}catch(e){}if(!at)at=controls.target.clone()}
+  let sp=perSpot(at);if(!sp&&COMP)sp=[COMP.X0+250*A,-(COMP.N0+30*A)];if(!sp)sp=[100,-300];
+  camSaved=false;endModes(true);try{closeDr()}catch(e){}try{closeInfo()}catch(e){}perMesh();WALK=true;PER.on=true;controls.enabled=false;clearGoal();
+  PER.p.set(sp[0],groundAt(sp[0],sp[1]),sp[1]);yaw=Math.atan2(-fw.x,-fw.z);pitch=0;PER.hd=Math.atan2(Math.cos(yaw),-Math.sin(yaw));PER.D=PER.cd=4.5;camera.rotation.order="YXZ";
+  document.getElementById("pad").hidden=false;D.fast=false;{const fb=document.getElementById("fastB");fb.hidden=false;fb.setAttribute("aria-pressed","false")}
+  const wh=document.getElementById("walkhint");wh.textContent=isTouchUI()?"העיגול — הליכה (עד הסוף — ריצה) · גרירה — סיבוב המצלמה · צביטה — קרוב או רחוק":"W A S D או החצים — הליכה · Shift — ריצה · גרירה — סיבוב המצלמה · גלגלת — קרוב או רחוק";wh.dataset.base=wh.textContent;wh.hidden=false;clearTimeout(PER.ht);PER.ht=setTimeout(()=>{if(PER.on)wh.hidden=true},9000);
+  syncWalkHud();perTick(0.016,0.016)}
+PER.rc=new THREE.Raycaster();let PCL=null;
+function perCols(){const now=performance.now();if(PCL&&now-PCL.t<4000)return PCL.a;const a=[];scene.traverseVisible(o=>{if(!o.isMesh||o===PER.b||o===PER.h||o.isSkinnedMesh)return;const g=o.geometry,m=o.material;if(!g||!g.attributes||!g.attributes.position||g.attributes.lg||!m||Array.isArray(m))return;if((m.transparent&&m.opacity<0.6)||m.colorWrite===false||m.depthWrite===false)return;const n=g.attributes.position.count;if(o.isInstancedMesh?n>300:n>6000)return;a.push(o)});PCL={t:now,a};return a}
+function perCamHit(q){const fl=floorAt(q.x,q.z);if(q.y<fl+0.25)return true;for(const c of COL){if(q.x>c.x0-0.25&&q.x<c.x1+0.25&&q.z>c.z0-0.25&&q.z<c.z1+0.25&&q.y>c.y0-0.25&&q.y<c.y1+0.25)return true}
+  if(!inCompBox(q.x,q.z)){const g=S2G(q.x,-q.z);if(cityHit(g[0],g[1],q.y-1.2))return true}return false}
+function perTick(dt,rawdt){const fwI=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),stI=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
+  const nm=Math.hypot(fwI,stI),fwN=nm>1?fwI/nm:fwI,stN=nm>1?stI/nm:stI,run=keys.shift||D.fast||Math.hypot(JOY.x,JOY.y)>0.92,sp=(run?6.5:2.5)*Math.min(0.5,rawdt);
+  const mvx=(-Math.sin(yaw)*fwN+Math.cos(yaw)*stN)*sp,mvz=(-Math.cos(yaw)*fwN-Math.sin(yaw)*stN)*sp,p=PER.p,x0=p.x,z0=p.z;
+  {const ml=Math.hypot(mvx,mvz),ns=Math.min(40,Math.max(1,Math.ceil(ml/0.3))),sx=mvx/ns,sz=mvz/ns;for(let i=0;i<ns;i++){if(canStep(p.x,p.z,p.x+sx,p.z+sz)){p.x+=sx;p.z+=sz}else if(canStep(p.x,p.z,p.x+sx,p.z)){p.x+=sx}else if(canStep(p.x,p.z,p.x,p.z+sz)){p.z+=sz}else break}}
+  const moved=Math.hypot(p.x-x0,p.z-z0),v=rawdt>0?moved/rawdt:0;
+  if(nm>0.05){const want=Math.atan2(-mvz,mvx);let d=want-PER.hd;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;PER.hd+=d*Math.min(1,dt*10)}
+  const gy=groundAt(p.x,p.z);p.y+=(gy-p.y)*Math.min(1,dt*9);if(Math.abs(gy-p.y)>3)p.y=gy;
+  const b=PER.b,h=PER.h,o=PER.o;b.setAmp(0,moved>0.002?1:0);b.setSp(0,Math.max(1,v));o.position.copy(p);o.rotation.set(0,PER.hd,0);o.scale.setScalar(1);o.updateMatrix();b.setMatrixAt(0,o.matrix);b.instanceMatrix.needsUpdate=true;o.position.y+=1.56;o.updateMatrix();h.setMatrixAt(0,o.matrix);h.instanceMatrix.needsUpdate=true;
+  if(PER.D<0.8){PER.g.visible=false;camera.position.set(p.x,p.y+1.65,p.z);camera.rotation.set(pitch,yaw,0);return}
+  PER.g.visible=true;const head=new THREE.Vector3(p.x,p.y+1.55,p.z),e=Math.max(-0.3,Math.min(1.3,0.22-pitch)),DW=PER.D*(camera.aspect<1?1.35:1),dir=new THREE.Vector3(Math.sin(yaw)*Math.cos(e),Math.sin(e),Math.cos(yaw)*Math.cos(e)),q=new THREE.Vector3();
+  let dd=DW;for(let s=0.35;s<=DW+0.01;s+=0.25){q.copy(head).addScaledVector(dir,s);if(perCamHit(q)){dd=Math.max(0.35,s-0.3);break}}
+  /* גם קרן אמיתית אל המבנים המצוירים (חומות, מגדלים, בתים קטנים), כי לא לכל מבנה יש תיבת חסימה. כל פריים שני, רק עצמים קטנים ותיבות מרובות (לא הרשתות הגדולות המאוחדות) */
+  if((PER.f=(PER.f||0)+1)%2===0||PER.rh==null){PER.rc.set(head,dir);PER.rc.far=DW+0.4;const hs=PER.rc.intersectObjects(perCols(),false);PER.rh=hs.length?hs[0].distance:1e9}if(PER.rh<1e8)dd=Math.min(dd,Math.max(0.35,PER.rh-0.4));
+  PER.cd=dd<PER.cd?dd:PER.cd+(dd-PER.cd)*Math.min(1,dt*2.5);camera.position.copy(head).addScaledVector(dir,PER.cd);camera.lookAt(head.x,head.y+0.6,head.z);
+  PER.g.visible=PER.cd>0.6}
+function perExit(){if(!PER.on){const h=document.getElementById("homeB");if(h)h.click();return}const p=PER.p.clone(),f=new THREE.Vector3(Math.sin(yaw),0,Math.cos(yaw));stopWalk();
+  const t=p.clone();t.y+=1;const np=p.clone().addScaledVector(f,55);np.y=p.y+55;try{safeCam(np,t)}catch(e){}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:np,t1:t,start:performance.now(),dur:reduce?1:1400}}
+renderer.domElement.addEventListener("wheel",e=>{if(!PER.on)return;e.preventDefault();const dy=e.deltaMode===1?e.deltaY*33:e.deltaY;let d=PER.D;if(d<0.8&&dy>0)d=1.2;else d=d*Math.exp(Math.max(-200,Math.min(200,dy))*0.0018);PER.D=d<0.9?0:Math.min(9,d)},{passive:false});
+renderer.domElement.addEventListener("touchstart",e=>{if(PER.on&&e.touches.length===2){PER.pinch=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);look=null}},{passive:true});
+renderer.domElement.addEventListener("touchmove",e=>{if(PER.on&&e.touches.length===2&&PER.pinch){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);let v=PER.D<0.8?(d<PER.pinch?1.2:0):PER.D*PER.pinch/d;PER.D=v<0.9?0:Math.min(9,v);PER.pinch=d}},{passive:true});
+renderer.domElement.addEventListener("touchend",e=>{if(e.touches.length<2)PER.pinch=0},{passive:true});
+window.__PERSON={start:startPerson,exit:perExit,on:()=>PER.on,state:()=>({x:+PER.p.x.toFixed(2),y:+PER.p.y.toFixed(2),z:+PER.p.z.toFixed(2),D:PER.D,cd:+PER.cd.toFixed(2),vis:!!(PER.g&&PER.g.visible),cam:camera.position.toArray().map(v=>+v.toFixed(1))})};
 // #18 B1: OrbitControls holds the camera at most 80° from straight up when far (over 160 m) and just under level when near (core/31).
 // A pose past that limit was pulled up by the controls the moment a flight ended (olives 34 m, city 56 m). Here the pose itself is moved to the limit, keeping its distance.
 function fixPhi(p,t){const o=p.clone().sub(t),L=o.length();if(L<1e-6)return[p,t];const lim=L>160?THREE.MathUtils.degToRad(79.5):Math.PI*0.495,phi=Math.acos(Math.max(-1,Math.min(1,o.y/L)));
@@ -14053,7 +14098,7 @@ function frame(){{const c=camera.position,q=camera.quaternion,sg=c.x.toFixed(2)+
   viewShift();
   if(tween&&!tween.fx){tween.fx=true;if(tween.p1&&tween.t1)fixPhi(tween.p1,tween.t1)} // #18 B1: every flight ends inside the limits of the controls
   if(tween){const k=Math.min(1,(now-tween.start)/tween.dur),e=k<0.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;if(tween.path){const n=tween.path.length-1,f=e*n,i=Math.min(n-1,Math.floor(f)),g=f-i,sg=g*g*(3-2*g);camera.position.lerpVectors(tween.path[i],tween.path[i+1],sg);controls.target.lerpVectors(tween.tpath[i],tween.tpath[i+1],sg);if(k>=1){tween=null;controls.update()}}else{camera.position.lerpVectors(tween.p0,tween.p1,e);controls.target.lerpVectors(tween.t0,tween.t1,e);if(tween.arc)camera.position.y+=Math.sin(Math.PI*e)*Math.min(120,tween.p0.distanceTo(tween.p1)*0.15);{const fl=floorAt(camera.position.x,camera.position.z)+2;if(camera.position.y<fl&&k<1)camera.position.y=fl}if(k>=1){tween=null;controls.update()}}}
-  if(TRN&&TRN.riding){TRN.camTick(camera)}else if(DRONE){droneTick(dt)}else if(WALK){const fw=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),st=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
+  if(TRN&&TRN.riding){TRN.camTick(camera)}else if(DRONE){droneTick(dt)}else if(WALK&&PER.on){perTick(dt,rawdt)}else if(WALK){const fw=Math.max(-1,Math.min(1,(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0)-JOY.y)),st=Math.max(-1,Math.min(1,(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0)+JOY.x));
     /* 125.0 (ביקורת 29): באלכסון לא מהר יותר (מנרמלים את הכיוון), וקצב הליכה איטי יותר כדי שאפשר לקרוא תוך כדי */const nm=Math.hypot(fw,st),fwN=nm>1?fw/nm:fw,stN=nm>1?st/nm:st;
     const sp=/* 126.1 (בדיקה חוזרת 29): הליכה רגועה 2.5 מ׳/ש; מהיר (Shift, כפתור "מהר" או דחיפה עד הסוף) 6.5 */((keys.shift||D.fast||Math.hypot(JOY.x,JOY.y)>0.92)?6.5:2.5)*Math.min(0.5,rawdt),f=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw)),rt=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
     const mvx=f.x*fwN*sp+rt.x*stN*sp,mvz=f.z*fwN*sp+rt.z*stN*sp,cp=camera.position;
@@ -15381,7 +15426,7 @@ window.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented)re
   if(closeDr(true))return;
   const ic=document.getElementById("infocard");if(ic&&!ic.hidden){closeInfo();return}
   if(STORY){STORY_API.stop();return}
-  if(WALK||DRONE||(TRN&&TRN.riding)){const h=document.getElementById("homeB");if(h)h.click()}});
+  if(PER.on){perExit();return}if(WALK||DRONE||(TRN&&TRN.riding)){const h=document.getElementById("homeB");if(h)h.click()}});
 const grabSwipe=(g,el,close)=>{let y0=null;g.addEventListener("pointerdown",e=>{y0=e.clientY;g.setPointerCapture(e.pointerId)});g.addEventListener("pointerup",e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;if(dy>40){if(el.classList.contains("full"))el.classList.remove("full");else close()}else if(dy<-40)el.classList.add("full");else el.classList.toggle("full")})};
 Object.values(DR).forEach(x=>grabSwipe(x.d.querySelector(".grab"),x.d,closeDr));
 // tours drawer: cards with picture tile, length and stations
@@ -15896,10 +15941,10 @@ try{(function(){const st=document.getElementById("stage");if(!st||document.getEl
   const mp=el("div","gl ui dim",'<div class="bt"><b>והראנו בבניינו</b><small>הדמיית המקדש בירושלים</small></div><div class="row"><button type="button" id="mpTime" aria-label="שעה ביום"></button></div>');mp.id="mplate";st.appendChild(mp);
   const curT=()=>{const b=document.querySelector('#timeSeg button[aria-pressed="true"]');return b?b.dataset.t:"morning"};
   mp.querySelector("#mpTime").onclick=()=>{const n=TO[(TO.indexOf(curT())+1)%4],b=document.querySelector('#timeSeg button[data-t="'+n+'"]');if(b)b.click()};
-  const cta=el("div","gl ui dim",'<button type="button" class="pri"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></svg>סיור מודרך</button><button type="button" class="sec"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="2"/><path d="M12 7.5v6M12 13.5l-3.2 6.5M12 13.5l3.2 6.5M8 10.2l4-1.6 4 1.6"/></svg><span>הליכה במקדש</span></button><button type="button" class="map" id="ctaMap" aria-label="מפה: מבט מלמעלה כמו בגוגל מפות"><svg viewBox="0 0 24 24"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>מפה</span></button>');cta.id="cta";st.appendChild(cta);
+  const cta=el("div","gl ui dim",'<button type="button" class="pri"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor" stroke="none"/></svg>סיור מודרך</button><button type="button" class="sec"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.6" r="2"/><path d="M12 7.5v6M12 13.5l-3.2 6.5M12 13.5l3.2 6.5M8 10.2l4-1.6 4 1.6"/></svg><span>הולך</span></button><button type="button" class="map" id="ctaMap" aria-label="מפה: מבט מלמעלה כמו בגוגל מפות"><svg viewBox="0 0 24 24"><path d="M3 6.5l6-2.5 6 2.5 6-2.5v13.5l-6 2.5-6-2.5-6 2.5z"/><path d="M9 4v13.5M15 6.5V20"/></svg><span>מפה</span></button>');cta.id="cta";st.appendChild(cta);
   /* 128.2: כפתור ״מפה״ — מבט מלמעלה כמו בגוגל מפות (60-navigation) */cta.querySelector(".map").onclick=()=>{try{window.__NAV.mapView()}catch(e){console.warn("map",e)}};
   cta.querySelector(".pri").onclick=()=>{const b=document.querySelector("#rail button");if(b&&b.getAttribute("aria-pressed")!=="true")b.click()};
-  cta.querySelector(".sec").onclick=()=>{const b=document.getElementById("vWalk");if(b)b.click()};
+  /* 128.3: ״הולך״ — דמות שהולכת מהמקום שבמרכז המסך, ומצלמה מאחוריה (52-views-hud) */cta.querySelector(".sec").setAttribute("aria-label","הולך: דמות בגובה אדם, ומצלמה מאחוריה");cta.querySelector(".sec").onclick=()=>{try{if(STORY)STORY.stop();fadeJump(()=>window.__PERSON.start())}catch(e){console.warn("person",e);const b=document.getElementById("vWalk");if(b)b.click()}};const vwS=()=>setTimeout(()=>{const b=document.querySelector('#rail button[aria-pressed="true"]');if(b)b.click()},0);cta.querySelector(".sec").addEventListener("click",vwS);
   let sig="";const sync=()=>{let t="morning",pl="ez",busy=false;try{t=curT();busy=!!(WALK||DRONE||(TRN&&TRN.riding))}catch(e){}
     const s=t+pl+busy;if(s===sig)return;sig=s;document.body.classList.toggle("tnight",t==="night");document.body.classList.toggle("busy3d",busy);
     const L=TL[t]||TL.morning;mp.querySelector("#mpTime").innerHTML="<span>"+L[0]+"</span>"+L[1]};
@@ -16032,7 +16077,7 @@ frame();
 function mv(){var m=document.getElementById("temple-music-mute"),h=document.getElementById("hud");if(m&&h&&m.parentElement!==h){m.classList.add("hb");h.appendChild(m)}}
 mv();try{new MutationObserver(mv).observe(st,{childList:true})}catch(e){}
 var b=document.createElement("button");b.type="button";b.id="modeExit";b.textContent="✕ יציאה";b.setAttribute("aria-label","יציאה מההליכה וחזרה למבט הכללי");
-var home=function(){var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
+var home=function(){/* 128.3: יציאה מ״הולך״ — מבט מלמעלה על המקום שבו הדמות עמדה */if(window.__PERSON&&window.__PERSON.on()){window.__PERSON.exit();return}var h=document.getElementById("homeB");if(h)h.click()};b.addEventListener("click",home);st.appendChild(b);
 /* 126.1: Escape ליציאה מהליכה עבר למטפל האחד ב־64-shell-ui */})();
 </script>
 </body></html>
