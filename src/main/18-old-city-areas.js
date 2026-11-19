@@ -511,6 +511,26 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),OI,new THREE.ConeGeometry(0.5,1,8,1,true));put(RK,MAT(0xa8432f),OI);window.__SQ=Object.assign(window.__SQ||{},{lamps:LP.length,umb:UP.length})}
 }catch(e){console.warn("squares",e)}})();
 
+// ---- 126.6 (תמונות Mapillary): רחוב דוד צר, מדורג ומקורה ----
+// 📜 בתמונות: רחוב צר (כ־3 מ׳), יורד במדרגות רחבות ונמוכות, ובחלקו המזרחי מקורה בקמרון אבן עם קשתות מחודדות. 💡 תחילת הקירוי (כ־35 מ׳ מזרחה לשער יפו) ופתחי האור בגג הם השלמה.
+(function(){try{
+  const DI={n:"רחוב דוד",r:"תמונות רחוב (Mapillary, 2015–2023)",t:"📜 רחוב השוק הראשי משער יפו מזרחה: צר, כ־3 מ׳, יורד במדרגות רחבות ונמוכות, עם חנויות משני הצדדים, ובחלקו המזרחי מקורה בקמרון אבן עם קשתות מחודדות. 💡 המקום שבו מתחיל הקירוי ופתחי האור בגג הם השלמה."};
+  const inB=(x,n)=>{const Lb=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!Lb)return false;for(const o of Lb){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const W=2.8,L=DAVID_ST,d=new THREE.Object3D(),RF=[],RB=[],ST=[],VA=[];
+  let acc=0,lastY=null,bay=0;
+  for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],len=Math.hypot(dx,dn),ux=dx/len,un=dn/len,ang=Math.atan2(dn,dx);
+    for(let s=0;s<len;s+=0.5){const x=a[0]+ux*s,n=a[1]+un*s,g=surfY(x,n);acc+=0.5;
+      if(lastY===null)lastY=g;if(lastY-g>=0.14){ST.push([x,g+(lastY-g)/2,n,ang,0.32,lastY-g,W]);lastY=g}else if(g-lastY>=0.14){ST.push([x,lastY+(g-lastY)/2,n,ang,0.32,g-lastY,W]);lastY=g}
+      if(x>-596&&Math.round(acc*2)%10===0){bay++;const top=g+4.4,px=-un,pn=ux,side=sg=>{for(let q=0.6;q<=7;q+=0.3)if(inB(x+px*q*sg,n+pn*q*sg))return q;return null};let dl=side(1),dr=side(-1);
+        /* הגג נשען על הבתים; אם בצד אחד אין בית קרוב, הקמרון נשען על עמוד בשפת הרחוב */if(dl==null&&dr==null)continue;if(dl==null)dl=W/2+0.4;if(dr==null)dr=W/2+0.4;
+        const sp=dl+dr+0.6,o=(dl-dr)/2,cx=x+px*o,cn=n+pn*o;
+        /* קמרון חבית (חצי גליל) נשען בגובה ~3 מ׳, ומעליו גג אבן שטוח; כל קשת רביעית פתח אור */
+        if(bay%4!==0){VA.push([cx,top-1.4,cn,ang,5.4,2.8,sp]);RF.push([cx,top+0.25,cn,ang,5.6,0.5,sp+0.4])}
+        RB.push([cx,top-1.45,cn,ang,0.5,2.6,sp-0.25])}}}
+  const put=(list,mat,geo)=>{if(!list.length)return;const m=new THREE.InstancedMesh(geo||new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.rotation.set(0,q[3],0);d.scale.set(q[4],q[5],q[6]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=DI;WG.add(m);PICK.push(m)};
+  const VM=new THREE.MeshStandardMaterial({color:0xcdbd9c,roughness:0.9}),RM=new THREE.MeshStandardMaterial({color:0xb9a684,roughness:0.9});const HC=()=>{const v=new THREE.CylinderGeometry(0.5,0.5,1,14,1,true,0,Math.PI);v.rotateZ(Math.PI/2);return v};put(VA,new THREE.MeshStandardMaterial({color:0xcdbd9c,roughness:0.95,side:THREE.DoubleSide}),HC());put(RF,VM);put(RB,new THREE.MeshStandardMaterial({color:0xb9a684,roughness:0.9,side:THREE.DoubleSide}),HC());put(ST,M.pave||M.stoneL);
+}catch(e){console.warn("david st",e)}})();
+
 // ---- 126.8: עיר דוד — בריכת השילוח, רחוב העולים, מקוואות, מעיין הגיחון וגן המלך (תוכנית: city-of-david/תוכנית-עיר-דוד.md) ----
 // 📜 נחמיה ג, טו: "ואת חומת ברכת השלח לגן המלך ועד המעלות היורדות מעיר דויד". הקואורדינטות ב־COD8 (10-setup).
 (function(){try{

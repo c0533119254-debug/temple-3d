@@ -115,7 +115,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     else if(gb>=thr-0.1&&!g.st_)paves.push([w.x+w.ox*4,thr+0.05,w.n+w.on*4,w.a,g.w+4,0.1,5]);
     // a gate whose street is far above the ground below it stands on a stone causeway, like Wilson's Arch under the Street of the Chain
     if(cwy){const thr=-1.5;let D=12;while(D<130&&H(w.x+w.ox*D,w.n+w.on*D)<thr-0.6)D+=2;D+=2;const yb=Math.min(yo,(PLZ+0.25))-1,cw=g.w+2,cx=w.x+w.ox*(D/2+2),cn=w.n+w.on*(D/2+2);
-      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);[-1,1].forEach(sd=>{const a=P(2.5,sd*(cw/2-0.25)),b=P(D+2,sd*(cw/2-0.25));RAILS.push([a[0],thr+1.1,a[1],b[0],thr+1.1,b[1]])});const arcs=[];
+      paves.push([cx,thr+0.05,cn,w.a,cw-0.4,0.1,D]);[-1,1].forEach(sd=>{/* 127.0: בגשר וילסון, פתח במעקה הדרומי לראש המדרגות שיורדות אל הרחבה (21–33 מ׳ מהשער) */const cut=g.n==="שער השלשלת"&&sd>0?[[2.5,20.5],[33,D+2]]:[[2.5,D+2]];cut.forEach(([d0,d1])=>{const a=P(d0,sd*(cw/2-0.25)),b=P(d1,sd*(cw/2-0.25));RAILS.push([a[0],thr+1.1,a[1],b[0],thr+1.1,b[1]])})});const arcs=[];
       for(let d=8;d<D-4;d+=13){const ay=H(w.x+w.ox*(d+2),w.n+w.on*(d+2));if(ay>thr-6)continue;const gq=[w.x+w.ox*(d+2),w.n+w.on*(d+2)],fl=inPoly(gq[0],gq[1],GEO.PLAZA)||inPoly(gq[0],gq[1],KZ)?(PLZ+0.45):TY(gq[0],gq[1]);arcs.push([d+2-3.5,d+2+3.5,fl,Math.min(fl+Math.min(thr-ay-3,11),thr-2.2)])}
       const piece=(a0,a1,y0,y1)=>{if(a1-a0<0.05||y1-y0<0.05)return;const c=(a0+a1)/2;stoneG.push([w.x+w.ox*c,(y0+y1)/2,w.n+w.on*c,w.a,cw,y1-y0,a1-a0])};let s0=2;
       arcs.forEach(r=>{piece(s0,r[0],yb,thr);piece(r[0],r[1],r[3],thr);piece(r[0],r[1],yb,r[2]);[-1,1].forEach(sd=>{const c=(r[0]+r[1])/2,px=w.x+w.ox*c+fx*sd*(cw/2+0.15),pn=w.n+w.on*c+fn*sd*(cw/2+0.15);stoneG.push([px,r[3]+0.35,pn,w.a,0.3,0.7,r[1]-r[0]+1.2])});s0=r[1]});piece(s0,D+2,yb,thr);
@@ -264,11 +264,13 @@ const GATEG=new THREE.Group();WG.add(GATEG);
       if(WALKG&&WALKG.h){const c=Math.cos(ang),sn=Math.sin(ang),A=(u,v)=>[cx+c*u-sn*v,-(cn+sn*u+c*v)],q=[A(-tr/2,-hw),A(tr/2,-hw),A(tr/2,hw),A(-tr/2,hw)];WALKG.tri(q[0][0],top,q[0][1],q[1][0],top,q[1][1],q[2][0],top,q[2][1]);WALKG.tri(q[0][0],top,q[0][1],q[2][0],top,q[2][1],q[3][0],top,q[3][1])}
       /* מעקה אבן מדורג משני הצדדים; ליד הצמתים (2 מ׳ מכל קצה) פתוח, כדי שאפשר לעבור בין גרמי המדרגות */
       if(s<2||s>L-2)continue;
-      [1,-1].forEach(sd=>{const ox=cx+px*sd*(hw+0.15),on=cn+pn*sd*(hw+0.15),go=H(cx+px*sd*(hw+4.5),cn+pn*sd*(hw+4.5)),tp=Math.max(top+0.95,go+0.15);SIDE.push([ox,(tp+yb)/2,on,ang,tr+0.03,tp-yb,0.3])})}
-    if(L>4.5)[1,-1].forEach(sd=>{const mx=(a[0]+b[0])/2+px*sd*(hw+0.15),mn=(a[1]+b[1])/2+pn*sd*(hw+0.15),lo=PLZ+Math.min(a[2],b[2]);cwAdd(mx,mn,ang,L-4,0.3,lo-2,PLZ+Math.max(a[2],b[2])+3);
+      /* 127.0: F.open = [[קטע, צד]] — צד פתוח בלי מעקה (ראש המדרגות מגשר וילסון נפתח אל הגשר) */
+      [1,-1].forEach(sd=>{if(F.open&&F.open.some(o=>o[0]===i&&o[1]===sd))return;const ox=cx+px*sd*(hw+0.15),on=cn+pn*sd*(hw+0.15),go=H(cx+px*sd*(hw+4.5),cn+pn*sd*(hw+4.5)),tp=Math.max(top+0.95,go+0.15);SIDE.push([ox,(tp+yb)/2,on,ang,tr+0.03,tp-yb,0.3])})}
+    if(L>4.5)[1,-1].forEach(sd=>{if(F.open&&F.open.some(o=>o[0]===i&&o[1]===sd))return;const mx=(a[0]+b[0])/2+px*sd*(hw+0.15),mn=(a[1]+b[1])/2+pn*sd*(hw+0.15),lo=PLZ+Math.min(a[2],b[2]);cwAdd(mx,mn,ang,L-4,0.3,lo-2,PLZ+Math.max(a[2],b[2])+3);
       /* מאחז יד ממתכת על המעקה */
       const sl=Math.atan2(-drop,L);HR.push([mx-px*sd*0.05,PLZ+(a[2]+b[2])/2+1.0,mn-pn*sd*0.05,ang,Math.hypot(L-4,drop*(L-4)/L),0.05,0.05,sl])})}});
   const SI={n:"המדרגות מהרובע היהודי לכותל",r:"תמונות רחוב (Mapillary, 2014–2023); OpenStreetMap",t:"📜 המדרגות יורדות מהרובע היהודי אל רחבת הכותל, לאורך השבילים שבמפה, עם מעקה אבן ומאחז יד, כמו בתמונות. 💡 גובה כל מדרגה (16 ס״מ) והרוחב (3.2 מ׳) מקורבים."};
+  {const q=G2S(-140,-131);label("מדרגות מגשר וילסון",q[0],PLZ+10,-q[1],null,{n:"המדרגות מגשר וילסון אל רחבת הכותל",r:"תוכנית רחבת הכותל, כניסה 6",t:"💡 מי שבא משער יפו ברחוב השלשלת יורד בסוף הרחוב במדרגות רחבות אל גשר וילסון, ובאמצע הגשר יורד במדרגות האלה אל צפון רחבת הכותל, בלי לעלות להר. הבניין שחסם היום את סוף הרחוב מעל הגשר לא נבנה. היום אין כאן ירידה ישירה. 💡 המקום והמידות הם הצעה."}).m=true}
   put(STP,MAT(0xd9cdb2),SI);put(SIDE,M.stoneL||MAT(0xcfc2a5),SI);put(HR,MAT(0x3a3d40,{metalness:0.5,roughness:0.5}),SI);
 
   // 2) הרחבה הדרומית: ריצוף, וקיר תמך בקצה שבו הקרקע גבוהה יותר
@@ -320,8 +322,10 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     /* 126.4 (תוכנית רחבת הכותל, ג5): בשוליים שבמערב ובצפון, במקום מדרון חול – טרסות אבן שטוחות במדרגות של 4.5 מ׳ (נושא 2), עם קיר אבן בכל מעבר בין טרסות */
     {const EDG=[];[PLAZA,KP,KZ].forEach(P=>{for(let i=0;i<P.length;i++)EDG.push([P[i],P[(i+1)%P.length]])});
      const dE=(x,n)=>{let m=1e9;for(const [a,b] of EDG){const dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn||1,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));m=Math.min(m,Math.hypot(x-a[0]-dx*t,n-a[1]-dn*t))}return m};
-     const S=2,X0=-200,N0=-280,NX=52,NN=86,LV=new Float32Array(NX*NN).fill(NaN);
-     const ok=(x,n)=>{if(x>-97||inPoly(x,n,PLAZA)||inPoly(x,n,KP)||inPoly(x,n,KZ)||inPoly(x,n,MOUNT_BIG)||nearE0(x,n)||inBld(x,n)||onStreet(x,n))return false;const k=kstAt(x,n);if(k&&k.d<k.w/2+1.5)return false;return dE(x,n)<30};
+     /* 127.0: הרשת ממשיכה צפונה עד n=-74, אל מדרון החול שמצפון לגשר וילסון (בין הבתים לכותל, עד שער המטהרה). מתחת לגשר עצמו לא בונים */
+     const DK=(window.__MG||[]).find(g=>g.n==="שער השלשלת"),dkw=DK&&DK.w_,underDeck=(x,n)=>{if(!dkw||x<-168)return false;const t=(x-dkw.x)/dkw.ox;return Math.abs(n-(dkw.n+dkw.on*t))<DK.w/2+3};
+     const S=2,X0=-200,N0=-280,NX=52,NN=103,LV=new Float32Array(NX*NN).fill(NaN);
+     const ok=(x,n)=>{if(x>-97||inPoly(x,n,PLAZA)||inPoly(x,n,KP)||inPoly(x,n,KZ)||inPoly(x,n,MOUNT_BIG)||nearE0(x,n)||inBld(x,n)||onStreet(x,n))return false;const k=kstAt(x,n);if(k&&k.d<k.w/2+1.5)return false;if(underDeck(x,n))return false;return dE(x,n)<30||(x>-162&&n>-124)};
      for(let i=0;i<NX;i++)for(let j=0;j<NN;j++){const x=X0+(i+0.5)*S,n=N0+(j+0.5)*S;if(!ok(x,n))continue;const d=Math.max(H(x,n),TY(x,n))-PLZ;if(d>27)continue;LV[j*NX+i]=PLZ+0.22+Math.max(0,Math.round(d/4.5))*4.5}
      /* מחליקים את קווי הטרסות: כל תא מקבל את הגובה הנפוץ בין 5×5 השכנים שלו (שלוש פעמים), כדי שהקירות יהיו ישרים ולא משוננים */
      for(let it=0;it<3;it++){const L0=LV.slice();for(let i=0;i<NX;i++)for(let j=0;j<NN;j++){if(isNaN(L0[j*NX+i]))continue;const c=new Map();for(let a=-2;a<=2;a++)for(let b=-2;b<=2;b++){const ii=i+a,jj=j+b;if(ii<0||jj<0||ii>=NX||jj>=NN)continue;const v=L0[jj*NX+ii];if(!isNaN(v))c.set(v,(c.get(v)||0)+1)}let bv=L0[j*NX+i],bc=0;c.forEach((k,v)=>{if(k>bc||(k===bc&&v===L0[j*NX+i])){bc=k;bv=v}});LV[j*NX+i]=bv}}
@@ -333,6 +337,48 @@ const GATEG=new THREE.Group();WG.add(GATEG);
          const ex=di>0?x+S:di<0?x:x+S/2,en=dj>0?n+S:dj<0?n:n+S/2,ang=di?Math.PI/2:0,h=L-L2+0.3;RIS.push([ex,L2-0.3+h/2,en,ang,S+0.02,h,0.5]);if(L-L2>1.2)cwAdd(ex,en,ang,S,0.5,L2-1,L)})}
      if(TOP.length){try{TMESH.conform(TOP,{lo:0.15,hi:99})}catch(e){console.warn("kotel terraces conform",e)}
        const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(TOP,3));g.computeVertexNormals();const m=new THREE.Mesh(g,M.pave);m.receiveShadow=true;m.renderOrder=2;
-       const TI={n:"טרסות האבן בשולי הרחבה",r:"תוכנית רחבת הכותל; נושא 2 (טרסות של 4.5 מ׳)",t:"💡 בין רחבת הכותל לבין הרובע היהודי הקרקע עולה בטרסות שטוחות של אבן, 4.5 מ׳ כל אחת, ולא במדרון חול. עולים ויורדים רק במדרגות."};m.userData=TI;WG.add(m);PICK.push(m);put(RIS,M.stoneL||MAT(0xcfc2a5),TI)}}
+       const TI={n:"טרסות האבן בשולי הרחבה",r:"תוכנית רחבת הכותל; נושא 2 (טרסות של 4.5 מ׳)",t:"💡 בין רחבת הכותל לבין הרובע היהודי, וגם מצפון לגשר וילסון, הקרקע עולה בטרסות שטוחות של אבן, 4.5 מ׳ כל אחת, ולא במדרון חול. עולים ויורדים רק במדרגות."};m.userData=TI;WG.add(m);PICK.push(m);put(RIS,M.stoneL||MAT(0xcfc2a5),TI)}}
   }
+  /* 127.0 (תוכנית רחבת הכותל, סעיף ו): חדר ההכנה בתוך מרפסת האבן של קיפונוס. נכנסים מהקצה הדרומי (ימין של מי שעולה, מידות ב, ב) ויוצאים בקצה הצפוני.
+     בחזית שפונה לרחבה: שורת קשתות אבן משני צדי המדרגות, כמו החנויות שנמצאו ברחוב שלמרגלות קשת רובינסון. בצד הדרומי, תחת הקשתות: ברזים וספסלי אבן לרחיצת רגליים, אחרונה לפני העלייה.
+     בצד הצפוני: דלפק עץ להחזרת החפצים וספסלים לנעילת נעליים. בקצה הדרומי: שתי דלתות למקוואות (גברים, נשים) משני צדי דלת החדר. 💡 הכול הצעה; מקור: ברכות ט, ה */
+  {const kG=(window.__MG||[]).find(q=>q.k==="K"),w=kG&&kG.w_;if(w){const fx=Math.cos(w.a),fn=Math.sin(w.a),P=(nn,al)=>[w.x+w.ox*nn+fx*al,w.n+w.on*nn+fn*al],yb=PLZ+0.25,TD=10,TW=30,a=w.a;
+    const DK=[],FR=[],BEN=[],TR=[],WAT=[],TAP=[],CTR=[];
+    const lab=(t,nn,al,y,info)=>{const p=P(nn,al),q=G2S(p[0],p[1]);label(t,q[0],y,-q[1],null,info).m=true};
+    [-1,1].forEach(sd=>{[11.0,13.5].forEach(c=>{const al=sd*c;
+      /* פתח קשת: מלבן כהה ומעליו שתי מדרגות כהות קטנות (קשת), ומסגרת אבן בהירה */
+      {const p=P(TD+0.03,al);bx(DK,p[0],p[1],yb,2.3,a,1.9,0.1);bx(DK,p[0],p[1],yb+2.3,0.32,a,1.5,0.1);bx(DK,p[0],p[1],yb+2.62,0.24,a,0.9,0.1)}
+      [-1,1].forEach(s2=>{const p=P(TD+0.08,al+s2*1.12);bx(FR,p[0],p[1],yb,2.45,a,0.34,0.2)});
+      {const p=P(TD+0.08,al);bx(FR,p[0],p[1],yb+2.95,0.3,a,2.6,0.2)}
+      if(sd>0){/* רחיצת רגליים: ספסל אבן נמוך, תעלת אבן עם מים, ושני ברזי נחושת בכל קשת */
+        {const p=P(TD+1.75,al);bx(BEN,p[0],p[1],yb,0.42,a,2.0,0.45)}
+        {const p=P(TD+0.75,al);bx(TR,p[0],p[1],yb,0.22,a,2.0,0.7);bx(WAT,p[0],p[1],yb+0.2,0.04,a,1.8,0.5)}
+        [-0.5,0.5].forEach(o=>{const p=P(TD+0.18,al+o);bx(TAP,p[0],p[1],yb+0.75,0.05,a,0.06,0.3)})}
+      else{/* יציאה: דלפק עץ להחזרת החפצים וספסל לנעילת נעליים */
+        {const p=P(TD+0.45,al);bx(CTR,p[0],p[1],yb,1.05,a,1.9,0.55)}
+        {const p=P(TD+2.0,al);bx(BEN,p[0],p[1],yb,0.42,a,2.0,0.45)}}})});
+    /* שתי דלתות מקווה בקצה הדרומי, משני צדי דלת החדר (שנמצאת באמצע הקצה) */
+    [1.8,8.2].forEach(nn=>{const p=P(nn,TW/2+0.06);bx(DK,p[0],p[1],yb,2.3,a+Math.PI/2,1.3,0.12);const f=P(nn,TW/2+0.12);bx(FR,f[0],f[1],yb+2.3,0.3,a+Math.PI/2,1.8,0.22)});
+    const IW={n:"רחיצת הרגליים לפני העלייה",r:"ברכות ט, ה; תוכנית רחבת הכותל",t:"⚖️ \"לא יכנס להר הבית במקלו ובמנעלו ובפונדתו ובאבק שעל רגליו\" (ברכות ט, ה). 💡 תחת הקשתות בצד הדרומי של מרפסת קיפונוס: ספסלי אבן נמוכים וברזים, זה הדבר האחרון לפני שעולים. משם יוצאים ישר אל צד העלייה של המדרגות."};
+    const IC={n:"החזרת החפצים ביציאה",r:"תוכנית רחבת הכותל",t:"💡 מי שיורד מההר יוצא בצד הצפוני (מידות ב, ב: יוצאים דרך שמאל). כאן, תחת הקשתות, מקבלים בחזרה את המקל, הארנק והנעליים שהופקדו בכניסה הדרומית, ויש ספסלים לנעול נעליים. כך אין שני זרמים של אנשים באותה דלת."};
+    const IA={n:"קשתות חדר ההכנה",r:"חפירות הרחוב שלמרגלות קשת רובינסון; תוכנית רחבת הכותל",t:"📜 ברחוב ההרודיאני שלמרגלות הכותל נמצאה שורת חנויות קטנות בקשתות אבן. 💡 חזית חדר ההכנה בנויה כך: קשתות אבן פתוחות, בלי שלטים מודרניים ובלי זכוכית. החדר עצמו נמצא בתוך מרפסת האבן שלפני השער, ולא כבניין על הרחבה."};
+    const IM={n:"מקוואות לפני העלייה",r:"פסחים סח ע״א; רמב״ם, הלכות ביאת מקדש ג",t:"⚖️ מי שצריך טבילה לא נכנס להר הבית עד שיטבול (פסחים סח ע״א; רמב״ם, ביאת מקדש ג). 💡 בקצה הדרומי של המרפסת, משני צדי הכניסה לחדר ההכנה, שתי דלתות למקוואות: אחת לגברים ואחת לנשים. מי שצריך טובל ראשון, ורק אחר כך מפקיד את חפציו."};
+    put(DK,MAT(0x2b251d),IA);put(FR,M.stoneL||MAT(0xcfc2a5),IA);put(BEN,M.stoneL||MAT(0xcfc2a5),IW);put(TR,MAT(0xb8ab92),IW);put(WAT,MAT(0x6f9fb5,{roughness:0.15,metalness:0.1}),IW);put(TAP,M.bronze||MAT(0xb07a48),IW);put(CTR,M.wood||MAT(0x8a6a48),IC);
+    lab("רחיצת רגליים",TD+1,12.2,yb+4.6,IW);lab("החזרת חפצים",TD+1,-12.2,yb+4.6,IC);lab("מקוואות",5,TW/2+1,yb+5.6,IM)}}
+  /* 127.0 (תוכנית רחבת הכותל, סעיף ו, שלב 5): אותו דבר בקטן בשערי חולדה. ליד כל אחת משתי הדלתות שבקצות גרם המדרגות: ספסל אבן, תעלה עם מים ושני ברזים. 💡 */
+  {const HG=window.__HG;if(HG&&HG.doors&&HG.w){const w=HG.w,fx=Math.cos(w.a),fn=Math.sin(w.a),BN=[],TRH=[],WH=[],TPH=[];
+    HG.doors.forEach((d,i)=>{const sd=i===0?-1:1;[-2.7,2.7].forEach(o=>{const bxp=(off)=>[d[0]+fx*sd*off+w.ox*o,d[2]+fn*sd*off+w.on*o];
+      {const p=bxp(1.9);bx(BN,p[0],p[1],d[1],0.42,w.a+Math.PI/2,1.8,0.45)}{const p=bxp(0.75);bx(TRH,p[0],p[1],d[1],0.22,w.a+Math.PI/2,1.8,0.7);bx(WH,p[0],p[1],d[1]+0.2,0.04,w.a+Math.PI/2,1.6,0.5)}
+      [-0.45,0.45].forEach(t=>{const p=bxp(0.2),q=[p[0]+w.ox*t,p[1]+w.on*t];bx(TPH,q[0],q[1],d[1]+0.75,0.05,w.a+Math.PI/2,0.06,0.3)})})});
+    const IH={n:"רחיצת רגליים בשערי חולדה",r:"ברכות ט, ה; תוכנית רחבת הכותל",t:"⚖️ \"ובאבק שעל רגליו\" (ברכות ט, ה). 💡 ליד חדרי הנעליים שבשני קצות מדרגות חולדה, ספסלי אבן וברזים לרחיצת רגליים, כמו בקיפונוס אבל בקטן. מי שצריך טבילה טובל במקוואות שבחדר שבקצה המדרגות לפני העלייה."};
+    put(BN,M.stoneL||MAT(0xcfc2a5),IH);put(TRH,MAT(0xb8ab92),IH);put(WH,MAT(0x6f9fb5,{roughness:0.15,metalness:0.1}),IH);put(TPH,M.bronze||MAT(0xb07a48),IH)}}
+  /* 127.0 (כניסה 7): הכניסה למנהרות הכותל, פתח בקיר הדרומי של גשר וילסון, בצפון אזור התפילה. כרטיס בלבד, בלי לבנות מנהרה */
+  {const kG=(window.__MG||[]).find(q=>q.n==="שער השלשלת"),w=kG&&kG.w_;if(w){const a=Math.atan2(w.on,w.ox),t=(-108-w.x)/w.ox,cn=w.n+w.on*t,hw=kG.w/2+1,PD=[],PF=[];
+    const px=-108-(-w.on)*0,pn=cn-hw-0.05;bx(PD,px,pn,Y0,2.8,a,2.4,0.12);bx(PF,px,pn-0.06,Y0+2.8,0.45,a,3.4,0.25);[-1,1].forEach(s=>bx(PF,px+w.ox*s*1.45,pn-0.06+w.on*s*1.45,Y0,2.8,a,0.5,0.25));
+    const IT={n:"הכניסה למנהרות הכותל",r:"חפירות מנהרות הכותל; תוכנית רחבת הכותל, כניסה 7",t:"📜 מכאן נכנסים למנהרות הכותל, שעוברות לאורך הכותל המערבי מתחת לבתי העיר, ויוצאות בצפון בויה דולורוזה. רואים בהן את האבנים הגדולות של החומה ואת הרחוב מימי בית שני. 💡 המנהרות נשארות לסיור היסטורי. הן מחוץ להר הבית, ולכן אין בהן דיני כניסה להר. המנהרות עצמן לא בנויות במודל."};
+    put(PD,MAT(0x221d17),IT);put(PF,M.stoneL||MAT(0xcfc2a5),IT);const q=G2S(px,pn-1);label("מנהרות הכותל",q[0],Y0+4,-q[1],null,IT).m=true}}
+  /* 127.0 (כניסה 10): מעלית מהרובע היהודי אל הרחבה. פיר אבן צמוד לטרסות שבמערב הרחבה, ודלת נחושת לכיוון הרחבה. 💡 המקום הוא הצעה */
+  {const LX=-183.6,LN=-192,LS=[],LDR=[],top=PLZ+15.5;bx(LS,LX,LN,Y0-0.2,top-Y0+0.2,0,3.8,3.8);bx(LS,LX,LN,top,0.35,0,4.3,4.3);bx(LDR,LX+1.93,LN,Y0,2.3,Math.PI/2,1.3,0.08);
+    const IL={n:"מעלית מהרובע היהודי",r:"תוכנית רחבת הכותל, כניסה 10",t:"💡 מעלית בפיר אבן, מהרובע היהודי ישר אל מפלס רחבת הכותל, למי שלא יכול לרדת במדרגות: זקנים, עגלות ילדים וכיסאות גלגלים. הפיר צמוד לטרסות שבמערב הרחבה, כך שאין מגדל חדש באמצע הרחבה. 💡 המקום והצורה הם הצעה; העירייה מתכננת מעלית כזו."};
+    put(LS,M.stoneL||MAT(0xcfc2a5),IL);put(LDR,M.bronze||MAT(0xb07a48),IL);const q=G2S(LX+3,LN);label("מעלית מהרובע",q[0],Y0+4,-q[1],null,IL).m=true}
 }catch(e){console.warn("kotel plaza",e)}})();
