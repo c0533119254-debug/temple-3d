@@ -301,11 +301,13 @@ const ROADS=(function(){const __r=(function(){const raw=[{"c":2,"w":8,"b":0,"p":
    raw.push({c:4,w:4,b:0,tidy:1,p:[[-208,-29],[-205,-45],[-202,-66],[-200,-80],[-197,-99],[-195,-114]]})}
   /* 127.5: מדרחוב ממילא (MAM10 ב־10-setup) — מדרחוב אבן מרוצף בין שתי שורות החנויות */
   raw.push({c:4,w:MAM10.w,b:0,mam:1,p:[MAM10.a,[(MAM10.a[0]+MAM10.b[0])/2,(MAM10.a[1]+MAM10.b[1])/2],MAM10.b]});
+  /* 127.8: שביל אבן בקרקעית גיא בן הינום, מהסכר של בריכת הסולטן דרומה (HIN11 ב־10-setup) */
+  raw.push({c:4,w:3.6,b:0,mam:1,p:HIN11.path.map(q=>q.slice())});
   raw.forEach(rd=>{const P=[];for(let i=0;i<rd.p.length-1;i++){const a=rd.p[i],b=rd.p[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.ceil(L/2.5));for(let k=0;k<m;k++)P.push([a[0]+(b[0]-a[0])*k/m,a[1]+(b[1]-a[1])*k/m])}P.push(rd.p[rd.p.length-1]);
     // keep the parts outside the Old City walls and off the Temple Mount
     /* 126.0: כביש רכב קטן בתוך החומה (כמו רחוב הפטריארכיה הארמנית משער ציון) לא נמחק. בתמונות Mapillary הוא רחוב סלול, ובדגם נשארה שם קרקע חשופה. עכשיו הוא רחוב מרוצף להולכי רגל, בלי מכוניות */
     let cur=[],cm=-1;const flush=()=>{if(cur.length>3)out.push(cm===1?{c:4,w:Math.min(rd.w,6),b:rd.b,p:cur,oc:1}:cm===2?{c:4,w:7.5,b:rd.b,p:cur,oc:1,cod:1}:cm===3?{c:4,w:rd.w,b:rd.b,p:cur,oc:1,mam:1}:{c:rd.c,w:rd.w,b:rd.b,p:cur});cur=[]};
-    P.forEach(q=>{const ok=!inPoly(q[0],q[1],MOUNT_BIG)&&!inPoly(q[0],q[1],PLAZA_BIG);const m=ok?(rd.mam?3:(rd.c<2&&inPoly(q[0],q[1],OLD))?1:(rd.c<3&&COD8.onWay(q[0],q[1]))?2:0):-1;/* 126.8: רחוב העולים בעיר דוד — מדרחוב מרוצף, בלי מכוניות */if(m!==cm){const l=cur[cur.length-1];flush();if(l&&m>=0&&cm>=0)cur.push(l);cm=m}if(m>=0)cur.push(q)});flush()});
+    P.forEach(q=>{const ok=!inPoly(q[0],q[1],MOUNT_BIG)&&!inPoly(q[0],q[1],PLAZA_BIG)&&(rd.mam||!HIN11.inPool(q[0],q[1],2.5));/* 127.8: אין דרכים בתוך בריכת הסולטן */const m=ok?(rd.mam?3:(rd.c<2&&inPoly(q[0],q[1],OLD))?1:(rd.c<3&&COD8.onWay(q[0],q[1]))?2:0):-1;/* 126.8: רחוב העולים בעיר דוד — מדרחוב מרוצף, בלי מכוניות */if(m!==cm){const l=cur[cur.length-1];flush();if(l&&m>=0&&cm>=0)cur.push(l);cm=m}if(m>=0)cur.push(q)});flush()});
   // round off the kinks of the mapped lines (two passes of corner cutting; the ends stay put)
   out.forEach(rd=>{for(let it=0;it<2;it++){const P=rd.p,Q=[P[0]];for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<1.2){if(i>0)Q.push(a);continue}const f=Math.min(0.25,3/L);Q.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f],[b[0]-(b[0]-a[0])*f,b[1]-(b[1]-a[1])*f])}Q.push(P[P.length-1]);rd.p=Q}});
   // smooth elevation profile (a road grade, not the 30 m terrain bumps)
