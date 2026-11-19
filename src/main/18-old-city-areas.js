@@ -663,3 +663,49 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
   __AFTER(()=>{try{const p=P(C.L*0.45,0),q=G2S(p[0],p[1]);label("מדרחוב ממילא",q[0],top(p[0],p[1])+9,-q[1],null,INF)}catch(e){console.warn("mamilla label",e)}});
   window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length};
 }catch(e){console.warn("mamilla",e)}})();
+// ---- 127.8: גיא בן הינום — בריכת הסולטן, שביל בקרקעית הגיא, חורשה לפי צילום הלוויין וטרסות בגיא התחתון ----
+// 📜 ירמיהו לא, לט: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
+(function(){try{
+  const C=HIN11,P=C.P,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{})),r=rng(1278);
+  const INFP={n:"בריכת הסולטן",r:"📜 סכר מימי סולימאן (1536); 💡 הצעה",t:"בריכה גדולה בקרקעית גיא בן הינום, כ־60 על 160 מ׳. בצד הדרומי יש סכר, והדרך לחברון עוברת עליו. 📜 את הסכר ואת הסביל שעליו בנה סולימאן ב־1536. אמת המים התחתונה, שהביאה בימי הבית השני מים מבריכות שלמה אל הר הבית, עוברת ליד הבריכה. 💡 בדגם של העתיד הבריכה שוב מלאה מים, ובצד הצפוני יש מדרגות שיורדות אליהם. היום הקרקעית יבשה, ומקיימים בה קונצרטים."};
+  const INFV={n:"גיא בן הינום",r:"ירמיהו לא, לט; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, לט). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), בריכת הסולטן מלאה מים, שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
+  const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
+  const GS={stone:[],light:[],dark:[],wood:[]},MATS={stone:M.stoneL||M.stone,light:M.stone||M.stoneL,dark:MAT(0x3a3530,{roughness:0.95}),wood:MAT(0x6b4a2f,{roughness:0.9})};
+  const add=(k,geo,x,y,n,ro)=>{geo=geo.index?geo.toNonIndexed():geo;if(geo.attributes.uv2)geo.deleteAttribute("uv2");const m=new THREE.Matrix4().makeRotationY(ro||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);GS[k].push(geo)};
+  // 1) הבריכה: קירות אבן בארבעת הצדדים (גובה לפי הקרקע משני צידי הקיר), מים, ומדרגות בצד הצפוני
+  const W=C.W,TOP=W+1.0;let segs=0;
+  const side=(ax,an,bx,bn,ox,on)=>{const L=Math.hypot(bx-ax,bn-an),k=Math.max(1,Math.round(L/4)),ro=Math.atan2(bn-an,bx-ax);
+    for(let i=0;i<k;i++){const t=(i+0.5)/k,x=ax+(bx-ax)*t,n=an+(bn-an)*t,gi=TY(x-ox*2,n-on*2),go=TY(x+ox*2.5,n+on*2.5),top=Math.max(TOP,go+0.7),bot=Math.min(gi,go,W)-2.5,h=top-bot;
+      add("light",wbox(L/k+0.02,h,2.4,4),x,bot+h/2,n,ro);add("stone",wbox(L/k+0.02,0.3,2.8,2),x,top+0.15,n,ro);cwAdd(x,n,ro,L/k,2.4,bot,top+0.3);segs++}};
+  side(P.x0,P.n1,P.x1,P.n1,0,1);side(P.x0,P.n0,P.x1,P.n0,0,-1);side(P.x0,P.n0,P.x0,P.n1,-1,0);side(P.x1,P.n0,P.x1,P.n1,1,0);
+  {const wg=new THREE.PlaneGeometry(P.x1-P.x0-2.4,P.n1-P.n0-2.4,1,1);wg.rotateX(-Math.PI/2);const wm=new THREE.Mesh(wg,M.water);wm.position.set((P.x0+P.x1)/2,W,-(P.n0+P.n1)/2);wm.receiveShadow=true;wm.userData=INFP;WG.add(wm);PICK.push(wm)}
+  const cx=(P.x0+P.x1)/2;for(let i=0;i<9;i++){const y=TOP-0.35*(i+1),d=i*0.7+0.35;add("stone",wbox(22,0.35+i*0.35+3,0.7,3),cx,y-(0.35+i*0.35+3)/2+0.35,P.n1-1.2-d)}
+  // 2) הסביל של סולימאן על הסכר: בניין אבן קטן עם נישה מקושתת וכיפה
+  {const cand=[[-829,-743],[-829,-738],[-900,-741],[-901,-735]];const s=cand.find(q=>clearAt(q[0],q[1],3))||cand[0],g=TY(s[0],s[1]);
+    add("light",wbox(4.4,4.2,4.4,3),s[0],g+2.1,s[1]);add("stone",wbox(4.8,0.4,4.8,3),s[0],g+4.4,s[1]);add("light",new THREE.SphereGeometry(1.7,16,8,0,Math.PI*2,0,Math.PI/2),s[0],g+4.6,s[1]);
+    add("dark",wbox(1.6,2.4,0.2,1),s[0],g+1.5,s[1]+2.22);add("stone",wbox(2.2,0.5,0.6,1),s[0],g+0.25,s[1]+2.5);cwAdd(s[0],s[1],0,4.8,4.8,g-1,g+5);
+    window.__HIN_SABIL=s}
+  // 3) שביל הגיא: פנסים וספסלים
+  const LP=[],LH=[];let benches=0;{const p=C.path;let acc=0;for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),ux=(b[0]-a[0])/L,un=(b[1]-a[1])/L;
+    for(let t=0;t<L;t+=4){acc+=4;if(acc%20)continue;const sd=(acc/20)%2?1:-1,x=a[0]+ux*t-un*sd*2.6,n=a[1]+un*t+ux*sd*2.6;if(inB(x,n)||(onRoad(x,n)&&!C.onPath(x,n)))continue;const g=TY(x,n);LP.push([x,g+2.1,n,0.12,4.2,0.12]);LH.push([x,g+4.35,n,0.4,0.5,0.4]);
+      if((acc/20)%3===1){const bx=x+ux*2,bn=n+un*2,gb=TY(bx,bn),ro=Math.atan2(un,ux);add("wood",wbox(1.8,0.12,0.5,1),bx,gb+0.46,bn,ro);add("stone",wbox(0.3,0.42,0.45,1),bx,gb+0.21,bn,ro);benches++}}}}
+  Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.castShadow=true;m.receiveShadow=true;m.userData=k==="wood"?INFV:INFP;WG.add(m);PICK.push(m)});
+  {const d=new THREE.Object3D(),put=(list,mat)=>{if(!list.length)return;const m=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.scale.set(q[3],q[4],q[5]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.userData=INFV;WG.add(m)};
+    put(LP,MAT(0x2a2d30,{metalness:0.5}));put(LH,MAT(0xf2e6c8,{emissive:0x332a18}))}
+  // 4) החורשה: עץ בכל נקודה של 5 מ׳ שיש בה עצים בצילום הלוויין (רוב העצים בגיא הם אורן ירושלים)
+  const free=(x,n)=>!inPoly(x,n,OLD)&&!inPoly(x,n,MOUNT_BIG)&&clearAt(x,n,2.2)&&!C.inPool(x,n,3)&&!C.onPath(x,n)&&!MAM10.zone(x,n);
+  const BY={pine:[],cypress:[],olive:[],carob:[],fig:[]},cap=SMALL?650:1500;let nT=0;
+  C.trees().forEach(q=>{if(nT>=cap)return;const x=q[0]+(r()-0.5)*3,n=q[1]+(r()-0.5)*3;if(!free(x,n))return;const v=r(),k=v<0.7?"pine":v<0.8?"cypress":v<0.9?"carob":"olive";BY[k].push([x,TY(x,n),-n,0.8+r()*0.45,r()*6.28]);nT++});
+  // 5) הגיא התחתון (מחוץ לצילום הלוויין): טרסות אבן נמוכות בכל 3.5 מ׳ של גובה, ועליהן זיתים ותאנים, עד 40 מ׳ מקו הגיא
+  const LOW=[[-840, -865], [-820, -886], [-798, -908], [-777, -929], [-756, -950], [-735, -971], [-712, -992], [-687, -1007], [-661, -1023], [-636, -1038], [-606, -1043], [-578, -1051], [-548, -1058], [-518, -1058], [-488, -1058], [-458, -1058], [-428, -1058], [-398, -1058], [-369, -1054], [-340, -1045], [-310, -1042], [-280, -1042], [-250, -1042], [-220, -1042], [-190, -1042], [-160, -1042], [-130, -1042], [-101, -1042], [-72, -1050], [-45, -1064], [-24, -1082], [-24, -1082]];let OL=0;const WL=[],wcap=SMALL?1800:4500,st=SMALL?3:2.5;
+  {let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;LOW.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
+    for(let x=xa-40;x<xb+40;x+=st)for(let n=na-40;n<nb+40;n+=st){if(segDist(x,n,LOW)[0]>40||!free(x,n)||segDist(x,n,KIDRON)[0]<30)continue;const h=TY(x,n),lv=Math.floor(h/3.5);
+      [[st,0],[0,st]].forEach(([dx,dn])=>{if(WL.length>=wcap)return;const x2=x+dx,n2=n+dn;if(!free(x2,n2))return;const h2=TY(x2,n2);if(Math.floor(h2/3.5)===lv)return;const gx=TY(x+0.5,n)-TY(x-0.5,n),gn=TY(x,n+0.5)-TY(x,n-0.5),ang=Math.atan2(gn,gx)+Math.PI/2;WL.push([(x+x2)/2,Math.min(h,h2),(n+n2)/2,ang,Math.abs(h2-h)])});
+      if(OL<(SMALL?350:900)&&Math.round(x/st)%3===0&&Math.round(n/st)%3===0&&r()<0.8){const tx=x+(r()-0.5)*2,tn=n+(r()-0.5)*2;(r()<0.7?BY.olive:BY.fig).push([tx,TY(tx,tn),-tn,0.7+r()*0.35,r()*6.28]);OL++}}}
+  Object.keys(BY).forEach(k=>{if(BY[k].length)TREES5.plant(WG,k,BY[k],INFV)});
+  if(WL.length){const d=new THREE.Object3D(),c=new THREE.Color(),wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),MAT(0xcbbd9f,{roughness:0.95,envMapIntensity:0.3}),WL.length);
+    WL.forEach((w,i)=>{const hh=Math.min(1.6,Math.max(0.6,w[4]+0.4));d.rotation.set(0,w[3],0);d.position.set(w[0],w[1]+hh/2-0.2,-w[2]);d.scale.set(3.1,hh,0.55);d.updateMatrix();wm.setMatrixAt(i,d.matrix);c.setRGB(0.95+r()*0.05,0.92+r()*0.06,0.86+r()*0.06);wm.setColorAt(i,c)});
+    wm.castShadow=true;wm.receiveShadow=true;wm.userData=INFV;WG.add(wm);PICK.push(wm)}
+  __AFTER(()=>{try{const q=G2S(cx,(P.n0+P.n1)/2);label("בריכת הסולטן",q[0],TOP+10,-q[1],null,INFP);const v=[-700,-1000],q2=G2S(v[0],v[1]);label("גיא בן הינום",q2[0],TY(v[0],v[1])+16,-q2[1],null,INFV)}catch(e){console.warn("hinnom label",e)}});
+  window.__HIN11={walls:segs,lamps:LP.length,benches,trees:nT,orchard:OL,terraces:WL.length};
+}catch(e){console.warn("hinnom",e)}})();
