@@ -435,3 +435,23 @@ const TODAYG=new THREE.Group();WG.add(TODAYG);TODAYG.visible=false;
   L(36,-215,{n:"מסגד אל־אקצא",r:"מצב \"היום\"",t:"המבנה שבדרום ההר היום. מוצג רק בתצוגת \"היום\"."},g=>{box(g,55,14,80,0,0,0);dome(g,9,0,14,30,grey,0.9)},TODAYG);
 })();
 
+// ---- 141.1: the neighbourhoods on the skyline, outside the detailed area (Overture Maps buildings: OpenStreetMap + Microsoft ML Buildings, ODbL) ----
+/* 141.1 (גובה הגג: מעל אמצע המדרון, כמו בית מדורג על צלע ההר): מחוץ לאזור המפורט (ארמון הנציב, תלפיות, א־טור, הר הצופים, רחביה, טלביה ועוד) לא היו בניינים בכלל, וקו הרקיע נראה כמו גבעות ריקות.
+   📜 טביעות הרגל של 10,030 בניינים מ־Overture Maps (גרסה 2026-11-18: OpenStreetMap ו־Microsoft ML Buildings, ODbL), מפושטות לפינות עד 1.5 מ׳.
+   💡 הגובה: רק לכ־250 בניינים יש מספר קומות במפה. לשאר הגובה משוער לפי השטח (2 עד 5 קומות, 3.2 מ׳ לקומה), כמו בשכונות ירושלים.
+   הקובץ bld_outer.bin נטען רק במחשב, אחרי שהדגם עולה. בטלפון אין אותם, כדי לשמור על מהירות. ארבעה חלקים (צפון, דרום, מזרח, מערב), בלי צללים */
+if(!SMALL)setTimeout(()=>{fetch("bld_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab);
+  const cv=document.createElement("canvas");cv.width=cv.height=64;const x=cv.getContext("2d");x.fillStyle="#d9cfbb";x.fillRect(0,0,64,64);x.fillStyle="#8e887d";x.fillRect(24,20,16,22);x.fillStyle="#cbc1ad";x.fillRect(0,56,64,8);
+  const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.encoding=THREE.sRGBEncoding;tx.anisotropy=4;
+  const mat=new THREE.MeshLambertMaterial({map:tx,vertexColors:true});
+  const Q=[0,1,2,3].map(()=>({p:[],u:[],c:[]}));let o=0;const rnd=k=>{const s=Math.sin(k*12.9898)*43758.5453;return s-Math.floor(s)};let bi=0;
+  while(o+2<=ab.byteLength){const fl=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}bi++;
+    let cx=0,cn=0,lo=1e9,hi=-1e9;P.forEach(q=>{cx+=q[0];cn+=q[1];const h=H(q[0],q[1]);lo=Math.min(lo,h);hi=Math.max(hi,h)});cx/=nv;cn/=nv;
+    if(bldTop(cx,cn)>-1e3)continue;
+    const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.86+0.14*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
+    for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/4,vt=(y1-y0)/3.2;
+      G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
+    for(let i=1;i<nv-1;i++){[P[0],P[i+1],P[i]].forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.5,0.94);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})}}
+  Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
+    const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
+}).catch(()=>{})},4000);
