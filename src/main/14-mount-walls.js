@@ -8,7 +8,7 @@
   const hc=LTX("tex_sand_diff.jpg"),hn=LTX("tex_sand_nor.jpg");[hc,hn].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8});hc.encoding=THREE.sRGBEncoding;
   const herod=new THREE.MeshStandardMaterial({map:hc,normalMap:hn,normalScale:new THREE.Vector2(1.8,1.8),color:0xe2d6bd,roughness:0.92,envMapIntensity:0.3});
   weather(top,0.3,0);weather(herod,0.14,0.22);const m=new THREE.Mesh(g,[top,herod]);m.receiveShadow=true;m.castShadow=false;
-  m.userData={n:"הר הבית",r:"מסכת מידות ב, א",t:"הרחבה שהורדוס הרחיב, בצורת טרפז: 488 מ׳ במערב, 470 במזרח, 315 בצפון ו־280 בדרום. הקירות שלה, כמו הכותל המערבי, עומדים עד היום. במודל היא מוצגת כקרקע פנויה רעיונית."};
+  m.userData={n:"הר הבית",r:"מסכת מידות ב, א; המידות של היום — ויקיפדיה, ערך הר הבית",t:"📜 הרחבה שהורדוס הרחיב, בצורת טרפז: 488 מ׳ במערב, 470 במזרח, 315 בצפון ו־280 בדרום. הקירות שלה, כמו הכותל המערבי, עומדים עד היום. 💡 במודל היא מוצגת כקרקע פנויה רעיונית."};
   WG.add(m);PICK.push(m);
 })();
 
