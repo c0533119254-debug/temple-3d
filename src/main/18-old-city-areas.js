@@ -89,7 +89,7 @@ const archP=(P,w,h)=>{const r=w/2;P.moveTo(-r,0);P.lineTo(-r,h-r);P.absarc(0,h-r
 const archG=(w,h,dep)=>{const g=new THREE.ExtrudeGeometry(archP(new THREE.Shape(),w,h),{depth:dep,bevelEnabled:false,curveSegments:5});g.translate(0,0,-dep);return g};
 const rnd=rng(4242);
 // one covered lane along a polyline. lw = lane width, sd = shop-row depth (0 = thin frontage wall), hs = vault springing height
-function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;
+function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;/* 136.0: רחוב מקורה — לקולות הרקע (הד) */(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);
@@ -328,7 +328,7 @@ const archP=(P,w,h,pt)=>{const r=w/2;P.moveTo(-r,0);if(pt){P.lineTo(-r,h-w*0.62)
 const archG=(w,h,dep,pt)=>{const g=new THREE.ExtrudeGeometry(archP(new THREE.Shape(),w,h,pt),{depth:dep,bevelEnabled:false,curveSegments:5});g.translate(0,0,-dep);return g};
 const rnd=rng(1336);
 // a Mamluk covered market: a tall pointed vault on two storeys of shops, lit from openings in the roof
-function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;
+function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);const top=hs+r+0.9;
@@ -391,7 +391,7 @@ begin({n:"שער האריות",r:"שערי העיר העתיקה",t:"📜 שער
   [-4.2,-2.9,2.9,4.2].forEach(u=>{const p=off(gx,gn,T.rot,u,T.out*4.65);add("light",wbox(1.1,0.75,0.25,1),p[0],T.hi+7.6,p[1],T.rot);add("dark",wbox(0.8,0.45,0.1,1),p[0],T.hi+7.6,p[1]+0,T.rot)})}
 // ===== Khan al-Zeit: the southern, roofed part of the market street from Damascus Gate =====
 begin({n:"חאן א־זית",r:"הרובע המוסלמי",t:"📜 רחוב השוק הראשי, שיורד משער שכם דרומה עד השווקים המקבילים. הוא נמצא על הקו של הקרדו הרומי. 📜 החלק הדרומי שלו מקורה בקמרונות. 💡 החנויות מצוירות בפשטות."});
-{const pl=[[-426,140],[-426,111],[-424,83],[-424,64],[-423,44],[-423,19]],lw=3.6,r=lw/2,hs=3.6,STEP=3.2,rnd=rng(77);let k=0;
+{const pl=[[-426,140],[-426,111],[-424,83],[-424,64],[-423,44],[-423,19]],lw=3.6,r=lw/2,hs=3.6,STEP=3.2,rnd=rng(77);let k=0;(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+0.35));add("stone",wbox(st+0.03,hs+r+2,0.7,4),c[0],y+(hs+r)/2,c[1],rot);const f=off(x,n,rot,0,s*r);add("dark",archG(2.2,2.9,1.2).translate(0,0,0.12),f[0],y,f[1],rot+(s>0?0:Math.PI));
@@ -521,6 +521,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
   const DI={n:"רחוב דוד",r:"תמונות רחוב (Mapillary, 2015–2023)",t:"📜 רחוב השוק הראשי משער יפו מזרחה: צר, כ־3 מ׳, יורד במדרגות רחבות ונמוכות, עם חנויות משני הצדדים, ובחלקו המזרחי מקורה בקמרון אבן עם קשתות מחודדות. 💡 המקום שבו מתחיל הקירוי ופתחי האור בגג הם השלמה."};
   const inB=(x,n)=>{const Lb=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!Lb)return false;for(const o of Lb){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const W=2.8,L=DAVID_ST,d=new THREE.Object3D(),RF=[],RB=[],ST=[],VA=[];
+  /* 136.0: החלק המקורה (מזרחית ל־x -596) — לקולות הרקע */(window.__COVL=window.__COVL||[]).push({p:[[-596,-142.5]].concat(L.filter(q=>q[0]>-596)),r:W/2,h:4.6});
   let acc=0,lastY=null,bay=0;
   for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],len=Math.hypot(dx,dn),ux=dx/len,un=dn/len,ang=Math.atan2(dn,dx);
     for(let s=0;s<len;s+=0.5){const x=a[0]+ux*s,n=a[1]+un*s,g=surfY(x,n);acc+=0.5;
@@ -597,7 +598,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     add("light",wbox(1.2,0.5,6,2),gx+3.4,g+4.7,gn,0,INF.gihon);
     for(let k=0;k<6;k++)add("light",wbox(0.9,0.6,5,2),gx+3.9+k*0.9,g-0.2*(k+1)-0.3,gn,0,INF.gihon);
     const pc=[gx+12,gn],pg=top(pc[0],pc[1]),py=Math.min(pg,g-1.1);add("wall",wbox(7,1.2,6,3),pc[0],py-0.1,pc[1],0,INF.gihon);add("water",new THREE.BoxGeometry(5.8,0.05,4.8),pc[0],py+0.42,pc[1],0,INF.gihon);
-    add("light",wbox(7.4,0.2,6.4,3),pc[0],py+0.6,pc[1],0,INF.gihon);cwAdd(gx-2,gn,0,10,9,g-1,g+6);C.gihonY=g}
+    add("light",wbox(7.4,0.2,6.4,3),pc[0],py+0.6,pc[1],0,INF.gihon);cwAdd(gx-2,gn,0,10,9,g-1,g+6);C.gihonY=g;/* 136.2: המים לקולות הרקע: המעיין והבריכה הקטנה */(window.__WATERS=window.__WATERS||[]).push({k:"gihon",x:pc[0],n:pc[1],hw:3,hl:2.5,r:0})}
   // merge by material; each merged mesh carries the card of its first part (the cards differ by area, so split by card)
   Object.keys(GS).forEach(k=>{const by=new Map();GS[k].forEach((geo,i)=>{const inf=GI[k][i];if(!by.has(inf))by.set(inf,[]);by.get(inf).push(geo)});
     by.forEach((list,inf)=>{const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(list,false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=inf===INF.pool?-2:0;m.castShadow=k!=="pave"&&k!=="water";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)})});
