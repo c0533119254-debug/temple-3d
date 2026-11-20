@@ -4,22 +4,30 @@
 (function(){
 const AMB={on:true,ready:false,loading:false,lv:{},why:""};window.__AMB=AMB;
 try{AMB.on=localStorage.getItem("tm_amb")!=="0"}catch(e){}
-const FILES={city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",steps:"sfx/steps.mp3",sheep:"sfx/sheep.mp3",coins:"sfx/coins.mp3"};
-const LOOPS=["city","market","quiet","stream","birds","night","steps"];
+/* 136.3: עוצמה כללית (0.1–1), מפס העוצמה בתפריט. ברירת מחדל 70% */AMB.v=0.7;try{const q=parseInt(localStorage.getItem("tm_ambv"),10);if(q>=10&&q<=100)AMB.v=q/100}catch(e){}
+const FILES={cattle:"sfx/cattle.mp3",city:"sfx/crowd-city.mp3",market:"sfx/crowd-market.mp3",quiet:"sfx/crowd-quiet.mp3",stream:"sfx/stream.mp3",birds:"sfx/birds.mp3",night:"sfx/crickets.mp3",steps:"sfx/steps.mp3",sheep:"sfx/sheep.mp3",coins:"sfx/coins.mp3"};
+const LOOPS=["city","market","quiet","stream","birds","night","steps","spring"];
+/* 136.2: לולאה שמשתמשת בקובץ של לולאה אחרת */const LBUF={spring:"stream"};
 /* נקודות הנקישה בקובץ המטבעות (שניות: התחלה, אורך) */
 const CLINKS=[[0,1.5],[1.6,1.5],[3.2,1.5],[4.8,1.5],[6.4,1.5]];
 let ctx=null,out=null,bufs={},gains={},pans={},started=false;
 /* 130.2: הנקודה הקרובה של כל מקור (בעולם: x, z) ומרחקה, מהחישוב האחרון של המצלמה */
 let NP=null,SRC={};
 function ensureCtx(){if(ctx)return ctx;try{ctx=new (window.AudioContext||window.webkitAudioContext)();out=ctx.createGain();out.gain.value=0;out.connect(ctx.destination)}catch(e){ctx=null}return ctx}
+/* 136.0: הד במקום מקורה (רחוב מקומר, שוק מקורה, מעבר שער, מנהרה, ההיכל). תגובת חדר מחושבת (רעש שדועך), בלי קובץ. שני חדרים: מעבר צר (כשנייה) ואולם גבוה (כשלוש שניות) 💡
+   הממיר מחובר רק כשנמצאים במקום מקורה, כדי לא לבזבז מעבד בטלפון */
+let REV=null;
+function mkIR(sec,pre){const sr=ctx.sampleRate,N=Math.floor(sr*sec),b=ctx.createBuffer(2,N,sr);for(let c=0;c<2;c++){const d=b.getChannelData(c);let lp=0;for(let i=0;i<N;i++){const t=i/sr;lp=lp*0.6+(Math.random()*2-1)*0.4;d[i]=t<pre?0:lp*Math.exp(-6.9*t/sec)}}return b}
+function mkRev(){const mk=(sec,pre)=>{const cv=ctx.createConvolver();cv.normalize=true;cv.buffer=mkIR(sec,pre);const g=ctx.createGain();g.gain.value=0;cv.connect(g);g.connect(ctx.destination);return{cv,g,on:false}};REV={lane:mk(1.1,0.012),hall:mk(3.2,0.03)};AMB.revOK=true}
+function revSet(k,v,now){const R=REV[k];if(v>0.01){R.off=0;if(!R.on){out.connect(R.cv);R.on=true}}else if(R.on){if(!R.off)R.off=now;/* ההד דועך כשלוש שניות, ואז מנתקים */else if(now-R.off>4){try{out.disconnect(R.cv)}catch(e){}R.on=false;R.off=0}}R.g.gain.setTargetAtTime(v,now,0.35)}
 /* iOS/Android: הקשר השמע נפתח רק בתוך מחווה של המשתמש (הלחיצה על «כניסה» או כל נגיעה) */
 const unlock=()=>{if(!AMB.on)return;ensureCtx();if(ctx&&ctx.state==="suspended")ctx.resume().catch(()=>{})};
 ["pointerdown","keydown","touchend"].forEach(t=>document.addEventListener(t,unlock,{capture:true,passive:true}));
 document.addEventListener("visibilitychange",()=>{if(!ctx)return;if(document.hidden)ctx.suspend().catch(()=>{});else if(AMB.on)ctx.resume().catch(()=>{})});
 function load(){if(AMB.loading||!ensureCtx())return;AMB.loading=true;
   Promise.all(Object.entries(FILES).map(([k,u])=>fetch(u).then(r=>r.ok?r.arrayBuffer():Promise.reject(u)).then(ab=>new Promise((res,rej)=>ctx.decodeAudioData(ab,res,rej))).then(b=>{bufs[k]=b}).catch(e=>console.warn("amb load",k,e))))
-  .then(()=>{LOOPS.forEach(k=>{if(!bufs[k])return;const s=ctx.createBufferSource();s.buffer=bufs[k];s.loop=true;const g=ctx.createGain();g.gain.value=0;s.connect(g);/* 130.2: כל קול עם כיוון (ימין/שמאל) משלו */const pn=ctx.createStereoPanner?ctx.createStereoPanner():null;if(pn){g.connect(pn);pn.connect(out);pans[k]=pn}else g.connect(out);
-      /* כל לולאה מתחילה במקום אחר, כדי שלא יישמעו יחד אותן נקודות */s.start(0,Math.random()*b0(bufs[k]));gains[k]=g});try{mkVeh()}catch(e){console.warn("amb veh",e)}started=true;AMB.ready=true})}
+  .then(()=>{LOOPS.forEach(k=>{const bk=LBUF[k]||k;if(!bufs[bk])return;const s=ctx.createBufferSource();s.buffer=bufs[bk];s.loop=true;const g=ctx.createGain();g.gain.value=0;s.connect(g);/* 130.2: כל קול עם כיוון (ימין/שמאל) משלו */const pn=ctx.createStereoPanner?ctx.createStereoPanner():null;if(pn){g.connect(pn);pn.connect(out);pans[k]=pn}else g.connect(out);
+      /* כל לולאה מתחילה במקום אחר, כדי שלא יישמעו יחד אותן נקודות */s.start(0,Math.random()*b0(bufs[bk]));gains[k]=g});try{mkVeh()}catch(e){console.warn("amb veh",e)}try{mkWind()}catch(e){console.warn("amb wind",e)}started=true;AMB.ready=true})}
 /* 130.4: רכבת קלה ואוטובוס חשמלי — קול מסונתז (בלי קובץ): זמזום מנוע שעולה עם המהירות, ורעש גלגלים. 💡 */
 let VEH=null;
 function mkVeh(){const sr=ctx.sampleRate,b=ctx.createBuffer(1,sr*2,sr),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){l=(l+0.04*(Math.random()*2-1))/1.04;d[i]=l*4}
@@ -28,6 +36,13 @@ function mkVeh(){const sr=ctx.sampleRate,b=ctx.createBuffer(1,sr*2,sr),d=b.getCh
   const g=ctx.createGain();g.gain.value=0;rg.connect(g);wg.connect(g);const pn=ctx.createStereoPanner?ctx.createStereoPanner():null;if(pn){g.connect(pn);pn.connect(out)}else g.connect(out);
   ns.start();os.start();o2.start();VEH={g,pn,os,o2,wg,prev:new Map()};AMB.vehOK=true}
 const b0=b=>Math.max(0,b.duration-0.1);
+/* 136.2: רוח — רעש מסונן שמשתנה לאט (משבים), בלי קובץ 💡 */
+let WIND=null;
+function mkWind(){const sr=ctx.sampleRate,N=sr*4,b=ctx.createBuffer(1,N,sr),d=b.getChannelData(0);let b0_=0,b1=0,b2=0;for(let i=0;i<N;i++){const w=Math.random()*2-1;b0_=0.99765*b0_+w*0.099;b1=0.963*b1+w*0.2965;b2=0.57*b2+w*1.0526;d[i]=(b0_+b1+b2+w*0.1848)*0.18}
+  /* קצוות הלולאה מתמזגים */const F=Math.floor(sr*0.3);for(let i=0;i<F;i++){const t=i/F;d[N-F+i]=d[N-F+i]*(1-t)+d[i]*t}
+  const s=ctx.createBufferSource();s.buffer=b;s.loop=true;s.loopStart=F/sr;s.loopEnd=N/sr;const bp=ctx.createBiquadFilter();bp.type="bandpass";bp.frequency.value=450;bp.Q.value=0.6;const g=ctx.createGain();g.gain.value=0;s.connect(bp);bp.connect(g);g.connect(out);s.start();WIND={g,bp,gu:0.5};AMB.windOK=true}
+/* 136.1: געיות בקר — קטעים בקובץ (שניות: התחלה, אורך) */
+const MOOS=[[0,2.45],[2.6,1.45],[4.2,1.2],[5.55,1.55],[7.25,1.2],[8.6,1.6],[10.35,2.15],[12.65,2.19]];
 // ---- אזורים ----
 const sat=v=>v<0?0:v>1?1:v;
 const near=(d,full,zero)=>sat((zero-d)/(zero-full));
@@ -47,8 +62,32 @@ function pilgrims(x,n){const M=window.__PGM;if(!M)return{c:0,sd:1e9,sp:null};let
   try{scan(M.b,d=>{c+=d<10?1:0.5});scan(M.s,(d,px,pn)=>{if(d<sd){sd=d;sp=[px,pn]}})}catch(e){}
   return{c,sd,sp}}
 function baa(vol,pan){if(!bufs.sheep||!ctx)return;const c=BAAS[Math.floor(Math.random()*BAAS.length)];if(c[0]+c[1]>bufs.sheep.duration)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.sheep;s.playbackRate.value=0.9+Math.random()*0.2;g.gain.value=vol;s.connect(g);if(p){p.pan.value=pan;g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],c[1])}
+function moo(vol,pan){if(!bufs.cattle||!ctx)return;const c=MOOS[Math.floor(Math.random()*MOOS.length)];if(c[0]+c[1]>bufs.cattle.duration+0.05)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.cattle;s.playbackRate.value=0.88+Math.random()*0.2;g.gain.value=vol;s.connect(g);if(p){p.pan.value=pan;g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],Math.min(c[1],bufs.cattle.duration-c[0]))}
+function panOf(S,near0,span){if(!S||!S[0])return 0;const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;return(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-near0)/span)}
+let nextMoo=0;
 function clink(vol){if(!bufs.coins||!ctx)return;const c=CLINKS[Math.floor(Math.random()*CLINKS.length)];if(c[0]+c[1]>bufs.coins.duration)return;const s=ctx.createBufferSource(),g=ctx.createGain(),p=ctx.createStereoPanner?ctx.createStereoPanner():null;s.buffer=bufs.coins;s.playbackRate.value=0.92+Math.random()*0.16;g.gain.value=vol;s.connect(g);if(p){p.pan.value=Math.max(-1,Math.min(1,((AMB.pan&&AMB.pan.market)||0)+Math.random()*0.4-0.2));g.connect(p);p.connect(out)}else g.connect(out);s.start(ctx.currentTime+0.02,c[0],c[1])}
-function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0,steps:0,sheep:0};
+/* 136.0: האם המצלמה במקום מקורה? מחזיר {lane, hall} (0..1): lane = מעבר צר ונמוך, hall = חלל גבוה.
+   הרשימות: רחובות מקורים (__COVL, 18-old-city-areas), מעברי שערי העיר (__GPAS, gatePass), המעברים שמתחת להר (TUNS: חולדה וקיפונוס), שערי העזרות (GLIST), וההיכל (INTBOX) */
+function encl(cp,x,n){const R={lane:0,hall:0,k:""};let gy=0;try{gy=groundAt(cp.x,cp.z)}catch(e){}const ha=cp.y-gy;
+  if(INTBOX&&cp.x>INTBOX.x0&&cp.x<INTBOX.x1&&cp.z>INTBOX.z0&&cp.z<INTBOX.z1&&cp.y<INTBOX.y1){R.hall=1;R.k="היכל";return R}
+  for(const L of (window.__COVL||[])){if(ha>L.h)continue;const P=L.p;for(let i=0;i<P.length-1;i++){if(segD(x,n,P[i],P[i+1])<=L.r+0.2){R.lane=1;R.k="רחוב מקורה";return R}}}
+  for(const G of (window.__GPAS||[])){const dx=x-G.x,dn=n-G.n,c=Math.cos(G.rot),s=Math.sin(G.rot),a=dx*c+dn*s,b=-dx*s+dn*c;if(ha<G.ph+1&&G.cor.some(q=>a>q[0]-0.3&&a<q[1]+0.3&&b>q[2]-0.3&&b<q[3]+0.3)){R.lane=1;R.k="שער העיר";return R}}
+  try{const T=tunAt(x,n,0);if(T){const dx=x-T.w.x,dn=n-T.w.n,dd=-(dx*T.w.ox+dn*T.w.on);/* המעבר מתחת לרחבה: אחרי פתח של כמה מטרים */if(dd>2&&cp.y<-0.5){R.lane=sat((dd-2)/6);R.k="מעבר "+T.nm;return R}}}catch(e){}
+  if(COMP&&GLIST.length){const u=(cp.x-COMP.X0)/A,v=(COMP.N0+cp.z)/A;for(const g of GLIST){const a=g.axis==="e"?u-g.cu:v-g.cv,w=g.axis==="e"?v-g.cv:u-g.cu;if(Math.abs(w)>g.pass/2)continue;const d=a*g.outward-g.L/2;if(d<-1&&d>-g.L+1&&cp.y<(g.floor+18)*A){R.hall=0.55;R.lane=0.35;R.k="שער העזרה";return R}}}
+  return R}
+/* 136.1: בעלי החיים של המקדש (BEAST.HERDS, 30-temple-life): העדר הקרוב מכל סוג. כבשים ועזים פועים, בקר גועה 💡 */
+const FLOCK={sheep:1,ram:1,goat:1,kid:1},CATTLE={bull:1,calf:1};let hwp=null;
+function herds(cp){const H=window.__BEAST&&window.__BEAST.HERDS;const R={fd:1e9,fp:null,fn:0,cd:1e9,cp:null,cn:0};if(!H||typeof THREE==="undefined")return R;hwp=hwp||new THREE.Vector3();
+  for(const h of H){if(!h.g.parent||!h.near||!h.near.count)continue;let q=h.g,vis=true;while(q){if(!q.visible){vis=false;break}q=q.parent}if(!vis)continue;
+    hwp.copy(h.c);h.g.localToWorld(hwp);const d=Math.max(0,Math.hypot(hwp.x-cp.x,hwp.z-cp.z)-h.r*0.7);
+    if(FLOCK[h.kind]){if(d<R.fd){R.fd=d;R.fp=[hwp.x,hwp.z]}if(d<30)R.fn+=h.near.count}
+    else if(CATTLE[h.kind]){if(d<R.cd){R.cd=d;R.cp=[hwp.x,hwp.z]}if(d<40)R.cn+=h.near.count}}
+  return R}
+/* 136.2: מים: מעיין הגיחון (📜 מלכים א א, לג) ובריכת השילוח (📜 "מי השלח ההלכים לאט", ישעיה ח, ו) */
+function waterD(x,n){let best=1e9,np=null,k="";const P=COD8&&COD8.pool;if(P){const dx=x-P.c[0],dn=n-P.c[1],a=dx*P.A[0]+dn*P.A[1],b=dx*P.U[0]+dn*P.U[1],ea=Math.max(0,Math.abs(a)-P.hl),eb=Math.max(0,Math.abs(b)-P.hw),d=Math.hypot(ea,eb);const ca=Math.max(-P.hl,Math.min(P.hl,a)),cb=Math.max(-P.hw,Math.min(P.hw,b));best=d;np=[P.c[0]+P.A[0]*ca+P.U[0]*cb,P.c[1]+P.A[1]*ca+P.U[1]*cb];k="pool"}
+  for(const W of (window.__WATERS||[])){const d=Math.max(0,Math.hypot(x-W.x,n-W.n)-Math.max(W.hw,W.hl));if(d<best){best=d;np=[W.x,W.n];k=W.k}}
+  return{d:best,np,k}}
+function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coins:0,steps:0,sheep:0,cattle:0,spring:0,wind:0,lane:0,hall:0};
   const cp=P||camera.position;let gy=0;try{gy=groundAt(cp.x,cp.z)}catch(e){}if(!isFinite(gy))gy=0;
   const h=Math.max(1,cp.y-gy);if(!P)AMB.h=h;
   /* גובה: עד 30 מ׳ מלא, מעל 250 מ׳ שקט, וביניהם בהדרגה (לוגריתמית) 💡 */
@@ -93,11 +132,21 @@ function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coi
   /* 130.4: כלי הרכב שנוסעים במודל (24-transport). בשבת הרכבות לא נוסעות, וכך גם הקול */
   if(!P&&window.__VEH&&VEH){let best=null;const now=performance.now(),np=new Map();try{window.__VEH().forEach((v,i)=>{const key=v[2]+":"+i,pr=VEH.prev.get(key);np.set(key,[v[0],v[1],now]);const d=Math.hypot(v[0]-cp.x,-v[1]-cp.z);if(d>80||!pr)return;const dt=(now-pr[2])/1000,sp=dt>0?Math.hypot(v[0]-pr[0],v[1]-pr[1])/dt:0;if(sp<0.3||sp>40)return;const w=near(d,6,70)*(v[2]?1:0.7);if(!best||w>best.w)best={w,sp,x:v[0],z:-v[1],d}})}catch(e){}VEH.prev=np;
     if(best){L.veh=best.w*(1-mount*0.6);SRC.veh=[[best.x,best.z],best.d];AMB.vsp=best.sp}}
-  for(const k in L)L[k]*=hf;
-  if(inHouse)for(const k in L)L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 */
+  /* 136.1: עדרי המקדש (במחנה הבדיקה, בדרך לעזרה, בלשכות). ⚖️ בשבת אין קרבנות יחיד (תמורה ב, א), ולכן העדרים עצמם קטנים; הקול הולך אחרי מה שיש במודל */
+  {const hd=herds(cp),qn=night?0.35:1;if(hd.fp){const v=near(hd.fd,3,32)*sat(0.35+hd.fn/12)*qn;if(v>L.sheep){L.sheep=v;if(!P)SRC.sheep=[hd.fp,hd.fd]}AMB.fn=hd.fn}
+    if(hd.cp){L.cattle=near(hd.cd,4,45)*sat(0.4+hd.cn/6)*qn;if(!P)SRC.cattle=[hd.cp,hd.cd];AMB.cn=hd.cn}}
+  /* 136.2: מים: הגיחון נובע חזק יותר, השילוח רגוע ("ההלכים לאט") 💡 */
+  {const w=waterD(x,n);if(w.np){const v=w.k==="gihon"?near(w.d,2,28)*0.9:near(w.d,2,34)*0.5;L.spring=v;if(!P)SRC.spring=[W(w.np),w.d]}}
+  /* 136.2: רוח בגבהים פתוחים (הר הזיתים, הר הצופים): לפי גובה הקרקע מעל הר הבית, ורק מחוץ לעיר העתיקה 💡 */
+  {let gy=0;try{gy=groundAt(cp.x,cp.z)}catch(e){}/* רק ברכס שממזרח לעיר (הר הזיתים), לא ברחובות העיר החדשה */L.wind=(inOld||x<150)?0:sat((gy-WIND0)/30)*(night?0.8:1)*(1-mount);AMB.gy=gy}
+  /* 136.0: במקום מקורה: הד, וקולות של שטח פתוח (ציפורים, צרצרים, רוח, רכב) כמעט לא נשמעים */
+  {const E=encl(cp,x,n);L.lane=E.lane;L.hall=E.hall;if(!P)AMB.encl=E.k;const ins=Math.max(E.lane,E.hall);if(ins>0){const f=1-0.8*ins;L.birds*=f;L.night*=f;L.wind*=1-ins;if(L.veh)L.veh*=f}}
+  for(const k in L)if(k!=="lane"&&k!=="hall")L[k]*=hf;
+  if(inHouse)for(const k in L)if(k!=="lane"&&k!=="hall"&&k!=="steps")L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 (הצעדים וההד נשארים) */
   return L}
 /* עוצמת בסיס לכל קובץ (אחרי נרמול), כדי שהשכבות יישבו יחד 💡 */
-const BASE={city:0.5,market:0.6,quiet:0.45,stream:0.55,birds:0.35,night:0.3,steps:0.55};
+/* 136.2: מעל גובה זה (גובה קרקע בעולם; רחבת הכותל ‎-13, שער יפו 39, ראש הר הזיתים 61) מתחילה רוח */const WIND0=30;
+const BASE={spring:0.5,city:0.5,market:0.6,quiet:0.45,stream:0.55,birds:0.35,night:0.3,steps:0.55};
 function tick(){if(!AMB.on||!ctx){return}
   if(typeof camera==="undefined"||!camera||!window.__LOADT)return;
   /* מהירות ההולך: הדמות במצב «הולך», אחרת המצלמה. קפיצה או טיסה (מעל 8 מ׳ לשנייה) אינה הליכה */
@@ -109,17 +158,26 @@ function tick(){if(!AMB.on||!ctx){return}
   const now=ctx.currentTime;
   /* בסיור הקריינות קודמת: הרקע יורד ל־40% */
   const duck=(typeof STORY!=="undefined"&&STORY)?0.4:1;
-  out.gain.setTargetAtTime(0.9*duck,now,0.3);
+  out.gain.setTargetAtTime(1.25*AMB.v*duck,now,0.3);
   /* 130.2: כיוון — המקור משמאל או מימין למצלמה. כשעומדים בתוכו, הקול מכל הצדדים (באמצע) */
   {const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,cp=camera.position;
    for(const k in pans){const S=SRC[k==="market"&&L.coins>L.market*0.9?"coins":k];let v=0;if(S&&S[0]){const dx=S[0][0]-cp.x,dz=S[0][1]-cp.z,dl=Math.hypot(dx,dz);if(dl>0.5)v=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-3)/20)}AMB.pan=AMB.pan||{};AMB.pan[k]=v;pans[k].pan.setTargetAtTime(v,now,0.25)}}
   LOOPS.forEach(k=>{if(gains[k])gains[k].gain.setTargetAtTime(L[k]*BASE[k],now,k==="steps"?0.2:0.6)});
   if(VEH){const v=L.veh||0,sp=AMB.vsp||0;VEH.g.gain.setTargetAtTime(0.5*v,now,0.4);VEH.os.frequency.setTargetAtTime(120+sp*18,now,0.5);VEH.o2.frequency.setTargetAtTime(240+sp*36,now,0.5);
     if(VEH.pn){const S=SRC.veh;let pv=0;if(S&&S[0]&&v>0){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pv=(dx*rx+dz*rz)/(dl*rl)*0.85*sat((S[1]-2)/12)}VEH.pn.pan.setTargetAtTime(pv,now,0.2)}}
-  if(L.sheep>0.05&&performance.now()>nextBaa){const S=SRC.sheep;let pn=0;if(S&&S[0]){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pn=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-2)/10)}baa(0.55*L.sheep,pn);nextBaa=performance.now()+3500+Math.random()*7000}
+  /* 136.0: הד */
+  if(!REV){try{mkRev()}catch(e){REV=null;console.warn("amb rev",e)}}
+  if(REV){revSet("lane",0.55*L.lane,now);revSet("hall",0.75*L.hall,now)}
+  /* 136.2: רוח במשבים */
+  if(WIND){WIND.gu=Math.max(0,Math.min(1,WIND.gu+(Math.random()-0.5)*0.18));WIND.g.gain.setTargetAtTime(0.32*(L.wind||0)*(0.45+0.55*WIND.gu),now,0.9);WIND.bp.frequency.setTargetAtTime(300+WIND.gu*550,now,1.2)}
+  /* 136.1: בקר גועה מדי פעם; ככל שיש יותר בקר קרוב, לעתים קרובות יותר */
+  if(L.cattle>0.05&&performance.now()>nextMoo){moo(0.6*L.cattle,panOf(SRC.cattle,2,12));nextMoo=performance.now()+(5000+Math.random()*10000)/Math.sqrt(Math.max(1,(AMB.cn||1)/2))}
+  if(L.sheep>0.05&&performance.now()>nextBaa){const S=SRC.sheep;let pn=0;if(S&&S[0]){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pn=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-2)/10)}baa(0.55*L.sheep,pn);nextBaa=performance.now()+(3500+Math.random()*7000)/Math.sqrt(Math.max(1,(AMB.fn||1)/4))}
   if(L.coins>0.02&&performance.now()>nextClink){clink(0.5*L.coins);nextClink=performance.now()+1800+Math.random()*4200}}
 setInterval(tick,250);
 AMB.set=v=>{AMB.on=!!v;try{localStorage.setItem("tm_amb",v?"1":"0")}catch(e){}if(v){unlock();tick()}else if(ctx&&out){out.gain.setTargetAtTime(0,ctx.currentTime,0.15)}};
+/* לבדיקה (136.x) */AMB.tun=()=>TUNS().map(T=>({nm:T.nm,x:T.w.x,n:T.w.n,ox:T.w.ox,on:T.w.on,D:T.D}));AMB.gl=()=>GLIST.map(g=>({axis:g.axis,cu:g.cu,cv:g.cv,o:g.outward,L:g.L,f:g.floor}));AMB.gp=()=>(window.__GPAS||[]).map(G=>({x:G.x,n:G.n,rot:G.rot,c:G.cor[0]}));AMB.rev=()=>REV&&{lane:REV.lane.on,hall:REV.hall.on,lg:REV.lane.g.gain.value,hg:REV.hall.g.gain.value};
+AMB.vol=v=>{AMB.v=Math.max(0.1,Math.min(1,+v||0.7));try{localStorage.setItem("tm_ambv",String(Math.round(AMB.v*100)))}catch(e){}if(AMB.on&&ctx&&out)out.gain.setTargetAtTime(1.25*AMB.v,ctx.currentTime,0.1)};
 AMB.levels=()=>{try{return levels()}catch(e){return{err:String(e)}}};
 /* לבדיקה: העוצמות בנקודה (x מזרח, n צפון במטרים מנקודת הייחוס של המפה), בגובה h מעל הקרקע */
 AMB.at=(gx,gn,h)=>{try{const s=G2S(gx,gn),x=s[0],z=-s[1];let gy=0;try{gy=groundAt(x,z)}catch(e){}return levels({x,y:gy+(h||2),z})}catch(e){return{err:String(e)}}};
