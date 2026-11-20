@@ -1619,7 +1619,7 @@ function build(){
     CROWDT=(dt)=>{if(!wkOK)wkCheck();WKR.forEach(o=>{/* v114: הולכים, נעצרים, וממשיכים — לא סיבוב אינסופי */o.tm-=dt;if(o.tm<=0){o.go=!o.go;o.tm=o.go?5+Math.random()*9:4+Math.random()*12;if(o.go&&Math.random()<0.35)o.w=-o.w}if(!o.sp1){o.sp1=1;bm.setSp(o.i,o.w)}bm.setAmp(o.i,o.go?1:0);if(!o.go)return;const na=o.a+o.w*dt/o.R*1.0,x=o.x+Math.cos(na)*o.R,z=o.z+Math.sin(na)*o.R,gy=groundAt(x,z);
       if(blocked(x,z,gy)||Math.abs(gy-o.y)>0.3){o.w=-o.w;return} /* v101 · משימה 07: בזמן תנועה בודקים את הצעד מול blocked ו-groundAt; גובה הדמות לפי משטח ההליכה */
       o.a=na;o.y=gy;d.rotation.set(0,HD(o,-o.a+(o.w>0?-Math.PI/2:Math.PI/2),dt),0);d.position.set(x,o.y,z);d.updateMatrix();bm.setMatrixAt(o.i,d.matrix);d.position.y=o.y+1.56;d.updateMatrix();hm.setMatrixAt(o.i,d.matrix)});bm.instanceMatrix.needsUpdate=hm.instanceMatrix.needsUpdate=true};
-    const r2=rng(202),pl=[];const mx=MOUNT_S.map(q=>q[0]),mn=MOUNT_S.map(q=>q[1]),bx0=Math.min(...mx),bx1=Math.max(...mx),bn0=Math.min(...mn),bn1=Math.max(...mn);for(let k=0;k<900;k++){const x=bx0+r2()*(bx1-bx0),n=bn0+r2()*(bn1-bn0);if(!inPoly(x,n,MOUNT_S))continue;const u=(x-X0)/A,v=(N0-n)/A;if(u>-14&&u<514&&v>-14&&v<514)continue;pl.push([x,0,n])}
+    const r2=rng(202),pl=[];const mx=MOUNT_S.map(q=>q[0]),mn=MOUNT_S.map(q=>q[1]),bx0=Math.min(...mx),bx1=Math.max(...mx),bn0=Math.min(...mn),bn1=Math.max(...mn);for(let k=0;k<900;k++){const x=bx0+r2()*(bx1-bx0),n=bn0+r2()*(bn1-bn0);if(!inPoly(x,n,MOUNT_S))continue;const u=(x-X0)/A,v=(N0-n)/A;if(u>-14&&u<514&&v>-14&&v<514)continue;/* 137.4: לא בתוך בתי הכהנים, השוק והסטיו המערבי, ולא באמצע דרכי העולים (שם הולכים העולים) */if((u>-44&&u<170&&v>-130&&v<-86)||(u>334&&u<402&&v>-150&&v<-62)||(u<-62)||(v>-62&&v<-48)||(u>-62&&u<-48)||(v>548&&v<562))continue;pl.push([x,0,n])}
     for(let k=0,t=0;k<260&&t<4000;t++){const x=-182+r2()*96,n=-248+r2()*133;if(!inPoly(x,n,PLAZA))continue;const q=G2S(x,n);pl.push([q[0],PLZ+0.4,q[1]]);k++}
     const NM2=pl.findIndex(p=>p[1]!==0),b2=FIG.mesh(pl.length,FIG.mat(0xffffff),{ctx:"mount"}),h2=new THREE.InstancedMesh(headG,M.people,pl.length);
     pl.forEach((p,i)=>{b2.setAmp(i,0);d.rotation.set(0,r2()*6.28,0);d.position.set(p[0],p[1],-p[2]);d.updateMatrix();b2.setMatrixAt(i,d.matrix);b2.dress(i,NM2>=0&&i>=NM2?"old":"mount",null,i);d.position.y=p[1]+1.52;d.updateMatrix();h2.setMatrixAt(i,d.matrix);c.setHex(0xb38b6d);h2.setColorAt(i,c)});
@@ -1719,6 +1719,73 @@ function build(){
     [fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PM;cPick.push(m);goods.add(m)});
     BEAST.flow(hold,()=>{const open=DAY!=="shabbat";if(goods.visible!==open)goods.visible=open});
     CL("שוק צורכי הקרבן",371,-106,14,PM,false);CL("מוכרי היונים",391,-80,12,PM,true);CL("סוחרי הבהמה",348,-80,12,PM,true)})();
+  /* 137.2 · בתי הכהנים בצפון־מערב, ואיש הר הבית בלילה.
+     📜 "קדש מן הארץ הוא, לכהנים משרתי המקדש יהיה... והיה להם מקום לבתים" (יחזקאל מה, ד). המלבי״ם: "לא יקחוהו בתורת נחלה לעשות בו שדות וכרמים... רק יבנו שם בתים לשבתם".
+     ⚖️ עשרים וארבע משמרות (תענית ד, ב). 💡 המקום, המספר והצורה הם הצעה: שורה שקטה של בתי חצר נמוכים מאבן, כמו בתי העיר העתיקה */
+  if(LOC==="kodesh")(function(){const HI=I("בתי הכהנים","יחזקאל מה, ד ומלבי״ם; תענית ד, ב","📜 \"קדש מן הארץ הוא, לכהנים משרתי המקדש יהיה, הקרבים לשרת את ה׳, והיה להם מקום לבתים\" (יחזקאל מה, ד). 📜 המלבי״ם: חלק הכהנים לא ניתן להם \"לעשות בו שדות וכרמים... רק יבנו שם בתים לשבתם\". ⚖️ הכהנים מתחלקים לעשרים וארבע משמרות, וכל משמר עובד שבוע (תענית ד, ב). 💡 כאן מוצעים בתי חצר לכהני המשמר של השבוע ולמשפחותיהם, מחוץ למגרש של 50 אמה ומחוץ לשטח המקודש. המקום, המספר והצורה הם הצעה.");
+    const g=0,H=14,t=1.6,win=[],dark=M.dark;
+    const house=(u0,v0,S)=>{const u1=u0+S,v1=v0+S,c=(u0+u1)/2;
+      box(u0,v0,u1,v0+t,g,g+H,M.stoneL,HI);box(u0,v1-t,c-2,v1,g,g+H,M.stoneL,HI);box(c+2,v1-t,u1,v1,g,g+H,M.stoneL,HI);box(c-2,v1-t,c+2,v1,g+7,g+H,M.stoneL,HI);
+      box(u0,v0+t,u0+t,v1-t,g,g+H,M.stoneL,HI);box(u1-t,v0+t,u1,v1-t,g,g+H,M.stoneL,HI);
+      // rooms round a courtyard: an inner wall ring, a roof on the rooms, a parapet
+      const r=10;box(u0+t,v0+t,u1-t,v0+r,g,g+H-0.1,M.stoneL,null,{noCol:true});box(u0+t,v1-r,c-2,v1-t,g,g+H-0.1,M.stoneL,null,{noCol:true});box(c+2,v1-r,u1-t,v1-t,g,g+H-0.1,M.stoneL,null,{noCol:true});
+      box(u0+t,v0+r,u0+r,v1-r,g,g+H-0.1,M.stoneL,null,{noCol:true});box(u1-r,v0+r,u1-t,v1-r,g,g+H-0.1,M.stoneL,null,{noCol:true});
+      [[u0-0.3,v0-0.3,u1+0.3,v0+r],[u0-0.3,v1-r,u1+0.3,v1+0.3],[u0-0.3,v0+r,u0+r,v1-r],[u1-r,v0+r,u1+0.3,v1-r]].forEach(q=>box(q[0],q[1],q[2],q[3],g+H,g+H+0.5,M.stone2,null,{noCol:true,cast:false}));box(u0+r-0.4,v0+r-0.4,u0+r,v1-r+0.4,g+H+0.5,g+H+1.6,M.stoneL,null,{noCol:true,cast:false});box(u1-r,v0+r-0.4,u1-r+0.4,v1-r+0.4,g+H+0.5,g+H+1.6,M.stoneL,null,{noCol:true,cast:false});box(u0+r,v0+r-0.4,u1-r,v0+r,g+H+0.5,g+H+1.6,M.stoneL,null,{noCol:true,cast:false});box(u0+r,v1-r,u1-r,v1-r+0.4,g+H+0.5,g+H+1.6,M.stoneL,null,{noCol:true,cast:false});box(u0+r,v0+r,u1-r,v1-r,g+0.02,g+0.1,M.pave,null,{noCol:true,cast:false});
+      box(c-1.6,v1-0.05,c+1.6,v1+0.05,g,g+6.4,M.wood||dark,null,{noCol:true,cast:false});
+      for(let k=0;k<4;k++){const uu=u0+4+k*(S-8)/3;if(Math.abs(uu-c)>4)win.push([uu,v1+0.06,9]);win.push([uu,v0-0.06,9])}};
+    const S=34;[-38,4,46,88,130].forEach(u=>house(u,-126,S));
+    const wm=new THREE.InstancedMesh(new THREE.PlaneGeometry(1.4*A,2.2*A),new THREE.MeshStandardMaterial({color:0x2a241d,roughness:1}),win.length),D=new THREE.Object3D();
+    win.forEach((q,i)=>{const p=W(q[0],q[1]);D.position.set(p[0],q[2]*A,p[1]);D.rotation.set(0,q[1]>-100?0:Math.PI,0);D.updateMatrix();wm.setMatrixAt(i,D.matrix)});group.add(wm);
+    CL("בתי הכהנים",80,-109,22,HI,false);
+    // 📜 איש הר הבית: at night he goes round every guard post, and torches burn before him (מידות א, ב)
+    const IM=I("איש הר הבית","מידות א, א-ב","📜 \"איש הר הבית היה מחזר על כל משמר ומשמר, ואבוקות דולקין לפניו. וכל משמר שאינו עומד, אומר לו איש הר הבית: שלום עליך\" (מידות א, ב). ⚖️ בשלושה מקומות הכהנים שומרים, ובעשרים ואחד מקומות הלוים: על שערי הר הבית ועל פינותיו (מידות א, א). 💡 במודל הוא מסתובב בלילה סביב חומת 500 האמה, ולפניו נושא אבוקות. הדרך המדויקת היא הצעה.");
+    const PT=[[-25,-25],[480,-25],[-25,-25],[-25,525],[465,525],[-25,525]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PT.length;i++)PL.push(PL[i-1]+Math.hypot(PT[i][0]-PT[i-1][0],PT[i][1]-PT[i-1][1]));const LEN=PL[PL.length-1];
+    const at=s=>{s=((s%LEN)+LEN)%LEN;let i=0;while(i<PL.length-2&&PL[i+1]<s)i++;const a=PT[i],b=PT[i+1],f=(s-PL[i])/((PL[i+1]-PL[i])||1);return[a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f,Math.atan2(-(b[1]-a[1]),b[0]-a[0])]};
+    const gN=new THREE.Group(),hold=new THREE.Group();group.add(gN);group.add(hold);gN.visible=false;
+    const fig=FIG.mesh(2,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),2),CC=new THREE.Color();fig.setColorAt(0,CC.setHex(0xf2efe8));fig.setColorAt(1,CC.setHex(0x8a6a4a));fig.setAmp(0,1);fig.setAmp(1,1);
+    const tg=new THREE.Group();{const st=new THREE.Mesh(new THREE.CylinderGeometry(0.03,0.04,1.3,6),M.wood||M.stone2);st.position.y=0.65;tg.add(st);const fl=new THREE.Mesh(new THREE.SphereGeometry(0.09,8,6),M.ember);fl.position.y=1.36;fl.scale.y=1.7;tg.add(fl)}
+    const t1=tg.clone(),t2=tg.clone();[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=IM;cPick.push(m);gN.add(m)});gN.add(t1);gN.add(t2);
+    const lt=new THREE.PointLight(0xff9a40,1.4,16,2);gN.add(lt);
+    let S_=0;const put=(i,q)=>{D.position.set(q[0],0,q[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(1);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y=1.56;D.updateMatrix();hd.setMatrixAt(i,D.matrix)};
+    BEAST.flow(hold,dt=>{const on=TIME==="night";if(gN.visible!==on)gN.visible=on;if(!on)return;S_+=dt*1.1;const a=at(S_+2.2),b=at(S_);put(0,b);put(1,a);fig.setSp(0,1.1);fig.setSp(1,1.1);
+      const hx=Math.cos(a[2]),hz=-Math.sin(a[2]);t1.position.set(a[0]+hz*0.3+hx*0.3,0.55,a[1]-hx*0.3+hz*0.3);t2.position.set(a[0]-hz*0.3+hx*0.3,0.55,a[1]+hx*0.3+hz*0.3);lt.position.set(a[0]+hx*0.6,2.2,a[1]+hz*0.6);
+      fig.instanceMatrix.needsUpdate=true;hd.instanceMatrix.needsUpdate=true});
+    window.__ISH={at,LEN}})();
+  /* 137.3 · שולי ההר: סטיו צר לאורך החומה המערבית, ופנסי אבן נמוכים לאורך דרכי העולים.
+     ⚖️ "כל האכסדראות... של אבן היו, לא של עץ" (רמב״ם עבודה זרה ו, י). 💡 הסטיו, העומק (4.5 מ׳), הפנסים והמרחק ביניהם הם הצעה */
+  if(LOC==="kodesh")(function(){const SI=I("הסטיו המערבי","רמב״ם עבודה זרה ו, י; פסחים יג ע״ב","⚖️ בהר אין סוכות עץ ואין עצים: \"כל האכסדראות... של אבן היו, לא של עץ\" (רמב״ם עבודה זרה ו, ט-י). 📜 סביב ההר היו סטווים, \"סטיו לפנים מסטיו\" (פסחים יג ע״ב). 💡 כאן סטיו אבן צר לאורך החומה המערבית, בין שבעת השערים: צל, ספסלי אבן ומים למי שנכנס מהעיר. העומק והגובה הם הצעה.");
+    const P=[[-155.2,197.2],[-148.1,163.5],[-141.1,127.2],[-130.7,72.1],[-125,41.6],[-118.5,6.2],[-113.8,-19.7],[-105.7,-71.7],[-103.4,-89.3],[-98,-116.5],[-92.3,-153.2]].map(q=>G2S(q[0],q[1]));
+    const GO=(window.__MG||[]).filter(g=>g.w_&&(g.k==="W")).map(g=>{const q=G2S(g.w_.x,g.w_.n);return[q[0],q[1],g.w/2+2.5]});
+    const D=new THREE.Object3D(),cols=[],benches=[],dep=4.5,h=6.2;
+    for(let i=0;i<P.length-1;i++){const a=P[i],b=P[i+1],dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn),ux=dx/L,un=dn/L;let nx=-un,nn=ux;if(!inPoly(a[0]+nx*6,a[1]+nn*6,MOUNT_S)){nx=-nx;nn=-nn}
+      const ang=Math.atan2(dn,dx),cx=(a[0]+b[0])/2+nx*dep/2,cn=(a[1]+b[1])/2+nn*dep/2;
+      const roof=new THREE.Mesh(wbox(L+0.6,0.7,dep+0.8,4),M.stoneL);roof.position.set(cx,h+0.35,-cn);roof.rotation.y=ang;roof.castShadow=true;roof.receiveShadow=true;roof.userData=SI;cPick.push(roof);group.add(roof);
+      for(let t=1.5;t<L-0.5;t+=4.2){const x=a[0]+ux*t+nx*dep,n=a[1]+un*t+nn*dep;if(GO.some(q=>Math.hypot(q[0]-x,q[1]-n)<q[2]+dep))continue;cols.push([x,n]);if(Math.round(t/4.2)%3===1)benches.push([a[0]+ux*(t+2.1)+nx*1.1,a[1]+un*(t+2.1)+nn*1.1,ang])}}
+    {const im=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.32,0.38,h,10),M.marble,cols.length);cols.forEach((c,i)=>{D.position.set(c[0],h/2,-c[1]);D.rotation.set(0,0,0);D.updateMatrix();im.setMatrixAt(i,D.matrix)});im.castShadow=true;im.userData=SI;cPick.push(im);group.add(im)}
+    {const im=new THREE.InstancedMesh(new THREE.BoxGeometry(2.2,0.45,0.6),M.stone2,benches.length);benches.forEach((c,i)=>{D.position.set(c[0],0.23,-c[1]);D.rotation.set(0,c[2],0);D.updateMatrix();im.setMatrixAt(i,D.matrix)});im.userData=SI;cPick.push(im);group.add(im)}
+    CL("הסטיו המערבי",-72,300,15,SI,true);
+    // lamps along the paths of 137.0: a low stone post with a lantern, every 36 amot, on the inner edge
+    const LI=I("פנסים בדרך העולים","💡 הצעה","💡 פנסי אבן נמוכים לאורך דרכי העולים, כדי שאפשר יהיה ללכת בבטחה בלילה, למשל בשמחת בית השואבה ובליל פסח. הם נמוכים, כדי שלא יסתירו את המקדש. בלי חשמל גלוי: אור חם, כמו של שמן.");
+    const LP=[];const run=(u0,v0,u1,v1)=>{const L=Math.hypot(u1-u0,v1-v0),n=Math.floor(L/36);for(let k=0;k<=n;k++){const f=n?k/n:0;LP.push(W(u0+(u1-u0)*f,v0+(v1-v0)*f))}};
+    run(-50.6,-170,-50.6,540);run(-40,-50.6,240,-50.6);run(262,-50.6,470,-50.6);run(-30,550.6,240,550.6);run(262,550.6,318,550.6);
+    const lm=new THREE.MeshStandardMaterial({color:0x6b5a3e,emissive:0xffb35c,emissiveIntensity:0.15,roughness:0.6});
+    const po=new THREE.InstancedMesh(new THREE.BoxGeometry(0.3,1.6,0.3),M.stone2,LP.length),la=new THREE.InstancedMesh(new THREE.BoxGeometry(0.34,0.38,0.34),lm,LP.length);
+    LP.forEach((q,i)=>{D.rotation.set(0,0,0);D.position.set(q[0],0.8,q[1]);D.updateMatrix();po.setMatrixAt(i,D.matrix);D.position.y=1.78;D.updateMatrix();la.setMatrixAt(i,D.matrix)});
+    [po,la].forEach(m=>{m.userData=LI;cPick.push(m);group.add(m)});
+    const hold=new THREE.Group();group.add(hold);let was=null;BEAST.flow(hold,()=>{const on=TIME==="night"||TIME==="evening";if(on!==was){was=on;lm.emissiveIntensity=on?0.9:0.15}})})();
+  /* 137.4 · העולים הולכים בדרכים: משערי ההר אל השער הצפוני או הדרומי, ומהשער שבו יצאו אל שער אחר של ההר.
+     📜 "הבא דרך שער צפון... יצא דרך שער נגב" (יחזקאל מו, ט). 💡 מספר ההולכים והבגדים של היום הם הצעה לתצוגה */
+  if(LOC==="kodesh"&&SHOW_PEOPLE)(function(){const WI=I("עולים בדרך","יחזקאל מו, ט; רמב״ם בית הבחירה ז, ב","📜 \"הבא דרך שער צפון להשתחות יצא דרך שער נגב, והבא דרך שער נגב יצא דרך שער צפונה\" (יחזקאל מו, ט). ⚖️ הם הולכים מסביב ולא חוצים את ההר כדי לקצר (רמב״ם בית הבחירה ז, ב). 💡 מספר ההולכים והבגדים של היום הם הצעה לתצוגה.");
+    const RT=[[[-72,451],[-55,451],[-55,-55],[245,-55],[245,-4]],[[-90,-14],[-55,-14],[-55,-55],[245,-55],[245,-4]],[[-83,116],[-55,116],[-55,555],[245,555],[245,504]],[[137,646],[137,555],[245,555],[245,504]],
+      [[255,504],[255,555],[11,555],[11,646]],[[484,-190],[484,-55],[255,-55],[255,-4]],[[255,-4],[255,-55],[-55,-55],[-55,229],[-78,229]],[[315,-186],[315,-55],[255,-55],[255,-4]],[[255,504],[255,555],[-55,555],[-55,383],[-80,383]]]
+      .map(R=>{const P=R.map(q=>W(q[0],q[1])),L=[0];for(let i=1;i<P.length;i++)L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));return{P,L,len:L[L.length-1]}});
+    const N=SMALL?24:64,rq=(()=>{let q=1374;return()=>(q=(q*16807)%2147483647)/2147483647})(),WK=[];for(let i=0;i<N;i++){const r=RT[i%RT.length];WK.push({r,s:rq()*r.len,v:1.0+rq()*0.45,off:(rq()-0.5)*3.4})}
+    const fig=FIG.mesh(N,FIG.mat(0xffffff),{kit:"all"}),hd=new THREE.InstancedMesh(FIG.head(),M.people,N),D=new THREE.Object3D(),CL_=[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0xf2efe8,0x1f2a3a,0x7a3b3b,0x4a5a6a,0xd9cbb0,0x2b2b2b,0x5d6b4a,0x9aa3ad],CC=new THREE.Color();
+    WK.forEach((w,i)=>{fig.setColorAt(i,CC.setHex(CL_[(i*7)%CL_.length]));hd.setColorAt(i,CC.setHex([0xb38b6d,0x9c7457,0xc79f80][i%3]));fig.setAmp(i,1);fig.setSp(i,w.v);if(fig.dress)try{fig.dress(i,"mount",null,i)}catch(e){}});
+    const gW=new THREE.Group();group.add(gW);[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=WI;cPick.push(m);gW.add(m)});FIG.LOD.add([fig,hd]);
+    const at=(r,s,off)=>{let i=0;while(i<r.L.length-2&&r.L[i+1]<s)i++;const a=r.P[i],b=r.P[i+1],f=(s-r.L[i])/((r.L[i+1]-r.L[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1;return[a[0]+dx*f-dz/l*off,a[1]+dz*f+dx/l*off,Math.atan2(dx,dz)]};
+    BEAST.flow(gW,dt=>{for(let i=0;i<N;i++){const w=WK[i];w.s+=w.v*dt;if(w.s>w.r.len)w.s=0;const q=at(w.r,w.s,w.off);D.position.set(q[0],0.18,q[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(1);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y=0.18+1.52;D.updateMatrix();hd.setMatrixAt(i,D.matrix)}fig.instanceMatrix.needsUpdate=hd.instanceMatrix.needsUpdate=true});
+    window.__OTW={N,routes:RT.length}})();
   // קירות שחורים (7.11.2026): מערכת ההרחקה (core/33) העלימה מרחוק את גושי המילוי, את קיר השפה ואת המגרש (קופסאות פשוטות בלי תחליף רחוק), ונראה החלל השחור שמתחתם. noLOD משאיר אותם תמיד.
   {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
     const S=500*A,st=4,cells=[];for(let x=X0+st/2;x<X0+S;x+=st)for(let n=N0-S+st/2;n<N0;n+=st){if(inPoly(x,n,MOUNT_S))continue;const h=HS(x,n);if(h<-0.5)cells.push([x,n,h])}
