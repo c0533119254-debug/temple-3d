@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 137.0"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 137.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -13123,7 +13123,7 @@ function build(){
          📜 "כל בעלי השיר יוצאין בשיר ונמשכין בשיר" (שבת ה, א). 📜 מי שבא בשער צפון יוצא בשער נגב (יחזקאל מו, ט). אישה עם קן יונים (ויקרא יב, ח). 💡 מספר האנשים, הבגדים של היום, והדרך המדויקת */
       {const FI=I("מביאים קרבן","שבת ה, א; יחזקאל מ, לט-מב; יחזקאל מו, ט; מנחות ט, ח; ויקרא יב, ח","📜 \"כל בעלי השיר יוצאין בשיר ונמשכין בשיר\" (שבת ה, א): מובילים את הבהמה בחבל. 📜 השולחנות לשחיטת העולה, החטאת והאשם עומדים באולם השער הצפוני (יחזקאל מ, לט-מב). 📜 \"הבא דרך שער צפון להשתחוות יצא דרך שער נגב\" (יחזקאל מו, ט). ⚖️ הבעלים סומך שתי ידיו על ראש הקרבן, ומיד אחר כך שוחטים. אישה וקטן לא סומכים (מנחות ט, ח). 📜 יולדת שאין לה כסף לכבש מביאה שתי תורים או שני בני יונה (ויקרא יב, ח). ⚖️ בשבת לא מביאים קרבנות יחיד: רק קרבנות הציבור דוחים את השבת (תמורה ב, א), ולכן בשבת הדרך ריקה. ⚖️ ברגל כל עולה רגל מביא עולת ראייה ושלמי חגיגה (חגיגה א, ב), ולכן ברגל יש פי שניים. 💡 כמה אנשים בדרך, הבגדים שלהם (בגדים של היום) והדרך המדויקת הם הצעה.");
         const gF=new THREE.Group();group.add(gF);const rq=(()=>{let q=2133;return()=>(q=(q*16807)%2147483647)/2147483647})();
-        const PTH=[[400,-136],[340,-72],[268,-17],[252,-3],[251,30],[251,60],[251,140],[251,163],[251,184]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PTH.length;i++)PL.push(PL[i-1]+Math.hypot(PTH[i][0]-PTH[i-1][0],PTH[i][1]-PTH[i-1][1]));const LEN=PL[PL.length-1];
+        /* 137.1: הדרך עוברת בשוק ובדרך העולים, ולא באלכסון דרך המגרש */const PTH=[[402,-136],[401,-152],[371,-152],[371,-55],[255,-55],[252,-20],[251,30],[251,60],[251,140],[251,163],[251,184]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PTH.length;i++)PL.push(PL[i-1]+Math.hypot(PTH[i][0]-PTH[i-1][0],PTH[i][1]-PTH[i-1][1]));const LEN=PL[PL.length-1];
         const at=(sv,off)=>{sv=((sv%LEN)+LEN)%LEN;let i=0;while(i<PL.length-2&&PL[i+1]<sv)i++;const a=PTH[i],b=PTH[i+1],f=(sv-PL[i])/((PL[i+1]-PL[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1,x=a[0]+dx*f-dz/l*off,z=a[1]+dz*f+dx/l*off;return[x,(typeof groundAt==="function"?groundAt(x,z):0),z,Math.atan2(-dz,dx)]};
         // who walks: sheep (most), goats, a ram, bulls with two people, and two women with a pair of doves in a cage
         const KS=[["sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xe2d6c0]],["goat",1.05,0.85,[0x2b2521,0x3d2f26,0x5a4434]],["ram",1.25,0.95,[0xe6dccb]],["bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x2e2420]]];
@@ -14166,6 +14166,30 @@ function build(){
     sign(-90,-162,0);[[240,LN+7],[260,LS-7]].forEach(([u,v])=>sign(u,v,0));
     CL("דרך העולים",LW,240,6,di,true);CL("דרך העולים",120,LN,6,di,true);CL("דרך העולים",360,LS,6,di,true);
     window.__OTM={TL:TL.length,KB:KB.length,gates:GS.map(q=>q.g.n+" "+q.u.toFixed(0)+","+q.v.toFixed(0))}})();
+  /* 137.1 · שוק צורכי הקרבן: בין שער חטה לבין מרכז הבדיקה, בדרך שבה העדרים מגיעים לשער הצפוני.
+     📜 "מעות שנמצאו לפני סוחרי בהמה" (שקלים ז, ב). 📜 קינים, תורים ובני יונה, נמכרו בירושלים (כריתות א, ז). ⚖️ אין מקח וממכר בשבת: בשבת השוק סגור.
+     ⚖️ סטווים של אבן, לא של עץ (רמב״ם עבודה זרה ו, י). 💡 המקום, הגודל והדוכנים הם הצעה. הנסכים לא נמכרים כאן: קונים חותם בלשכת החותמות (שקלים ה, ד) */
+  if(LOC==="kodesh")(function(){const PM=I("שוק צורכי הקרבן","שקלים ז, ב; כריתות א, ז; ויקרא ה, ז; ויקרא יב, ח; שקלים ה, ד; ביצה ה, ב","📜 \"מעות שנמצאו לפני סוחרי בהמה\" (שקלים ז, ב): היו סוחרים שמכרו בהמות לקרבנות. 📜 מעשה ש\"עמדו קינים בירושלים בדינרי זהב\", ורבן שמעון בן גמליאל הוריד את מחירם (כריתות א, ז): זוגות של תורים ובני יונה, לקרבן של יולדת ושל מי שאין ידו משגת (ויקרא ה, ז; יב, ח). ⚖️ בשבת אין מקח וממכר (ביצה ה, ב), ולכן בשבת הדוכנים סגורים וריקים. ⚖️ הנסכים לא נמכרים כאן: קונים חותם בלשכת החותמות שבפנים (שקלים ה, ד). ⚖️ הסטווים מאבן ולא מעץ (רמב״ם עבודה זרה ו, י). 💡 המקום, ליד מרכז הבדיקה ובדרך של העדרים, הגודל והדוכנים הם הצעה.");
+    const g=0,B=8,V0_=-146,V1_=-66,goods=new THREE.Group(),hold=new THREE.Group();group.add(goods);group.add(hold);
+    const row=(u0,u1,face)=>{const back=face>0?u0:u1,front=face>0?u1:u0;box(u0,V0_,u1,V1_,g,g+0.4,M.stone2,PM,{noCol:true});
+      box(Math.min(back,back+face*1.2),V0_,Math.max(back,back+face*1.2),V1_,g+0.4,g+9,M.stoneL,PM);box(u0-0.3,V0_-0.3,u1+0.3,V1_+0.3,g+9,g+10,M.stone2,PM,{noCol:true});
+      box(Math.min(back,front),V0_-1.2,Math.max(back,front),V0_,g+0.4,g+9,M.stoneL,null);box(Math.min(back,front),V1_,Math.max(back,front),V1_+1.2,g+0.4,g+9,M.stoneL,null);
+      for(let v=V0_;v<=V1_+0.01;v+=B){cyl(front-face*0.9,v,g+0.4,g+9,0.6,0.7,M.marble,PM,12);if(v>V0_&&v<V1_)box(Math.min(back,front-face*4),v-0.2,Math.max(back,front-face*4),v+0.2,g+0.4,g+6,M.stoneL,null,{noCol:true})}
+      for(let v=V0_;v<V1_;v+=B)box(Math.min(front-face*3.6,front-face*2),v+1.4,Math.max(front-face*3.6,front-face*2),v+B-1.4,g+0.4,g+2.4,M.stoneL,null,{noCol:true})};
+    row(338,358,1);row(384,398,-1);
+    // goods: dove cages on the east counters and in stacks behind them; sheep and goats in the west booths
+    const cg=[],D=new THREE.Object3D();for(let v=V0_;v<V1_;v+=B){for(let k=0;k<3;k++)cg.push([385+1.8,v+2.4+k*1.6,2.4,1]);for(let k=0;k<4;k++)for(let h=0;h<2;h++)cg.push([394.5-((k%2)*1.6),v+1.6+k*1.6,0.4+h*1.3,1.15])}
+    {const cm=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.55*A,0.62*A,1.1*A,8),new THREE.MeshStandardMaterial({color:0xb08d55,roughness:1}),cg.length);cg.forEach((c,i)=>{const p=W(c[0],c[1]);D.position.set(p[0],(c[2]+0.55*c[3])*A,p[1]);D.scale.setScalar(c[3]);D.rotation.set(0,i*0.7,0);D.updateMatrix();cm.setMatrixAt(i,D.matrix)});cm.castShadow=true;cm.userData=PM;cPick.push(cm);goods.add(cm)}
+    const rr=(()=>{let q=1371;return()=>(q=(q*16807)%2147483647)/2147483647})(),hb=(kind,L,H,cols,n,v0)=>{const h=BEAST.herd(kind,L,H,n,cols);for(let i=0;i<n;i++){const p=W(341+rr()*11,v0+1.5+rr()*(B-3));h.set(i,p[0],(g+0.4)*A,p[1],rr()*6.283,0.9+rr()*0.15)}h.pick(m=>{m.userData=PM;cPick.push(m)});goods.add(h.g)};
+    for(let v=V0_,k=0;v<V1_;v+=B,k++){if(k%3===2)hb("goat",1.05,0.85,[0x2b2521,0x3d2f26,0x5a4434],3,v);else hb("sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xe2d6c0],4,v)}
+    // sellers behind the counters, buyers in the aisle (💡 clothes of today)
+    const SP=[];for(let v=V0_;v<V1_;v+=B){SP.push([355.5,v+4,-Math.PI/2,0x6b5440,0]);SP.push([387.2,v+4,Math.PI/2,0x4a5a6a,0])}
+    for(let i=0;i<(SMALL?6:12);i++)SP.push([362+rr()*18,V0_+4+rr()*(V1_-V0_-8),rr()*6.283,[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0x7a3b3b,0xd9cbb0][i%6],1]);
+    const fig=FIG.mesh(SP.length,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),SP.length),CC=new THREE.Color();
+    SP.forEach((q,i)=>{const p=W(q[0],q[1]),s=0.9+rr()*0.14;D.position.set(p[0],(g+(q[4]?0:0.4))*A,p[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(s);D.updateMatrix();fig.setMatrixAt(i,D.matrix);fig.setColorAt(i,CC.setHex(q[3]));fig.setAmp(i,0);D.position.y+=1.56*s;D.updateMatrix();hd.setMatrixAt(i,D.matrix)});
+    [fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PM;cPick.push(m);goods.add(m)});
+    BEAST.flow(hold,()=>{const open=DAY!=="shabbat";if(goods.visible!==open)goods.visible=open});
+    CL("שוק צורכי הקרבן",371,-106,14,PM,false);CL("מוכרי היונים",391,-80,12,PM,true);CL("סוחרי הבהמה",348,-80,12,PM,true)})();
   // קירות שחורים (7.11.2026): מערכת ההרחקה (core/33) העלימה מרחוק את גושי המילוי, את קיר השפה ואת המגרש (קופסאות פשוטות בלי תחליף רחוק), ונראה החלל השחור שמתחתם. noLOD משאיר אותם תמיד.
   {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
     const S=500*A,st=4,cells=[];for(let x=X0+st/2;x<X0+S;x+=st)for(let n=N0-S+st/2;n<N0;n+=st){if(inPoly(x,n,MOUNT_S))continue;const h=HS(x,n);if(h<-0.5)cells.push([x,n,h])}
