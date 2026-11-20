@@ -446,7 +446,9 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
 // 📜 בתמונות הרחוב (Mapillary, 2018–2023) ברחוב דוד, ברחוב השלשלת, בחאן א־זית, בוויה דולורוזה ובמוריסטן, קומת הרחוב היא שורה של חנויות פתוחות:
 // פתח כהה, סחורה על דוכן לפני הפתח, תריס מתכת מגולגל מעל, ולפעמים סוכך בד. בדגם היה שם קיר עם חלונות. השווקים המקורים (אזור 2) כבר בנויים עם חנויות ולא נוגעים בהם.
 (function(){try{
-  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
+  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]],
+    /* 141.2 (תמונות Mapillary 2015–2023 ברובע הנוצרי): רחוב הנוצרים (חארת א־נסארה), מרחוב דוד צפונה עד ליד כנסיית הקבר, הוא רחוב שוק עם חנויות משני הצדדים, ובדגם היו בו רק קירות */
+    [[-538,-140],[-534,-94],[-545,-77],[-546,-34],[-537,5],[-535,31]]];
   const nearSpine=(x,n)=>SP.some(L=>{for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));if(Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n)<9)return true}return false});
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const souq=(x,n)=>x>-442&&x<-384&&n>-140&&n<22;
@@ -474,7 +476,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     {const p=P(0,-0.08);d.position.set(p[0],f.g+Hh+0.2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.14,0.4,W+0.1);d.updateMatrix();shut.setMatrixAt(i,d.matrix)}
     for(let k=0;k<3;k++){const al=(k-1)*W/3,h=0.3+((f.o2*7+k*3)%1)*0.45,p=P(al,-0.25);d.position.set(p[0],f.g+h/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.4,h,W/3-0.15);d.updateMatrix();goods.setMatrixAt(gi,d.matrix);goods.setColorAt(gi,col.setHex(PAL[Math.floor(((f.o3*13+k*5)%1)*PAL.length)]));gi++}
     if(f.o3<(f.w>=4?0.45:0.3)&&f.w>=2.6){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
-  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
+  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן, רחוב הנוצרים) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
 
 }catch(e){console.warn("shops",e)}})();
 
