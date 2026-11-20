@@ -104,7 +104,7 @@ const FIG=(function(){const U={uT:{value:0}};
   function KOH(r,role){const L={f:(1<<B.RB)|(1<<B.LS)|(1<<B.HS)|(1<<B.AV),hs:0.98+r()*0.08,w:1,top:0xfbfaf4,bot:0xfbfaf4,hair:HAIR[Math.floor(r()*6)],skin:SKIN[Math.floor(r()*SKIN.length)],acc:role==="levi"?0xe8e2cf:0x7a3b6a,shoe:3,kip:0};
     if(role!=="levi")L.f|=1<<B.MG;if(role==="hp")L.acc=0xf4f1e8;if(role==="young"){L.hs=0.84+r()*0.08;L.f&=~((1<<B.BD)|(1<<B.BL))}if(r()<0.6)L.f|=1<<B.BD;if(r()<0.2)L.f|=1<<B.BL;if(role==="levi"){L.f&=~(1<<B.AV);L.top=0xf1ece0}return L}
   const C3=new T.Color();
-  function mesh(count,material,opt){opt=opt||{};const kit=opt.kit||((opt.role==="kohen"||opt.role==="levi"||opt.role==="hp"||opt.role==="young")?"koh":"civ");const g=geo(kit).clone();g.userData.kit=kit;
+  function mesh(count,material,opt){opt=opt||{};const kit=opt.kit||((opt.role==="kohen"||opt.role==="levi"||opt.role==="hp"||opt.role==="young")?"koh":"civ");const g=geo(kit,!!opt.far).clone();g.userData.kit=kit;
     const an=new Float32Array(count*3),lk=new Float32Array(count*4),cx=new Float32Array(count*4);
     for(let i=0;i<count;i++){an[i*3]=Math.random()*6.283;an[i*3+1]=1;an[i*3+2]=1}
     const IA=(a,n)=>new T.InstancedBufferAttribute(a,n);g.setAttribute("ian",IA(an,3));g.setAttribute("ilk",IA(lk,4));g.setAttribute("icx",IA(cx,4));
