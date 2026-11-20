@@ -613,8 +613,9 @@ function build(){
       const entr=(vs,dir)=>{const vp=vs+dir*7.5,g=0;
         const v0=Math.min(vp,vp+dir*24),v1=Math.max(vp,vp+dir*24);
         box(186,v0,314,v1,g,g+0.06,M.stone2,svc,{noCol:true,cast:false});
-        [232,268].forEach(u=>{const v=vp+dir*12;cyl(u,v,g,g+0.5,3.2,3.4,M.stone2,svc,24);cyl(u,v,g+0.5,g+2,1.5,1.2,M.marble,svc,20);cyl(u,v,g+1.85,g+1.95,1.3,1.3,M.water,svc,20)});
-        if(dir>0){const a=vp+8;box(186,a,210,a+18,g,g+6,M.stoneL,svc);box(185.6,a-0.4,210.4,a+18.4,g+6,g+6.6,M.stone2,null);box(209.95,a+3,210.05,a+6,g,g+4.5,M.dark,null,{noCol:true,cast:false});box(209.95,a+12,210.05,a+15,g,g+4.5,M.dark,null,{noCol:true,cast:false})}
+        /* 137.0: קערות המים והשירותים עמדו בתוך המגרש של 50 אמה. 📜 "וחמשים אמה מגרש... מקום פנוי" (יחזקאל מה, ב ומלבי״ם). עכשיו הקערות בין שני המקוואות, והשירותים ממערב למקווה הדרומי, מחוץ למגרש */
+        [232,268].forEach(u=>{const v=dir<0?-75:575;cyl(u,v,g,g+0.5,3.2,3.4,M.stone2,svc,24);cyl(u,v,g+0.5,g+2,1.5,1.2,M.marble,svc,20);cyl(u,v,g+1.85,g+1.95,1.3,1.3,M.water,svc,20)});
+        if(dir>0){const a=566,u0=150,u1=174;box(u0,a,u1,a+18,g,g+6,M.stoneL,svc);box(u0-0.4,a-0.4,u1+0.4,a+18.4,g+6,g+6.6,M.stone2,null);box(u1-0.05,a+3,u1+0.05,a+6,g,g+4.5,M.dark,null,{noCol:true,cast:false});box(u1-0.05,a+12,u1+0.05,a+15,g,g+4.5,M.dark,null,{noCol:true,cast:false})}
         const ve=dir<0?vs-200:vs+110,w0=Math.min(vp,ve),w1=Math.max(vp,ve);box(246,w0,254,w1,g+0.02,g+0.08,M.marble,sec,{noCol:true,cast:false,tile:4});box(245.6,w0,246,w1,g,g+0.12,M.stoneL,null,{noCol:true,cast:false});box(254,w0,254.4,w1,g,g+0.12,M.stoneL,null,{noCol:true,cast:false})};
       entr(0,-1);entr(500,1)}
     {const vc=I("מרכז מבקרים לכל העמים","ישעיה נו, ז; מלכים א ח, מא-מג","📜 \"כי ביתי בית תפלה יקרא לכל העמים\". 📜 שלמה התפלל גם על \"הנכרי אשר לא מעמך ישראל הוא, ובא מארץ רחוקה\". ⚖️ גם נכרי יכול להביא קרבן ולהתפלל במקדש, אבל אסור לו להיכנס לפנים מן הסורג (מידות ב, ג). 💡 לכן מרכז המבקרים עומד ליד הכניסה הצפונית, שדרכה נכנסים כולם (יחזקאל מ״ו, ט), מחוץ לשטח המקודש: הסברים בשפות רבות, מה מותר לכל אחד ועד איפה, ומקום תפילה לכל אדם.");
@@ -1655,6 +1656,47 @@ function build(){
     [[205,-75],[295,-75],[205,575],[295,575]].forEach(c=>{const p=W(c[0],c[1]);const n=-p[1];if(!inPoly(p[0],n,MOUNT_S))return;const m=new THREE.Mesh(wbox(16,6,12,4),M.stoneL);m.position.set(p[0],3,p[1]);m.castShadow=true;m.receiveShadow=true;m.userData=mi;cPick.push(m);group.add(m);COL.push({x0:p[0]-8,x1:p[0]+8,z0:p[1]-6,z1:p[1]+6,y0:0,y1:6});
       const dm=new THREE.Mesh(new THREE.SphereGeometry(3.2,16,8,0,Math.PI*2,0,Math.PI/2),M.white);dm.position.set(p[0],6,p[1]);dm.userData=mi;cPick.push(dm);group.add(dm)})})();
   }
+  /* 137.0 · דרכי העולים: דרך מרוצפת מכל שער של הר הבית של היום, מסביב למגרש, אל השער הצפוני ואל השער הדרומי של המקדש.
+     📜 "הבא דרך שער צפון... יצא דרך שער נגב" (יחזקאל מו, ט). ⚖️ "ולא יעשנו קפנדריא" (ברכות ט, ה): לא חוצים, "אלא יקיפו מבחוץ" (רמב״ם בית הבחירה ז, ב).
+     💡 הרוחב (10 אמה), הצבע והשלטים הם הצעה. הדרך נבנית על רשת של אמה: כך אבני השפה נסגרות יפה בכל צומת */
+  if(LOC==="kodesh")(function(){const di=I("דרך העולים","יחזקאל מו, ט; ברכות ט, ה; רמב״ם בית הבחירה ז, ב","📜 \"הבא דרך שער צפון להשתחות יצא דרך שער נגב, והבא דרך שער נגב יצא דרך שער צפונה\" (יחזקאל מו, ט). ⚖️ \"ולא יעשנו קפנדריא\" (ברכות ט, ה): \"לא יעשה הר הבית דרך שיכנס מפתח זו ויצא מפתח שכנגדה כדי לקצר הדרך, אלא יקיפו מבחוץ\" (רמב״ם בית הבחירה ז, ב). 💡 לכן מכל שער של ההר יש דרך מרוצפת שמקיפה את המקדש מבחוץ, מחוץ למגרש של 50 אמה, עד השער הצפוני והשער הדרומי. ⚖️ בדרך אין עצים ואין סוכות עץ (רמב״ם עבודה זרה ו, ט-י). 💡 הרוחב, הצבע והשלטים הם הצעה.");
+    const U0=-110,V0=-210,NU=630,NV=950,G=new Uint8Array(NU*NV),at=(u,v)=>(u-U0)+(v-V0)*NU,uvOf=(x,n)=>{const q=G2S(x,n);return[(q[0]-X0)/A,(N0-q[1])/A]};
+    const inM=(u,v)=>{const p=W(u+0.5,v+0.5);return inPoly(p[0],-p[1],MOUNT_S)},free=(u,v)=>!(u>=-50&&u<550&&v>=-50&&v<550);
+    const rect=(u0,v0,u1,v1,any)=>{for(let v=Math.round(Math.min(v0,v1));v<Math.round(Math.max(v0,v1));v++)for(let u=Math.round(Math.min(u0,u1));u<Math.round(Math.max(u0,u1));u++){if(u<U0||v<V0||u>=U0+NU||v>=V0+NV)continue;if(inM(u,v)&&(any||free(u,v)))G[at(u,v)]=1}};
+    const HW=5,LW=-55,LN=-55,LS=555,LE=485;
+    rect(LW-HW,-180,LW+HW,553);            // west lane, from the corner gate down to the Kiponus gatehouse
+    rect(LW-HW,LN-HW,LE+HW,LN+HW);          // north lane
+    rect(-43,LS-HW,320,LS+HW);              // south lane, from the Kiponus gatehouse east to the south gate road
+    rect(LE-HW,LN,LE+HW,-200);              // up to the Tribes gate
+    // spokes to every gate of today's mount (Tadi is closed: "לא היה משמש כלום", מידות א, ג)
+    const GS=(window.__MG||[]).filter(g=>g.w_&&g.n!=="שער טדי").map(g=>{const p=uvOf(g.w_.x,g.w_.n);return{g,u:p[0],v:p[1]}});
+    GS.forEach(q=>{const k=q.g.k;if(k==="W"||k==="K"){if(q.v<553)rect(q.u-2,q.v-4,LW,q.v+4,true)}else if(k==="N"){if(Math.abs(q.u-LE)>12)rect(q.u-4,q.v+2,q.u+4,LN,true)}});
+    rect(LW-HW,-176,-110,-164,true);        // the north-west corner gate
+    [[11,652],[137,648]].forEach(([u,v1])=>rect(u-HW,LS,u+HW,v1,true)); // the two Huldah stair-heads
+    // surface: 10x10 blocks when full, otherwise row runs. kerbs: every edge between path and not-path, merged into runs
+    const TL=[],KB=[];
+    for(let bv=V0;bv<V0+NV;bv+=10)for(let bu=U0;bu<U0+NU;bu+=10){let full=true,anyc=false;for(let v=bv;v<bv+10;v++)for(let u=bu;u<bu+10;u++){const c=G[at(u,v)];if(c)anyc=true;else full=false}
+      if(!anyc)continue;if(full){TL.push([bu,bv,bu+10,bv+10]);continue}
+      for(let v=bv;v<bv+10;v++){let s=null;for(let u=bu;u<=bu+10;u++){const c=u<bu+10&&G[at(u,v)];if(c&&s===null)s=u;if(!c&&s!==null){TL.push([s,v,u,v+1]);s=null}}}}
+    const isP=(u,v)=>u>=U0&&v>=V0&&u<U0+NU&&v<V0+NV&&G[at(u,v)]===1;
+    for(let v=V0;v<V0+NV;v++)[-1,1].forEach(dv=>{let s=null;for(let u=U0;u<=U0+NU;u++){const e=isP(u,v)&&!isP(u,v+dv);if(e&&s===null)s=u;if(!e&&s!==null){const y=dv<0?v:v+1;KB.push([s,y-(dv<0?0:0.7),u,y+(dv<0?0.7:0)]);s=null}}});
+    for(let u=U0;u<U0+NU;u++)[-1,1].forEach(du=>{let s=null;for(let v=V0;v<=V0+NV;v++){const e=isP(u,v)&&!isP(u+du,v);if(e&&s===null)s=v;if(!e&&s!==null){const x=du<0?u:u+1;KB.push([x-(du<0?0:0.7),s,x+(du<0?0.7:0),v]);s=null}}});
+    const pm=M.pave.clone();pm.color=new THREE.Color(0xc9ae84);
+    const mk=(L,mat,y0,h)=>{const im=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),mat,Math.max(1,L.length)),d=new THREE.Object3D();L.forEach((r,i)=>{const a=W(r[0],r[1]),b=W(r[2],r[3]);d.position.set((a[0]+b[0])/2,y0+h/2,(a[1]+b[1])/2);d.scale.set(Math.abs(b[0]-a[0]),h,Math.abs(b[1]-a[1]));d.updateMatrix();im.setMatrixAt(i,d.matrix)});im.count=L.length;im.receiveShadow=true;im.castShadow=false;im.userData=di;cPick.push(im);group.add(im);return im};
+    {const P=[],U=[],IX=[];TL.forEach(r=>{const k=P.length/3;[[r[0],r[1]],[r[2],r[1]],[r[2],r[3]],[r[0],r[3]]].forEach(([u,v])=>{const q=W(u,v);P.push(q[0],0.18,q[1]);U.push(u/9,-v/9)});IX.push(k,k+2,k+1,k,k+3,k+2)});
+      const gm=new THREE.BufferGeometry();gm.setAttribute("position",new THREE.Float32BufferAttribute(P,3));gm.setAttribute("uv",new THREE.Float32BufferAttribute(U,2));gm.setIndex(IX);gm.computeVertexNormals();if(gm.attributes.normal.array[1]<0){IX.reverse();gm.setIndex(IX);gm.computeVertexNormals()}
+      const sm_=new THREE.Mesh(gm,pm);sm_.receiveShadow=true;sm_.userData=di;cPick.push(sm_);group.add(sm_)}
+    mk(KB,M.stone2,0.1,0.22);
+    // a low stone sign where each gate's path starts, and at the two crossings before the temple gates
+    const sc=cv(512,256,(x,w,h)=>{x.fillStyle="#3b2f22";x.fillRect(0,0,w,h);x.strokeStyle="#c9a24b";x.lineWidth=8;x.strokeRect(10,10,w-20,h-20);x.fillStyle="#f0d58c";x.textAlign="center";x.textBaseline="middle";x.direction="rtl";x.font="bold 60px serif";x.fillText("אל שערי המקדש",w/2,h*0.36);x.font="38px serif";x.fillText("צפון · דרום — מסביב",w/2,h*0.7)});
+    const st=new THREE.CanvasTexture(sc);st.encoding=THREE.sRGBEncoding;const sm=new THREE.MeshStandardMaterial({map:st,roughness:0.7});
+    const si=I("שלט הכוונה","יחזקאל מו, ט; רמב״ם בית הבחירה ז, ב","💡 שלט אבן נמוך בתחילת הדרך מכל שער: מכאן הולכים מסביב אל השער הצפוני או אל השער הדרומי של המקדש. 📜 מי שנכנס בצפון יוצא בדרום (יחזקאל מו, ט), ⚖️ ולא חוצים את ההר כדי לקצר (רמב״ם בית הבחירה ז, ב).");
+    const sign=(u,v,face)=>{const p=W(u,v),s=new THREE.Mesh(new THREE.BoxGeometry(1.7,1.1,0.35),M.stoneL);s.position.set(p[0],0.75,p[1]);s.rotation.y=face;s.castShadow=true;s.userData=si;cPick.push(s);group.add(s);
+      const pl=new THREE.Mesh(new THREE.PlaneGeometry(1.5,0.75),sm);pl.position.set(0,0.07,0.18);s.add(pl);const b=pl.clone();b.position.z=-0.18;b.rotation.y=Math.PI;s.add(b)};
+    GS.forEach(q=>{const k=q.g.k;if(k==="W"&&q.v<553)sign(q.u+14,q.v-6.5,Math.PI/2);else if(k==="N")sign(q.u+6.5,q.v+16,0)});
+    sign(-90,-162,0);[[240,LN+7],[260,LS-7]].forEach(([u,v])=>sign(u,v,0));
+    CL("דרך העולים",LW,240,6,di,true);CL("דרך העולים",120,LN,6,di,true);CL("דרך העולים",360,LS,6,di,true);
+    window.__OTM={TL:TL.length,KB:KB.length,gates:GS.map(q=>q.g.n+" "+q.u.toFixed(0)+","+q.v.toFixed(0))}})();
   // קירות שחורים (7.11.2026): מערכת ההרחקה (core/33) העלימה מרחוק את גושי המילוי, את קיר השפה ואת המגרש (קופסאות פשוטות בלי תחליף רחוק), ונראה החלל השחור שמתחתם. noLOD משאיר אותם תמיד.
   {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
     const S=500*A,st=4,cells=[];for(let x=X0+st/2;x<X0+S;x+=st)for(let n=N0-S+st/2;n<N0;n+=st){if(inPoly(x,n,MOUNT_S))continue;const h=HS(x,n);if(h<-0.5)cells.push([x,n,h])}
