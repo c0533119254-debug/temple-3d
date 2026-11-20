@@ -10277,17 +10277,19 @@ const TODAYG=new THREE.Group();WG.add(TODAYG);TODAYG.visible=false;
    💡 הגובה: רק לכ־250 בניינים יש מספר קומות במפה. לשאר הגובה משוער לפי השטח (2 עד 5 קומות, 3.2 מ׳ לקומה), כמו בשכונות ירושלים.
    הקובץ bld_outer.bin נטען רק במחשב, אחרי שהדגם עולה. בטלפון אין אותם, כדי לשמור על מהירות. ארבעה חלקים (צפון, דרום, מזרח, מערב), בלי צללים */
 if(!SMALL)setTimeout(()=>{fetch("bld_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab);
-  const cv=document.createElement("canvas");cv.width=cv.height=64;const x=cv.getContext("2d");x.fillStyle="#d9cfbb";x.fillRect(0,0,64,64);x.fillStyle="#8e887d";x.fillRect(24,20,16,22);x.fillStyle="#cbc1ad";x.fillRect(0,56,64,8);
-  const tx=new THREE.CanvasTexture(cv);tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.encoding=THREE.sRGBEncoding;tx.anisotropy=4;
-  const mat=new THREE.MeshLambertMaterial({map:tx,vertexColors:true});
+  /* 4 על 4 חלונות בתמונה אחת. בלילה חלק מהחלונות דולקים (141.3), כמו בבניינים שבאזור המפורט */
+  const cv=document.createElement("canvas");cv.width=cv.height=256;const x=cv.getContext("2d"),cl=document.createElement("canvas");cl.width=cl.height=256;const xl=cl.getContext("2d");x.fillStyle="#d9cfbb";x.fillRect(0,0,256,256);xl.fillStyle="#000";xl.fillRect(0,0,256,256);
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){x.fillStyle="#8e887d";x.fillRect(i*64+24,j*64+20,16,22);x.fillStyle="#cbc1ad";x.fillRect(i*64,j*64+56,64,8);if((i*7+j*5+i*j*3)%8<3){xl.fillStyle="#ffcf8a";xl.fillRect(i*64+24,j*64+20,16,22)}}
+  const tx=new THREE.CanvasTexture(cv),tl=new THREE.CanvasTexture(cl);[tx,tl].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.anisotropy=4});
+  const mat=new THREE.MeshLambertMaterial({map:tx,vertexColors:true,emissiveMap:tl,emissive:0x000000,emissiveIntensity:1.3});if(typeof BLDMAT!=="undefined"&&BLDMAT){mat.emissive.copy(BLDMAT.emissive);BLDMAT.userData.sky=mat}
   const Q=[0,1,2,3].map(()=>({p:[],u:[],c:[]}));let o=0;const rnd=k=>{const s=Math.sin(k*12.9898)*43758.5453;return s-Math.floor(s)};let bi=0;
   while(o+2<=ab.byteLength){const fl=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}bi++;
     let cx=0,cn=0,lo=1e9,hi=-1e9;P.forEach(q=>{cx+=q[0];cn+=q[1];const h=H(q[0],q[1]);lo=Math.min(lo,h);hi=Math.max(hi,h)});cx/=nv;cn/=nv;
     if(bldTop(cx,cn)>-1e3)continue;
     const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.86+0.14*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
-    for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/4,vt=(y1-y0)/3.2;
+    for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/16,vt=(y1-y0)/12.8;
       G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
-    for(let i=1;i<nv-1;i++){[P[0],P[i+1],P[i]].forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.5,0.94);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})}}
+    for(let i=1;i<nv-1;i++){[P[0],P[i+1],P[i]].forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})}}
   Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
 }).catch(()=>{})},4000);
@@ -10739,7 +10741,9 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
 // 📜 בתמונות הרחוב (Mapillary, 2018–2023) ברחוב דוד, ברחוב השלשלת, בחאן א־זית, בוויה דולורוזה ובמוריסטן, קומת הרחוב היא שורה של חנויות פתוחות:
 // פתח כהה, סחורה על דוכן לפני הפתח, תריס מתכת מגולגל מעל, ולפעמים סוכך בד. בדגם היה שם קיר עם חלונות. השווקים המקורים (אזור 2) כבר בנויים עם חנויות ולא נוגעים בהם.
 (function(){try{
-  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
+  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]],
+    /* 141.2 (תמונות Mapillary 2015–2023 ברובע הנוצרי): רחוב הנוצרים (חארת א־נסארה), מרחוב דוד צפונה עד ליד כנסיית הקבר, הוא רחוב שוק עם חנויות משני הצדדים, ובדגם היו בו רק קירות */
+    [[-538,-140],[-534,-94],[-545,-77],[-546,-34],[-537,5],[-535,31]]];
   const nearSpine=(x,n)=>SP.some(L=>{for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));if(Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n)<9)return true}return false});
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const souq=(x,n)=>x>-442&&x<-384&&n>-140&&n<22;
@@ -10767,7 +10771,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     {const p=P(0,-0.08);d.position.set(p[0],f.g+Hh+0.2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.14,0.4,W+0.1);d.updateMatrix();shut.setMatrixAt(i,d.matrix)}
     for(let k=0;k<3;k++){const al=(k-1)*W/3,h=0.3+((f.o2*7+k*3)%1)*0.45,p=P(al,-0.25);d.position.set(p[0],f.g+h/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.4,h,W/3-0.15);d.updateMatrix();goods.setMatrixAt(gi,d.matrix);goods.setColorAt(gi,col.setHex(PAL[Math.floor(((f.o3*13+k*5)%1)*PAL.length)]));gi++}
     if(f.o3<(f.w>=4?0.45:0.3)&&f.w>=2.6){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
-  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
+  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן, רחוב הנוצרים) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
 
 }catch(e){console.warn("shops",e)}})();
 
@@ -13495,7 +13499,7 @@ function build(){
       let glowOn=false;
       const shoeGlow=on=>{glowOn=!!on;const night=TIME==="night";
         if(M.win)M.win.emissiveIntensity=on?5.4:(night?2.2:0);if(M.win2)M.win2.emissiveIntensity=on?2.4:(night?1.05:0);
-        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(q=>{if(q)q.emissiveIntensity=on?2.7:1.3})}
+        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin,BLDMAT.userData.sky].forEach(q=>{if(q)q.emissiveIntensity=on?2.7:1.3})}
         if(SUKC.lit&&SUKC.lit.material)SUKC.lit.material.size=on?(SMALL?16:15):(SMALL?10:9);
         if(typeof bloom!=="undefined"&&bloom){if(on){bloom.strength=0.72;bloom.threshold=0.64}else if(night){bloom.strength=0.55;bloom.threshold=0.75}else{bloom.strength=0.12;bloom.threshold=0.96}}};
       const SUKX=(()=>{let t=0,sh=false,ST=null;const stat=()=>{if(ST||!FESTG)return ST||[];ST=[];FESTG.traverse(o=>{if(o.isInstancedMesh&&o.userData&&o.userData.n==="שמחת בית השואבה")ST.push(o);if(o.userData&&o.userData.sbTorch)ST.push(o)});return ST};
@@ -14479,9 +14483,9 @@ function applyTime0(){renderer.shadowMap.needsUpdate=true;
   NIGHT.dir=skyVec(Math.max(20,-sp.el),sp.az+180);
   su.sunPosition.value.copy(d2);sky.visible=!night;stars.visible=night;
   if(night)nightSky();scene.background=night?NIGHT.tex:null;if(NIGHT.moon){NIGHT.moon.visible=night;NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position);NIGHT.moon.lookAt(camera.position)}
-  scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
+  scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);/* 141.3: כשעל הטבעת יש צילום לוויין (במחשב) לא צובעים אותה בצבע האובך (היא מוארת כמו שאר הקרקע) */if(RING.material.map)RING.material.color.setScalar(1);else RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
   renderer.toneMappingExposure=t.exp;
-  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
+  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin,BLDMAT.userData.sky].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
   if(night){sun.color.set(NIGHT.moonC);sun.intensity=NIGHT.moonI;sun.position.copy(C).addScaledVector(NIGHT.dir,900)}
   else{sun.color.set(TIME==="evening"?0xffc28a:TIME==="morning"?0xffd3a0:0xfff1dc);sun.intensity=t.sunI;sun.position.copy(C).addScaledVector(d2,900)}
   sun.target.position.copy(C);hemi.intensity=t.hemi;hemi.color.set(night?NIGHT.hemiS:0xdfe8f2);hemi.groundColor.set(night?NIGHT.hemiG:0x7a6a52);
