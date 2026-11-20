@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 141.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 141.5"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9655,8 +9655,8 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
   }
   g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
   const tm=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
-  /* 141.0: מחוץ לאזור צילום הלוויין המפורט, הקרקע הייתה צבע כללי עם רעש, ונראתה כמו חצץ בכל קו הרקיע. עכשיו יש עליה צילום לוויין חופשי: Sentinel-2 cloudless 2016 (EOX, CC BY 4.0, נתוני Copernicus), כ־2.2 מ' לפיקסל אחרי מתיחה, בצבעים שהותאמו לאריחי העיר. בטלפון נשאר הצבע הכללי, כמו בתוך העיר. */
-  if(!SMALL)new THREE.TextureLoader().load("sat_outer.jpg",t=>{t.encoding=THREE.sRGBEncoding;t.anisotropy=8;tm.map=t;tm.vertexColors=false;tm.color.setHex(0xffffff);tm.needsUpdate=true});
+  /* 141.0: מחוץ לאזור צילום הלוויין המפורט, הקרקע הייתה צבע כללי עם רעש, ונראתה כמו חצץ בכל קו הרקיע. עכשיו יש עליה צילום לוויין חופשי: Sentinel-2 cloudless 2016 (EOX, CC BY 4.0, נתוני Copernicus), כ־2.2 מ' לפיקסל אחרי מתיחה, בצבעים שהותאמו לאריחי העיר. בטלפון: ראו 141.5, כמו בתוך העיר. */
+  /* 141.5: גם בטלפון, בתמונה קטנה יותר (1024 פיקסלים, כ־4.5 מ׳ לפיקסל) */new THREE.TextureLoader().load(SMALL?"sat_outer_s.jpg":"sat_outer.jpg",t=>{t.encoding=THREE.sRGBEncoding;t.anisotropy=SMALL?2:8;tm.map=t;tm.normalMap=null;tm.vertexColors=false;tm.color.setHex(0xffffff);tm.needsUpdate=true});
   /* 141.0: הצילום הוא 10 מ׳ לפיקסל, ולכן מקרוב הוא מטושטש. מוסיפים עליו גרעיניות דקה של אדמה (חוזרת כל 6 מ׳ בערך) */
   if(!SMALL)tm.onBeforeCompile=sh=>{sh.uniforms.dTex={value:T.ground};sh.fragmentShader="uniform sampler2D dTex;\n"+sh.fragmentShader.replace("#include <map_fragment>","#include <map_fragment>\n#ifdef USE_MAP\n diffuseColor.rgb*=0.8+0.4*texture2D(dTex,vUv*vec2(760.,870.)).r*mix(1.,texture2D(dTex,vUv*vec2(97.,111.)).g*2.,0.4);\n#endif")};
   else{tm.normalMap=T.ground;tm.normalScale=new THREE.Vector2(0.3,0.3)}
