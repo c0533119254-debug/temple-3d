@@ -230,7 +230,7 @@ function build(){
       ["לשכת הטלאים","מידות א, ו; תמיד ג, ג","⚖️ שם שמרו את הכבשים לקרבן התמיד, ארבעה ימים לפני הקרבתם."],["לשכת עושי לחם הפנים","מידות א, ו","⚖️ שם אפו את לחם הפנים."]];
     const SP=(FMODE==="ez")?[[231.5,309,14],[231.5,322,14],null,[268.5,319,14]]:null;S.forEach((c,k)=>{const li=nm(c[0],c[1],c[2]);if(SP){if(SP[k])CL(c[0],SP[k][0],SP[k][1],SP[k][2],li)}else CL(c[0],112.5+k*25,310,31,li)});
     N.forEach((c,k)=>{const u=112.5+k*25,li=nm(c[0],c[1],c[2]);if((FMODE==="ez")){const NP=[[274,167,25],[268.5,180,25],[231.5,162.5,14],[175,340,26]];CL(c[0],NP[k][0],NP[k][1],NP[k][2],li)}else CL(c[0],u,190,31,li)});
-    if(((FMODE==="ez"))){[[226,304,237,314,"u0",309,S[0]],[226,317,237,327,"u0",322,S[1]],[263,313,274,325,"u1",319,S[3]],/* גרסה 117: 📜 "וגג שלשתן שוה" (מידות ה, ד): הגולה ופרהדרין בגובה גג הגזית (20). פרהדרין "אחורי שתיהן": צמודה לגולה מצפון ולגזית ממערב. 💡 מידות הלשכה */[263,174,274,186,"u1",180,N[1],20],[264,160,280,174,"v0",276.5,N[0],20],[226,157,237,168,"u0",162.5,N[2]]].forEach(([a,b,c2,d,sd,cc,e,hh])=>{const yT=hh||11;hroom(a,b,c2,d,3.5,yT,M.stoneL,nm(e[0],e[1],e[2]),{side:sd,c:cc,nm:e[0]});box(a-0.3,b-0.3,c2+0.3,d+0.3,yT,yT+0.6,M.stone2,null)});/* 📜 מזוזה בפתח לשכת פרהדרין (יומא י ע״א) */box(274.8,159.84,275,160.02,5.7,6.2,M.bronze||M.wood,nm(N[0][0],N[0][1],N[0][2]),{noCol:true,cast:false})}
+    if(((FMODE==="ez"))){[[226,304,237,314,"u0",309,S[0]],[226,317,237,327,"u0",322,S[1]],[263,313,274,325,"u1",319,S[3]],/* גרסה 117: 📜 "וגג שלשתן שוה" (מידות ה, ד): הגולה ופרהדרין בגובה גג הגזית (20). פרהדרין "אחורי שתיהן": צמודה לגולה מצפון ולגזית ממערב. 💡 מידות הלשכה */[263,174,274,186,"u1",180,N[1],20],[264,160,280,174,"v0",276.5,N[0],20],[226,157,237,168,"u0",162.5,N[2]]].forEach(([a,b,c2,d,sd,cc,e,hh])=>{const yT=hh||11;hroom(a,b,c2,d,3.5,yT,M.stoneL,nm(e[0],e[1],e[2]),{side:sd,c:cc,nm:e[0]});box(a-0.3,b-0.3,c2+0.3,d+0.3,yT,yT+0.6,M.stone2,null)});/* 133.1: 📜 ששה טלאים בדוקים בלשכת הטלאים (תמיד ג, ג; רמב״ם תמידין ומוספין א, ט: "אין פוחתין מששה טלאים המבוקרין"). 💡 המקום של כל טלה */{const h=BEAST.herd("sheep",0.85,0.68,6,[0xf4efe6,0xf1ebdf,0xece3d2]);[[233.6,158.8],[235.6,160.6],[235.2,165.2],[233.2,166.6],[228.4,166.6],[228.4,158.7]].forEach((q,i)=>{const p=W(q[0],q[1]);h.set(i,p[0],3.5*A,p[1],(i*2.1)%6.283,0.95)});h.pick(m=>{m.userData=nm(N[2][0],"מידות א, ו; תמיד ג, ג; רמב״ם, הלכות תמידין ומוספין א, ט","📜 \"אין פוחתין מששה טלאים המבוקרין בלשכת הטלאים... ויהיו מוכנים קודם יום הקרבה בארבעה ימים\" (רמב״ם תמידין ומוספין א, ט). 📜 בבוקר משקים את התמיד בכוס של זהב ובודקים אותו שוב לאור האבוקות (תמיד ג, ד).");cPick.push(m)});group.add(h.g)}/* 📜 מזוזה בפתח לשכת פרהדרין (יומא י ע״א) */box(274.8,159.84,275,160.02,5.7,6.2,M.bronze||M.wood,nm(N[0][0],N[0][1],N[0][2]),{noCol:true,cast:false})}
     // the immersion room on the roof of the Parvah
     {const pv=nm("בית הטבילה על גג הפרוה","יומא ג, ג; מידות ה, ג","⚖️ על גג לשכת הפרוה היה בית טבילה, ושם טבל הכהן הגדול ביום הכיפורים.");const u=137.5;if(!((FMODE==="ez"))){
       box(u-5,303.5,u+5,312,28.1,32,M.stoneL,pv);box(u-5.3,303.2,u+5.3,312.3,32,32.5,M.stone2,null);box(u-1,312,u+1,312.08,28.1,31,M.dark,null,{cast:false,noCol:true})}}}
@@ -628,7 +628,56 @@ function build(){
       /* גרסה 117: בלי זכוכית ועץ. בניין אבן ומכלאות בגדר אבן נמוכה, מרוחק מהרחבה */
       const g=0;box(404,-150,434,-122,g,g+9,M.stoneL,ic);box(403.6,-150.4,434.4,-121.6,g+9,g+9.6,M.stone2,null);box(403.95,-138,404.0,-134,g,g+5,M.dark,null,{noCol:true,cast:false});
       for(let i=0;i<=3;i++){const u0=438+i*11;box(u0,-150,u0+0.6,-122,g,g+2,M.stone2,ic,{noCol:true})}box(438,-150,471.6,-149.4,g,g+2,M.stone2,null,{noCol:true});box(438,-122.6,471.6,-122,g,g+2,M.stone2,null,{noCol:true});
-      CL("מרכז בדיקת קרבנות",436,-136,g+13,ic,false)}
+      CL("מרכז בדיקת קרבנות",436,-136,g+13,ic,false);
+      /* 133.1: המכלאות כבר לא ריקות. ⚖️ בהמה עם מום פסולה, ובודק מומחה בודק אותה (ויקרא כב, יז-כה; בכורות ד, ה). 📜 צאן גידלו במדבריות (בבא קמא ז, ז), ובהמות לקרבנות הגיעו לעיר כל הזמן (שקלים ז, ד).
+         💡 כמה בהמות בכל מכלאה, השוקת, והבודקים בבגדים של היום הם הצעה לתצוגה */
+      {const rr=(()=>{let q=1331;return()=>(q=(q*16807)%2147483647)/2147483647})(),D=new THREE.Object3D();
+        const PI=I("מכלאות מרכז הבדיקה","ויקרא כב, יז-כה; בכורות ד, ה; שקלים ז, ד; בבא קמא ז, ז","⚖️ כל בהמה שמביאים לקרבן נבדקת שאין בה מום: עיוור, שבור, חרוץ, יבלת ועוד (ויקרא כב, כב). הבודק הוא מומחה (בכורות ד, ה). 📜 צאן גידלו במדבריות ולא ביישוב (בבא קמא ז, ז), ובהמה שנמצאה בדרך מירושלים עד מגדל עדר נחשבת קרבן (שקלים ז, ד): כל הזמן הגיעו עדרים לעיר. 💡 כאן מחכות הבהמות לבדיקה, עם שוקת מים. מספר הבהמות והבודקים הם הצעה.");
+        const fill=(kind,L,H,cols,n,u0,u1,v0,v1,nx)=>{const h=BEAST.herd(kind,L,H,n,cols),ny=Math.ceil(n/nx);for(let i=0;i<n;i++){const cu=(i%nx+0.5+(rr()-0.5)*0.45)/nx,cv=(Math.floor(i/nx)+0.5+(rr()-0.5)*0.4)/ny,p=W(u0+cu*(u1-u0),v0+cv*(v1-v0));h.set(i,p[0],g*A,p[1],rr()*6.283,0.9+rr()*0.16)}
+          h.pick(m=>{m.userData=PI;cPick.push(m)});group.add(h.g);return h};
+        // pen 1: sheep and two rams. pen 2: goats and kids. pen 3: bulls and calves
+        fill("sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xf4efe6,0xe2d6c0,0xd9cbb0],12,439.6,447.4,-145.5,-124.5,3);fill("ram",1.25,0.95,[0xe6dccb,0xd9cdb8],2,440,447,-146.2,-145.6,2);
+        fill("goat",1.05,0.85,[0x2b2521,0x3d2f26,0x1f1b19,0x5a4434],6,450.6,458.4,-145.5,-126,2);fill("kid",0.75,0.6,[0x2b2521,0x6b5440,0x1f1b19],3,451,458,-124.8,-123.4,3);
+        fill("bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x7a4528,0x2e2420],3,461.8,469.2,-147,-132,1);fill("calf",1.3,1.0,[0x7a4528,0x5e3a22],2,462,469,-128,-124.5,2);
+        // a stone trough with water in every pen
+        [438,449,460].forEach(u0=>{box(u0+2,-149.3,u0+9.6,-147.9,g,g+1.1,M.stone2,PI,{noCol:true});box(u0+2.3,-149.0,u0+9.3,-148.2,g+1.1,g+1.13,M.water||M.stone2,null,{noCol:true,cast:false})});
+        // the inspectors (💡 clothes of today): two at the pens, one at the door with a bull, and owners who wait
+        const SP=[[443.5,-121,Math.PI/2,0xf4f2ec],[454.5,-121,Math.PI/2,0xf4f2ec],[465,-121.2,Math.PI/2,0xf4f2ec],[436.5,-131,0,0x34465e],[436.8,-128.5,0,0x6b6f74],[436.2,-140,0.3,0x2f3b2c],[471.8,-133,Math.PI,0x8a6a4a],[472,-136,Math.PI,0x34465e]];
+        const fig=FIG.mesh(SP.length,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),SP.length),CC=new THREE.Color();
+        SP.forEach((q,i)=>{const p=W(q[0],q[1]),s=0.9+rr()*0.14;D.position.set(p[0],g*A,p[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(s);D.updateMatrix();fig.setMatrixAt(i,D.matrix);fig.setColorAt(i,CC.setHex(q[3]));fig.setAmp(i,0);D.position.y+=1.56*s;D.updateMatrix();hd.setMatrixAt(i,D.matrix)});
+        const gI=new THREE.Group();group.add(gI);window.__INSPG=gI;[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PI;cPick.push(m);gI.add(m)})}
+      /* 133.2: הדרך ביום יום. אנשים מובילים בהמה בחבל ממרכז הבדיקה אל השער החיצוני הצפוני, דרך החצר החיצונה, אל השער הפנימי הצפוני ששם השולחנות (יחזקאל מ, לט-מב).
+         📜 "כל בעלי השיר יוצאין בשיר ונמשכין בשיר" (שבת ה, א). 📜 מי שבא בשער צפון יוצא בשער נגב (יחזקאל מו, ט). אישה עם קן יונים (ויקרא יב, ח). 💡 מספר האנשים, הבגדים של היום, והדרך המדויקת */
+      {const FI=I("מביאים קרבן","שבת ה, א; יחזקאל מ, לט-מב; יחזקאל מו, ט; מנחות ט, ח; ויקרא יב, ח","📜 \"כל בעלי השיר יוצאין בשיר ונמשכין בשיר\" (שבת ה, א): מובילים את הבהמה בחבל. 📜 השולחנות לשחיטת העולה, החטאת והאשם עומדים באולם השער הצפוני (יחזקאל מ, לט-מב). 📜 \"הבא דרך שער צפון להשתחוות יצא דרך שער נגב\" (יחזקאל מו, ט). ⚖️ הבעלים סומך שתי ידיו על ראש הקרבן, ומיד אחר כך שוחטים. אישה וקטן לא סומכים (מנחות ט, ח). 📜 יולדת שאין לה כסף לכבש מביאה שתי תורים או שני בני יונה (ויקרא יב, ח). ⚖️ בשבת לא מביאים קרבנות יחיד: רק קרבנות הציבור דוחים את השבת (תמורה ב, א), ולכן בשבת הדרך ריקה. ⚖️ ברגל כל עולה רגל מביא עולת ראייה ושלמי חגיגה (חגיגה א, ב), ולכן ברגל יש פי שניים. 💡 כמה אנשים בדרך, הבגדים שלהם (בגדים של היום) והדרך המדויקת הם הצעה.");
+        const gF=new THREE.Group();group.add(gF);const rq=(()=>{let q=2133;return()=>(q=(q*16807)%2147483647)/2147483647})();
+        const PTH=[[400,-136],[340,-72],[268,-17],[252,-3],[251,30],[251,60],[251,140],[251,163],[251,184]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PTH.length;i++)PL.push(PL[i-1]+Math.hypot(PTH[i][0]-PTH[i-1][0],PTH[i][1]-PTH[i-1][1]));const LEN=PL[PL.length-1];
+        const at=(sv,off)=>{sv=((sv%LEN)+LEN)%LEN;let i=0;while(i<PL.length-2&&PL[i+1]<sv)i++;const a=PTH[i],b=PTH[i+1],f=(sv-PL[i])/((PL[i+1]-PL[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1,x=a[0]+dx*f-dz/l*off,z=a[1]+dz*f+dx/l*off;return[x,(typeof groundAt==="function"?groundAt(x,z):0),z,Math.atan2(-dz,dx)]};
+        // who walks: sheep (most), goats, a ram, bulls with two people, and two women with a pair of doves in a cage
+        const KS=[["sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xe2d6c0]],["goat",1.05,0.85,[0x2b2521,0x3d2f26,0x5a4434]],["ram",1.25,0.95,[0xe6dccb]],["bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x2e2420]]];
+        /* 133.3: ביום רגיל הזרם הבסיסי. ברגל עוד עולי רגלים עם עולת ראייה ושלמי חגיגה (חגיגה א, ב), פי שניים. בשבת אין קרבנות יחיד: רק קרבנות הציבור דוחים את השבת (תמורה ב, א) */const BASE=SMALL?["sheep","sheep","goat","bull","sheep","bird","sheep","goat"]:["sheep","sheep","goat","bull","sheep","bird","sheep","ram","goat","sheep","bull","sheep","bird","goat"],EXTRA=SMALL?["sheep","bull","sheep","goat","sheep","sheep"]:["sheep","bull","sheep","goat","sheep","sheep","bull","sheep","ram","sheep","goat","sheep","bull","sheep"],PLAN=BASE.concat(EXTRA);
+        const H={};KS.forEach(k=>{const n=PLAN.filter(p=>p===k[0]).length;if(n){H[k[0]]=BEAST.herd(k[0],k[1],k[2],n,k[3]);H[k[0]].k=k;H[k[0]].used=0;H[k[0]].pick(m=>{m.userData=FI;cPick.push(m)});gF.add(H[k[0]].g)}});
+        const CLOTH=[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0xf2efe8,0x1f2a3a,0x7a3b3b,0x4a5a6a,0xd9cbb0,0x2b2b2b,0x5d6b4a,0x9aa3ad];
+        const WK=[];let np=0;PLAN.forEach((k,i)=>{const w={k,ex:i>=BASE.length,s:LEN*((i<BASE.length?i/BASE.length:(i-BASE.length+0.5)/EXTRA.length))+rq()*6,v:0.85+rq()*0.3,off:(rq()-0.5)*3.2*A,p:np++};if(k==="bull")w.p2=np++;if(k!=="bird"){const h=H[k];w.h=h;w.i=h.used++}WK.push(w)});
+        const fig=FIG.mesh(np,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),np),CC=new THREE.Color(),D=new THREE.Object3D();
+        for(let i=0;i<np;i++){fig.setColorAt(i,CC.setHex(CLOTH[(i*5)%CLOTH.length]));fig.setAmp(i,1)}
+        const nR=WK.filter(w=>w.h).length+WK.filter(w=>w.p2!==undefined).length,rope=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.012,0.012,1,4),new THREE.MeshStandardMaterial({color:0x8a7550,roughness:1}),Math.max(1,nR));
+        const nB=WK.filter(w=>w.k==="bird").length,cage=new THREE.InstancedMesh((()=>{const g=new THREE.CylinderGeometry(0.13,0.15,0.26,8);g.translate(0,-0.13,0);return g})(),new THREE.MeshStandardMaterial({color:0xb08d55,roughness:1}),Math.max(1,nB));
+        [fig,hd,rope,cage].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=FI;cPick.push(m);gF.add(m)});
+        const putP=(i,q,sc)=>{D.position.set(q[0],q[1],q[2]);D.rotation.set(0,q[3],0);D.scale.setScalar(sc);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y+=1.56*sc;D.updateMatrix();hd.setMatrixAt(i,D.matrix)};
+        const A0=new THREE.Vector3(),B0=new THREE.Vector3(),NK=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0),Q=new THREE.Quaternion();
+        const putR=(j,a,b)=>{const d=B0.copy(b).sub(a),l=d.length();D.position.copy(a).addScaledVector(d,0.5);D.quaternion.copy(Q.setFromUnitVectors(UP,d.normalize()));D.scale.set(1,l,1);D.updateMatrix();rope.setMatrixAt(j,D.matrix);D.rotation.set(0,0,0);D.scale.set(1,1,1)};
+        let MODE=-1;BEAST.flow(gF,dt=>{const fest=DOY===FEST.pesach.doy||DOY===FEST.shavuot.doy||DOY===FEST.sukkot.doy,md=DAY==="shabbat"?0:fest?2:1;
+          if(md!==MODE){MODE=md;if(window.__INSPG)window.__INSPG.visible=md>0;for(const w of WK){w.off_=md===0||(w.ex&&md<2);if(w.off_){D.position.set(0,-50,0);D.rotation.set(0,0,0);D.scale.setScalar(1e-4);D.updateMatrix();fig.setMatrixAt(w.p,D.matrix);hd.setMatrixAt(w.p,D.matrix);if(w.p2!==undefined){fig.setMatrixAt(w.p2,D.matrix);hd.setMatrixAt(w.p2,D.matrix)}if(w.h)w.h.set(w.i,0,-50,0,0,1e-4)}}
+            for(let j=0;j<rope.count;j++)rope.setMatrixAt(j,D.matrix);for(let j=0;j<cage.count;j++)cage.setMatrixAt(j,D.matrix);D.scale.setScalar(1)}
+          let r=0,c=0;for(const w of WK){if(w.off_){if(w.k==="bird")c++;else{r++;if(w.p2!==undefined)r++}continue}w.s+=w.v*dt;if(w.s>LEN-0.3)w.s=0.02;const q=at(w.s,w.off),sc=0.94;putP(w.p,q,sc);fig.setSp(w.p,w.v);
+            const hx=Math.cos(q[3]),hz=-Math.sin(q[3]),rx=-hz,rz=hx;   // forward and right (on the ground)
+            const hand=A0.set(q[0]+rx*0.28-hx*0.05,q[1]+0.92,q[2]+rz*0.28);
+            if(w.k==="bird"){D.position.copy(hand);D.rotation.set(0,q[3],0);D.updateMatrix();cage.setMatrixAt(c++,D.matrix);continue}
+            const k=w.h.k,back=k[1]*0.85+0.6,a=at(Math.max(0.01,w.s-back),w.off+0.45);w.h.set(w.i,a[0],a[1],a[2],a[3]);w.h.walk(w.i,1,w.v*1.25/k[1]);
+            const d=BEAST.dims(k[0],k[1],k[2]),ax=Math.cos(a[3]),az=-Math.sin(a[3]),neck=NK.set(a[0]+ax*(d.hx-d.hl*0.35),a[1]+d.hy-d.hl*0.25,a[2]+az*(d.hx-d.hl*0.35));putR(r++,hand,neck);
+            if(w.p2!==undefined){const q2=at(Math.max(0.01,w.s-back*0.55),w.off+1.3);putP(w.p2,q2,0.97);fig.setSp(w.p2,w.v);const h2=A0.set(q2[0]+Math.cos(q2[3])*0.15,q2[1]+0.92,q2[2]-Math.sin(q2[3])*0.15);putR(r++,h2,neck)}}
+          [fig,hd,rope,cage].forEach(m=>m.instanceMatrix.needsUpdate=true)});
+        window.__FLOW={n:np,len:LEN,at,WK}}}
     {const ba=I("בן אחיה — מרפאה","שקלים ה, א-ב","📜 \"בן אחיה על חולי מעים\" — אחד הממונים במקדש, שטיפל בכהנים שחלו (הם הלכו יחפים על השיש ואכלו הרבה בשר). 💡 כאן מוצעת מרפאה ותחנת עזרה ראשונה לכל המבקרים, מחוץ לשטח המקודש. 💡 באותו אגף גם השירותים והמים של הכניסה הצפונית.");
       /* גרסה 117: המרפאה והשירותים באגף המערבי של רחבת כל העמים, מול מרכז המבקרים. אותו מבנה, בתמונת ראי */
       const g=0;{const u0=188,u1=232,info=ba;box(u0,-150,u1,-104,g,g+1.2,M.stone2,info);box(u0+1,-149,u1-1,-105,g+1.2,g+13,M.stoneL,info);box(u0+0.4,-149.6,u1-0.4,-104.4,g+13,g+14,M.stone2,null,{noCol:true});
@@ -774,13 +823,12 @@ function build(){
         rail(PEN[0],PEN[1],PEN[2],PEN[1]);rail(PEN[0],PEN[3],PEN[2],PEN[3]);rail(PEN[0],PEN[1],PEN[0],PEN[3]);rail(PEN[2],PEN[1],PEN[2],PEN[3]);
         const posts=[];for(let u=PEN[0];u<=PEN[2]+0.1;u+=(PEN[2]-PEN[0])/6)posts.push([u,PEN[1]],[u,PEN[3]]);for(let v=PEN[1]+7;v<PEN[3];v+=7)posts.push([PEN[0],v],[PEN[2],v]);
         const pm=new THREE.InstancedMesh(new THREE.BoxGeometry(0.12,1.05,0.12),wd,posts.length);posts.forEach((q,i)=>{const p=P3(q[0],q[1],3.5);setI(pm,i,p.x,p.y+0.52,p.z,0,1)});gPen.add(pick(pm,C.pen))}
-      const animal=(L,Hh,Wd,lg,horn)=>{const b=(w,h,d,x,y,z)=>{const g=new THREE.BoxGeometry(w,h,d);g.translate(x,y,z);return g},a=[b(L,Hh,Wd,0,lg+Hh/2,0),b(L*0.24,Hh*0.62,Wd*0.62,L/2+L*0.1,lg+Hh*0.92,0)];
-        [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>a.push(b(L*0.09,lg,L*0.09,i*L*0.38,lg/2,j*Wd*0.32)));if(horn)[-1,1].forEach(j=>a.push(b(0.05,horn,0.05,L/2+L*0.08,lg+Hh*1.25+horn/2,j*Wd*0.22)));return mrg(a)};
-      const herd=(geo,col,spots)=>{const m=new THREE.InstancedMesh(geo,std(col),spots.length);spots.forEach((q,i)=>{const p=P3(q[0],q[1],3.5);setI(m,i,p.x,p.y,p.z,Math.PI/2+(rs()-0.5)*0.5,0.94+rs()*0.12)});m.castShadow=true;gPen.add(pick(m,C.pen));return m};
-      const bulls=herd(animal(2.1,0.95,0.72,0.62,0.22),0x6f4426,Array.from({length:13},(_,i)=>[288+(i%7)*4.2,122.5+Math.floor(i/7)*5.5]));
-      const rams=herd(animal(1.25,0.6,0.46,0.42,0.16),0xd9d2c2,[[288,134.5],[292,134.5]]);
-      const goat=herd(animal(1.05,0.5,0.38,0.42,0.14),0x3d2f26,[[297,134.5]]);
-      const lambs=herd(animal(0.85,0.4,0.36,0.3,0),0xf1ece2,Array.from({length:14},(_,i)=>[287.5+(i%7)*4.2,139+Math.floor(i/7)*3.4]));
+      /* 133.0: בהמות אמיתיות מהספרייה (BEAST) במקום קופסאות. 📜 לכבשים אליה (ויקרא ג, ט). 💡 הצבעים והגדלים הם הצעה */
+      const herd=(kind,L,H,cols,spots)=>{const h=BEAST.herd(kind,L,H,spots.length,cols);spots.forEach((q,i)=>{const p=P3(q[0]+(rs()-0.5)*0.8,q[1]+(rs()-0.5)*0.8,3.5);h.set(i,p.x,p.y,p.z,Math.PI/2+(rs()-0.5)*0.9,0.92+rs()*0.14)});h.pick(m=>pick(m,C.pen));gPen.add(h.g);return h};
+      const bulls=herd("bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x7a4528,0x2e2420,0x8a5a36,0x6b4a33],Array.from({length:13},(_,i)=>[288+(i%7)*4.2,122.5+Math.floor(i/7)*5.5]));
+      const rams=herd("ram",1.25,0.95,[0xe6dccb,0xd9cdb8],[[288,134.5],[292,134.5]]);
+      const goat=herd("goat",1.05,0.85,[0x2b2521],[[297,134.5]]);
+      const lambs=herd("sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xf4efe6,0xe2d6c0],Array.from({length:14},(_,i)=>[287.5+(i%7)*4.2,139+Math.floor(i/7)*3.4]));
       /* ---- 6. הסוכה (לגגות העיר בלבד). גרסה 119: בחצר המקדש אין סוכות. 💡 הצורה, החומרים והצבעים הם הצעה לתצוגה ---- */
       const cvs=(w,h,f)=>{const c=document.createElement("canvas");c.width=w;c.height=h;f(c.getContext("2d"),w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
       const wallT=cvs(128,128,(x,w,h)=>{x.fillStyle="#cdb892";x.fillRect(0,0,w,h);for(let i=0;i<8;i++){const v=200+Math.floor(rs()*40);x.fillStyle="rgb("+v+","+Math.floor(v*0.88)+","+Math.floor(v*0.66)+")";x.fillRect(i*16+1,0,14,h);x.fillStyle="rgba(70,50,28,.55)";x.fillRect(i*16,0,1.5,h);for(let k=0;k<5;k++){x.fillStyle="rgba(90,66,38,"+(0.08+rs()*0.12)+")";x.fillRect(i*16+2+rs()*10,rs()*h,1,10+rs()*30)}}x.fillStyle="rgba(84,60,34,.8)";x.fillRect(0,18,w,5);x.fillRect(0,100,w,5)});
@@ -1076,7 +1124,7 @@ function build(){
         const PNIGHT={"15n":1,"16n":1},LEVC=0x9fb4c8,silM=std(0xd9dde2,{metalness:0.9,roughness:0.25});
         let phud=document.getElementById("pesHud");if(!phud){phud=document.createElement("div");phud.id="pesHud";phud.hidden=true;phud.setAttribute("dir","rtl");phud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(phud)}
         let phT="";const setP=t=>{if(t!==phT){phT=t;phud.textContent=t}};
-        const lambG=animal(0.85,0.4,0.36,0.3,0),lambM=std(0xf1ece2),carcG=(()=>{const g=animal(0.8,0.34,0.3,0.26,0);g.rotateZ(-Math.PI/2);return g})(),carcM=std(0xd9a99c,{roughness:0.8});
+        /* 133.0: הבהמות מהספרייה BEAST. לחבורות (הרבה שיות) הצורה הפשוטה */const lambG=BEAST.geo("sheep",0.9,0.72,true),lambM=BEAST.smat(0xf1ebdf),carcG=(()=>{const g=BEAST.still("kid",0.8,0.6,true);g.rotateZ(-Math.PI/2);return g})(),carcM=BEAST.smat(0xd9a99c);
         const spotsY=(sp,y,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],y);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
         const mkPath=nodes=>{const pts=nodes.map(q=>P3(q[0],q[1],q[2]===undefined?3.5:q[2])),L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));return{pts,L,len:L[L.length-1]}};
         const pAt=(pa,s,off)=>{let i=0;while(i<pa.L.length-2&&pa.L[i+1]<s)i++;const a=pa.pts[i],b=pa.pts[i+1],f=Math.min(1,Math.max(0,(s-pa.L[i])/((pa.L[i+1]-pa.L[i])||1))),dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1;return[a.x+dx*f-dz/l*off,a.y+(b.y-a.y)*f,a.z+dz*f+dx/l*off,Math.atan2(-dz,dx)]};
@@ -1249,7 +1297,7 @@ function build(){
         const LEVC=0x9fb4c8,KOH=0xf4f1e8,OFFC=0x6b3f86,CRAFT=0xb5651d,silM=std(0xd9dde2,{metalness:0.9,roughness:0.25}),wickM=std(0xb8935a,{roughness:1});
         let shud=document.getElementById("shvHud");if(!shud){shud=document.createElement("div");shud.id="shvHud";shud.hidden=true;shud.setAttribute("dir","rtl");shud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(shud)}
         let shT="";const setS=t=>{if(t!==shT){shT=t;shud.textContent=t}};
-        const lambG=animal(0.85,0.4,0.36,0.3,0),lambM=std(0xf1ece2);
+        const lambG=BEAST.geo("sheep",0.9,0.72),lambM=BEAST.smat(0xf1ebdf);
         const spotsY=(sp,y,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],y);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
         const mkPathV=pts=>{const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));return{pts,L,len:L[L.length-1]}};
         const mkPath=nodes=>mkPathV(nodes.map(q=>P3(q[0],q[1],q[2]===undefined?3.5:q[2])));
@@ -1280,8 +1328,8 @@ function build(){
           const path=mkPathV(pts);path.sR=path.L[iR];path.sG=path.L[iG];
           /* ---- המצעד: שור, חלילנים ונושאי סלים. 💡 מספר ---- */
           {const K=SMALL?2:3,BN=SMALL?10:16,FL=2,nb=K*BN,nf=K*FL,V=1.25;
-            const oxG=animal(2.4,1.0,0.8,0.8,0),oxHorn=(()=>{const a=[];[-1,1].forEach(j=>{const c=new THREE.ConeGeometry(0.05,0.42,6);c.rotateX(j*0.45);c.translate(1.34,2.18,j*0.22);a.push(c)});return mrg(a)})(),oxWr=(()=>{const t=new THREE.TorusGeometry(0.2,0.04,6,12);t.rotateX(Math.PI/2);t.translate(1.34,2.0,0);return t})();
-            const om=inst(g.gProc,oxG,std(0xa87b4f),K,SC.ox),hm=inst(g.gProc,oxHorn,M.gold,K,SC.ox),wm=inst(g.gProc,oxWr,std(0x6f8a3a),K,SC.ox);om.castShadow=true;
+            const oxG=BEAST.geo("bull",2.4,1.8),oxHorn=BEAST.hornGeo(2.4,1.8,1.25),oxWr=(()=>{const d=BEAST.dims("bull",2.4,1.8),t=new THREE.TorusGeometry(d.wid*0.44,0.03,6,14);t.rotateX(Math.PI/2);t.rotateZ(0.3);t.translate(d.hx-d.hl*0.1,d.hy+d.hl*0.3,0);return t})();
+            const om=inst(g.gProc,oxG,BEAST.smat(0xa87b4f,1),K,SC.ox),hm=inst(g.gProc,oxHorn,M.gold,K,SC.ox),wm=inst(g.gProc,oxWr,std(0x6f8a3a),K,SC.ox);om.castShadow=true;
             const ff=figset(g.gProc,nf,SC.ox,()=>0xd8c9a0),fl=inst(g.gProc,(()=>{const c=new THREE.CylinderGeometry(0.018,0.018,0.5,5);c.rotateZ(Math.PI/2);return c})(),std(0xc9b27a),nf,SC.ox);
             const bf=figset(g.gProc,nb,SC.bask,i=>ccol[(i*3+1)%ccol.length]);
             const bg=new THREE.CylinderGeometry(0.24,0.19,0.26,10),dg=(()=>{const a=[(()=>{const s=new THREE.SphereGeometry(0.1,6,4);s.scale(1.5,1,0.9);s.translate(0,0.09,0);return s})(),(()=>{const s=new THREE.SphereGeometry(0.045,5,4);s.translate(0.16,0.17,0);return s})(),(()=>{const b=new THREE.BoxGeometry(0.16,0.02,0.1);b.translate(-0.18,0.1,0);return b})()];return mrg(a)})();
