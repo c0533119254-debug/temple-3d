@@ -92,11 +92,12 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
       pick(f){[near,far].forEach(m=>{f(m);m.userData=Object.assign({},m.userData,{noLOD:true})});return h}};
     HERDS.push(h);return h}
   // near or far by the distance of the camera from the group (checked a few times a second)
+  const FLOWS=[];function flow(g,fn){FLOWS.push({g,fn})}
   let acc=0;const NEAR=(typeof SMALL!=="undefined"&&SMALL)?38:60;
-  function tick(dt){acc+=dt;if(acc<0.25)return;acc=0;if(typeof camera==="undefined")return;cp.copy(camera.position);
+  function tick(dt){const d=Math.min(0.1,dt);for(const F of FLOWS){if(F.g.parent&&F.g.visible){try{F.fn(d)}catch(e){if(!F.err){F.err=1;console.error(e);(window.__ERRS||[]).push("BEAST "+e.message)}}}}acc+=dt;if(acc<0.25)return;acc=0;if(typeof camera==="undefined")return;cp.copy(camera.position);
     for(const h of HERDS){if(!h.g.parent)continue;if(h.dirty){h.dirty=false;let n=h.near.count,sx=0,sy=0,sz=0;const a=h.near.instanceMatrix.array;for(let i=0;i<n;i++){sx+=a[i*16+12];sy+=a[i*16+13];sz+=a[i*16+14]}n=Math.max(1,n);h.c.set(sx/n,sy/n,sz/n);let r=0;for(let i=0;i<h.near.count;i++)r=Math.max(r,Math.hypot(a[i*16+12]-h.c.x,a[i*16+14]-h.c.z));h.r=r+2}
       wp.copy(h.c);h.g.localToWorld(wp);const dd=wp.distanceTo(cp)-h.r,nr=dd<NEAR;if(h.near.visible!==nr){h.near.visible=nr;h.far.visible=!nr}}}
-  return{geo,mat,smat,one,herd,tick,dims,hornGeo,still,HERDS}})();
+  return{geo,mat,smat,one,herd,tick,dims,hornGeo,still,flow,HERDS,FLOWS}})();
 function mkBeast(kind,col,L,H){return BEAST.one(kind,col,L,H)}
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};

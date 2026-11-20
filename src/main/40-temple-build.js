@@ -645,7 +645,36 @@ function build(){
         const SP=[[443.5,-121,Math.PI/2,0xf4f2ec],[454.5,-121,Math.PI/2,0xf4f2ec],[465,-121.2,Math.PI/2,0xf4f2ec],[436.5,-131,0,0x34465e],[436.8,-128.5,0,0x6b6f74],[436.2,-140,0.3,0x2f3b2c],[471.8,-133,Math.PI,0x8a6a4a],[472,-136,Math.PI,0x34465e]];
         const fig=FIG.mesh(SP.length,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),SP.length),CC=new THREE.Color();
         SP.forEach((q,i)=>{const p=W(q[0],q[1]),s=0.9+rr()*0.14;D.position.set(p[0],g*A,p[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(s);D.updateMatrix();fig.setMatrixAt(i,D.matrix);fig.setColorAt(i,CC.setHex(q[3]));fig.setAmp(i,0);D.position.y+=1.56*s;D.updateMatrix();hd.setMatrixAt(i,D.matrix)});
-        [fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PI;cPick.push(m);group.add(m)})}}
+        [fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PI;cPick.push(m);group.add(m)})}
+      /* 133.2: הדרך ביום יום. אנשים מובילים בהמה בחבל ממרכז הבדיקה אל השער החיצוני הצפוני, דרך החצר החיצונה, אל השער הפנימי הצפוני ששם השולחנות (יחזקאל מ, לט-מב).
+         📜 "כל בעלי השיר יוצאין בשיר ונמשכין בשיר" (שבת ה, א). 📜 מי שבא בשער צפון יוצא בשער נגב (יחזקאל מו, ט). אישה עם קן יונים (ויקרא יב, ח). 💡 מספר האנשים, הבגדים של היום, והדרך המדויקת */
+      {const FI=I("מביאים קרבן","שבת ה, א; יחזקאל מ, לט-מב; יחזקאל מו, ט; מנחות ט, ח; ויקרא יב, ח","📜 \"כל בעלי השיר יוצאין בשיר ונמשכין בשיר\" (שבת ה, א): מובילים את הבהמה בחבל. 📜 השולחנות לשחיטת העולה, החטאת והאשם עומדים באולם השער הצפוני (יחזקאל מ, לט-מב). 📜 \"הבא דרך שער צפון להשתחוות יצא דרך שער נגב\" (יחזקאל מו, ט). ⚖️ הבעלים סומך שתי ידיו על ראש הקרבן, ומיד אחר כך שוחטים. אישה וקטן לא סומכים (מנחות ט, ח). 📜 יולדת שאין לה כסף לכבש מביאה שתי תורים או שני בני יונה (ויקרא יב, ח). 💡 כמה אנשים בדרך, הבגדים שלהם (בגדים של היום) והדרך המדויקת הם הצעה.");
+        const gF=new THREE.Group();group.add(gF);const rq=(()=>{let q=2133;return()=>(q=(q*16807)%2147483647)/2147483647})();
+        const PTH=[[400,-136],[340,-72],[268,-17],[252,-3],[251,30],[251,60],[251,140],[251,163],[251,184]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PTH.length;i++)PL.push(PL[i-1]+Math.hypot(PTH[i][0]-PTH[i-1][0],PTH[i][1]-PTH[i-1][1]));const LEN=PL[PL.length-1];
+        const at=(sv,off)=>{sv=((sv%LEN)+LEN)%LEN;let i=0;while(i<PL.length-2&&PL[i+1]<sv)i++;const a=PTH[i],b=PTH[i+1],f=(sv-PL[i])/((PL[i+1]-PL[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1,x=a[0]+dx*f-dz/l*off,z=a[1]+dz*f+dx/l*off;return[x,(typeof groundAt==="function"?groundAt(x,z):0),z,Math.atan2(-dz,dx)]};
+        // who walks: sheep (most), goats, a ram, bulls with two people, and two women with a pair of doves in a cage
+        const KS=[["sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xe2d6c0]],["goat",1.05,0.85,[0x2b2521,0x3d2f26,0x5a4434]],["ram",1.25,0.95,[0xe6dccb]],["bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x2e2420]]];
+        const PLAN=SMALL?["sheep","sheep","goat","bull","sheep","bird","sheep","goat"]:["sheep","sheep","goat","bull","sheep","bird","sheep","ram","goat","sheep","bull","sheep","bird","goat"];
+        const H={};KS.forEach(k=>{const n=PLAN.filter(p=>p===k[0]).length;if(n){H[k[0]]=BEAST.herd(k[0],k[1],k[2],n,k[3]);H[k[0]].k=k;H[k[0]].used=0;H[k[0]].pick(m=>{m.userData=FI;cPick.push(m)});gF.add(H[k[0]].g)}});
+        const CLOTH=[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0xf2efe8,0x1f2a3a,0x7a3b3b,0x4a5a6a,0xd9cbb0,0x2b2b2b,0x5d6b4a,0x9aa3ad];
+        const WK=[];let np=0;PLAN.forEach((k,i)=>{const w={k,s:LEN*i/PLAN.length+rq()*6,v:0.85+rq()*0.3,off:(rq()-0.5)*3.2*A,p:np++};if(k==="bull")w.p2=np++;if(k!=="bird"){const h=H[k];w.h=h;w.i=h.used++}WK.push(w)});
+        const fig=FIG.mesh(np,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),np),CC=new THREE.Color(),D=new THREE.Object3D();
+        for(let i=0;i<np;i++){fig.setColorAt(i,CC.setHex(CLOTH[(i*5)%CLOTH.length]));fig.setAmp(i,1)}
+        const nR=WK.filter(w=>w.h).length+WK.filter(w=>w.p2!==undefined).length,rope=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.012,0.012,1,4),new THREE.MeshStandardMaterial({color:0x8a7550,roughness:1}),Math.max(1,nR));
+        const nB=WK.filter(w=>w.k==="bird").length,cage=new THREE.InstancedMesh((()=>{const g=new THREE.CylinderGeometry(0.13,0.15,0.26,8);g.translate(0,-0.13,0);return g})(),new THREE.MeshStandardMaterial({color:0xb08d55,roughness:1}),Math.max(1,nB));
+        [fig,hd,rope,cage].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=FI;cPick.push(m);gF.add(m)});
+        const putP=(i,q,sc)=>{D.position.set(q[0],q[1],q[2]);D.rotation.set(0,q[3],0);D.scale.setScalar(sc);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y+=1.56*sc;D.updateMatrix();hd.setMatrixAt(i,D.matrix)};
+        const A0=new THREE.Vector3(),B0=new THREE.Vector3(),NK=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0),Q=new THREE.Quaternion();
+        const putR=(j,a,b)=>{const d=B0.copy(b).sub(a),l=d.length();D.position.copy(a).addScaledVector(d,0.5);D.quaternion.copy(Q.setFromUnitVectors(UP,d.normalize()));D.scale.set(1,l,1);D.updateMatrix();rope.setMatrixAt(j,D.matrix);D.rotation.set(0,0,0);D.scale.set(1,1,1)};
+        BEAST.flow(gF,dt=>{let r=0,c=0;for(const w of WK){w.s+=w.v*dt;if(w.s>LEN-0.3)w.s=0.02;const q=at(w.s,w.off),sc=0.94;putP(w.p,q,sc);fig.setSp(w.p,w.v);
+            const hx=Math.cos(q[3]),hz=-Math.sin(q[3]),rx=-hz,rz=hx;   // forward and right (on the ground)
+            const hand=A0.set(q[0]+rx*0.28-hx*0.05,q[1]+0.92,q[2]+rz*0.28);
+            if(w.k==="bird"){D.position.copy(hand);D.rotation.set(0,q[3],0);D.updateMatrix();cage.setMatrixAt(c++,D.matrix);continue}
+            const k=w.h.k,back=k[1]*0.85+0.6,a=at(Math.max(0.01,w.s-back),w.off+0.45);w.h.set(w.i,a[0],a[1],a[2],a[3]);w.h.walk(w.i,1,w.v*1.25/k[1]);
+            const d=BEAST.dims(k[0],k[1],k[2]),ax=Math.cos(a[3]),az=-Math.sin(a[3]),neck=NK.set(a[0]+ax*(d.hx-d.hl*0.35),a[1]+d.hy-d.hl*0.25,a[2]+az*(d.hx-d.hl*0.35));putR(r++,hand,neck);
+            if(w.p2!==undefined){const q2=at(Math.max(0.01,w.s-back*0.55),w.off+1.3);putP(w.p2,q2,0.97);fig.setSp(w.p2,w.v);const h2=A0.set(q2[0]+Math.cos(q2[3])*0.15,q2[1]+0.92,q2[2]-Math.sin(q2[3])*0.15);putR(r++,h2,neck)}}
+          [fig,hd,rope,cage].forEach(m=>m.instanceMatrix.needsUpdate=true)});
+        window.__FLOW={n:np,len:LEN,at,WK}}}
     {const ba=I("בן אחיה — מרפאה","שקלים ה, א-ב","📜 \"בן אחיה על חולי מעים\" — אחד הממונים במקדש, שטיפל בכהנים שחלו (הם הלכו יחפים על השיש ואכלו הרבה בשר). 💡 כאן מוצעת מרפאה ותחנת עזרה ראשונה לכל המבקרים, מחוץ לשטח המקודש. 💡 באותו אגף גם השירותים והמים של הכניסה הצפונית.");
       /* גרסה 117: המרפאה והשירותים באגף המערבי של רחבת כל העמים, מול מרכז המבקרים. אותו מבנה, בתמונת ראי */
       const g=0;{const u0=188,u1=232,info=ba;box(u0,-150,u1,-104,g,g+1.2,M.stone2,info);box(u0+1,-149,u1-1,-105,g+1.2,g+13,M.stoneL,info);box(u0+0.4,-149.6,u1-0.4,-104.4,g+13,g+14,M.stone2,null,{noCol:true});
