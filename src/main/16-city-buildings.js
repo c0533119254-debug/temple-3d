@@ -54,7 +54,7 @@ function facadeTex(old){const W=1024,Hh=512,bw=256,fh=128;let r;
 // the Heikhal rises 100 amot above a floor ~13.5 amot over the platform (platform top = 0): about 54 m even with the smallest amah.
 // No building in the city may come within 12 m of that: taller ones are cut down (on ground that is itself too high, to 2 floors at most).
 const CAPY=113.5*0.48-12;
-let BLDMAT=null;const LODS=[];let LODF=0;function lodTick(){if(++LODF%15)return;WG.updateMatrixWorld();const v=new THREE.Vector3();LODS.forEach(L=>{v.copy(L.c).applyMatrix4(WG.matrixWorld);L.m.visible=camera.position.distanceTo(v)<L.d})}
+let BLDMAT=null;const LODS=[];let LODF=0;const LODP=new THREE.Vector3(1e9,0,0);function lodTick(){/* 139.0: אחרי קפיצה של המצלמה (סיור, מעבר מבט) בודקים מיד, לא אחרי 15 פריימים */if(++LODF%15&&camera.position.distanceToSquared(LODP)<400)return;LODP.copy(camera.position);WG.updateMatrixWorld();const v=new THREE.Vector3();LODS.forEach(L=>{v.copy(L.c).applyMatrix4(WG.matrixWorld);L.m.visible=camera.position.distanceTo(v)<L.d})}
 const SUKC={roofs:[],apply:null,heads:null};const PESC={b:[],apply:null};const ROOFS=[],SANDC=LTX("tex_sand_diff.jpg"),SANDN=LTX("tex_sand_nor.jpg");
 [SANDC,SANDN].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8});SANDC.encoding=THREE.sRGBEncoding;
 {const pc=LTX("tex_sand_diff.jpg"),pn=LTX("tex_sand_nor.jpg");[pc,pn].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);t.anisotropy=8});pc.encoding=THREE.sRGBEncoding;M.pave.map=pc;M.pave.normalMap=pn;M.pave.color.setHex(0xd8cdb9);M.pave.roughness=0.88;M.pave.needsUpdate=true;if(PLATTOP){PLATTOP.map=pc;PLATTOP.normalMap=pn;PLATTOP.color.setHex(0xd6cbb6);PLATTOP.needsUpdate=true}}
