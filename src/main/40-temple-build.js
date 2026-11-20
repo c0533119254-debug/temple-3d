@@ -1581,10 +1581,11 @@ function build(){
   const cl=(t,u,v,y)=>{const p=W(u,v);cLabels.push(label(t,p[0],y*A,p[1],"c",findI(KEYS[t]||t)))};
   cl("הבית",150,250,114);cl("המזבח",250,250,27);const gy=GATE==="high"?66:26;cl("שער צפון",250,25,gy);cl("שער דרום",250,475,gy);cl("שער המזרח · סגור",490,250,gy);cl("לשכות הכהנים",150,170,32);
   (function(){const mg=I("המגרש","יחזקאל מ״ה, ב","\"וחמשים אמה מגרש לו סביב\" — 50 אמה פנויות סביב המקדש. לכן לא בונים כאן כלום.");
-    const mat=M.pave;
+    /* 134.1: המגרש היה מתחת לריצוף של ההר, ורק כמה כתמים חומים נראו ליד השערים. עכשיו הוא רצועה אחידה מעל הריצוף, בגוון אבן בהיר, כדי שיראו את 50 האמה הפנויות סביב המקדש. */
+    const mat=M.pave.clone();mat.color=new THREE.Color(0xe6dcc6);
     const tiles=[];const add=(u0,v0,u1,v1)=>{for(let u=u0;u<u1;u+=10)for(let v=v0;v<v1;v+=10){const q=W(u+5,v+5);if(inPoly(q[0],-q[1],MOUNT_S))tiles.push(q)}};
     add(-50,-50,550,0);add(-50,500,550,550);add(-50,0,0,500);add(500,0,550,500);
-    const tm=new THREE.InstancedMesh(new THREE.BoxGeometry(10*A,0.06,10*A),mat,Math.max(1,tiles.length)),dd=new THREE.Object3D();tiles.forEach((q,i)=>{dd.position.set(q[0],0.03,q[1]);dd.updateMatrix();tm.setMatrixAt(i,dd.matrix)});tm.count=tiles.length;tm.receiveShadow=true;mg.noLOD=true;tm.userData=mg;cPick.push(tm);group.add(tm)})();
+    const tm=new THREE.InstancedMesh(new THREE.BoxGeometry(10*A,0.06,10*A),mat,Math.max(1,tiles.length)),dd=new THREE.Object3D();tiles.forEach((q,i)=>{dd.position.set(q[0],0.1,q[1]);dd.updateMatrix();tm.setMatrixAt(i,dd.matrix)});tm.count=tiles.length;tm.receiveShadow=true;mg.noLOD=true;tm.userData=mg;cPick.push(tm);group.add(tm)})();
   (function(){const si=I("סטווים — אכסדראות לאורך החומה","הצעה של התוכנית; יוספוס, קדמוניות ט״ו","💡 שורות עמודים מקורות לאורך חומות ההר, לצל ולהמתנה לפי משמרות. בימי בית שני היו סטווים כאלה סביב ההר, והסטיו המלכותי בדרום. הם נמצאים מחוץ למתחם ומחוץ למגרש של 50 אמה.");
     const colG=new THREE.CylinderGeometry(0.55,0.65,9,12),cols=[],d=new THREE.Object3D();
     const stoa=(a,b,inward,depth,h)=>{const dx=b[0]-a[0],dn=b[1]-a[1],L=Math.hypot(dx,dn),ux=dx/L,un=dn/L,nx=-un*inward,nn=ux*inward,ang=Math.atan2(dn,dx);
