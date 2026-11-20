@@ -81,7 +81,7 @@ if(window.__JG){const J=window.__JG,b=new THREE.Mesh(new THREE.BoxGeometry(17,20
 
 // ---- topic 3, area 2: the covered markets (three parallel souqs + the roofed part of David Street) ----
 (function(){try{
-const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[]};
+const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[],wood:[]};let stallT=0;
 const add=(k,geo,x,y,n,rot)=>{geo=geo.index?geo.toNonIndexed():geo;const m=new THREE.Matrix4().makeRotationY(rot||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);if(geo.attributes.uv2)geo.deleteAttribute("uv2");GS[k].push(geo)};
 const gy=(x,n)=>Math.min(TY(x,n),H(x,n)+0.5);
 const off=(x,n,rot,a,b)=>[x+Math.cos(rot)*a-Math.sin(rot)*b,n+Math.sin(rot)*a+Math.cos(rot)*b];
@@ -97,7 +97,7 @@ function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+wd/2));add("stone",wbox(st+0.03,top+1.5,wd,4),c[0],y+top/2-0.75,c[1],rot);
         // a shop: arched opening with goods on a low table in front (💡)
         if(k%2===0||opt.dense){const f=off(x,n,rot,0,s*r);add("dark",archG(2.3,3.1,1.3).translate(0,0,0.12),f[0],y,f[1],rot+(s>0?0:Math.PI));
-          if(rnd()<0.8){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35));add(gk,new THREE.BoxGeometry(1.4,0.35+rnd()*0.35,0.5),q[0],y+0.45,q[1],rot)}}});
+          /* 130.5: הסחורה על שולחן עץ (משטח ושתי רגליים), במקום ארגז שמרחף מעל הרצפה */if(rnd()<0.8){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35)),gh=0.2+rnd()*0.3;add("wood",new THREE.BoxGeometry(1.55,0.05,0.6),q[0],y+0.6,q[1],rot);[-0.68,0.68].forEach(a=>{const l=off(q[0],q[1],rot,a,0);add("wood",new THREE.BoxGeometry(0.06,0.58,0.52),l[0],y+0.29,l[1],rot)});add(gk,new THREE.BoxGeometry(1.35,gh,0.48),q[0],y+0.625+gh/2,q[1],rot);stallT++}}});
       // barrel vault, with a light shaft every fourth bay (📜 the souqs are lit from openings in the roof)
       if(k%4!==2){const v=new THREE.CylinderGeometry(r,r,st+0.04,12,1,true,0,Math.PI);v.rotateZ(Math.PI/2);add("vault",v,x,y+hs,n,rot);
         const sk=new THREE.CylinderGeometry(r+0.45,r+0.45,st+0.04,12,1,true,0,Math.PI);sk.rotateZ(Math.PI/2);add("stone",sk,x,y+hs,n,rot)}
@@ -113,7 +113,7 @@ add("stone",wbox(12,8.5,62,4),-378,gy(-378,-95)+3.2,-95,0);
 lane([[-566,-153],[-538,-152],[-530,-155],[-513,-162],[-506,-164],[-484,-169],[-475,-169],[-466,-168],[-457,-164],[-442,-163],[-436,-161]],3.6,0,3.6,{dense:true});
 const sM=M.stoneL,vM=sM.clone();vM.side=THREE.DoubleSide;
 const gm=c=>new THREE.MeshStandardMaterial({color:c,roughness:0.85});
-const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a)};
+const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a),wood:M.wood};window.__STALLS=(window.__STALLS||0)+stallT;
 const NAMES=[["שוק הקצבים",-429.5,-88],["שוק הבשמים",-411.5,-88],["שוק הצורפים",-393,-88]];
 const info={n:"השווקים המקורים",r:"בין רחוב דוד לרחוב השלשלת וחאן א־זית",t:"📜 שלושה שווקים מקבילים ומקורים, מימי הצלבנים (המאה ה־12), על הקו של הקרדו הרומי. ממערב למזרח: שוק הקצבים (אל־לחאמין), שוק הבשמים (אל־עטארין) ושוק הצורפים (אל־ח׳וואג׳את). 📜 התקרה היא קמרון אבן עם פתחי אור. 💡 החנויות והסחורה מצוירות בפשטות. גם החלק המזרחי של רחוב דוד מקורה."};
 Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MAT[k]);m.castShadow=k==="stone"||k==="vault";m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)});
@@ -320,7 +320,7 @@ groups.forEach(G=>Object.keys(G.GS).forEach(k=>{if(!G.GS[k].length)return;const 
 
 // ---- topic 3, area 6: the Muslim Quarter by the Mount — the Cotton Merchants' market and the arches of Chain Street ----
 (function(){try{
-const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[]};
+const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[],wood:[]};let stallT=0;
 const add=(k,geo,x,y,n,rot)=>{geo=geo.index?geo.toNonIndexed():geo;const m=new THREE.Matrix4().makeRotationY(rot||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);if(geo.attributes.uv2)geo.deleteAttribute("uv2");GS[k].push(geo)};
 const gy=(x,n)=>Math.min(TY(x,n),H(x,n)+0.5);
 const off=(x,n,rot,a,b)=>[x+Math.cos(rot)*a-Math.sin(rot)*b,n+Math.sin(rot)*a+Math.cos(rot)*b];
@@ -334,7 +334,7 @@ function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);const top=hs+r+0.9;
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+sd/2));add("stone",wbox(st+0.03,top+1.5,sd,4),c[0],y+top/2-0.75,c[1],rot);
         const f=off(x,n,rot,0,s*r),fr=rot+(s>0?0:Math.PI);add("dark",archG(2.4,3.0,1.3,true).translate(0,0,0.12),f[0],y,f[1],fr);add("dark",archG(1.1,1.6,1.0,true).translate(0,0,0.12),f[0],y+3.5,f[1],fr);
-        if(rnd()<0.75){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35));add(gk,new THREE.BoxGeometry(1.4,0.35+rnd()*0.35,0.5),q[0],y+0.45,q[1],rot)}});
+        /* 130.5: הסחורה על שולחן עץ (משטח ושתי רגליים), במקום ארגז שמרחף מעל הרצפה */if(rnd()<0.75){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35)),gh=0.2+rnd()*0.3;add("wood",new THREE.BoxGeometry(1.55,0.05,0.6),q[0],y+0.6,q[1],rot);[-0.68,0.68].forEach(a=>{const l=off(q[0],q[1],rot,a,0);add("wood",new THREE.BoxGeometry(0.06,0.58,0.52),l[0],y+0.29,l[1],rot)});add(gk,new THREE.BoxGeometry(1.35,gh,0.48),q[0],y+0.625+gh/2,q[1],rot);stallT++}});
       if(k%4!==2){const v=new THREE.CylinderGeometry(r,r,st+0.04,12,1,true,0,Math.PI);v.rotateZ(Math.PI/2);v.scale(1,1.25,1);add("vault",v,x,y+hs,n,rot);
         const sk=new THREE.CylinderGeometry(r+0.5,r+0.5,st+0.04,12,1,true,0,Math.PI);sk.rotateZ(Math.PI/2);sk.scale(1,1.2,1);add("stone",sk,x,y+hs,n,rot)}
       if(k%2===0){const rb=new THREE.TorusGeometry(r-0.05,0.2,5,12,Math.PI);rb.rotateY(Math.PI/2);rb.scale(1,1.25,1);add("stone",rb,x,y+hs,n,rot)}}}}
@@ -345,7 +345,7 @@ const span=(x,n,rot,w)=>{const y=gy(x,n),r=w/2+0.1;[1,-1].forEach(s=>{const p=of
   const ar=new THREE.TorusGeometry(r+0.3,0.45,6,14,Math.PI);ar.rotateY(Math.PI/2);ar.scale(1,0.9,1);add("stone",ar,x,y+4.4,n,rot);add("stone",wbox(1.4,2.6,w+2.4,3),x,y+4.4+r+0.9,n,rot)};
 [[-250,-123.4],[-300,-131.1],[-352,-140.2]].forEach(q=>span(q[0],q[1],-0.17,4.6));
 const sM=M.stoneL,vM=sM.clone();vM.side=THREE.DoubleSide;const gm=c=>new THREE.MeshStandardMaterial({color:c,roughness:0.85});
-const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a)};
+const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a),wood:M.wood};window.__STALLS=(window.__STALLS||0)+stallT;
 const info={n:"שוק הכותנה (סוק אל־קטאנין)",r:"הרובע המוסלמי, ליד הר הבית",t:"📜 שוק מקורה ומפואר מהתקופה הממלוכית, שבנה המושל תנכיז בשנת 1336. 📜 קמרון גבוה, שתי קומות של חנויות, ופתחי אור בתקרה. השוק מוביל ישר אל שער סוחרי הכותנה של הר הבית. 💡 ברחוב השלשלת נוספו קשתות מעל הרחוב, כמו שיש בו היום."};
 Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MAT[k]);m.castShadow=k==="stone"||k==="vault";m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)});
 }catch(e){console.warn("area6",e)}})();
@@ -659,13 +659,18 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
     const b=P(s+4,sd*2.95);add("wood",wbox(1.8,0.12,0.5,1),b[0],top(b[0],b[1])+0.46,b[1]);add("stone",wbox(0.3,0.42,0.45,1),b[0],top(b[0],b[1])+0.21,b[1])}
   if(TR.length)TREES5.plant(WG,"olive",TR,INF);
   // 3) בתי קפה: שמשיות ושולחנות בשלושה מקומות לאורך הרחוב
-  const UP=[],UC=[],TB=[];[0.18,0.5,0.82].forEach((t,i)=>{const sd=i%2?1:-1;for(let j=0;j<3;j++){const p=P(C.L*t+(j-1)*3.4,sd*1.9);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);UP.push([p[0],g+1.2,p[1],0.06,2.4,0.06]);UC.push([p[0],g+2.4,p[1],2.4,0.55,2.4]);TB.push([p[0],g+0.74,p[1],0.8,0.05,0.8])}});
+  /* 130.5: שולחן קפה עגול על רגל אחת ובסיס (קודם המשטח ריחף באוויר), שני כיסאות מתכת עם מושב קש, ושתי כוסות. 💡 הכל השלמה, כמו בתי הקפה ברחוב היום */
+  const UP=[],UC=[],TB=[],TL=[],TBS=[],CUP=[];let cafeChairs=0;[0.18,0.5,0.82].forEach((t,i)=>{const sd=i%2?1:-1;for(let j=0;j<3;j++){const p=P(C.L*t+(j-1)*3.4,sd*1.9);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);UP.push([p[0],g+1.2,p[1],0.06,2.4,0.06]);UC.push([p[0],g+2.4,p[1],2.4,0.55,2.4]);TB.push([p[0],g+0.74,p[1],0.8,0.04,0.8]);TL.push([p[0],g+0.37,p[1],0.07,0.72,0.07]);TBS.push([p[0],g+0.015,p[1],0.5,0.03,0.5]);
+    [1,-1].forEach(d=>{const cx=p[0]+C.ux*d*0.72,cn=p[1]+C.un*d*0.72;if(inB(cx,cn))return;const gc=top(cx,cn),bx=cx+C.ux*d*0.2,bn=cn+C.un*d*0.2;add("wood",new THREE.BoxGeometry(0.42,0.04,0.42),cx,gc+0.46,cn);add("dark",new THREE.BoxGeometry(0.03,0.4,0.4),bx,gc+0.68,bn);
+      [[0.17,0.17],[0.17,-0.17],[-0.17,0.17],[-0.17,-0.17]].forEach(([a,b])=>add("dark",new THREE.BoxGeometry(0.025,0.45,0.025),cx+a*C.ux+b*C.un,gc+0.225,cn+a*C.un-b*C.ux));
+      CUP.push([p[0]+C.ux*d*0.2,g+0.8,p[1]+C.un*d*0.2,0.08,0.09,0.08]);cafeChairs++})}});
   Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.castShadow=k!=="ring";m.receiveShadow=true;m.userData=INF;WG.add(m);PICK.push(m)});
   {const d=new THREE.Object3D(),put=(list,mat,geo)=>{if(!list.length)return;const m=new THREE.InstancedMesh(geo||new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.scale.set(q[3],q[4],q[5]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=INF;WG.add(m)};
     put(LP,MAT(0x2a2d30,{metalness:0.5}));put(LH,MAT(0xf2e6c8,{emissive:0x332a18}));put(UP,MAT(0xdddddd,{metalness:0.4}),new THREE.CylinderGeometry(0.5,0.5,1,6));
-    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),new THREE.ConeGeometry(0.5,1,8,1,true));put(TB,MAT(0x8a8378),new THREE.CylinderGeometry(0.5,0.5,1,12))}
+    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),new THREE.ConeGeometry(0.5,1,8,1,true));put(TB,MAT(0x8a8378),new THREE.CylinderGeometry(0.5,0.5,1,12));
+    put(TL,MAT(0x2a2d30,{metalness:0.5}),new THREE.CylinderGeometry(0.5,0.5,1,6));put(TBS,MAT(0x2a2d30,{metalness:0.5}),new THREE.CylinderGeometry(0.5,0.5,1,12));put(CUP,MAT(0xf4f1ea,{roughness:0.5}),new THREE.CylinderGeometry(0.5,0.4,1,8))}
   __AFTER(()=>{try{const p=P(C.L*0.45,0),q=G2S(p[0],p[1]);label("מדרחוב ממילא",q[0],top(p[0],p[1])+9,-q[1],null,INF)}catch(e){console.warn("mamilla label",e)}});
-  window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length};
+  window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length,cafeChairs};
 }catch(e){console.warn("mamilla",e)}})();
 // ---- 127.8: גיא בן הינום — בריכת הסולטן, שביל בקרקעית הגיא, חורשה לפי צילום הלוויין וטרסות בגיא התחתון ----
 // 📜 ירמיהו לא, מ: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.

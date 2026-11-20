@@ -283,7 +283,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     const l=Math.hypot(best.dx,best.dn);let ax=best.dx/l,an=best.dn/l;if(an<0){ax=-ax;an=-an}/* al חיובי = צפונה */
     let ox=-an,on=ax;if(ox>0){ox=-ox;on=-on}/* nn חיובי = מערבה, אל הרחבה */
     const P=(nn,al)=>[best.fx+ox*nn+ax*al,best.fn+on*nn+an*al],WA=Math.atan2(an,ax)/* כיוון לאורך הכותל */,FACE=Math.atan2(-on,-ox)/* מבט אל הכותל */;
-    const FEN=[],ARK=[],BOOK=[],CH=[],TB=[],SHT=[],UMP=[],UMT=[];
+    const FEN=[],ARK=[],BOOK=[],CH=[],TB=[],SHT=[],UMP=[],UMT=[],LEG=[],TBK=[];
     // הגדר: 26 מ׳ מהכותל, מ־25 מ׳ דרומה עד 24 מ׳ צפונה, עם ארבעה פתחים של 3 מ׳
     const OPEN=[-18,-6,8,18],FN=26;let runs=[],cur=-25;OPEN.forEach(o=>{runs.push([cur,o-1.5]);cur=o+1.5});runs.push([cur,24]);
     /* 126.4 (תוכנית רחבת הכותל): במקום גדר המתכת של היום, מעקה אבן נמוך (אבן בלבד, כמו כל הרחבה), עם אותם פתחים */
@@ -295,14 +295,17 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     [[24.6,4],[24.6,13],[24.6,21],[24.6,-11],[24.6,-21]].forEach(([nn,al])=>{const q=P(nn,al);bx(BOOK,q[0],q[1],Y0,1.9,WA,2.2,0.45);busy.push([nn,al,1.6])});
     busy.push([14,0,0.9]);/* המחיצה */
     const place=(cnt,a0,a1,rad,fn)=>{let k=0,t=0;while(k<cnt&&t<cnt*40){t++;const nn=2+r()*21.5,al=a0+r()*(a1-a0);if(Math.abs(al)<1.2||!free(nn,al,rad))continue;busy.push([nn,al,rad]);fn(nn,al);k++}};
-    const chair=(nn,al)=>{const q=P(nn,al),f=FACE+(r()-0.5)*1.2,c=Math.cos(f),s=Math.sin(f);CH.push([q[0],Y0+0.45,q[1],f,0.44,0.05,0.44]);CH.push([q[0]-c*0.2,Y0+0.7,q[1]-s*0.2,f,0.05,0.45,0.44]);CH.push([q[0],Y0+0.21,q[1],f,0.36,0.42,0.36])};
-    place(10,2,23,1.2,(nn,al)=>{const q=P(nn,al);TB.push([q[0],Y0+0.72,q[1],WA,1.8,0.04,0.75]);TB.push([q[0],Y0+0.35,q[1],WA,1.6,0.7,0.04]);chair(nn+0.9,al)});
+    /* 130.5: כיסא רגיל: מושב, משענת מעט נטויה, וארבע רגליים דקות של מתכת (קודם גוש מלא מתחת למושב) */
+    const chair=(nn,al)=>{const q=P(nn,al),f=FACE+(r()-0.5)*1.2,c=Math.cos(f),s=Math.sin(f);CH.push([q[0],Y0+0.45,q[1],f,0.44,0.05,0.44]);CH.push([q[0]-c*0.21,Y0+0.7,q[1]-s*0.21,f,0.04,0.42,0.42,-0.08]);[[0.18,0.18],[0.18,-0.18],[-0.18,0.18],[-0.18,-0.18]].forEach(([a,b])=>LEG.push([q[0]+a*c+b*s,Y0+0.215,q[1]+a*s-b*c,f,0.03,0.43,0.03]))};
+    /* 130.5: שולחן רגיל: משטח, שתי רגליים בצורת מסגרת בקצוות, מוט מחבר, וספרים פתוחים או סגורים על רוב השולחנות */
+    place(10,2,23,1.2,(nn,al)=>{const q=P(nn,al),c=Math.cos(WA),s=Math.sin(WA);TB.push([q[0],Y0+0.72,q[1],WA,1.8,0.04,0.75]);[-0.78,0.78].forEach(a=>{LEG.push([q[0]+a*c,Y0+0.35,q[1]+a*s,WA,0.04,0.7,0.04]);LEG.push([q[0]+a*c,Y0+0.02,q[1]+a*s,WA,0.05,0.04,0.62]);LEG.push([q[0]+a*c,Y0+0.68,q[1]+a*s,WA,0.05,0.04,0.62])});LEG.push([q[0],Y0+0.2,q[1],WA,1.5,0.04,0.04]);
+      for(let b=0;b<3;b++)if(r()<0.6){const a=(b-1)*0.55+(r()-0.5)*0.15,o=(r()-0.5)*0.25;TBK.push([q[0]+a*c+o*s,Y0+0.76,q[1]+a*s-o*c,WA+(r()-0.5)*0.5,0.17,0.035,0.24])}chair(nn+0.9,al)});
     place(20,1.5,23,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
     place(8,-24,-1.5,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
     place(90,1.5,23,0.4,chair);place(45,-24,-1.5,0.4,chair);
     /* 126.4 (תוכנית רחבת הכותל): בלי שמשיות. הכלל של שמואל: בלי סככות על הרחבה, והמודל מראה את העתיד ולא ריהוט של קיץ */
     const PI={n:"אזור התפילה ליד הכותל",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 ליד הכותל עומדים ארונות קודש מעץ, ארונות ספרים, כיסאות, שולחנות וסטנדרים, כמו בתמונות. 💡 המקום של כל פריט הוא השלמה. 💡 השמשיות של היום לא נבנו (בלי סככות על הרחבה). ⚖️ המתפללים פונים מזרחה, אל המקדש: \"היה עומד בירושלים, יכוון את ליבו כנגד בית המקדש\" (ברכות ל ע״א)."};
-    put(ARK,MAT(0x6b4a2b),PI);put(BOOK,MAT(0x5a3d24),PI);put(CH,MAT(0xf1f0ea,{roughness:0.6}),PI);put(TB,MAT(0xeeeeea,{roughness:0.6}),PI);put(SHT,MAT(0x7a5634),PI);
+    put(ARK,MAT(0x6b4a2b),PI);put(BOOK,MAT(0x5a3d24),PI);put(CH,MAT(0xf1f0ea,{roughness:0.6}),PI);put(TB,MAT(0xeeeeea,{roughness:0.6}),PI);put(LEG,MAT(0x8d8f91,{metalness:0.5,roughness:0.45}),PI);put(TBK,MAT(0x3b2a28,{roughness:0.8}),PI);put(SHT,MAT(0x7a5634),PI);
 }
 
   // 4) כיור נטילת ידיים ברחבה, ופנסי רחוב

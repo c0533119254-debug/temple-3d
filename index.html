@@ -10335,7 +10335,7 @@ if(window.__JG){const J=window.__JG,b=new THREE.Mesh(new THREE.BoxGeometry(17,20
 
 // ---- topic 3, area 2: the covered markets (three parallel souqs + the roofed part of David Street) ----
 (function(){try{
-const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[]};
+const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[],wood:[]};let stallT=0;
 const add=(k,geo,x,y,n,rot)=>{geo=geo.index?geo.toNonIndexed():geo;const m=new THREE.Matrix4().makeRotationY(rot||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);if(geo.attributes.uv2)geo.deleteAttribute("uv2");GS[k].push(geo)};
 const gy=(x,n)=>Math.min(TY(x,n),H(x,n)+0.5);
 const off=(x,n,rot,a,b)=>[x+Math.cos(rot)*a-Math.sin(rot)*b,n+Math.sin(rot)*a+Math.cos(rot)*b];
@@ -10351,7 +10351,7 @@ function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+wd/2));add("stone",wbox(st+0.03,top+1.5,wd,4),c[0],y+top/2-0.75,c[1],rot);
         // a shop: arched opening with goods on a low table in front (💡)
         if(k%2===0||opt.dense){const f=off(x,n,rot,0,s*r);add("dark",archG(2.3,3.1,1.3).translate(0,0,0.12),f[0],y,f[1],rot+(s>0?0:Math.PI));
-          if(rnd()<0.8){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35));add(gk,new THREE.BoxGeometry(1.4,0.35+rnd()*0.35,0.5),q[0],y+0.45,q[1],rot)}}});
+          /* 130.5: הסחורה על שולחן עץ (משטח ושתי רגליים), במקום ארגז שמרחף מעל הרצפה */if(rnd()<0.8){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35)),gh=0.2+rnd()*0.3;add("wood",new THREE.BoxGeometry(1.55,0.05,0.6),q[0],y+0.6,q[1],rot);[-0.68,0.68].forEach(a=>{const l=off(q[0],q[1],rot,a,0);add("wood",new THREE.BoxGeometry(0.06,0.58,0.52),l[0],y+0.29,l[1],rot)});add(gk,new THREE.BoxGeometry(1.35,gh,0.48),q[0],y+0.625+gh/2,q[1],rot);stallT++}}});
       // barrel vault, with a light shaft every fourth bay (📜 the souqs are lit from openings in the roof)
       if(k%4!==2){const v=new THREE.CylinderGeometry(r,r,st+0.04,12,1,true,0,Math.PI);v.rotateZ(Math.PI/2);add("vault",v,x,y+hs,n,rot);
         const sk=new THREE.CylinderGeometry(r+0.45,r+0.45,st+0.04,12,1,true,0,Math.PI);sk.rotateZ(Math.PI/2);add("stone",sk,x,y+hs,n,rot)}
@@ -10367,7 +10367,7 @@ add("stone",wbox(12,8.5,62,4),-378,gy(-378,-95)+3.2,-95,0);
 lane([[-566,-153],[-538,-152],[-530,-155],[-513,-162],[-506,-164],[-484,-169],[-475,-169],[-466,-168],[-457,-164],[-442,-163],[-436,-161]],3.6,0,3.6,{dense:true});
 const sM=M.stoneL,vM=sM.clone();vM.side=THREE.DoubleSide;
 const gm=c=>new THREE.MeshStandardMaterial({color:c,roughness:0.85});
-const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a)};
+const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a),wood:M.wood};window.__STALLS=(window.__STALLS||0)+stallT;
 const NAMES=[["שוק הקצבים",-429.5,-88],["שוק הבשמים",-411.5,-88],["שוק הצורפים",-393,-88]];
 const info={n:"השווקים המקורים",r:"בין רחוב דוד לרחוב השלשלת וחאן א־זית",t:"📜 שלושה שווקים מקבילים ומקורים, מימי הצלבנים (המאה ה־12), על הקו של הקרדו הרומי. ממערב למזרח: שוק הקצבים (אל־לחאמין), שוק הבשמים (אל־עטארין) ושוק הצורפים (אל־ח׳וואג׳את). 📜 התקרה היא קמרון אבן עם פתחי אור. 💡 החנויות והסחורה מצוירות בפשטות. גם החלק המזרחי של רחוב דוד מקורה."};
 Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MAT[k]);m.castShadow=k==="stone"||k==="vault";m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)});
@@ -10574,7 +10574,7 @@ groups.forEach(G=>Object.keys(G.GS).forEach(k=>{if(!G.GS[k].length)return;const 
 
 // ---- topic 3, area 6: the Muslim Quarter by the Mount — the Cotton Merchants' market and the arches of Chain Street ----
 (function(){try{
-const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[]};
+const GS={stone:[],vault:[],dark:[],pave:[],g0:[],g1:[],g2:[],g3:[],wood:[]};let stallT=0;
 const add=(k,geo,x,y,n,rot)=>{geo=geo.index?geo.toNonIndexed():geo;const m=new THREE.Matrix4().makeRotationY(rot||0);m.setPosition(x,y,-n);geo.applyMatrix4(m);if(geo.attributes.uv2)geo.deleteAttribute("uv2");GS[k].push(geo)};
 const gy=(x,n)=>Math.min(TY(x,n),H(x,n)+0.5);
 const off=(x,n,rot,a,b)=>[x+Math.cos(rot)*a-Math.sin(rot)*b,n+Math.sin(rot)*a+Math.cos(rot)*b];
@@ -10588,7 +10588,7 @@ function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);const top=hs+r+0.9;
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+sd/2));add("stone",wbox(st+0.03,top+1.5,sd,4),c[0],y+top/2-0.75,c[1],rot);
         const f=off(x,n,rot,0,s*r),fr=rot+(s>0?0:Math.PI);add("dark",archG(2.4,3.0,1.3,true).translate(0,0,0.12),f[0],y,f[1],fr);add("dark",archG(1.1,1.6,1.0,true).translate(0,0,0.12),f[0],y+3.5,f[1],fr);
-        if(rnd()<0.75){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35));add(gk,new THREE.BoxGeometry(1.4,0.35+rnd()*0.35,0.5),q[0],y+0.45,q[1],rot)}});
+        /* 130.5: הסחורה על שולחן עץ (משטח ושתי רגליים), במקום ארגז שמרחף מעל הרצפה */if(rnd()<0.75){const gk="g"+Math.floor(rnd()*4),q=off(x,n,rot,0,s*(r-0.35)),gh=0.2+rnd()*0.3;add("wood",new THREE.BoxGeometry(1.55,0.05,0.6),q[0],y+0.6,q[1],rot);[-0.68,0.68].forEach(a=>{const l=off(q[0],q[1],rot,a,0);add("wood",new THREE.BoxGeometry(0.06,0.58,0.52),l[0],y+0.29,l[1],rot)});add(gk,new THREE.BoxGeometry(1.35,gh,0.48),q[0],y+0.625+gh/2,q[1],rot);stallT++}});
       if(k%4!==2){const v=new THREE.CylinderGeometry(r,r,st+0.04,12,1,true,0,Math.PI);v.rotateZ(Math.PI/2);v.scale(1,1.25,1);add("vault",v,x,y+hs,n,rot);
         const sk=new THREE.CylinderGeometry(r+0.5,r+0.5,st+0.04,12,1,true,0,Math.PI);sk.rotateZ(Math.PI/2);sk.scale(1,1.2,1);add("stone",sk,x,y+hs,n,rot)}
       if(k%2===0){const rb=new THREE.TorusGeometry(r-0.05,0.2,5,12,Math.PI);rb.rotateY(Math.PI/2);rb.scale(1,1.25,1);add("stone",rb,x,y+hs,n,rot)}}}}
@@ -10599,7 +10599,7 @@ const span=(x,n,rot,w)=>{const y=gy(x,n),r=w/2+0.1;[1,-1].forEach(s=>{const p=of
   const ar=new THREE.TorusGeometry(r+0.3,0.45,6,14,Math.PI);ar.rotateY(Math.PI/2);ar.scale(1,0.9,1);add("stone",ar,x,y+4.4,n,rot);add("stone",wbox(1.4,2.6,w+2.4,3),x,y+4.4+r+0.9,n,rot)};
 [[-250,-123.4],[-300,-131.1],[-352,-140.2]].forEach(q=>span(q[0],q[1],-0.17,4.6));
 const sM=M.stoneL,vM=sM.clone();vM.side=THREE.DoubleSide;const gm=c=>new THREE.MeshStandardMaterial({color:c,roughness:0.85});
-const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a)};
+const MAT={stone:sM,vault:vM,dark:M.dark,pave:M.pave,g0:gm(0x7a2a12),g1:gm(0x9a6614),g2:gm(0x44521c),g3:gm(0x24395a),wood:M.wood};window.__STALLS=(window.__STALLS||0)+stallT;
 const info={n:"שוק הכותנה (סוק אל־קטאנין)",r:"הרובע המוסלמי, ליד הר הבית",t:"📜 שוק מקורה ומפואר מהתקופה הממלוכית, שבנה המושל תנכיז בשנת 1336. 📜 קמרון גבוה, שתי קומות של חנויות, ופתחי אור בתקרה. השוק מוביל ישר אל שער סוחרי הכותנה של הר הבית. 💡 ברחוב השלשלת נוספו קשתות מעל הרחוב, כמו שיש בו היום."};
 Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MAT[k]);m.castShadow=k==="stone"||k==="vault";m.receiveShadow=true;m.userData=info;WG.add(m);PICK.push(m)});
 }catch(e){console.warn("area6",e)}})();
@@ -10913,13 +10913,18 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
     const b=P(s+4,sd*2.95);add("wood",wbox(1.8,0.12,0.5,1),b[0],top(b[0],b[1])+0.46,b[1]);add("stone",wbox(0.3,0.42,0.45,1),b[0],top(b[0],b[1])+0.21,b[1])}
   if(TR.length)TREES5.plant(WG,"olive",TR,INF);
   // 3) בתי קפה: שמשיות ושולחנות בשלושה מקומות לאורך הרחוב
-  const UP=[],UC=[],TB=[];[0.18,0.5,0.82].forEach((t,i)=>{const sd=i%2?1:-1;for(let j=0;j<3;j++){const p=P(C.L*t+(j-1)*3.4,sd*1.9);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);UP.push([p[0],g+1.2,p[1],0.06,2.4,0.06]);UC.push([p[0],g+2.4,p[1],2.4,0.55,2.4]);TB.push([p[0],g+0.74,p[1],0.8,0.05,0.8])}});
+  /* 130.5: שולחן קפה עגול על רגל אחת ובסיס (קודם המשטח ריחף באוויר), שני כיסאות מתכת עם מושב קש, ושתי כוסות. 💡 הכל השלמה, כמו בתי הקפה ברחוב היום */
+  const UP=[],UC=[],TB=[],TL=[],TBS=[],CUP=[];let cafeChairs=0;[0.18,0.5,0.82].forEach((t,i)=>{const sd=i%2?1:-1;for(let j=0;j<3;j++){const p=P(C.L*t+(j-1)*3.4,sd*1.9);if(inB(p[0],p[1]))continue;const g=top(p[0],p[1]);UP.push([p[0],g+1.2,p[1],0.06,2.4,0.06]);UC.push([p[0],g+2.4,p[1],2.4,0.55,2.4]);TB.push([p[0],g+0.74,p[1],0.8,0.04,0.8]);TL.push([p[0],g+0.37,p[1],0.07,0.72,0.07]);TBS.push([p[0],g+0.015,p[1],0.5,0.03,0.5]);
+    [1,-1].forEach(d=>{const cx=p[0]+C.ux*d*0.72,cn=p[1]+C.un*d*0.72;if(inB(cx,cn))return;const gc=top(cx,cn),bx=cx+C.ux*d*0.2,bn=cn+C.un*d*0.2;add("wood",new THREE.BoxGeometry(0.42,0.04,0.42),cx,gc+0.46,cn);add("dark",new THREE.BoxGeometry(0.03,0.4,0.4),bx,gc+0.68,bn);
+      [[0.17,0.17],[0.17,-0.17],[-0.17,0.17],[-0.17,-0.17]].forEach(([a,b])=>add("dark",new THREE.BoxGeometry(0.025,0.45,0.025),cx+a*C.ux+b*C.un,gc+0.225,cn+a*C.un-b*C.ux));
+      CUP.push([p[0]+C.ux*d*0.2,g+0.8,p[1]+C.un*d*0.2,0.08,0.09,0.08]);cafeChairs++})}});
   Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(GS[k],false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.castShadow=k!=="ring";m.receiveShadow=true;m.userData=INF;WG.add(m);PICK.push(m)});
   {const d=new THREE.Object3D(),put=(list,mat,geo)=>{if(!list.length)return;const m=new THREE.InstancedMesh(geo||new THREE.BoxGeometry(1,1,1),mat,list.length);list.forEach((q,i)=>{d.position.set(q[0],q[1],-q[2]);d.scale.set(q[3],q[4],q[5]);d.updateMatrix();m.setMatrixAt(i,d.matrix)});m.instanceMatrix.needsUpdate=true;m.castShadow=true;m.receiveShadow=true;m.userData=INF;WG.add(m)};
     put(LP,MAT(0x2a2d30,{metalness:0.5}));put(LH,MAT(0xf2e6c8,{emissive:0x332a18}));put(UP,MAT(0xdddddd,{metalness:0.4}),new THREE.CylinderGeometry(0.5,0.5,1,6));
-    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),new THREE.ConeGeometry(0.5,1,8,1,true));put(TB,MAT(0x8a8378),new THREE.CylinderGeometry(0.5,0.5,1,12))}
+    put(UC,MAT(0xf3efe6,{side:THREE.DoubleSide}),new THREE.ConeGeometry(0.5,1,8,1,true));put(TB,MAT(0x8a8378),new THREE.CylinderGeometry(0.5,0.5,1,12));
+    put(TL,MAT(0x2a2d30,{metalness:0.5}),new THREE.CylinderGeometry(0.5,0.5,1,6));put(TBS,MAT(0x2a2d30,{metalness:0.5}),new THREE.CylinderGeometry(0.5,0.5,1,12));put(CUP,MAT(0xf4f1ea,{roughness:0.5}),new THREE.CylinderGeometry(0.5,0.4,1,8))}
   __AFTER(()=>{try{const p=P(C.L*0.45,0),q=G2S(p[0],p[1]);label("מדרחוב ממילא",q[0],top(p[0],p[1])+9,-q[1],null,INF)}catch(e){console.warn("mamilla label",e)}});
-  window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length};
+  window.__MAM10={shops,rings,lamps:LP.length,trees:TR.length,cafes:UP.length,cafeChairs};
 }catch(e){console.warn("mamilla",e)}})();
 // ---- 127.8: גיא בן הינום — בריכת הסולטן, שביל בקרקעית הגיא, חורשה לפי צילום הלוויין וטרסות בגיא התחתון ----
 // 📜 ירמיהו לא, מ: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
@@ -11454,7 +11459,7 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     const l=Math.hypot(best.dx,best.dn);let ax=best.dx/l,an=best.dn/l;if(an<0){ax=-ax;an=-an}/* al חיובי = צפונה */
     let ox=-an,on=ax;if(ox>0){ox=-ox;on=-on}/* nn חיובי = מערבה, אל הרחבה */
     const P=(nn,al)=>[best.fx+ox*nn+ax*al,best.fn+on*nn+an*al],WA=Math.atan2(an,ax)/* כיוון לאורך הכותל */,FACE=Math.atan2(-on,-ox)/* מבט אל הכותל */;
-    const FEN=[],ARK=[],BOOK=[],CH=[],TB=[],SHT=[],UMP=[],UMT=[];
+    const FEN=[],ARK=[],BOOK=[],CH=[],TB=[],SHT=[],UMP=[],UMT=[],LEG=[],TBK=[];
     // הגדר: 26 מ׳ מהכותל, מ־25 מ׳ דרומה עד 24 מ׳ צפונה, עם ארבעה פתחים של 3 מ׳
     const OPEN=[-18,-6,8,18],FN=26;let runs=[],cur=-25;OPEN.forEach(o=>{runs.push([cur,o-1.5]);cur=o+1.5});runs.push([cur,24]);
     /* 126.4 (תוכנית רחבת הכותל): במקום גדר המתכת של היום, מעקה אבן נמוך (אבן בלבד, כמו כל הרחבה), עם אותם פתחים */
@@ -11466,14 +11471,17 @@ const GATEG=new THREE.Group();WG.add(GATEG);
     [[24.6,4],[24.6,13],[24.6,21],[24.6,-11],[24.6,-21]].forEach(([nn,al])=>{const q=P(nn,al);bx(BOOK,q[0],q[1],Y0,1.9,WA,2.2,0.45);busy.push([nn,al,1.6])});
     busy.push([14,0,0.9]);/* המחיצה */
     const place=(cnt,a0,a1,rad,fn)=>{let k=0,t=0;while(k<cnt&&t<cnt*40){t++;const nn=2+r()*21.5,al=a0+r()*(a1-a0);if(Math.abs(al)<1.2||!free(nn,al,rad))continue;busy.push([nn,al,rad]);fn(nn,al);k++}};
-    const chair=(nn,al)=>{const q=P(nn,al),f=FACE+(r()-0.5)*1.2,c=Math.cos(f),s=Math.sin(f);CH.push([q[0],Y0+0.45,q[1],f,0.44,0.05,0.44]);CH.push([q[0]-c*0.2,Y0+0.7,q[1]-s*0.2,f,0.05,0.45,0.44]);CH.push([q[0],Y0+0.21,q[1],f,0.36,0.42,0.36])};
-    place(10,2,23,1.2,(nn,al)=>{const q=P(nn,al);TB.push([q[0],Y0+0.72,q[1],WA,1.8,0.04,0.75]);TB.push([q[0],Y0+0.35,q[1],WA,1.6,0.7,0.04]);chair(nn+0.9,al)});
+    /* 130.5: כיסא רגיל: מושב, משענת מעט נטויה, וארבע רגליים דקות של מתכת (קודם גוש מלא מתחת למושב) */
+    const chair=(nn,al)=>{const q=P(nn,al),f=FACE+(r()-0.5)*1.2,c=Math.cos(f),s=Math.sin(f);CH.push([q[0],Y0+0.45,q[1],f,0.44,0.05,0.44]);CH.push([q[0]-c*0.21,Y0+0.7,q[1]-s*0.21,f,0.04,0.42,0.42,-0.08]);[[0.18,0.18],[0.18,-0.18],[-0.18,0.18],[-0.18,-0.18]].forEach(([a,b])=>LEG.push([q[0]+a*c+b*s,Y0+0.215,q[1]+a*s-b*c,f,0.03,0.43,0.03]))};
+    /* 130.5: שולחן רגיל: משטח, שתי רגליים בצורת מסגרת בקצוות, מוט מחבר, וספרים פתוחים או סגורים על רוב השולחנות */
+    place(10,2,23,1.2,(nn,al)=>{const q=P(nn,al),c=Math.cos(WA),s=Math.sin(WA);TB.push([q[0],Y0+0.72,q[1],WA,1.8,0.04,0.75]);[-0.78,0.78].forEach(a=>{LEG.push([q[0]+a*c,Y0+0.35,q[1]+a*s,WA,0.04,0.7,0.04]);LEG.push([q[0]+a*c,Y0+0.02,q[1]+a*s,WA,0.05,0.04,0.62]);LEG.push([q[0]+a*c,Y0+0.68,q[1]+a*s,WA,0.05,0.04,0.62])});LEG.push([q[0],Y0+0.2,q[1],WA,1.5,0.04,0.04]);
+      for(let b=0;b<3;b++)if(r()<0.6){const a=(b-1)*0.55+(r()-0.5)*0.15,o=(r()-0.5)*0.25;TBK.push([q[0]+a*c+o*s,Y0+0.76,q[1]+a*s-o*c,WA+(r()-0.5)*0.5,0.17,0.035,0.24])}chair(nn+0.9,al)});
     place(20,1.5,23,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
     place(8,-24,-1.5,0.5,(nn,al)=>{const q=P(nn,al);bx(SHT,q[0],q[1],Y0,1.15,FACE,0.4,0.5)});
     place(90,1.5,23,0.4,chair);place(45,-24,-1.5,0.4,chair);
     /* 126.4 (תוכנית רחבת הכותל): בלי שמשיות. הכלל של שמואל: בלי סככות על הרחבה, והמודל מראה את העתיד ולא ריהוט של קיץ */
     const PI={n:"אזור התפילה ליד הכותל",r:"תמונות רחוב (Mapillary, 2014–2023)",t:"📜 ליד הכותל עומדים ארונות קודש מעץ, ארונות ספרים, כיסאות, שולחנות וסטנדרים, כמו בתמונות. 💡 המקום של כל פריט הוא השלמה. 💡 השמשיות של היום לא נבנו (בלי סככות על הרחבה). ⚖️ המתפללים פונים מזרחה, אל המקדש: \"היה עומד בירושלים, יכוון את ליבו כנגד בית המקדש\" (ברכות ל ע״א)."};
-    put(ARK,MAT(0x6b4a2b),PI);put(BOOK,MAT(0x5a3d24),PI);put(CH,MAT(0xf1f0ea,{roughness:0.6}),PI);put(TB,MAT(0xeeeeea,{roughness:0.6}),PI);put(SHT,MAT(0x7a5634),PI);
+    put(ARK,MAT(0x6b4a2b),PI);put(BOOK,MAT(0x5a3d24),PI);put(CH,MAT(0xf1f0ea,{roughness:0.6}),PI);put(TB,MAT(0xeeeeea,{roughness:0.6}),PI);put(LEG,MAT(0x8d8f91,{metalness:0.5,roughness:0.45}),PI);put(TBK,MAT(0x3b2a28,{roughness:0.8}),PI);put(SHT,MAT(0x7a5634),PI);
 }
 
   // 4) כיור נטילת ידיים ברחבה, ופנסי רחוב
@@ -12356,6 +12364,15 @@ function build(){
   function dframe(ax,f,sg,c,w,y,h){const P=(d0,d1,a0,a1,y0,y1,m)=>{const p0=Math.min(f+sg*d0,f+sg*d1),p1=Math.max(f+sg*d0,f+sg*d1);if(ax==="u")box(p0,a0,p1,a1,y0,y1,m,null,{noCol:true,cast:false});else box(a0,p0,a1,p1,y0,y1,m,null,{noCol:true,cast:false})};
     P(0,0.4,c-w/2-0.5,c-w/2,y,y+h,M.stoneL);P(0,0.4,c+w/2,c+w/2+0.5,y,y+h,M.stoneL);P(0,0.55,c-w/2-0.8,c+w/2+0.8,y+h,y+h+0.6,M.stone2)}
   function cyl(u,v,y0,y1,r0,r1,mat,info,seg){const m=new THREE.Mesh(new THREE.CylinderGeometry(r1*A,r0*A,(y1-y0)*A,seg||20),mat);const p=W(u,v);m.position.set(p[0],(y0+y1)/2*A,p[1]);m.castShadow=true;m.receiveShadow=true;if(info){m.userData=info;cPick.push(m)}group.add(m);return m}
+  /* 130.5: שולחן שנראה כמו שולחן, במקום קובייה מלאה. המידות והמקום נשארים בדיוק: המשטח הוא כל השטח שנתון, ומתחתיו בסיס אבן צר יותר, או ארבע רגליים ומסגרת (legs) */
+  function tbl(u0,v0,u1,v1,y0,y1,mat,info,o){o=o||{};const h=y1-y0,th=o.th||Math.min(0.28,h*0.24),lm=o.legM||mat;
+    box(u0,v0,u1,v1,y1-th,y1,mat,info,{noCol:true});
+    if(o.legs){const lg=o.lg||0.13,e=0.07,ap=Math.min(0.2,h*0.13);[[u0+e,v0+e],[u1-e-lg,v0+e],[u0+e,v1-e-lg],[u1-e-lg,v1-e-lg]].forEach(([a,b])=>box(a,b,a+lg,b+lg,y0,y1-th,lm,info,{noCol:true,cast:false}));
+      box(u0+e,v0+e,u1-e,v0+e+0.05,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});box(u0+e,v1-e-0.05,u1-e,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});
+      box(u0+e,v0+e,u0+e+0.05,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});box(u1-e-0.05,v0+e,u1-e,v1-e,y1-th-ap,y1-th,lm,info,{noCol:true,cast:false});return}
+    const iu=(u1-u0)*0.2,iv=(v1-v0)*0.2,pl=Math.min(0.15,h*0.12);
+    box(u0+iu*0.6,v0+iv*0.6,u1-iu*0.6,v1-iv*0.6,y0,y0+pl,mat,info,{noCol:true});box(u0+iu,v0+iv,u1-iu,v1-iv,y0+pl,y1-th,mat,info,{noCol:true});
+    box(u0+iu*0.75,v0+iv*0.75,u1-iu*0.75,v1-iv*0.75,y1-th-0.08,y1-th,mat,null,{noCol:true,cast:false})}
   {
   // floors
   box(0,0,500,500,0,3.5,M.pave,I("החצר החיצונה","יחזקאל מ׳, יז-יט","📜 החצר שבה עומד העם, גבוהה ב־7 מדרגות מהר הבית. 📜 לאורך החומה רצפה, ועליה 30 לשכות. 💡 בתוכנית: עד 10–15 אלף איש בבת אחת. 💡 צורת אבני הריצוף, מידותיהן וצבען הן בחירה חזותית בלבד."),{cast:false,tile:9});
@@ -12603,8 +12620,10 @@ function build(){
     const lt=new THREE.PointLight(0xffb45c,1.5,26*a*3,2);lt.position.set(p[0],(fl+3.6)*A,p[1]);group.add(lt);MENL=lt;
     // stage 6: soft flames — "להעלות נר תמיד", pure olive oil (Exodus 27:20); the group is turned a quarter, so local x runs along -z
     const LMP=[-6,-4,-2,0,2,4,6].map(x=>{const xl=(x+(x===0?0:-Math.sign(x)*0.25))*t;return{x:p[0],y:fl*A+18.72*t,z:p[1]-xl,rx:0.006,s:0.06}});group.add(makePFX(LMP.length*(SMALL?8:12),true,LMP,{seed:71}))})();
-  const sI=I("שולחן לחם הפנים","שמות כ״ה, כג-ל; מנחות צו ע״א","📜 שולחן מצופה זהב בצפון ההיכל: אורך 2 אמות, רוחב אמה, גובה אמה וחצי (כ־80 ס״מ — גובה של שולחן רגיל). עליו 12 חלות בשתי מערכות של 6. \"החלות ארכן עשרה ורחבן חמשה וקרנותיהן שבע אצבעות\" (מנחות יא, ד): לפי רבי יהודה החלה מונחת לרוחב השולחן, ושני קצותיה מקופלים כלפי מעלה, כמו \"תיבה פרוצה\". בין חלה לחלה קנים של זהב, שהאוויר יעבור, ו־4 סניפין (עמודים) של זהב מחזיקים את הקנים. בין המערכות שני בזיכי לבונה. בקצרה: 📜 קיומו מהתורה (שמות כ״ה, כג). ⚖️ צורתו לפי המשנה (מנחות יא). ⚖️ מקומו בצפון ההיכל (שמות כ״ו, לה).");
+  const sI=I("שולחן לחם הפנים","שמות כ״ה, כג-ל; מנחות צו ע״א","📜 שולחן מצופה זהב בצפון ההיכל: אורך 2 אמות, רוחב אמה, גובה אמה וחצי (כ־80 ס״מ — גובה של שולחן רגיל). עליו 12 חלות בשתי מערכות של 6. \"החלות ארכן עשרה ורחבן חמשה וקרנותיהן שבע אצבעות\" (מנחות יא, ד): לפי רבי יהודה החלה מונחת לרוחב השולחן, ושני קצותיה מקופלים כלפי מעלה, כמו \"תיבה פרוצה\". בין חלה לחלה קנים של זהב, שהאוויר יעבור, ו־4 סניפין (עמודים) של זהב מחזיקים את הקנים. בין המערכות שני בזיכי לבונה. בקצרה: 📜 קיומו מהתורה (שמות כ״ה, כג). ⚖️ צורתו לפי המשנה (מנחות יא). ⚖️ מקומו בצפון ההיכל (שמות כ״ו, לה). 📜 \"ועשית לו זר זהב סביב. ועשית לו מסגרת טפח סביב\" (שמות כה, כד–כה): שפה של זהב מסביב למשטח, ומסגרת ברוחב טפח. 💡 המסגרת מוצגת מתחת למשטח, בין הרגליים.");
   (function(){const RRT=(GATE==="high"),su=RRT?143:150,sv=243,TH=RRT?3:1.5,sI2=RRT?I("השולחן","יחזקאל מ״א, כב; רש״י שם; משכני עליון לרמח״ל","📜 \"המזבח עץ שלוש אמות גבה, וארכו שתים אמות... וידבר אלי זה השלחן אשר לפני ה׳\" (מ״א, כב). ⚖️ לפי רש״י והרמח״ל זה שולחן לחם הפנים: אורך 2 אמות, רוחב אמה וגובה 3 אמות. הוא בצפון ההיכל, 5 אמות מקיר קודש הקודשים. עליו 12 חלות בשתי מערכות (ויקרא כד, ה-ו)."):sI;box(su-1,sv-0.5,su+1,sv+0.5,fl+TH-0.15,fl+TH,M.gold,sI2);[[-0.9,-0.4],[0.9,-0.4],[-0.9,0.4],[0.9,0.4]].forEach(o=>box(su+o[0]-0.06,sv+o[1]-0.06,su+o[0]+0.06,sv+o[1]+0.06,fl,fl+TH-0.15,M.gold,sI2,{cast:false}));
+    /* 130.5: 📜 זר זהב סביב המשטח, ומסגרת טפח בין הרגליים (שמות כה, כד–כה) */{const yt=fl+TH,ym=yt-0.15,z=0.04,tp=1/6;box(su-1-z,sv-0.5-z,su+1+z,sv-0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su-1-z,sv+0.5,su+1+z,sv+0.5+z,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su-1-z,sv-0.5,su-1,sv+0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});box(su+1,sv-0.5,su+1+z,sv+0.5,ym,yt+0.1,M.altarGold,sI2,{noCol:true,cast:false});
+      box(su-0.9,sv-0.42,su+0.9,sv-0.38,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su-0.9,sv+0.38,su+0.9,sv+0.42,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su-0.92,sv-0.4,su-0.88,sv+0.4,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false});box(su+0.88,sv-0.4,su+0.92,sv+0.4,ym-tp,ym,M.gold,sI2,{noCol:true,cast:false})}
     {const t=1/6,top=fl+TH,step=2.1*t;[-3.5*t,3.5*t].forEach(o=>{const u=su+o;for(let k=0;k<6;k++){const y=top+k*step;
       box(u-2.5*t,sv-3*t,u+2.5*t,sv+3*t,y,y+0.5*t,M.bread,sI,{cast:false,noCol:true});[-1,1].forEach(sd=>box(u-2.5*t,sv+sd*3*t-(sd>0?0.5*t:0),u+2.5*t,sv+sd*3*t+(sd<0?0.5*t:0),y,y+2*t,M.bread,sI,{cast:false,noCol:true}));
       if(k<5)for(let q=-1;q<=1;q++){if(k===4&&q===0)continue;const cc=new THREE.Mesh(new THREE.CylinderGeometry(0.06*t*A,0.06*t*A,6.2*t*A,6),M.altarGold);const pp=W(u+q*1.6*t,sv);cc.position.set(pp[0],(y+step-0.08*t)*A,pp[1]);cc.rotation.x=Math.PI/2;group.add(cc)}}});
@@ -12683,12 +12702,15 @@ function build(){
     hroom(263,150,272,160,3.5,11,M.stoneL,lw,{side:"v0",c:266,nm:"הדחת העולה · לשכת המדיחין"});box(262.7,149.7,272.3,160.3,11,11.6,M.stone2,null);
     cyl(268.5,148.3,3.5,4.6,1.1,1.25,M.stone2,lw,16);cyl(268.5,148.3,4.45,4.62,0.95,0.95,M.water,null,16);CL("הדחת העולה · לשכת המדיחין",267.5,155,14,lw)}
   const tb=I("שולחנות השחיטה","יחזקאל מ׳, לט-מג","📜 \"ארבעה שלחנות מפה וארבעה שלחנות מפה לכתף השער\", ועוד ארבעה שולחנות של אבני גזית לכלים (יחזקאל מ, לט–מג). כאן שוחטים את העולה, החטאת והאשם. ⚖️ המלבי״ם (מ, מא) מונה כאן 16 שולחנות לשחיטה, וארבעת שולחנות הגזית לכלים בנפרד. בהדמיה מוצגים כל ה־16: 📜 ארבעה באולם השער (מ, לט), ⚖️ ארבעה מחוץ לשער משני צדי המעלות (מ, מ), ⚖️ ושמונה לכתף השער, ארבעה מכל צד (מ, מא). 💡 מידות השולחנות ומקומם המדויק בהערכה.");
-  [229,269].forEach(u=>{for(let k=0;k<4;k++)box(u,162+k*7,u+2,163.5+k*7,3.5,4.5,M.stoneL,tb,{noCol:true})});
+  [229,269].forEach(u=>{for(let k=0;k<4;k++)tbl(u,162+k*7,u+2,163.5+k*7,3.5,4.5,M.stoneL,tb)});
   /* 126.1 (בדיקה חוזרת 6): ארבעת השולחנות של יחזקאל מ, מ — "ואל הכתף מחוצה לעולה לפתח שער הצפונה שנים שלחנות, ואל הכתף האחרת אשר לאולם השער שנים שלחנות" */
   {const t40=I("השולחנות שליד מעלות השער","יחזקאל מ׳, מ; מלבי״ם שם","📜 \"ואל הכתף מחוצה לעולה לפתח שער הצפונה שנים שלחנות, ואל הכתף האחרת אשר לאולם השער שנים שלחנות\" — ⚖️ לפי המלבי״ם אלה ארבעה שולחנות לשחיטה מחוץ לשער, בחצר החיצונה, שניים מכל צד של העולה במעלות. יחד עם ארבעת שולחנות האולם ושמונת שולחנות הכתף הם 16 (מלבי״ם מ, מא). 💡 המידות והמרחק מהמעלות בהערכה.");
-    [[237.6,142.6],[237.6,146.4],[260.4,142.6],[260.4,146.4]].forEach(c=>box(c[0],c[1],c[0]+2,c[1]+1.5,3.5,4.5,M.stoneL,t40,{noCol:true}))}
-  {const tg=I("שולחנות אבני גזית","יחזקאל מ׳, מב-מג","📜 \"ושלחנות ארבעה לעולה אבני גזית, ארך אמה אחת וחצי ורחב אמה אחת וחצי וגבה אמה אחת\" — כ־80 × 80 ס״מ וגובה כ־50 ס״מ. עליהם מניחים את כלי השחיטה. \"והשפתים טפח אחד\" — ⚖️ לפי התרגום והמפרשים \"השפתיים\" הם אונקלאות, ווים באורך טפח לתליית הבשר.");
-    [231,235.5,263,267.5].forEach(u=>box(u,203,u+1.5,204.5,7.5,8.5,M.marble,tg,{noCol:true}))}
+    [[237.6,142.6],[237.6,146.4],[260.4,142.6],[260.4,146.4]].forEach(c=>tbl(c[0],c[1],c[0]+2,c[1]+1.5,3.5,4.5,M.stoneL,t40))}
+  {const tg=I("שולחנות אבני גזית","יחזקאל מ׳, מב-מג","📜 \"ושלחנות ארבעה לעולה אבני גזית, ארך אמה אחת וחצי ורחב אמה אחת וחצי וגבה אמה אחת\" — כ־80 × 80 ס״מ וגובה כ־50 ס״מ. עליהם מניחים את כלי השחיטה. \"והשפתים טפח אחד\" — ⚖️ לפי התרגום והמפרשים \"השפתיים\" הם אונקלאות, ווים באורך טפח לתליית הבשר. 📜 \"ויניחו את הכלים אשר ישחטו את העולה בם\" (מ, מב) — לכן מונחים עליהם סכינים. 💡 מספר הווים והסכינים ומקומם הם השלמה.");
+    [231,235.5,263,267.5].forEach(u=>{tbl(u,203,u+1.5,204.5,7.5,8.5,M.marble,tg);
+      /* 130.5: ⚖️ ווים של טפח בשפת השולחן, ו־📜 "ויניחו את הכלים אשר ישחטו את העולה בם": שני סכינים על המשטח */
+      [0.3,0.75,1.2].forEach(a=>[203,204.5].forEach(v=>{const sg=v>204?1:-1;box(u+a-0.025,v+sg*0.01-0.025,u+a+0.025,v+sg*0.01+0.025,8.3,8.5,M.bronze,tg,{noCol:true,cast:false});box(u+a-0.025,v+sg*0.01-0.025+sg*0.04,u+a+0.025,v+sg*0.01+0.025+sg*0.04,8.3,8.35,M.bronze,null,{noCol:true,cast:false})}));
+      [[0.45,203.55],[0.95,203.95]].forEach(([a,v])=>{box(u+a-0.32,v-0.04,u+a+0.12,v+0.04,8.5,8.52,M.white,tg,{noCol:true,cast:false});box(u+a+0.12,v-0.05,u+a+0.34,v+0.05,8.5,8.55,M.wood,tg,{noCol:true,cast:false})})})}
   }
   const SG=new THREE.Group(),colS=COL.length,grpS=group,sgL=cLabels.length;;
   {const sg=I("לשכת המשוררים ולשכת שומרי משמרת הבית","יחזקאל מ׳, מד-מה; מלבי״ם שם","📜 \"ומחוצה לשער הפנימי לשכות שרים בחצר הפנימית, אשר אל כתף שער הצפון ופניהם דרך הדרום\" — לשכה ליד השער הצפוני, פונה לדרום, לכהנים \"שמרי משמרת הבית\". 💡 הגובה בהערכה.");
@@ -12698,7 +12720,7 @@ function build(){
     hroom(212,292,234,300,7.5,15,M.stoneL,sp,{side:"v0",c:223,nm:"לשכת שומרי משמרת המזבח"});box(211.7,291.7,234.3,300.3,15,15.6,M.stone2,null);
     }
     const tv=I("השולחנות שבאולם השער","יחזקאל מ׳, לט; מלבי״ם שם","📜 \"ובאולם השער שנים שלחנות מפו ושנים שלחנות מפה, לשחוט אליהם העולה והחטאת והאשם\" — ארבעה שולחנות של אבן בתוך אולם השער הצפוני הפנימי. 💡 המידות לא מפורשות.");
-    [[245.3,153.2],[245.3,156.4],[253.5,153.2],[253.5,156.4]].forEach(c=>box(c[0],c[1],c[0]+1.2,c[1]+2,7.5,8.6,M.marble,tv,{noCol:true}))}
+    [[245.3,153.2],[245.3,156.4],[253.5,153.2],[253.5,156.4]].forEach(c=>tbl(c[0],c[1],c[0]+1.2,c[1]+2,7.5,8.6,M.marble,tv))}
   // ---- stage 7: the Sanhedrin and the courts of 23 (Sanhedrin 11:2; Middot 5:4) ----
   {let MIR=false;const SEAT=new Map(),STAND=new Map(),add=(mp,info,p)=>{if(MIR){p.a=Math.PI-p.a;p.v=500-p.v}if(!mp.has(info))mp.set(info,[]);mp.get(info).push(p)};
     const face=(u,v,fu,fv)=>Math.atan2(fu-u,fv-v);
@@ -12777,7 +12799,13 @@ function build(){
       CL("בית המדרש",12,125,19,st,true)}
     // -- the money changers (Shekalim 1:3) --
     {const sh=I("השולחנים — מחליפי הכסף","שקלים א, ג; ב, א","📜 \"בעשרים וחמשה בו ישבו במקדש\" — בחודש אדר ישבו כאן שולחנים, מחליפי כסף, וגבו את מחצית השקל. ⚖️ מי שאין לו מטבע של חצי שקל מחליף אצלם ומשלם קלבון, תוספת קטנה. 💡 היום אפשר להוסיף על השולחנות עמדות תשלום בכרטיס.");
-      for(let k=0;k<6;k++){const u=206+k*5;box(u,58,u+3.2,59.6,Y3,Y3+1.6,M.wood,sh,{noCol:true});box(u+2.3,58.5,u+2.8,59,Y3+1.6,Y3+2.05,M.dark,sh,{noCol:true,cast:false});cyl(u+0.8,58.8,Y3+1.6,Y3+1.8,0.18,0.18,M.gold,null,10);cyl(u+1.3,58.9,Y3+1.6,Y3+1.9,0.18,0.18,M.white,null,10);
+      /* 130.5: שולחן עבודה רגיל במקום קובייה: משטח ורגליים, מפה ירוקה שיורדת לצד הקונה, קופסת מטבעות, ערימות מטבעות, ו־💡 מסוף לתשלום בכרטיס */
+      const CLOTH=M.cloth||(M.cloth=new THREE.MeshStandardMaterial({color:0x2f5a46,roughness:0.95})),SCR=M.scr||(M.scr=new THREE.MeshStandardMaterial({color:0x9fc3d6,emissive:0x1c3442,roughness:0.4}));
+      for(let k=0;k<6;k++){const u=206+k*5,yt=Y3+1.6;tbl(u,58,u+3.2,59.6,Y3,yt,M.wood,sh,{legs:1,th:0.12,lg:0.12});
+        box(u+0.2,58.1,u+3.0,59.66,yt,yt+0.02,CLOTH,sh,{noCol:true,cast:false});box(u+0.2,59.64,u+3.0,59.68,yt-0.55,yt+0.02,CLOTH,sh,{noCol:true,cast:false});
+        box(u+2.3,58.4,u+2.85,58.95,yt+0.02,yt+0.32,M.dark,sh,{noCol:true,cast:false});box(u+2.33,58.43,u+2.82,58.92,yt+0.32,yt+0.34,M.wood,null,{noCol:true,cast:false});
+        cyl(u+0.8,58.8,yt+0.02,yt+0.2,0.16,0.16,M.gold,null,10);cyl(u+1.3,58.9,yt+0.02,yt+0.3,0.16,0.16,M.white,null,10);cyl(u+1.05,59.25,yt+0.02,yt+0.12,0.16,0.16,M.gold,null,10);cyl(u+0.55,59.2,yt+0.02,yt+0.08,0.16,0.16,M.bronze,null,10);
+        box(u+1.75,58.95,u+2.05,59.35,yt+0.02,yt+0.1,M.dark,sh,{noCol:true,cast:false});box(u+1.78,58.98,u+2.02,59.16,yt+0.1,yt+0.105,SCR,null,{noCol:true,cast:false});
         add(SEAT,sh,{u:u+1.6,v:57,y:Y3,a:0,c:[0xa58f6e,0x8e8a7c,0xb7a181][k%3]});add(STAND,sh,{u:u+1.6,v:61.4,y:Y3,a:Math.PI,c:[0xc2b59a,0x9ea6ad,0xb9a48c][k%3]})}
       CL("השולחנים",221,59,9,sh,true)}
     // -- the passage down to the mikveh (Tamid 1:1) --
@@ -13624,8 +13652,9 @@ function build(){
   {const kv=I("הכיור והמוכני","שמות ל, יז-כא; מידות ג, ו; יומא לז ע״א","⚖️ כיור נחושת שממנו הכהנים מקדשים ידיים ורגליים לפני העבודה. \"הכיור היה בין האולם ולמזבח, ומשוך כלפי הדרום\". בן קטין עשה לו 12 דדים (ברזים), כדי ש־12 כהנים יקדשו בבת אחת, ומוכני — גלגל שמשקיע אותו במים בלילה. 💡 הגודל לא מפורש; כאן קוטר של כ־3 אמות. בקצרה: 📜 קיומו מהתורה (שמות ל, יח). ⚖️ מקומו בין האולם למזבח, משוך לדרום (מידות ג, ו). 💡 צורתו וגודלו הם הצעה.");
     const u=222,v=263;cyl(u,v,7.5,9.5,0.9,0.7,M.bronze,kv,16);cyl(u,v,9.5,11,1.6,1.9,M.bronze,kv,24);
     for(let k=0;k<12;k++){const an=k/12*Math.PI*2,q=W(u+Math.cos(an)*1.85,v+Math.sin(an)*1.85),sp=new THREE.Mesh(new THREE.CylinderGeometry(0.035*A,0.035*A,0.35*A,6),M.bronze);sp.position.set(q[0],10.2*A,q[1]);sp.rotation.z=Math.PI/2;sp.rotation.y=-an;group.add(sp)}}
-  {const ts=I("שולחנות השיש והכסף","שקלים ו, ד; תמיד ג","⚖️ שני שולחנות במערב הכבש: של שיש, עליו נותנים את איברי הקרבן, ושל כסף, עליו כלי השרת.");
-    box(238.5,268,240.5,269.2,7.5,8.6,M.marble,ts,{noCol:true});box(238.5,276,240.5,277.2,7.5,8.6,M.white,ts,{noCol:true})}
+  {const ts=I("שולחנות השיש והכסף","שקלים ו, ד; תמיד ג","⚖️ שני שולחנות במערב הכבש: של שיש, עליו נותנים את איברי הקרבן, ושל כסף, עליו כלי השרת. 💡 צורת הכלים על שולחן הכסף היא הצעה.");
+    tbl(238.5,268,240.5,269.2,7.5,8.6,M.marble,ts,{legs:1,th:0.2});tbl(238.5,276,240.5,277.2,7.5,8.6,M.white,ts,{legs:1,th:0.12,lg:0.1});
+    /* 130.5: על שולחן הכסף כלי השרת (שקלים ו, ד). 💡 שלושה מזרקים קטנים */[239,239.5,240].forEach(u=>cyl(u,276.6,8.6,8.78,0.13,0.2,M.white,ts,12))}
   {const bm=I("בית המטבחיים","מידות ג, ה; תמיד ג","⚖️ בצפון המזבח: 24 טבעות ברצפה (ארבע שורות של שש) לקשירת הבהמות בשעת השחיטה, ושמונה עמודים נמוכים (\"ננסין\") עם קורות ארז וּווים של ברזל לתליית הבשר והפשטתו, ושמונה שולחנות שיש להדחת הקרביים.");
     // stage 5: each ring stands up on a hinge, so the neck of the animal goes through it (Middot 3:5; Tamid 3:3, 4:1)
     const rg=new THREE.TorusGeometry(0.24*A,0.05*A,6,14);for(let r=0;r<4;r++)for(let c=0;c<6;c++){const q=W(238+c*2.4,212+r*2.6),m=new THREE.Mesh(rg,M.iron);m.position.set(q[0],7.5*A+0.24*A,q[1]);m.rotation.y=0.3*((r+c)%3-1);m.userData=bm;cPick.push(m);group.add(m);
@@ -13643,7 +13672,7 @@ function build(){
   ;
   // ulam: tables of marble and of gold (Menachot 99b)
   {const ut=I("שני השולחנות שבאולם","מנחות צט ע״ב; שקלים ו, ד","⚖️ \"על שולחן של שיש נותנין לחם הפנים בכניסתו, ועל של זהב ביציאתו, שמעלין בקודש ולא מורידין\".");
-    box(187,243,189,244,13.56,15.06,M.marble,ut,{noCol:true});box(187,256,189,257,13.56,15.06,M.altarGold,ut,{noCol:true})}
+    tbl(187,243,189,244,13.56,15.06,M.marble,ut,{legs:1,th:0.2});tbl(187,256,189,257,13.56,15.06,M.altarGold,ut,{legs:1,th:0.14,lg:0.1})}
   // golden vine over the heikhal entrance (Middot 3:8)
   {const gv=I("גפן של זהב","מידות ג, ח","⚖️ \"וגפן של זהב היתה עומדת על פתחו של היכל ומודלה על גבי כלונסות. כל מי שהוא מתנדב עלה, או גרגיר, או אשכול — מביא ותולה בה\".");
     box(183.02,243,183.2,257,33.6,34.0,M.altarGold,gv,{cast:false,noCol:true});const r=rng(33);for(let k=0;k<26;k++){const q=W(183.25,243.4+r()*13.2),b=new THREE.Mesh(new THREE.SphereGeometry((0.12+r()*0.1)*A,8,6),M.altarGold);b.position.set(q[0],(33.2+r()*1.2)*A,q[1]);b.userData=gv;cPick.push(b);group.add(b)}}

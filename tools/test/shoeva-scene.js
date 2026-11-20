@@ -32,13 +32,14 @@ const ARGS = { args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--
   if (!(shoe.s.crowd >= 400)) throw new Error("הקהל דליל: " + shoe.s.crowd);
   if (!(shoe.s.levites >= 24)) throw new Error("מעט לוויים: " + shoe.s.levites);
   if (shoe.s.lights > shoe.s.cap) throw new Error("יותר מדי אורות: " + shoe.s.lights + " > " + shoe.s.cap);
-  await pg.screenshot({ path: OUT + "/shoeva.png" });
+  /* 130.5: בתוכנת הציור של CI (swiftshader) פריים של הסצנה לוקח 2-3 שניות, וצילום מסך לוקח כ־20 שניות גם ב־main. הגבול של 30 שניות היה על הקצה */
+  await pg.screenshot({ path: OUT + "/shoeva.png", timeout: 120000 });
   await pg.evaluate(() => window.__STORY.go(3));
   await pg.waitForFunction(() => { const v = window.__sukVis && window.__sukVis(); return v && v.on && v.nisuch; }, null, { timeout: 30000 });
   await pg.waitForFunction(() => { const q = window.__SHOE && window.__SHOE(); return q && (q.phase === "pour" || q.phase === "turn" || q.phase === "climb"); }, null, { timeout: 20000 });
   await pg.waitForTimeout(2500);
   const phase = await pg.evaluate(() => window.__SHOE().phase);
-  await pg.screenshot({ path: OUT + "/nisuch.png" });
+  await pg.screenshot({ path: OUT + "/nisuch.png", timeout: 120000 });
   await browser.close();
   const report = ["# שמחת בית השואבה", "", `- מרקדים: ${shoe.s.dancers}`, `- לוליינים: ${shoe.s.jugglers}`, `- אבוקות: ${shoe.s.torches}`, `- קהל: ${shoe.s.crowd}`, `- לוויים: ${shoe.s.levites}`, `- אורות: ${shoe.s.lights} / תקרה ${shoe.s.cap}`, `- שלב ניסוך: ${phase}`, `- שגיאות: ${errs.length ? errs.join(" | ") : "אין"}`, ""].join("\n");
   fs.writeFileSync(OUT + "/report.md", report);
