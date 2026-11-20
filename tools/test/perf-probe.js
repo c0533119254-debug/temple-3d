@@ -55,23 +55,30 @@ async function sample(pg) {
   });
 }
 
+async function shot(pg, name) {
+  // ב־CI פריים אחד ב־SwiftShader יכול לקחת עשרות שניות, וצילום ברירת המחדל נכשל אחרי 30.
+  await pg.screenshot({ path: path.join(OUT, name), timeout: 120000, animations: "disabled" }).catch((e) => {
+    console.log("צילום " + name + ": " + String(e.message || e).split("\n")[0]);
+  });
+}
+
 async function views(pg, dev) {
   await pg.waitForTimeout(400);
   await pg.evaluate(() => { const b = document.querySelector("#intro button:not(.pri)"); if (b) b.click(); });
   await pg.evaluate(() => window.__flyTo("home", 0));
   await pg.waitForTimeout(1200);
   const opening = await sample(pg);
-  await pg.screenshot({ path: path.join(OUT, dev + "-opening.png") });
+  await shot(pg, dev + "-opening.png");
   await pg.evaluate(() => { window.__STORY.start("sukkot"); window.__STORY.go(4); });
   await pg.waitForFunction(() => { const v = window.__sukVis && window.__sukVis(); return v && v.shoeva; }, null, { timeout: 90000 });
   await pg.waitForTimeout(1600);
   const shoeva = await sample(pg);
-  await pg.screenshot({ path: path.join(OUT, dev + "-shoeva.png") });
+  await shot(pg, dev + "-shoeva.png");
   await pg.evaluate(() => { window.__STORY.start("oldcity"); window.__STORY.go(2); });
   await pg.waitForFunction(() => { const s = window.__STORY && window.__STORY.S; return s && s.key === "oldcity" && s.i === 2 && !s.move; }, null, { timeout: 90000 });
   await pg.waitForTimeout(1000);
   const city = await sample(pg);
-  await pg.screenshot({ path: path.join(OUT, dev + "-city.png") });
+  await shot(pg, dev + "-city.png");
   return { opening, shoeva, city };
 }
 
