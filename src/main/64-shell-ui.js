@@ -101,7 +101,7 @@ window.addEventListener("keydown",e=>{if(e.key!=="Escape"||e.defaultPrevented)re
 const grabSwipe=(g,el,close)=>{let y0=null;g.addEventListener("pointerdown",e=>{y0=e.clientY;g.setPointerCapture(e.pointerId)});g.addEventListener("pointerup",e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;if(dy>40){if(el.classList.contains("full"))el.classList.remove("full");else close()}else if(dy<-40)el.classList.add("full");else el.classList.toggle("full")})};
 Object.values(DR).forEach(x=>grabSwipe(x.d.querySelector(".grab"),x.d,closeDr));
 // tours drawer: cards with picture tile, length and stations
-const TICON={oldcity:"🏛",pilgrim:"🚶",yk:"🕯",tamid:"🐑",pesach:"🍷",shavuot:"🌾",sukkot:"🌿",hakhel:"📖"};
+const TICON={oldcity:"🏛",pilgrim:"🚶",yk:"🕯",tamid:"🐑",pesach:"🍷",shavuot:"🌾",sukkot:"🌿",hakhel:"📖",tahara:"💧"};
 DR.tours.fill=()=>{const d=DR.tours.d;d.querySelectorAll(".tcard,.tnote").forEach(x=>x.remove());
   Object.keys(STORIES).forEach(k=>{const S=STORIES[k];const min=S.min||Math.max(2,Math.round(S.steps.reduce((a,s)=>a+(s.cap||"").length,0)/14/60+S.steps.length*0.15));const b=mk("button","tcard",'<span class="tim">'+(TICON[k]||"🧭")+'</span><span><b>'+esc(S.title)+'</b><small>'+S.steps.length+' תחנות · כ־<bdi class="n">'+min+'</bdi> דקות</small></span>');b.type="button";b.onclick=()=>startTour(k);d.appendChild(b)});
   d.appendChild(mk("p","tnote ch",'נגיעה במודל עוצרת את הסיור לרגע, ו"המשך סיור" מחזיר אותו. Esc יוצא מהסיור.'))};
