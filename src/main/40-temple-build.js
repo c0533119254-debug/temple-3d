@@ -1781,7 +1781,7 @@ function build(){
     const N=SMALL?24:64,rq=(()=>{let q=1374;return()=>(q=(q*16807)%2147483647)/2147483647})(),WK=[];for(let i=0;i<N;i++){const r=RT[i%RT.length];WK.push({r,s:rq()*r.len,v:1.0+rq()*0.45,off:(rq()-0.5)*3.4})}
     const fig=FIG.mesh(N,FIG.mat(0xffffff),{kit:"all"}),hd=new THREE.InstancedMesh(FIG.head(),M.people,N),D=new THREE.Object3D(),CL_=[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0xf2efe8,0x1f2a3a,0x7a3b3b,0x4a5a6a,0xd9cbb0,0x2b2b2b,0x5d6b4a,0x9aa3ad],CC=new THREE.Color();
     WK.forEach((w,i)=>{fig.setColorAt(i,CC.setHex(CL_[(i*7)%CL_.length]));hd.setColorAt(i,CC.setHex([0xb38b6d,0x9c7457,0xc79f80][i%3]));fig.setAmp(i,1);fig.setSp(i,w.v);if(fig.dress)try{fig.dress(i,"mount",null,i)}catch(e){}});
-    const gW=new THREE.Group();group.add(gW);[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=WI;cPick.push(m);gW.add(m)});
+    const gW=new THREE.Group();group.add(gW);[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=WI;cPick.push(m);gW.add(m)});FIG.LOD.add([fig,hd]);
     const at=(r,s,off)=>{let i=0;while(i<r.L.length-2&&r.L[i+1]<s)i++;const a=r.P[i],b=r.P[i+1],f=(s-r.L[i])/((r.L[i+1]-r.L[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1;return[a[0]+dx*f-dz/l*off,a[1]+dz*f+dx/l*off,Math.atan2(dx,dz)]};
     BEAST.flow(gW,dt=>{for(let i=0;i<N;i++){const w=WK[i];w.s+=w.v*dt;if(w.s>w.r.len)w.s=0;const q=at(w.r,w.s,w.off);D.position.set(q[0],0.18,q[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(1);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y=0.18+1.52;D.updateMatrix();hd.setMatrixAt(i,D.matrix)}fig.instanceMatrix.needsUpdate=hd.instanceMatrix.needsUpdate=true});
     window.__OTW={N,routes:RT.length}})();
