@@ -956,7 +956,7 @@ function build(){
       let glowOn=false;
       const shoeGlow=on=>{glowOn=!!on;const night=TIME==="night";
         if(M.win)M.win.emissiveIntensity=on?5.4:(night?2.2:0);if(M.win2)M.win2.emissiveIntensity=on?2.4:(night?1.05:0);
-        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(q=>{if(q)q.emissiveIntensity=on?2.7:1.3})}
+        if(typeof BLDMAT!=="undefined"&&BLDMAT){[BLDMAT,BLDMAT.userData.twin,BLDMAT.userData.sky].forEach(q=>{if(q)q.emissiveIntensity=on?2.7:1.3})}
         if(SUKC.lit&&SUKC.lit.material)SUKC.lit.material.size=on?(SMALL?16:15):(SMALL?10:9);
         if(typeof bloom!=="undefined"&&bloom){if(on){bloom.strength=0.72;bloom.threshold=0.64}else if(night){bloom.strength=0.55;bloom.threshold=0.75}else{bloom.strength=0.12;bloom.threshold=0.96}}};
       const SUKX=(()=>{let t=0,sh=false,ST=null;const stat=()=>{if(ST||!FESTG)return ST||[];ST=[];FESTG.traverse(o=>{if(o.isInstancedMesh&&o.userData&&o.userData.n==="שמחת בית השואבה")ST.push(o);if(o.userData&&o.userData.sbTorch)ST.push(o)});return ST};
