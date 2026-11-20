@@ -462,3 +462,22 @@ setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.ar
   Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
 }).catch(()=>{})},SMALL?8000:4000);
+/* 141.9: היערות, הפארקים והמטעים מסביב לעיר כעצים בתלת־ממד. עד עכשיו מחוץ לאזור המפורט היה רק צילום לוויין שטוח, ובקו הרקיע לא היה אף עץ.
+   📜 היכן: השטחים המסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע (Overture Maps, מתוך OpenStreetMap), וגם עצים בודדים המסומנים במפה.
+   📜 בתוך השטחים עץ נשתל רק במקום שבו צילום הלוויין (Sentinel-2) כהה וירקרק, כלומר צמרות, ולא דשא, שביל או בניין. לא על כבישים, לא על בניינים, לא במגרשי ספורט ובבתי קברות.
+   💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים, בפארקים תערובת.
+   קובץ trees_outer.bin: לכל עץ x,n (חצאי מטר) וסוג. מקרוב העץ הרגיל, מרחוק צורה פשוטה של 10 משולשים. בטלפון רק שליש מהעצים */
+setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab),KS=["pine","olive","cypress","carob","shade"];
+  /* מקומות שכבר יש בהם עץ (עצי האזורים האחרים): לא שותלים שוב */
+  const occ=new Set(),m4=new THREE.Matrix4(),p=new THREE.Vector3();WG.children.forEach(o=>{if(!o.isInstancedMesh||o.material!==TREES5.mat)return;for(let i=0;i<o.count;i++){o.getMatrixAt(i,m4);p.setFromMatrixPosition(m4);occ.add(Math.floor(p.x/5)+","+Math.floor(-p.z/5))}});
+  const BY={};KS.forEach(k=>BY[k]=[]);const rnd=k=>{const s=Math.sin(k*12.9898+3.1)*43758.5453;return s-Math.floor(s)};let n0=0;
+  for(let o=0,i=0;o+5<=ab.byteLength;o+=5,i++){if(SMALL&&i%3)continue;const x=v.getInt16(o,true)/2,n=v.getInt16(o+2,true)/2,k=KS[v.getUint8(o+4)]||"pine";
+    if(occ.has(Math.floor(x/5)+","+Math.floor(n/5))||bldTop(x,n)>-1e3)continue;BY[k].push([x,H(x,n),-n,0.75+rnd(i)*0.5,rnd(i+11)*6.28]);n0++}
+  /* צורה רחוקה: צמרת (תמנון מעוגל) וגזע (משטח אחד), 10 משולשים */
+  const S={pine:[9.6,3.2,1.7,0x46592f,8],olive:[3.8,3.2,1.8,0x7d8a62,2],cypress:[6.8,1.0,6.4,0x2e3d26,0.6],carob:[4.2,3.1,2.2,0x3f5b2d,2],shade:[6,3.1,2.7,0x55713a,3.3]};
+  const far=k=>{const [cy,r,ry,hex,tr]=S[k],g=new THREE.OctahedronGeometry(1,0),P=g.attributes.position,N=g.attributes.normal,col=[],c=new THREE.Color(hex),t=new THREE.Color(0x6a5a48);
+    for(let i=0;i<P.count;i++){const X=P.getX(i),Y=P.getY(i),Z=P.getZ(i);N.setXYZ(i,X,Y,Z);P.setXYZ(i,X*r,cy+Y*ry,Z*r);const s=0.7+0.3*(Y*0.5+0.5);col.push(c.r*s,c.g*s,c.b*s)}
+    const pos=Array.from(P.array),nor=Array.from(N.array);[[-0.3,0],[0.3,0],[0.3,tr],[-0.3,0],[0.3,tr],[-0.3,tr]].forEach(q=>{pos.push(q[0],q[1],0);nor.push(0,0,1);col.push(t.r,t.g,t.b)});
+    const b=new THREE.BufferGeometry();b.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));b.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));b.setAttribute("color",new THREE.Float32BufferAttribute(col,3));b.computeBoundingSphere();return b};
+  const INF={n:"יערות ופארקים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL; Sentinel-2 cloudless 2016, EOX, CC BY 4.0",t:"📜 העצים עומדים בשטחים שמסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע, ורק במקומות שבהם בצילום הלוויין רואים צמרות. 💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים."};
+  KS.forEach(k=>{if(!BY[k].length)return;const m=TREES5.plant(WG,k,BY[k],INF);if(m){m.userData.farGeo=far(k);m.userData.lodR=SMALL?140:200;m.name="outerTrees"}});window.__TR141={trees:n0}}).catch(()=>{})},SMALL?9000:5000);
