@@ -458,7 +458,9 @@ setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.ar
     const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.84+0.1*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
     for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/16,vt=(y1-y0)/12.8;
       G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
-    for(let i=1;i<nv-1;i++){[P[0],P[i+1],P[i]].forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})}}
+    /* 143.0: גג לפי הצורה האמיתית (גם לבניין בצורת ח׳ או ר׳). קודם בניין עם יותר מ־8 פינות הפך למלבן גדול שעוטף אותו, ובניינים גדולים כמו בקמפוס הר הצופים נראו כגוש אחד */
+    const TR=nv===3?[[0,1,2]]:THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
+    TR.forEach(t=>{const a=P[t[0]],b=P[t[1]],d=P[t[2]],cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0;(cw?[a,d,b]:[a,b,d]).forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})})}
   Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
 }).catch(()=>{})},SMALL?8000:4000);
@@ -481,3 +483,8 @@ setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").t
     const b=new THREE.BufferGeometry();b.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));b.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));b.setAttribute("color",new THREE.Float32BufferAttribute(col,3));b.computeBoundingSphere();return b};
   const INF={n:"יערות ופארקים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL; Sentinel-2 cloudless 2016, EOX, CC BY 4.0",t:"📜 העצים עומדים בשטחים שמסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע, ורק במקומות שבהם בצילום הלוויין רואים צמרות. 💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים."};
   KS.forEach(k=>{if(!BY[k].length)return;const m=TREES5.plant(WG,k,BY[k],INF);if(m){m.userData.farGeo=far(k);m.userData.lodR=SMALL?140:200;m.userData.farMax=1400;m.name="outerTrees"}});window.__TR141={trees:n0}}).catch(()=>{})},SMALL?9000:5000);
+/* 143.0: הר הצופים: שמות המקומות הגדולים על ההר, לפי המפה הפתוחה (OpenStreetMap). 📜 גובה המגדל 56 מ׳ לפי המפה */
+__AFTER(()=>{try{const L=[["האוניברסיטה העברית",850,1600,34,{n:"האוניברסיטה העברית, הר הצופים",r:"📜 OpenStreetMap",t:"📜 הקמפוס של האוניברסיטה העברית על הר הצופים: הפקולטות למדעי הרוח, למשפטים ולמדעי החברה, ספריית בלומפילד, המכון לארכאולוגיה ומכון טרומן. 💡 גובה הבניינים משוער, חוץ מהמגדל."}],
+  ["מגדל הר הצופים",1058,1651,64,{n:"מגדל הר הצופים",r:"📜 OpenStreetMap",t:"📜 המגדל של הקמפוס בהר הצופים, כ־56 מ׳ לפי המפה. נראה מכל העיר."}],
+  ["הדסה הר הצופים",665,2120,36,{n:"בית החולים הדסה הר הצופים",r:"📜 OpenStreetMap",t:"📜 בית החולים הדסה בצפון הר הצופים. 💡 גובה הבניין משוער."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("scopus labels",e)}});
