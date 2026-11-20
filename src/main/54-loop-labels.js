@@ -63,7 +63,10 @@ function layoutLabels(w,h,inHouse,LOWC){const now=performance.now(),cp=camera.po
   const hitB=r=>BOX.some(q=>r[0]<q[2]&&r[2]>q[0]&&r[1]<q[3]&&r[3]>q[1]);
   labels.forEach(L=>{L._d=cp.distanceTo(L.v)});
   const set=(L,on,hard)=>{if(hard||L.force){L._on=on;L._sw=0}else if(on!==!!L._on){if(!L._sw)L._sw=now;if(now-L._sw>=(on?160:320)){L._on=on;L._sw=0}}else L._sw=0;L.el.hidden=!L._on};
+  let inCourts=false;try{if(typeof COMP!=="undefined"&&COMP){const cu=(cp.x-COMP.X0)/A,cv=(cp.z+COMP.N0)/A;inCourts=cu>90&&cu<340&&cv>140&&cv<360&&cp.y<45}}catch(e){}
+  const hideCity=inCourts||(typeof STORY!=="undefined"&&STORY&&typeof STORIES!=="undefined"&&STORY_API&&STORY_API.S&&STORY_API.S.def===STORIES.tamid);
   labels.slice().sort((a,b)=>((b.force?1:0)-(a.force?1:0))||((b.pr||0)-(a.pr||0))||((b.c?1:0)-(a.c?1:0))||((b._on?1:0)-(a._on?1:0))||(a._d-b._d)).forEach(L=>{
+    if(hideCity&&!L.c&&!L.force&&!(typeof cLabels!=="undefined"&&cLabels.includes(L))){set(L,false,true);return}
     if(!L.force&&(!SHOW_LABELS||(!L.c&&cp.y>420)||(FLOOR==="satm"&&(L.c||cLabels.includes(L)))||(L.wall&&!SHOW_WALL)||(L.tr&&!SHOW_TR)||(L.yk&&!(ACTS&&ACTS.yk&&ACTS.yk.g.visible))||(LOWC&&L.occ)||L.docc||(L.inh?INSIDE!==2:inHouse)||(WALK&&!L.c))){set(L,false,true);return}
     const key=L.txt||"";if(key&&used.has(key)&&!L.force){set(L,false,true);return}
     tmp.copy(L.v).project(camera);const dist=L._d;

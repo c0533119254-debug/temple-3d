@@ -167,3 +167,32 @@ jobs:
           name: perf-screens
           path: perf-out
           retention-days: 14
+
+  tamid:
+    name: סדר התמיד מונפש
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: התקנת דפדפן לבדיקה
+        run: |
+          npm i --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: הסצנה
+        run: |
+          python3 -m http.server 8765 >/dev/null 2>&1 &
+          sleep 2
+          node tools/test/tamid-scene.js http://localhost:8765/ tamid-out
+      - name: דוח
+        if: always()
+        run: cat tamid-out/report.md >> "$GITHUB_STEP_SUMMARY" || true
+      - name: צילומי מסך
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tamid-screens
+          path: tamid-out
+          retention-days: 14

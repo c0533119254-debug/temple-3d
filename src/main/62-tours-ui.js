@@ -354,7 +354,15 @@ const TOURFIGS=(function(){
     if(type==="bowl"){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.10,0.10,14),new THREE.MeshStandardMaterial({color:0xd4af37,metalness:0.85,roughness:0.28}));return m}
     if(type==="willow"){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.03,1.4,6),new THREE.MeshStandardMaterial({color:0x6f8a45,roughness:0.9}));m.rotation.z=-0.4;return m}
     if(type==="sefer"){const m=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.24,0.06),new THREE.MeshStandardMaterial({color:0xc9a36a,roughness:0.7}));return m}
-    if(type==="jug"){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.08,0.2,10),new THREE.MeshStandardMaterial({color:0xd4b45a,metalness:0.55,roughness:0.35}));return m}
+    if(type==="jug"){const g=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.08,0.2,10),new THREE.MeshStandardMaterial({color:0xd4b45a,metalness:0.55,roughness:0.35}));g.add(m);const s=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.012,0.22,6),new THREE.MeshStandardMaterial({color:0xc98a3a,transparent:true,opacity:0.8}));s.position.set(0,-0.16,0);s.visible=false;s.name="stream";g.add(s);return g}
+    if(type==="keys"){const g=new THREE.Group(),br=new THREE.MeshStandardMaterial({color:0xb08a45,metalness:0.6,roughness:0.35});[0,1].forEach(i=>{const k=new THREE.Mesh(new THREE.TorusGeometry(0.035,0.008,6,8),br);k.position.set(0,i*0.09,0);g.add(k);const b=new THREE.Mesh(new THREE.BoxGeometry(0.012,0.07,0.02),br);b.position.set(0.03,i*0.09-0.04,0);g.add(b)});g.name="keys";return g}
+    if(type==="shovel"){const g=new THREE.Group(),sv=new THREE.MeshStandardMaterial({color:0xd5dbe2,metalness:0.85,roughness:0.25});const pan=new THREE.Mesh(new THREE.BoxGeometry(0.16,0.03,0.12),sv);const hd=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.012,0.42,6),sv);hd.rotation.z=0.5;hd.position.set(-0.12,0.12,0);const c=new THREE.Mesh(new THREE.SphereGeometry(0.045,8,6),new THREE.MeshStandardMaterial({color:0xff6a2a,emissive:0xff4a12,emissiveIntensity:0.9}));c.position.set(0,0.04,0);c.name="coal";g.add(pan,hd,c);return g}
+    if(type==="log"){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.055,0.55,6),new THREE.MeshStandardMaterial({color:0x7a5a3a,roughness:0.88}));m.rotation.z=Math.PI/2;return m}
+    if(type==="torch"){const g=new THREE.Group();const st=new THREE.Mesh(new THREE.CylinderGeometry(0.012,0.016,0.55,6),new THREE.MeshStandardMaterial({color:0x6b4a2c,roughness:0.9}));const fl=new THREE.Mesh(new THREE.ConeGeometry(0.045,0.16,7),new THREE.MeshStandardMaterial({color:0xffb15a,emissive:0xff6a1a,emissiveIntensity:1.1}));fl.position.y=0.34;g.add(st,fl);return g}
+    if(type==="cup"){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.045,0.03,0.07,10),new THREE.MeshStandardMaterial({color:0xe0b84a,metalness:0.75,roughness:0.28}));return m}
+    if(type==="mizrak"){const g=new THREE.Group();const o=new THREE.Mesh(new THREE.CylinderGeometry(0.09,0.07,0.06,12),new THREE.MeshStandardMaterial({color:0xd4af37,metalness:0.7,roughness:0.3}));const inn=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.045,0.025,12),new THREE.MeshStandardMaterial({color:0x6e1c22,roughness:0.5}));inn.position.y=0.025;g.add(o,inn);return g}
+    if(type==="horn"){const m=new THREE.Mesh(new THREE.ConeGeometry(0.035,0.55,8,1,true),new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.85,roughness:0.25,side:THREE.DoubleSide}));m.rotation.z=Math.PI/2;return m}
+    if(type==="cymbal"){const g=new THREE.Group(),sv=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.22});[ -1,1].forEach(sg=>{const d=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.11,0.012,12),sv);d.rotation.z=Math.PI/2;d.position.x=sg*0.04;g.add(d)});return g}
     return null;
   }
   function captureBind(root){
@@ -488,19 +496,17 @@ const TOURFIGS=(function(){
       set("lowerarm_r",carLR,0);set("lowerarm_r",carLR,1);
       set("lowerarm_l",carLL,0);set("lowerarm_l",carLL,1);
     });
-    // Tamid 7:2 / Sotah 7:6 — במקדש נושאים ידיהם על גבי ראשיהן.
-    // Arms extended forward, hands slightly above the head, elbows only slightly bent, symmetric.
-    // Palms toward the people (forward/down). Fingers split in the priestly shin (index+middle / ring+pinky, thumb out).
-    // Not a straight vertical salute and not a side Y-pose.
-    const huUR=aimLocal(uR,new THREE.Vector3(0.50,0.40,0.77));
-    const huUL=aimLocal(uL,new THREE.Vector3(-0.50,0.40,0.77));
-    const huLR=withPose(uR,huUR,()=>aimLocal(loR,new THREE.Vector3(0.18,0.96,0.20)));
-    const huLL=withPose(uL,huUL,()=>aimLocal(loL,new THREE.Vector3(-0.18,0.96,0.20)));
+    // תמיד ז, ב; סוטה ז, ו: במקדש מגביהין את ידיהם למעלה מראשיהן, והאצבעות פשוקות (שי"ן: אצבע ואמה / קמיצה וזרת, אגודל בחוץ).
+    // כפות אל העם. לא הצדעה זקופה ולא ידיים לצדדים.
+    const huUR=aimLocal(uR,new THREE.Vector3(0.42,0.82,0.38));
+    const huUL=aimLocal(uL,new THREE.Vector3(-0.42,0.82,0.38));
+    const huLR=withPose(uR,huUR,()=>aimLocal(loR,new THREE.Vector3(0.08,0.99,0.08)));
+    const huLL=withPose(uL,huUL,()=>aimLocal(loL,new THREE.Vector3(-0.08,0.99,0.08)));
     const huHR=qAdd(bq("hand_r"),-0.35,0.20,0.70);
     const huHL=qAdd(bq("hand_l"),-0.35,-0.20,-0.70);
     const huFin={};
     // modest abduction at the first joints to open a shin-like gap; keep the fingers extended (open palm)
-    [["index",-0.22,-0.16],["middle",-0.14,-0.08],["ring",0.14,0.08],["pinky",0.24,0.16]].forEach(([f,yr,yl])=>{
+    [["index",-0.42,-0.30],["middle",-0.24,-0.16],["ring",0.24,0.16],["pinky",0.44,0.32]].forEach(([f,yr,yl])=>{
       huFin[f+"_01_r"]=qAdd(bq(f+"_01_r"),-0.06,yr,0.06);
       huFin[f+"_01_l"]=qAdd(bq(f+"_01_l"),-0.06,yl,-0.06);
       huFin[f+"_02_r"]=qAdd(bq(f+"_02_r"),-0.03,0,0);
@@ -517,7 +523,31 @@ const TOURFIGS=(function(){
       set("hand_l",huHL,0);set("hand_l",huHL,2);
       Object.keys(huFin).forEach(nm=>{set(nm,huFin[nm],0);set(nm,huFin[nm],2)});
     });
-    const bowSP=qAdd(bq("spine_01"),0.45,0,0);
+    // פיס: מרימים אצבע (יומא ב, א «הצביעו»). האצבע זקופה, השאר רפויות.
+    const ptUR=aimLocal(uR,new THREE.Vector3(0.22,0.88,0.42));
+    const ptLR=withPose(uR,ptUR,()=>aimLocal(loR,new THREE.Vector3(0.06,0.98,0.16)));
+    tracks("Point",1.4,(set)=>{
+      set("upperarm_r",idleUR,0);set("upperarm_r",ptUR,0.35);set("upperarm_r",ptUR,1.05);set("upperarm_r",idleUR,1.4);
+      set("upperarm_l",idleUL,0);set("upperarm_l",idleUL,1.4);
+      set("lowerarm_r",idleLR,0);set("lowerarm_r",ptLR,0.35);set("lowerarm_r",ptLR,1.05);set("lowerarm_r",idleLR,1.4);
+      set("lowerarm_l",idleLL,0);set("lowerarm_l",idleLL,1.4);
+      set("index_01_r",qAdd(bq("index_01_r"),-0.15,0,0),0.35);set("index_01_r",qAdd(bq("index_01_r"),-0.15,0,0),1.05);
+      ["middle","ring","pinky"].forEach(f=>{set(f+"_01_r",qAdd(bq(f+"_01_r"),0.7,0,0),0.35);set(f+"_01_r",qAdd(bq(f+"_01_r"),0.7,0,0),1.05);set(f+"_02_r",qAdd(bq(f+"_02_r"),0.6,0,0),0.35);set(f+"_02_r",qAdd(bq(f+"_02_r"),0.6,0,0),1.05)});
+    });
+    // חתייה: הידיים יורדות אל הגחלים ועולות עם המחתה (תמיד א, ד).
+    const scUR=aimLocal(uR,new THREE.Vector3(0.22,-0.85,0.45));
+    const scUL=aimLocal(uL,new THREE.Vector3(-0.22,-0.85,0.45));
+    const scLR=withPose(uR,scUR,()=>aimLocal(loR,new THREE.Vector3(0.1,-0.2,0.95)));
+    const scLL=withPose(uL,scUL,()=>aimLocal(loL,new THREE.Vector3(-0.1,-0.2,0.95)));
+    tracks("Scoop",2,(set)=>{
+      set("upperarm_r",wkUR,0);set("upperarm_r",scUR,1);set("upperarm_r",wkUR,2);
+      set("upperarm_l",wkUL,0);set("upperarm_l",scUL,1);set("upperarm_l",wkUL,2);
+      set("lowerarm_r",wkLR,0);set("lowerarm_r",scLR,1);set("lowerarm_r",wkLR,2);
+      set("lowerarm_l",wkLL,0);set("lowerarm_l",scLL,1);set("lowerarm_l",wkLL,2);
+      const spD=qAdd(bq("spine_01"),0.35,0,0);
+      set("spine_01",bq("spine_01"),0);set("spine_01",spD,1);set("spine_01",bq("spine_01"),2);
+    });
+    const bowSP=qAdd(bq("spine_01"),0.55,0,0);
     tracks("Bow",2,(set)=>{
       set("spine_01",bowSP,0);set("spine_01",bowSP,2);
       set("upperarm_r",idleUR,0);set("upperarm_r",idleUR,2);
@@ -537,6 +567,7 @@ const TOURFIGS=(function(){
     if(!c)return null;
     const a=mixer.clipAction(c);a.reset();a.setLoop(THREE.LoopRepeat,Infinity);a.timeScale=speed||1;a.play();return a;
   }
+  function useClip(o,name){if(!name)return o.act;if(o.clipName!==name){o.clipName=name;o.act=play(o.mixer,name,1)}return o.act}
   function load(){
     if(typeof THREE==="undefined"||!THREE.GLTFLoader){fail=true;return}
     const ldr=new THREE.GLTFLoader();
@@ -631,13 +662,14 @@ const TOURFIGS=(function(){
     if(clipName==="Walk"&&spec.prop)clipName="WalkCarry";
     if(clipName==="Working"&&spec.prop)clipName="Carry";
     const act=play(mixer,clipName,spec.speed||1);
-    const o={root,body,mixer,spec,t:Math.random()*10};root.userData.fig=o;
+    const o={root,body,mixer,spec,clipName,act,t:spec.hold?(spec.wait?-spec.wait:0):(spec.path?0:Math.random()*10)};root.userData.fig=o;
     place(o);
     /* v114: קצב הצעדים לפי מהירות ההליכה בפועל (מחזור הליכה מלא = כ-1.78 מ׳), ופאזה אקראית כדי שלא יזוזו כולם יחד */
     if(act){if(spec.path&&spec._len&&!spec.speed&&/Walk/.test(clipName))act.timeScale=Math.max(0.3,Math.min(1.3,(spec._len*A/(spec.period||8))/1.78));try{act.time=Math.random()*act.getClip().duration}catch(e){}}
     try{mixer.update(0.02)}catch(e){}
     body.updateMatrixWorld(true);
     const prop=spec.prop?mkProp(spec.prop):null;
+    o.prop=prop;
     if(prop){
       const hand=findBone(body,"hand_r")||findBone(body,"hand_l");
       const handL=findBone(body,"hand_l");
@@ -672,12 +704,16 @@ const TOURFIGS=(function(){
     if(s.path&&s.path.length>=2){
       const L=s.path,per=s.period||8,n=L.length-1;
       if(!s._cl){let acc=0;const cl=[0];for(let i=0;i<n;i++){acc+=Math.hypot(L[i+1][0]-L[i][0],L[i+1][1]-L[i][1],L[i+1][2]-L[i][2]);cl.push(acc)}s._cl=cl;s._len=acc;s._loop=Math.hypot(L[n][0]-L[0][0],L[n][1]-L[0][1])<0.5}
-      o.t=(o.t||0)%per;const k=o.t/per;
-      if(!s._loop){const e=Math.min(0.08,0.4/per);fade=Math.min(1,k/e,(1-k)/e);if(o._k!==undefined&&k<o._k)o.yaw=null;o._k=k} /* v114: בלי קפיצה בסוף המסלול — הדמות נמוגה ומופיעה */
-      const dist=k*s._len;let i=0;while(i<n-1&&s._cl[i+1]<dist)i++;
-      const seg=(s._cl[i+1]-s._cl[i])||1,t=Math.max(0,Math.min(1,(dist-s._cl[i])/seg)),a=L[i],b=L[i+1];
-      u=a[0]+(b[0]-a[0])*t;v=a[1]+(b[1]-a[1])*t;y=a[2]+(b[2]-a[2])*t;
-      fu=b[0];fv=b[1];
+      if((o.t||0)<0){u=L[0][0];v=L[0][1];y=L[0][2];fu=L[1][0];fv=L[1][1];fade=1}
+      else{
+        if(s.hold)o.t=Math.min(o.t,per*0.999);else o.t=(o.t||0)%per;
+        const k=o.t/per;
+        if(!s.hold&&!s._loop){const e=Math.min(0.08,0.4/per);fade=Math.min(1,k/e,(1-k)/e);if(o._k!==undefined&&k<o._k)o.yaw=null;o._k=k} /* v114: בלי קפיצה בסוף המסלול — הדמות נמוגה ומופיעה. hold: נעצרים בסוף, בלי להיעלם */
+        const dist=k*s._len;let i=0;while(i<n-1&&s._cl[i+1]<dist)i++;
+        const seg=(s._cl[i+1]-s._cl[i])||1,tt=Math.max(0,Math.min(1,(dist-s._cl[i])/seg)),a=L[i],b=L[i+1];
+        u=a[0]+(b[0]-a[0])*tt;v=a[1]+(b[1]-a[1])*tt;y=a[2]+(b[2]-a[2])*tt;
+        fu=b[0];fv=b[1];
+      }
     }
     const p=worldOf(u,v,y);
     o.root.position.copy(p);
@@ -693,10 +729,10 @@ const TOURFIGS=(function(){
       spawn({kind,clip,u:cu+Math.cos(a)*r,v:cv+Math.sin(a)*r,y,fu:fu!=null?fu:cu,fv:fv!=null?fv:cv});
     }
   }
-  function line(n,u0,v0,u1,v1,y,kind,clip,fu,fv,prop){
+  function line(n,u0,v0,u1,v1,y,kind,clip,fu,fv,prop,job){
     for(let i=0;i<n;i++){
       const t=n>1?i/(n-1):0;
-      spawn({kind,clip,prop,u:u0+(u1-u0)*t,v:v0+(v1-v0)*t,y,fu,fv});
+      spawn({kind,clip,prop,job,i,u:u0+(u1-u0)*t,v:v0+(v1-v0)*t,y,fu,fv});
     }
   }
   function findNamed(n){
@@ -823,7 +859,7 @@ const TOURFIGS=(function(){
     stylized(false);
     use.forEach(s=>{
       if(s.ring)ring(s.n,s.u,s.v,s.y,s.r,s.kind,s.clip,s.fu,s.fv);
-      else if(s.line)line(s.n,s.u0,s.v0,s.u1,s.v1,s.y,s.kind,s.clip,s.fu,s.fv,s.prop);
+      else if(s.line)line(s.n,s.u0,s.v0,s.u1,s.v1,s.y,s.kind,s.clip,s.fu,s.fv,s.prop,s.job);
       else spawn(s);
     });
   }
@@ -849,30 +885,50 @@ const TOURFIGS=(function(){
     }
     if(key==="tamid"){
       const gz=310,gv=295.2,gy=7.56;
-      // Bind existing scenes to station topics, never to the old 13-stop ordinal.
-      const topics=["לילה — השומרים והמפתחות", "הפיס הראשון", "תרומת הדשן", "סידור המערכה", "הפיס השני — 13 כהנים", "ברקאי — האיר המזרח", "השחיטה והזריקה", "דישון המזבח הפנימי והמנורה", "הולכת האיברים לכבש", "קריאת שמע בלשכת הגזית", "הקטורת", "ברכת כהנים", "ניסוך, שיר ותקיעות"];
+      // לפי כותרת התחנה, לא לפי מספר (issue 112).
       const topic=STORIES.tamid.steps[i]&&STORIES.tamid.steps[i].title;
-      if(topic==="הפיס השלישי והרביעי")return [{kind:K,u:gz,v:gv,y:gy,fu:gz+1,fv:gv,clip:"Idle"},{ring:1,n:8,u:gz,v:gv,y:gy,r:2.8,kind:K,clip:"Idle",fu:gz,fv:gv}];
-      return [
-        {line:1,n:8,u0:222,v0:186,u1:238,v1:186,y:3.5,kind:K,clip:"Idle",fu:230,fv:175},
-        [{kind:K,u:gz,v:gv,y:gy,fu:gz+1,fv:gv,clip:"Idle"},{ring:1,n:8,u:gz,v:gv,y:gy,r:2.8,kind:K,clip:"Idle",fu:gz,fv:gv}],
-        [{kind:K,u:250,v:258,y:16.5,fu:250,fv:250,clip:"Working"},{kind:K,u:222.3,v:265.2,y:7.5,fu:222,fv:263,clip:"Idle"},{line:1,n:5,u0:226,v0:270,u1:240,v1:270,y:7.5,kind:K,clip:"Idle",fu:250,fv:250}],
-        [{line:1,n:4,u0:244,v0:247,u1:256,v1:253,y:16.5,kind:K,clip:"Working",fu:250,fv:250},{line:1,n:4,u0:226,v0:272,u1:244,v1:272,y:7.5,kind:K,clip:"Idle",fu:250,fv:262}],
-        [{kind:K,u:gz,v:gv,y:gy,fu:gz+1,fv:gv,clip:"Idle"},{ring:1,n:8,u:gz,v:gv,y:gy,r:2.8,kind:K,clip:"Idle",fu:gz,fv:gv}],
-        [{kind:K,u:250,v:166,y:27.6,fu:300,fv:140,clip:"Idle"},{kind:K,u:250.6,v:201,y:7.5,fu:250,fv:203,clip:"Idle"},{kind:K,u:249.4,v:201,y:7.5,fu:250,fv:203,clip:"Idle"}],
-        [{kind:K,u:244.6,v:214.6,y:7.5,fu:244,fv:216,clip:"Working"},{kind:K,u:245.6,v:217.6,y:7.5,fu:244,fv:216,clip:"Idle"},{line:1,n:5,u0:234,v0:224,u1:260,v1:224,y:7.5,kind:K,clip:"Idle",fu:244,fv:216}],
-        [{kind:K,u:155.2,v:250,y:13.56,fu:153,fv:250,clip:"Carry",prop:"bowl"},{kind:K,u:150.95,v:257.5,y:13.81,fu:150,fv:257.5,clip:"Reach",prop:"bowl"}],
-        [{path:1,kind:K,clip:"WalkCarry",prop:"limb",period:10,u:247,v:292,y:ramp(292),path:[[247,292,ramp(292)],[247,282,ramp(282)]],fu:247,fv:270},
-         {path:1,kind:K,clip:"WalkCarry",prop:"limb",period:11,u:247,v:290,y:ramp(290),path:[[247,290,ramp(290)],[247,280,ramp(280)]],fu:247,fv:270},
-         {path:1,kind:K,clip:"WalkCarry",prop:"limb",period:9,u:247,v:288,y:ramp(288),path:[[247,288,ramp(288)],[247,278,ramp(278)]],fu:247,fv:270},
-         {kind:K,u:247,v:284,y:ramp(284),fu:247,fv:270,clip:"Carry",prop:"limb"},
-         {kind:K,u:247,v:282,y:ramp(282),fu:247,fv:270,clip:"Carry",prop:"limb"}],
-        [{line:1,n:6,u0:283,v0:293,u1:299,v1:293,y:7.56,kind:K,clip:"Idle",fu:292,fv:290},{line:1,n:5,u0:284,v0:297.5,u1:298,v1:297.5,y:7.56,kind:K,clip:"Idle",fu:292,fv:290}],
-        [{kind:K,u:154,v:250,y:13.56,fu:152,fv:250,clip:"Working"}],
-        [{line:1,n:7,u0:203.5,v0:241,u1:203.5,v1:259,y:11.5,kind:K,clip:"HandsUp",fu:240,fv:250}],
-        [{kind:K,u:238,v:262,y:16.5,fu:234,fv:266,clip:"Working"},{kind:K,u:240.5,v:263,y:16.5,fu:250,fv:280,clip:"Idle"},{kind:L,u:239.3,v:268.2,y:8.6,fu:250,fv:268,clip:"Idle"},{kind:L,u:239.3,v:270.4,y:8.6,fu:250,fv:268,clip:"Idle"},
-         {path:1,kind:K,clip:"WalkCarry",prop:"limb",period:10,path:[[247,286,ramp(286)],[247,270,ramp(270)]],u:247,v:280,y:ramp(280),fu:250,fv:262}]
-      ][topics.indexOf(topic)]||[];
+      const walk=(path,o)=>Object.assign({path:1,kind:K,hold:1,u:path[0][0],v:path[0][1],y:path[0][2],path,fu:path[path.length-1][0],fv:path[path.length-1][1]},o);
+      /* 💡 מספר העומדים במעגל לא נלמד מהמשנה, חוץ משלושה עשר הזוכים בפיס השני (תמיד ג, א). */
+      const pais=(n,r,boss)=>{const a=[];if(boss)a.push({kind:K,u:gz,v:gv,y:gy,fu:gz,fv:gv+1,clip:"Idle",job:"counter"});
+        for(let k=0;k<n;k++){const t=k/n*Math.PI*2-Math.PI/2,u=gz+Math.cos(t)*r,v=gv+Math.sin(t)*r;
+          if(k===1)a.push(walk([[u,v,gy],[gz+Math.cos(t)*r*0.42,gv+Math.sin(t)*r*0.42,gy]],{clip:"Walk",job:"winner",wait:5.2,period:3.2,then:"Idle"}));
+          else a.push({kind:K,u,v,y:gy,fu:gz,fv:gv,clip:"Idle",job:"pais",i:k})}return a};
+      const cast={
+        "לילה — השומרים והמפתחות":[{line:1,n:6,u0:222,v0:186,u1:236,v1:186,y:3.5,kind:K,clip:"Idle",fu:230,fv:175},
+          walk([[228,166,3.5],[234,178,3.5]],{clip:"Walk",prop:"keys",period:6,job:"keys",then:"Idle"})],
+        "הפיס הראשון":pais(8,2.8,true),
+        "תרומת הדשן":[walk([[236,292,ramp(292)],[246,274,ramp(274)],[250,260,16.5]],{clip:"WalkCarry",prop:"shovel",period:8,then:"Scoop",job:"scoop"}),
+          {kind:K,u:250,v:256,y:16.5,fu:250,fv:252,clip:"Scoop",prop:"shovel",job:"scoop"},
+          {line:1,n:3,u0:228,v0:270,u1:240,v1:270,y:7.5,kind:K,clip:"Idle",fu:250,fv:262}],
+        "סידור המערכה":[0,1,2,3].map(k=>walk([[228+k*1.2,274,7.5],[246+k*0.7,256,16.5]],{clip:"WalkCarry",prop:"log",period:7+k*0.4,then:"Working"})),
+        "הפיס השני — 13 כהנים":pais(13,3.1,false),
+        "ברקאי — האיר המזרח":[{kind:K,u:250,v:166,y:27.6,fu:300,fv:140,clip:"Idle"},
+          {kind:K,u:248.2,v:202.2,y:7.5,fu:250,fv:203,clip:"Idle",prop:"torch"},
+          {kind:K,u:251.6,v:202.2,y:7.5,fu:250,fv:203,clip:"Idle",prop:"torch"},
+          walk([[246,188,7.5],[249.3,203.6,7.5]],{clip:"WalkCarry",prop:"cup",period:4.5,wait:3.2,then:"Carry"})],
+        "השחיטה והזריקה":[{kind:K,u:247.2,v:212.2,y:7.5,fu:243,fv:212,clip:"Working",prop:"mizrak"},
+          {kind:K,u:243.2,v:215.6,y:7.5,fu:243,fv:212,clip:"Idle"},
+          {line:1,n:3,u0:236,v0:220,u1:254,v1:220,y:7.5,kind:K,clip:"Idle",fu:243,fv:212}],
+        "דישון המזבח הפנימי והמנורה":[walk([[168,252,13.56],[158,255.5,13.66],[152.1,257.5,13.81]],{clip:"Walk",prop:"bowl",period:6.5,then:"Reach",job:"menorah"}),
+          {kind:K,u:154.4,v:250.2,y:13.56,fu:153,fv:250,clip:"Scoop",prop:"bowl",job:"dishun"}],
+        "הולכת האיברים לכבש":[0,1,2,3,4,5].map(k=>walk([[247,(293-k*0.35),ramp(293-k*0.35)],[247,(286.5-k*0.28),ramp(286.5-k*0.28)]],{clip:"WalkCarry",prop:"limb",period:8+k*0.35,then:"Carry"})),
+        "קריאת שמע בלשכת הגזית":[0,1,2,3,4,5].map(k=>walk([[304,292.6+k*0.85,gy],[289+k*1.5,293.1,gy]],{clip:"Walk",period:5,then:"Idle"})).concat([0,1,2,3,4].map(k=>({kind:K,u:293+k*1.3,v:297.3,y:gy,fu:292,fv:290,clip:"Idle"}))),
+        "הפיס השלישי והרביעי":pais(10,3.5,true),
+        "הקטורת":[walk([[176,250,13.56],[156,250,13.56]],{clip:"WalkCarry",prop:"bowl",period:5.5,then:"Working",job:"ketoret"})].concat([0,1,2,3].map(k=>walk([[208,236+k*4,7.5],[208,216,7.5],[300,220+k*3,7.5]],{kind:K,clip:"Walk",period:7,then:"Idle"}))),
+        "ברכת כהנים":[{line:1,n:7,u0:203.5,v0:241,u1:203.5,v1:259,y:11.5,kind:K,clip:"HandsUp",fu:300,fv:250,job:"birkat"},
+          /* כלים א, ט: בין האולם ולמזבח אין עומדים אלא כהנים. העם במזרח המזבח, פניו מערבה. 💡 ביחזקאל אין קיר של עזרת ישראל; הרצועה הזו, מזרחית לחיק ומערבית לשער הפנימי המזרחי, היא המקום של ישראל בדגם. */
+          {line:1,n:6,u0:300,v0:236,u1:300,v1:252,y:7.5,kind:P,clip:"Idle",fu:203.5,fv:250}],
+        "ניסוך, שיר ותקיעות":[{kind:K,u:252,v:257,y:16.5,fu:250,fv:252,clip:"Bow",prop:"jug",job:"pour"},
+          {kind:K,u:256,v:259,y:16.5,fu:250,fv:252,clip:"Idle"},
+          {kind:K,u:282,v:266,y:9,fu:250,fv:252,clip:"Idle",prop:"horn"},
+          {kind:K,u:282,v:270,y:9,fu:250,fv:252,clip:"Idle",prop:"horn"},
+          {kind:L,u:284.2,v:268,y:9,fu:250,fv:252,clip:"Idle",prop:"cymbal",job:"cymbal"},
+          {kind:L,u:284.2,v:272,y:9,fu:250,fv:252,clip:"Idle"},
+          walk([[247,288,ramp(288)],[247,274,ramp(274)]],{clip:"WalkCarry",prop:"limb",period:9,then:"Carry"}),
+          /* כלים א, ט: המשתחווים בעזרת ישראל, מזרחית למזבח, לא על הכבש ולא בין האולם למזבח. */
+          {line:1,n:4,u0:304,v0:236,u1:304,v1:250,y:7.5,kind:P,clip:"Idle",fu:250,fv:250,job:"bow"}]
+      };
+      return cast[topic]||[];
     }
     if(key==="pilgrim"){
       return [
@@ -910,7 +966,9 @@ const TOURFIGS=(function(){
     return [];
   }
 
+  let stepT=performance.now();
   function onStep2(def,idx,st){
+    stepT=performance.now();
     clear();attach();
     if(!def||!ready)return;
     const key=Object.keys(STORIES).find(k=>STORIES[k]===def);
@@ -928,26 +986,57 @@ const TOURFIGS=(function(){
     stylized(false);
     ok.forEach(s=>{
       if(s.ring)ring(s.n,s.u,s.v,s.y,s.r,s.kind,s.clip,s.fu,s.fv);
-      else if(s.line)line(s.n,s.u0,s.v0,s.u1,s.v1,s.y,s.kind,s.clip,s.fu,s.fv,s.prop);
+      else if(s.line)line(s.n,s.u0,s.v0,s.u1,s.v1,s.y,s.kind,s.clip,s.fu,s.fv,s.prop,s.job);
       else spawn(s);
     });
     api.needRefit=false;
   }
   let lastTk=0;
+  function direct(sec){
+    const pais=actors.filter(o=>!o.amb&&o.spec&&o.spec.job==="pais");
+    if(pais.length){
+      const beat=Math.floor(sec/0.55)%pais.length,up=sec<1.8;
+      pais.forEach((o,i)=>{const point=up||i===beat,a=useClip(o,point?"Point":"Idle");if(a){a.paused=!!point;if(point)a.time=0.7}});
+      const c=actors.find(o=>o.spec&&o.spec.job==="counter"),tg=pais[beat];
+      if(c&&tg&&tg.spec){c.spec.fu=tg.spec.u;c.spec.fv=tg.spec.v}
+    }
+    actors.forEach(o=>{
+      if(o.amb||!o.spec)return;const s=o.spec;
+      if(s.job==="ketoret"){const per=s.period||8,moving=(o.t||0)>=0&&o.t<per*0.92;useClip(o,moving?"WalkCarry":(sec>7?"Bow":"Working"));return}
+      if(s.hold&&s.path&&s.then){const per=s.period||8,moving=(o.t||0)>=0&&o.t<per*0.92;const base=(s.clip==="Walk"&&s.prop)?"WalkCarry":(s.clip||"Walk");useClip(o,moving?base:s.then)}
+      if(s.job==="bow")useClip(o,(Math.floor(sec/2.4)%2)?"Bow":"Idle");
+      if(o.prop&&s.job==="cymbal"){const open=Math.abs(Math.sin(sec*7));o.prop.children.forEach((d,i)=>{d.position.x=(i?1:-1)*(0.03+open*0.07)})}
+      if(o.prop&&s.job==="pour"){const st=o.prop.getObjectByName&&o.prop.getObjectByName("stream");if(st){st.visible=true;st.scale.y=0.7+0.3*Math.sin(sec*3)}}
+      if(o.prop&&s.job==="scoop"){const c=o.prop.getObjectByName&&o.prop.getObjectByName("coal");if(c)c.scale.setScalar(0.55+0.45*Math.abs(Math.sin(sec*2)))}
+    });
+  }
+  function hands(){
+    let n=0,up=0;const a=new THREE.Vector3(),b=new THREE.Vector3();
+    actors.forEach(o=>{if(o.amb||o.clipName!=="HandsUp")return;o.body.updateMatrixWorld(true);const hand=findBone(o.body,"hand_r"),hd=findBone(o.body,"Head");if(!hand||!hd)return;hand.getWorldPosition(a);hd.getWorldPosition(b);n++;if(a.y>b.y+0.02)up++});
+    return {n,up};
+  }
   function tick(dt0){ /* v112: זמן משלו, פעם אחת לפריים — נקרא משתי לולאות, ולפני כן הדמויות קודמו פעמיים (מהירות כפולה וקפיצות) */
     const nowT=performance.now();if(nowT-lastTk<8)return;const dt=lastTk?Math.min(0.1,(nowT-lastTk)/1000):0.016;lastTk=nowT;
-    try{const P=window.__PAISF,tm=!!STORY&&STORY_API.S.def===STORIES.tamid;if(P&&P.length&&P[0].visible===tm)P.forEach(m=>m.visible=!tm)}catch(e){}
+    let tm=false;try{const P=window.__PAISF;tm=!!STORY&&STORY_API.S.def===STORIES.tamid;if(P&&P.length&&P[0].visible===tm)P.forEach(m=>m.visible=!tm)}catch(e){}
+    try{const C=window.__CRW;if(C&&C.length&&C[0]&&C[0].visible===tm)C.forEach(m=>{if(m)m.visible=!tm})}catch(e){}
     if(!g.visible)return;
+    try{direct(Math.max(0,(nowT-stepT)/1000))}catch(e){}
     /* v115: דמות רחוקה — בלי עיניים וגבות (לא נראות ממרחק), ורחוקה מאוד — בלי חישוב שלד */
     {const cp=camera.position;actors.forEach(o=>{const dd=o.root.position.distanceToSquared(cp),far=dd>18*18;if(o.far!==far){o.far=far;if(!o.face){o.face=[];o.root.traverse(q=>{if(q.isSkinnedMesh&&/eye|brow/i.test(q.name||""))o.face.push(q)})}o.face.forEach(q=>q.visible=!far)}o.skip=dd>140*140||!o.root.visible});actors.forEach(o=>{if(!o.skip)o.mixer.update(dt)})}
     const st=!!STORY,showAmb=!st&&(typeof TIME==="undefined"||TIME!=="night"); /* 117: הקפת המזבח רק בשעות העבודה, לא בלילה */
     if(ambN){if(st&&!ambSt){try{if(ACTS&&ACTS.amb&&STORY_API.S.def!==STORIES.tamid)ACTS.amb.forEach(m=>m.visible=true)}catch(e){}}
       else if(!st){try{if(ACTS&&ACTS.amb)ACTS.amb.forEach(m=>{if(m.visible)m.visible=false})}catch(e){}}}
     ambSt=st;
-    actors.forEach(o=>{if(o.amb){if(!showAmb){o.root.visible=false;return}if(!o.root.visible&&(o.fade===undefined||o.fade>0.01))o.root.visible=true}if(o.spec&&o.spec.path){o.t=(o.t||0)+dt;place(o,dt)}});
+    actors.forEach(o=>{if(o.amb){if(!showAmb){o.root.visible=false;return}if(!o.root.visible&&(o.fade===undefined||o.fade>0.01))o.root.visible=true}if(o.spec&&o.spec.path)o.t=(o.t||0)+dt;if(o.spec&&(o.spec.path||o.spec.job==="counter"))place(o,dt)});
   }
   function arm(){if(arm.d)return;arm.d=1;load()}
-  const api={g,clear,tick,ambient,onStep:onStep2,refit,frameCheck,arm,get ready(){return ready},get fail(){return fail},spawn,stylized};
+  const api={g,clear,tick,ambient,onStep:onStep2,refit,frameCheck,arm,hands,get ready(){return ready},get fail(){return fail},spawn,stylized,
+    age:()=>Math.max(0,(performance.now()-stepT)/1000),
+    seek(sec){stepT=performance.now()-Math.max(0,sec)*1000;actors.forEach(o=>{if(o.amb||!o.spec||!o.spec.path)return;o.t=sec-(o.spec.wait||0)});try{if(ACTS&&ACTS.tm&&ACTS.tm.seek)ACTS.tm.seek(sec)}catch(e){}},
+    cast:()=>actors.filter(o=>!o.amb&&o.root.visible).map(o=>({job:o.spec&&o.spec.job,clip:o.clipName,prop:o.spec&&o.spec.prop,kind:o.spec&&o.spec.kind})),
+    /* כלים א, ט. 💡 גבולות בדגם יחזקאל: פני האולם u≈199, פני החיק במערב u=234 (32×32 סביב 250), הכבש מדרום מ־v=264, טבעות השחיטה מצפון למזבח. אין קיר של עזרת ישראל. */
+    offLimits(u,v){if(u>=199&&u<=236&&v>=220&&v<=280)return"ulam";if(u>=232&&u<=268&&v>=232&&v<=305)return"altar";if(u>=228&&u<=264&&v>=198&&v<=232)return"shechita";return""},
+    lay(){return actors.filter(o=>!o.amb&&o.root.visible&&o.spec).map(o=>({kind:o.spec.kind,u:(o.root.position.x-COMP.X0)/A,v:(o.root.position.z+COMP.N0)/A,job:o.spec.job}))}};
   /* 131.3: מודל הדמות נטען אחרי לחיצה על «כניסה», לא בזמן בניית העיר. סיור שמתחיל קודם מפעיל את הטעינה מיד. */
   const kick=()=>{try{if(window.__ENTER&&window.__ENTER.entered)arm();else setTimeout(kick,400)}catch(e){arm()}};
   setTimeout(kick,400);
@@ -985,7 +1074,8 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
     byTopic("דישון המזבח הפנימי והמנורה").pose=AP(172,251.5,16.2,152.0,254.5,15.15);byTopic("דישון המזבח הפנימי והמנורה").fov=32;byTopic("דישון המזבח הפנימי והמנורה").subjects=["המנורה","מזבח הזהב"];
     byTopic("הולכת האיברים לכבש").pose=AP(266,298,13.8,247,286.5,10.4);byTopic("הולכת האיברים לכבש").fov=34;byTopic("הולכת האיברים לכבש").subjects=["כבש"];
     byTopic("קריאת שמע בלשכת הגזית").pose=AP(300,308,11.4,292,295,7.8);byTopic("קריאת שמע בלשכת הגזית").fov=34;
-    byTopic("ברכת כהנים").pose=AP(228,258,14.0,204,250,12.4);byTopic("ברכת כהנים").fov=38;
+    /* מהמזרח, מעזרת ישראל: הכהנים והידיים במרכז, והעם למטה לפניהם. */
+    byTopic("ברכת כהנים").pose=AP(326,262,16,204,250,12);byTopic("ברכת כהנים").fov=32;
     byTopic("הפיס השלישי והרביעי").pose=AP(328,306,12.2,310,295.2,8);byTopic("הפיס השלישי והרביעי").fov=34;
     const c=STORIES.tamid.close;
     STORIES.tamid.close=function(){if(c)c.call(this);TOURFIGS.clear()};
