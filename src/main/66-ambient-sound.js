@@ -19,7 +19,14 @@ document.addEventListener("visibilitychange",()=>{if(!ctx)return;if(document.hid
 function load(){if(AMB.loading||!ensureCtx())return;AMB.loading=true;
   Promise.all(Object.entries(FILES).map(([k,u])=>fetch(u).then(r=>r.ok?r.arrayBuffer():Promise.reject(u)).then(ab=>new Promise((res,rej)=>ctx.decodeAudioData(ab,res,rej))).then(b=>{bufs[k]=b}).catch(e=>console.warn("amb load",k,e))))
   .then(()=>{LOOPS.forEach(k=>{if(!bufs[k])return;const s=ctx.createBufferSource();s.buffer=bufs[k];s.loop=true;const g=ctx.createGain();g.gain.value=0;s.connect(g);/* 130.2: כל קול עם כיוון (ימין/שמאל) משלו */const pn=ctx.createStereoPanner?ctx.createStereoPanner():null;if(pn){g.connect(pn);pn.connect(out);pans[k]=pn}else g.connect(out);
-      /* כל לולאה מתחילה במקום אחר, כדי שלא יישמעו יחד אותן נקודות */s.start(0,Math.random()*b0(bufs[k]));gains[k]=g});started=true;AMB.ready=true})}
+      /* כל לולאה מתחילה במקום אחר, כדי שלא יישמעו יחד אותן נקודות */s.start(0,Math.random()*b0(bufs[k]));gains[k]=g});try{mkVeh()}catch(e){console.warn("amb veh",e)}started=true;AMB.ready=true})}
+/* 130.4: רכבת קלה ואוטובוס חשמלי — קול מסונתז (בלי קובץ): זמזום מנוע שעולה עם המהירות, ורעש גלגלים. 💡 */
+let VEH=null;
+function mkVeh(){const sr=ctx.sampleRate,b=ctx.createBuffer(1,sr*2,sr),d=b.getChannelData(0);let l=0;for(let i=0;i<d.length;i++){l=(l+0.04*(Math.random()*2-1))/1.04;d[i]=l*4}
+  const ns=ctx.createBufferSource();ns.buffer=b;ns.loop=true;const lp=ctx.createBiquadFilter();lp.type="lowpass";lp.frequency.value=420;const rg=ctx.createGain();rg.gain.value=0.9;ns.connect(lp);lp.connect(rg);
+  const os=ctx.createOscillator();os.type="sawtooth";os.frequency.value=200;const o2=ctx.createOscillator();o2.type="triangle";o2.frequency.value=400;const wl=ctx.createBiquadFilter();wl.type="bandpass";wl.frequency.value=600;wl.Q.value=2;const wg=ctx.createGain();wg.gain.value=0.06;os.connect(wl);o2.connect(wl);wl.connect(wg);
+  const g=ctx.createGain();g.gain.value=0;rg.connect(g);wg.connect(g);const pn=ctx.createStereoPanner?ctx.createStereoPanner():null;if(pn){g.connect(pn);pn.connect(out)}else g.connect(out);
+  ns.start();os.start();o2.start();VEH={g,pn,os,o2,wg,prev:new Map()};AMB.vehOK=true}
 const b0=b=>Math.max(0,b.duration-0.1);
 // ---- אזורים ----
 const sat=v=>v<0?0:v>1?1:v;
@@ -83,6 +90,9 @@ function levels(P){const L={city:0,market:0,quiet:0,stream:0,birds:0,night:0,coi
   if(!P&&WALK){const sp=AMB.spd||0;L.steps=sat((sp-0.15)/0.8)*(inHouse?0.6:1)}
   /* 130.3: עולי רגל בדרך להר: ההמולה לפי כמה עולים הולכים ליד המצלמה. הכבשים לקרבן (📜 שמות יב, ג-ו; ⚖️ פסחים ה) פועים מדי פעם */
   {const pg=pilgrims(cp.x,cp.z),pv=0.75*sat(pg.c/14)*(night?0.3:1);/* ⚖️ על הר הבית גם עולי הרגל רק בהמולה שקטה */if(mount>0.5)L.quiet=Math.max(L.quiet,pv*0.85);else L.city=Math.max(L.city,pv*(1-mount));if(pg.sp&&!night){L.sheep=near(pg.sd,3,30);if(!P)SRC.sheep=[pg.sp,pg.sd]}}
+  /* 130.4: כלי הרכב שנוסעים במודל (24-transport). בשבת הרכבות לא נוסעות, וכך גם הקול */
+  if(!P&&window.__VEH&&VEH){let best=null;const now=performance.now(),np=new Map();try{window.__VEH().forEach((v,i)=>{const key=v[2]+":"+i,pr=VEH.prev.get(key);np.set(key,[v[0],v[1],now]);const d=Math.hypot(v[0]-cp.x,-v[1]-cp.z);if(d>80||!pr)return;const dt=(now-pr[2])/1000,sp=dt>0?Math.hypot(v[0]-pr[0],v[1]-pr[1])/dt:0;if(sp<0.3||sp>40)return;const w=near(d,6,70)*(v[2]?1:0.7);if(!best||w>best.w)best={w,sp,x:v[0],z:-v[1],d}})}catch(e){}VEH.prev=np;
+    if(best){L.veh=best.w*(1-mount*0.6);SRC.veh=[[best.x,best.z],best.d];AMB.vsp=best.sp}}
   for(const k in L)L[k]*=hf;
   if(inHouse)for(const k in L)L[k]*=0.12; /* בתוך ההיכל כמעט שקט 💡 */
   return L}
@@ -104,6 +114,8 @@ function tick(){if(!AMB.on||!ctx){return}
   {const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,cp=camera.position;
    for(const k in pans){const S=SRC[k==="market"&&L.coins>L.market*0.9?"coins":k];let v=0;if(S&&S[0]){const dx=S[0][0]-cp.x,dz=S[0][1]-cp.z,dl=Math.hypot(dx,dz);if(dl>0.5)v=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-3)/20)}AMB.pan=AMB.pan||{};AMB.pan[k]=v;pans[k].pan.setTargetAtTime(v,now,0.25)}}
   LOOPS.forEach(k=>{if(gains[k])gains[k].gain.setTargetAtTime(L[k]*BASE[k],now,k==="steps"?0.2:0.6)});
+  if(VEH){const v=L.veh||0,sp=AMB.vsp||0;VEH.g.gain.setTargetAtTime(0.5*v,now,0.4);VEH.os.frequency.setTargetAtTime(120+sp*18,now,0.5);VEH.o2.frequency.setTargetAtTime(240+sp*36,now,0.5);
+    if(VEH.pn){const S=SRC.veh;let pv=0;if(S&&S[0]&&v>0){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pv=(dx*rx+dz*rz)/(dl*rl)*0.85*sat((S[1]-2)/12)}VEH.pn.pan.setTargetAtTime(pv,now,0.2)}}
   if(L.sheep>0.05&&performance.now()>nextBaa){const S=SRC.sheep;let pn=0;if(S&&S[0]){const e=camera.matrixWorld.elements,rx=e[0],rz=e[2],rl=Math.hypot(rx,rz)||1,dx=S[0][0]-camera.position.x,dz=S[0][1]-camera.position.z,dl=Math.hypot(dx,dz)||1;pn=(dx*rx+dz*rz)/(dl*rl)*0.8*sat((S[1]-2)/10)}baa(0.55*L.sheep,pn);nextBaa=performance.now()+3500+Math.random()*7000}
   if(L.coins>0.02&&performance.now()>nextClink){clink(0.5*L.coins);nextClink=performance.now()+1800+Math.random()*4200}}
 setInterval(tick,250);
