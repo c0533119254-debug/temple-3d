@@ -22,8 +22,8 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
   const smat=(col,walk)=>{const k=col+"|"+(walk||0);return SM[k]||(SM[k]=mk(true,col,walk))};
   // one part: geometry, place, scale, rotation, color, motion code (0 body, ±1 front leg, ±2 back leg, 3 head and neck, 4 tail), pivot, tinted by the coat color or not
   function build(kind,L,H,lo){const parts=[],rs=(()=>{let s=7;return()=>(s=(s*16807)%2147483647)/2147483647})();
-    const S=(w,n,m)=>{const g=new THREE.SphereGeometry(1,lo?6:(n||10),lo?4:(m||7));if(w&&!lo){const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+0.075*Math.sin(x*9.1+y*3.3)*Math.sin(y*8.3+z*2.1)*Math.sin(z*9.7+x*1.7)+0.03*Math.sin(x*23+z*19);p.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals()}return g};
-    const C=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,lo?4:(n||8));
+    const S=(w,n,m)=>{const g=new THREE.SphereGeometry(1,lo?6:Math.min(n||8,12),lo?4:Math.min(m||6,8));if(w&&!lo){const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+0.075*Math.sin(x*9.1+y*3.3)*Math.sin(y*8.3+z*2.1)*Math.sin(z*9.7+x*1.7)+0.03*Math.sin(x*23+z*19);p.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals()}return g};
+    const C=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,lo?4:Math.min(n||6,7),1,true);
     const tube=(pts,r,n)=>{const c=new THREE.CatmullRomCurve3(pts.map(q=>new THREE.Vector3(q[0],q[1],q[2])));const g=new THREE.TubeGeometry(c,lo?4:(n||14),r,lo?3:6,false);
       const p=g.attributes.position,seg=(lo?4:(n||14))+1,ring=(lo?3:6)+1;for(let i=0;i<p.count;i++){const t=Math.floor(i/ring)/(seg-1),q=c.getPointAt(Math.min(1,t)),f=1-0.75*t;p.setXYZ(i,q.x+(p.getX(i)-q.x)*f,q.y+(p.getY(i)-q.y)*f,q.z+(p.getZ(i)-q.z)*f)}g.computeVertexNormals();return g};
     const put=(geo,x,y,z,sx,sy,sz,rx,ry,rz,col,code,pv,tint)=>{const m=new THREE.Matrix4().compose(new THREE.Vector3(x,y,z),new THREE.Quaternion().setFromEuler(new THREE.Euler(rx||0,ry||0,rz||0)),new THREE.Vector3(sx||1,sy||1,sz||1));
@@ -34,7 +34,7 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
     const FACE=sheep?(kind==="ram"?[0.55,0.42,0.32]:[0.62,0.47,0.35]):W,HORN=kind==="ram"?[0.74,0.66,0.55]:goat?[0.36,0.33,0.3]:[0.86,0.8,0.68];
     const by=H*(sheep?0.6:bull?0.62:0.63),dep=H*(sheep?0.25:bull?0.27:0.21),wid=H*(sheep?0.23:bull?0.24:0.17),hipY=by-dep*0.3,lh=by-dep*0.55;
     // body: barrel, chest and rump (wool on the sheep)
-    put(S(sheep,16,10),0,by,0,L*0.47,dep,wid,0,0,0,W,0);
+    put(S(sheep,12,8),0,by,0,L*0.47,dep,wid,0,0,0,W,0);
     put(S(sheep,12,9),L*0.2,by+dep*0.1,0,L*0.27,dep*1.02,wid*0.98,0,0,0,W,0);
     put(S(sheep,12,9),-L*0.24,by+dep*0.06,0,L*0.25,dep*0.97,wid*0.97,0,0,0,W,0);
     if(!sheep)put(S(0),0,by-dep*0.18,0,L*0.36,dep*0.86,wid*1.04,0,0,0,W,0);                       // belly
@@ -95,10 +95,12 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
   const FLOWS=[];function flow(g,fn){FLOWS.push({g,fn})}
   let acc=0;const NEAR=(typeof SMALL!=="undefined"&&SMALL)?38:60;
   function tick(dt){const d=Math.min(0.1,dt);for(const F of FLOWS){if(F.g.parent&&F.g.visible){try{F.fn(d)}catch(e){if(!F.err){F.err=1;console.error(e);(window.__ERRS||[]).push("BEAST "+e.message)}}}}acc+=dt;if(acc<0.25)return;acc=0;if(typeof camera==="undefined")return;cp.copy(camera.position);
+    for(let k=HERDS.length-1;k>=0;k--){let q=HERDS[k].g;while(q.parent)q=q.parent;if(!q.isScene)HERDS.splice(k,1)}for(let k=FLOWS.length-1;k>=0;k--){let q=FLOWS[k].g;while(q.parent)q=q.parent;if(!q.isScene)FLOWS.splice(k,1)}
     for(const h of HERDS){if(!h.g.parent)continue;if(h.dirty){h.dirty=false;let n=h.near.count,sx=0,sy=0,sz=0;const a=h.near.instanceMatrix.array;for(let i=0;i<n;i++){sx+=a[i*16+12];sy+=a[i*16+13];sz+=a[i*16+14]}n=Math.max(1,n);h.c.set(sx/n,sy/n,sz/n);let r=0;for(let i=0;i<h.near.count;i++)r=Math.max(r,Math.hypot(a[i*16+12]-h.c.x,a[i*16+14]-h.c.z));h.r=r+2}
       wp.copy(h.c);h.g.localToWorld(wp);const dd=wp.distanceTo(cp)-h.r,nr=dd<NEAR;if(h.near.visible!==nr){h.near.visible=nr;h.far.visible=!nr}}}
   return{geo,mat,smat,one,herd,tick,dims,hornGeo,still,flow,HERDS,FLOWS}})();
 function mkBeast(kind,col,L,H){return BEAST.one(kind,col,L,H)}
+window.__BEAST=BEAST; /* לבדיקות: מספר הבהמות והמשולשים */
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});

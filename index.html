@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 133.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 133.4"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -12062,8 +12062,8 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
   const smat=(col,walk)=>{const k=col+"|"+(walk||0);return SM[k]||(SM[k]=mk(true,col,walk))};
   // one part: geometry, place, scale, rotation, color, motion code (0 body, ±1 front leg, ±2 back leg, 3 head and neck, 4 tail), pivot, tinted by the coat color or not
   function build(kind,L,H,lo){const parts=[],rs=(()=>{let s=7;return()=>(s=(s*16807)%2147483647)/2147483647})();
-    const S=(w,n,m)=>{const g=new THREE.SphereGeometry(1,lo?6:(n||10),lo?4:(m||7));if(w&&!lo){const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+0.075*Math.sin(x*9.1+y*3.3)*Math.sin(y*8.3+z*2.1)*Math.sin(z*9.7+x*1.7)+0.03*Math.sin(x*23+z*19);p.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals()}return g};
-    const C=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,lo?4:(n||8));
+    const S=(w,n,m)=>{const g=new THREE.SphereGeometry(1,lo?6:Math.min(n||8,12),lo?4:Math.min(m||6,8));if(w&&!lo){const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+0.075*Math.sin(x*9.1+y*3.3)*Math.sin(y*8.3+z*2.1)*Math.sin(z*9.7+x*1.7)+0.03*Math.sin(x*23+z*19);p.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals()}return g};
+    const C=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,lo?4:Math.min(n||6,7),1,true);
     const tube=(pts,r,n)=>{const c=new THREE.CatmullRomCurve3(pts.map(q=>new THREE.Vector3(q[0],q[1],q[2])));const g=new THREE.TubeGeometry(c,lo?4:(n||14),r,lo?3:6,false);
       const p=g.attributes.position,seg=(lo?4:(n||14))+1,ring=(lo?3:6)+1;for(let i=0;i<p.count;i++){const t=Math.floor(i/ring)/(seg-1),q=c.getPointAt(Math.min(1,t)),f=1-0.75*t;p.setXYZ(i,q.x+(p.getX(i)-q.x)*f,q.y+(p.getY(i)-q.y)*f,q.z+(p.getZ(i)-q.z)*f)}g.computeVertexNormals();return g};
     const put=(geo,x,y,z,sx,sy,sz,rx,ry,rz,col,code,pv,tint)=>{const m=new THREE.Matrix4().compose(new THREE.Vector3(x,y,z),new THREE.Quaternion().setFromEuler(new THREE.Euler(rx||0,ry||0,rz||0)),new THREE.Vector3(sx||1,sy||1,sz||1));
@@ -12074,7 +12074,7 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
     const FACE=sheep?(kind==="ram"?[0.55,0.42,0.32]:[0.62,0.47,0.35]):W,HORN=kind==="ram"?[0.74,0.66,0.55]:goat?[0.36,0.33,0.3]:[0.86,0.8,0.68];
     const by=H*(sheep?0.6:bull?0.62:0.63),dep=H*(sheep?0.25:bull?0.27:0.21),wid=H*(sheep?0.23:bull?0.24:0.17),hipY=by-dep*0.3,lh=by-dep*0.55;
     // body: barrel, chest and rump (wool on the sheep)
-    put(S(sheep,16,10),0,by,0,L*0.47,dep,wid,0,0,0,W,0);
+    put(S(sheep,12,8),0,by,0,L*0.47,dep,wid,0,0,0,W,0);
     put(S(sheep,12,9),L*0.2,by+dep*0.1,0,L*0.27,dep*1.02,wid*0.98,0,0,0,W,0);
     put(S(sheep,12,9),-L*0.24,by+dep*0.06,0,L*0.25,dep*0.97,wid*0.97,0,0,0,W,0);
     if(!sheep)put(S(0),0,by-dep*0.18,0,L*0.36,dep*0.86,wid*1.04,0,0,0,W,0);                       // belly
@@ -12135,10 +12135,12 @@ const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=n
   const FLOWS=[];function flow(g,fn){FLOWS.push({g,fn})}
   let acc=0;const NEAR=(typeof SMALL!=="undefined"&&SMALL)?38:60;
   function tick(dt){const d=Math.min(0.1,dt);for(const F of FLOWS){if(F.g.parent&&F.g.visible){try{F.fn(d)}catch(e){if(!F.err){F.err=1;console.error(e);(window.__ERRS||[]).push("BEAST "+e.message)}}}}acc+=dt;if(acc<0.25)return;acc=0;if(typeof camera==="undefined")return;cp.copy(camera.position);
+    for(let k=HERDS.length-1;k>=0;k--){let q=HERDS[k].g;while(q.parent)q=q.parent;if(!q.isScene)HERDS.splice(k,1)}for(let k=FLOWS.length-1;k>=0;k--){let q=FLOWS[k].g;while(q.parent)q=q.parent;if(!q.isScene)FLOWS.splice(k,1)}
     for(const h of HERDS){if(!h.g.parent)continue;if(h.dirty){h.dirty=false;let n=h.near.count,sx=0,sy=0,sz=0;const a=h.near.instanceMatrix.array;for(let i=0;i<n;i++){sx+=a[i*16+12];sy+=a[i*16+13];sz+=a[i*16+14]}n=Math.max(1,n);h.c.set(sx/n,sy/n,sz/n);let r=0;for(let i=0;i<h.near.count;i++)r=Math.max(r,Math.hypot(a[i*16+12]-h.c.x,a[i*16+14]-h.c.z));h.r=r+2}
       wp.copy(h.c);h.g.localToWorld(wp);const dd=wp.distanceTo(cp)-h.r,nr=dd<NEAR;if(h.near.visible!==nr){h.near.visible=nr;h.far.visible=!nr}}}
   return{geo,mat,smat,one,herd,tick,dims,hornGeo,still,flow,HERDS,FLOWS}})();
 function mkBeast(kind,col,L,H){return BEAST.one(kind,col,L,H)}
+window.__BEAST=BEAST; /* לבדיקות: מספר הבהמות והמשולשים */
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});
@@ -12977,26 +12979,26 @@ function build(){
         // pen 1: sheep and two rams. pen 2: goats and kids. pen 3: bulls and calves
         fill("sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xf4efe6,0xe2d6c0,0xd9cbb0],12,439.6,447.4,-145.5,-124.5,3);fill("ram",1.25,0.95,[0xe6dccb,0xd9cdb8],2,440,447,-146.2,-145.6,2);
         fill("goat",1.05,0.85,[0x2b2521,0x3d2f26,0x1f1b19,0x5a4434],6,450.6,458.4,-145.5,-126,2);fill("kid",0.75,0.6,[0x2b2521,0x6b5440,0x1f1b19],3,451,458,-124.8,-123.4,3);
-        fill("bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x7a4528,0x2e2420],3,461.8,469.2,-144,-128,1);fill("calf",1.3,1.0,[0x7a4528,0x5e3a22],2,462,469,-127,-124,2);
+        fill("bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x7a4528,0x2e2420],3,461.8,469.2,-147,-132,1);fill("calf",1.3,1.0,[0x7a4528,0x5e3a22],2,462,469,-128,-124.5,2);
         // a stone trough with water in every pen
         [438,449,460].forEach(u0=>{box(u0+2,-149.3,u0+9.6,-147.9,g,g+1.1,M.stone2,PI,{noCol:true});box(u0+2.3,-149.0,u0+9.3,-148.2,g+1.1,g+1.13,M.water||M.stone2,null,{noCol:true,cast:false})});
         // the inspectors (💡 clothes of today): two at the pens, one at the door with a bull, and owners who wait
         const SP=[[443.5,-121,Math.PI/2,0xf4f2ec],[454.5,-121,Math.PI/2,0xf4f2ec],[465,-121.2,Math.PI/2,0xf4f2ec],[436.5,-131,0,0x34465e],[436.8,-128.5,0,0x6b6f74],[436.2,-140,0.3,0x2f3b2c],[471.8,-133,Math.PI,0x8a6a4a],[472,-136,Math.PI,0x34465e]];
         const fig=FIG.mesh(SP.length,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),SP.length),CC=new THREE.Color();
         SP.forEach((q,i)=>{const p=W(q[0],q[1]),s=0.9+rr()*0.14;D.position.set(p[0],g*A,p[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(s);D.updateMatrix();fig.setMatrixAt(i,D.matrix);fig.setColorAt(i,CC.setHex(q[3]));fig.setAmp(i,0);D.position.y+=1.56*s;D.updateMatrix();hd.setMatrixAt(i,D.matrix)});
-        [fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PI;cPick.push(m);group.add(m)})}
+        const gI=new THREE.Group();group.add(gI);window.__INSPG=gI;[fig,hd].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=PI;cPick.push(m);gI.add(m)})}
       /* 133.2: הדרך ביום יום. אנשים מובילים בהמה בחבל ממרכז הבדיקה אל השער החיצוני הצפוני, דרך החצר החיצונה, אל השער הפנימי הצפוני ששם השולחנות (יחזקאל מ, לט-מב).
          📜 "כל בעלי השיר יוצאין בשיר ונמשכין בשיר" (שבת ה, א). 📜 מי שבא בשער צפון יוצא בשער נגב (יחזקאל מו, ט). אישה עם קן יונים (ויקרא יב, ח). 💡 מספר האנשים, הבגדים של היום, והדרך המדויקת */
-      {const FI=I("מביאים קרבן","שבת ה, א; יחזקאל מ, לט-מב; יחזקאל מו, ט; מנחות ט, ח; ויקרא יב, ח","📜 \"כל בעלי השיר יוצאין בשיר ונמשכין בשיר\" (שבת ה, א): מובילים את הבהמה בחבל. 📜 השולחנות לשחיטת העולה, החטאת והאשם עומדים באולם השער הצפוני (יחזקאל מ, לט-מב). 📜 \"הבא דרך שער צפון להשתחוות יצא דרך שער נגב\" (יחזקאל מו, ט). ⚖️ הבעלים סומך שתי ידיו על ראש הקרבן, ומיד אחר כך שוחטים. אישה וקטן לא סומכים (מנחות ט, ח). 📜 יולדת שאין לה כסף לכבש מביאה שתי תורים או שני בני יונה (ויקרא יב, ח). 💡 כמה אנשים בדרך, הבגדים שלהם (בגדים של היום) והדרך המדויקת הם הצעה.");
+      {const FI=I("מביאים קרבן","שבת ה, א; יחזקאל מ, לט-מב; יחזקאל מו, ט; מנחות ט, ח; ויקרא יב, ח","📜 \"כל בעלי השיר יוצאין בשיר ונמשכין בשיר\" (שבת ה, א): מובילים את הבהמה בחבל. 📜 השולחנות לשחיטת העולה, החטאת והאשם עומדים באולם השער הצפוני (יחזקאל מ, לט-מב). 📜 \"הבא דרך שער צפון להשתחוות יצא דרך שער נגב\" (יחזקאל מו, ט). ⚖️ הבעלים סומך שתי ידיו על ראש הקרבן, ומיד אחר כך שוחטים. אישה וקטן לא סומכים (מנחות ט, ח). 📜 יולדת שאין לה כסף לכבש מביאה שתי תורים או שני בני יונה (ויקרא יב, ח). ⚖️ בשבת לא מביאים קרבנות יחיד: רק קרבנות הציבור דוחים את השבת (תמורה ב, א), ולכן בשבת הדרך ריקה. ⚖️ ברגל כל עולה רגל מביא עולת ראייה ושלמי חגיגה (חגיגה א, ב), ולכן ברגל יש פי שניים. 💡 כמה אנשים בדרך, הבגדים שלהם (בגדים של היום) והדרך המדויקת הם הצעה.");
         const gF=new THREE.Group();group.add(gF);const rq=(()=>{let q=2133;return()=>(q=(q*16807)%2147483647)/2147483647})();
         const PTH=[[400,-136],[340,-72],[268,-17],[252,-3],[251,30],[251,60],[251,140],[251,163],[251,184]].map(q=>W(q[0],q[1])),PL=[0];for(let i=1;i<PTH.length;i++)PL.push(PL[i-1]+Math.hypot(PTH[i][0]-PTH[i-1][0],PTH[i][1]-PTH[i-1][1]));const LEN=PL[PL.length-1];
         const at=(sv,off)=>{sv=((sv%LEN)+LEN)%LEN;let i=0;while(i<PL.length-2&&PL[i+1]<sv)i++;const a=PTH[i],b=PTH[i+1],f=(sv-PL[i])/((PL[i+1]-PL[i])||1),dx=b[0]-a[0],dz=b[1]-a[1],l=Math.hypot(dx,dz)||1,x=a[0]+dx*f-dz/l*off,z=a[1]+dz*f+dx/l*off;return[x,(typeof groundAt==="function"?groundAt(x,z):0),z,Math.atan2(-dz,dx)]};
         // who walks: sheep (most), goats, a ram, bulls with two people, and two women with a pair of doves in a cage
         const KS=[["sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xe2d6c0]],["goat",1.05,0.85,[0x2b2521,0x3d2f26,0x5a4434]],["ram",1.25,0.95,[0xe6dccb]],["bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x2e2420]]];
-        const PLAN=SMALL?["sheep","sheep","goat","bull","sheep","bird","sheep","goat"]:["sheep","sheep","goat","bull","sheep","bird","sheep","ram","goat","sheep","bull","sheep","bird","goat"];
+        /* 133.3: ביום רגיל הזרם הבסיסי. ברגל עוד עולי רגלים עם עולת ראייה ושלמי חגיגה (חגיגה א, ב), פי שניים. בשבת אין קרבנות יחיד: רק קרבנות הציבור דוחים את השבת (תמורה ב, א) */const BASE=SMALL?["sheep","sheep","goat","bull","sheep","bird","sheep","goat"]:["sheep","sheep","goat","bull","sheep","bird","sheep","ram","goat","sheep","bull","sheep","bird","goat"],EXTRA=SMALL?["sheep","bull","sheep","goat","sheep","sheep"]:["sheep","bull","sheep","goat","sheep","sheep","bull","sheep","ram","sheep","goat","sheep","bull","sheep"],PLAN=BASE.concat(EXTRA);
         const H={};KS.forEach(k=>{const n=PLAN.filter(p=>p===k[0]).length;if(n){H[k[0]]=BEAST.herd(k[0],k[1],k[2],n,k[3]);H[k[0]].k=k;H[k[0]].used=0;H[k[0]].pick(m=>{m.userData=FI;cPick.push(m)});gF.add(H[k[0]].g)}});
         const CLOTH=[0x34465e,0x6b6f74,0x2f3b2c,0x8a6a4a,0xf2efe8,0x1f2a3a,0x7a3b3b,0x4a5a6a,0xd9cbb0,0x2b2b2b,0x5d6b4a,0x9aa3ad];
-        const WK=[];let np=0;PLAN.forEach((k,i)=>{const w={k,s:LEN*i/PLAN.length+rq()*6,v:0.85+rq()*0.3,off:(rq()-0.5)*3.2*A,p:np++};if(k==="bull")w.p2=np++;if(k!=="bird"){const h=H[k];w.h=h;w.i=h.used++}WK.push(w)});
+        const WK=[];let np=0;PLAN.forEach((k,i)=>{const w={k,ex:i>=BASE.length,s:LEN*((i<BASE.length?i/BASE.length:(i-BASE.length+0.5)/EXTRA.length))+rq()*6,v:0.85+rq()*0.3,off:(rq()-0.5)*3.2*A,p:np++};if(k==="bull")w.p2=np++;if(k!=="bird"){const h=H[k];w.h=h;w.i=h.used++}WK.push(w)});
         const fig=FIG.mesh(np,FIG.mat(0xffffff)),hd=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),np),CC=new THREE.Color(),D=new THREE.Object3D();
         for(let i=0;i<np;i++){fig.setColorAt(i,CC.setHex(CLOTH[(i*5)%CLOTH.length]));fig.setAmp(i,1)}
         const nR=WK.filter(w=>w.h).length+WK.filter(w=>w.p2!==undefined).length,rope=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.012,0.012,1,4),new THREE.MeshStandardMaterial({color:0x8a7550,roughness:1}),Math.max(1,nR));
@@ -13005,7 +13007,10 @@ function build(){
         const putP=(i,q,sc)=>{D.position.set(q[0],q[1],q[2]);D.rotation.set(0,q[3],0);D.scale.setScalar(sc);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y+=1.56*sc;D.updateMatrix();hd.setMatrixAt(i,D.matrix)};
         const A0=new THREE.Vector3(),B0=new THREE.Vector3(),NK=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0),Q=new THREE.Quaternion();
         const putR=(j,a,b)=>{const d=B0.copy(b).sub(a),l=d.length();D.position.copy(a).addScaledVector(d,0.5);D.quaternion.copy(Q.setFromUnitVectors(UP,d.normalize()));D.scale.set(1,l,1);D.updateMatrix();rope.setMatrixAt(j,D.matrix);D.rotation.set(0,0,0);D.scale.set(1,1,1)};
-        BEAST.flow(gF,dt=>{let r=0,c=0;for(const w of WK){w.s+=w.v*dt;if(w.s>LEN-0.3)w.s=0.02;const q=at(w.s,w.off),sc=0.94;putP(w.p,q,sc);fig.setSp(w.p,w.v);
+        let MODE=-1;BEAST.flow(gF,dt=>{const fest=DOY===FEST.pesach.doy||DOY===FEST.shavuot.doy||DOY===FEST.sukkot.doy,md=DAY==="shabbat"?0:fest?2:1;
+          if(md!==MODE){MODE=md;if(window.__INSPG)window.__INSPG.visible=md>0;for(const w of WK){w.off_=md===0||(w.ex&&md<2);if(w.off_){D.position.set(0,-50,0);D.rotation.set(0,0,0);D.scale.setScalar(1e-4);D.updateMatrix();fig.setMatrixAt(w.p,D.matrix);hd.setMatrixAt(w.p,D.matrix);if(w.p2!==undefined){fig.setMatrixAt(w.p2,D.matrix);hd.setMatrixAt(w.p2,D.matrix)}if(w.h)w.h.set(w.i,0,-50,0,0,1e-4)}}
+            for(let j=0;j<rope.count;j++)rope.setMatrixAt(j,D.matrix);for(let j=0;j<cage.count;j++)cage.setMatrixAt(j,D.matrix);D.scale.setScalar(1)}
+          let r=0,c=0;for(const w of WK){if(w.off_){if(w.k==="bird")c++;else{r++;if(w.p2!==undefined)r++}continue}w.s+=w.v*dt;if(w.s>LEN-0.3)w.s=0.02;const q=at(w.s,w.off),sc=0.94;putP(w.p,q,sc);fig.setSp(w.p,w.v);
             const hx=Math.cos(q[3]),hz=-Math.sin(q[3]),rx=-hz,rz=hx;   // forward and right (on the ground)
             const hand=A0.set(q[0]+rx*0.28-hx*0.05,q[1]+0.92,q[2]+rz*0.28);
             if(w.k==="bird"){D.position.copy(hand);D.rotation.set(0,q[3],0);D.updateMatrix();cage.setMatrixAt(c++,D.matrix);continue}
