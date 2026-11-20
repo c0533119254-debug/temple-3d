@@ -162,7 +162,9 @@ let LIFE_LG=null;const LIFE=(function(){const WK=[[[-1086.5,-713.1],[-1083.9,-70
   const head=FIG.head();
   const mB=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.9}),mH=new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8});
   const ib=FIG.mesh(NP,FIG.mat(0xffffff)),ih=new THREE.InstancedMesh(head,mH,NP),c=new THREE.Color();
-  /* 132.0: גברים, נשים וילדים בבגדים של היום; בעיר העתיקה יותר דתיים וחרדים (💡 אחוזים: people/תוכנית-אנשים.md) */const P=[];for(let k=0;k<NP;k++){const q=walks[Math.floor(r()*walks.length)];const L=ib.dress(k,inPoly(q.p[0][0],q.p[0][1],OLD)?"old":"city");P.push({q,t:r()*q.len,v:(0.9+r()*0.6)*(L.hs<0.9?0.85:1)*(r()<0.5?1:-1),s:1,ph:r()*6});ib.setSp(k,P[k].v)}
+  /* 132.0: גברים, נשים וילדים בבגדים של היום; בעיר העתיקה יותר דתיים וחרדים (💡 אחוזים: people/תוכנית-אנשים.md) */const P=[];for(let k=0;k<NP;k++){const q=walks[Math.floor(r()*walks.length)];const L=ib.dress(k,inPoly(q.p[0][0],q.p[0][1],OLD)?"old":"city");const kid=L.hs<0.9,o={q,t:r()*q.len,v:(0.9+r()*0.6)*(r()<0.5?1:-1),s:1,ph:r()*6,nh:kid||(L.f&(1<<FIG.B.SK)?r()<0.6:r()<0.3)};
+    /* 132.3: ילד הולך ליד מבוגר (משפחה), באותו קצב ובאותו כיוון. 💡 בלילה (22:00-05:00) ברחוב מעט אנשים, ובעיקר גברים */if(kid&&k>0){let j=k-1;while(j>0&&P[j].par!=null)j=P[j].par;o.par=j;o.q=P[j].q;o.side=(k%2?1:-1)*(0.55+r()*0.2)}
+    P.push(o);ib.setSp(k,o.v)}
   ib.castShadow=false;WG.add(ib,ih);FIG.LOD.add([ib,ih]);
   // ---- topic 4 stage 9: Shabbat / Yom Tov (⚖️ no driving; 💡 how many people walk and what they wear)
   let SHB=false;const r2=rng(7781),NS=SMALL?600:1800,DRC=drives.filter(q=>Math.hypot(q.p[0][0],q.p[0][1])<1000),sb=FIG.mesh(NS,FIG.mat(0xffffff)),sh=new THREE.InstancedMesh(head,mH,NS),SP=[],clS=[0xf2f0ea,0xeeeeea,0x1d2430,0x111111,0x2b2f38,0x3e5c7a,0xd8cfbf,0x6b5b4a];
@@ -194,11 +196,12 @@ let LIFE_LG=null;const LIFE=(function(){const WK=[[[-1086.5,-713.1],[-1083.9,-70
       const b0=[drives.length,walks.length],nd=[],nw=[];drives.forEach(q=>nd.push(...split(q,40)));walks.forEach(q=>nw.push(...split(q,15)));
       if(nd.length){drives.length=0;nd.forEach(q=>drives.push(q))}if(nw.length){walks.length=0;nw.forEach(q=>walks.push(q))}
       const rr=rng(9091);C.forEach(o=>{o.q=drives[Math.floor(rr()*drives.length)];o.t=rr()*o.q.len;o.side=-(o.v>0?1:-1)*(o.q.w/4);o.gf=undefined;o.x=undefined});C._grp=0;
-      P.forEach(o=>{o.q=walks[Math.floor(rr()*walks.length)];o.t=rr()*o.q.len;o.gy=undefined});return{drives:[b0[0],drives.length],walks:[b0[1],walks.length]}},
+      P.forEach(o=>{o.q=walks[Math.floor(rr()*walks.length)];o.t=rr()*o.q.len;o.gy=undefined});P.forEach(o=>{if(o.par!=null)o.q=P[o.par].q});return{drives:[b0[0],drives.length],walks:[b0[1],walks.length]}},
     tick(dt,tt){GF=(GF+1)&7;if(SHB&&sb.visible){for(let k=0;k<NS;k++){const o=SP[k];o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}const a=at(o.q,o.t),x=a[0]-Math.sin(a[2])*o.off,n=a[1]+Math.cos(a[2])*o.off,y=gYc(o,k,x,n,(a[3]??TY(x,n))+0.17+0.04*(o.q.c||0),dt),bob=0;
         d.position.set(x,y+bob,-n);d.rotation.set(0,HD(o,a[2]+(o.v<0?Math.PI:0),dt),0);d.scale.setScalar(o.s);d.updateMatrix();sb.setMatrixAt(k,d.matrix);d.position.y=y+bob+1.56*o.s;d.updateMatrix();sh.setMatrixAt(k,d.matrix)}sb.instanceMatrix.needsUpdate=sh.instanceMatrix.needsUpdate=true}
-    for(let k=0;k<NP;k++){const o=P[k];o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}const a=at(o.q,o.t),y=gYc(o,k,a[0],a[1],a[3],dt),bob=0;
-      d.position.set(a[0],y+bob,-a[1]);d.rotation.set(0,HD(o,a[2]+(o.v<0?Math.PI:0),dt),0);d.scale.setScalar(o.s);d.updateMatrix();ib.setMatrixAt(k,d.matrix);d.position.y=y+bob+1.56*o.s;d.updateMatrix();ih.setMatrixAt(k,d.matrix)}
+    const hrN=HOUR==null?new Date().getHours():HOUR,ngt=hrN>=22||hrN<5;
+    for(let k=0;k<NP;k++){const o=P[k];if(o.par!=null){const pa=P[o.par];if(o.v!==pa.v){o.v=pa.v;ib.setSp(k,o.v)}o.t=pa.t}else{o.t+=o.v*dt;if(o.t<0||o.t>o.q.len){o.v=-o.v;o.t=Math.max(0,Math.min(o.q.len,o.t))}}let a=at(o.q,o.t);if(o.side)a=[a[0]-Math.sin(a[2])*o.side,a[1]+Math.cos(a[2])*o.side,a[2],a[3]];const y=gYc(o,k,a[0],a[1],a[3],dt),bob=0;
+      d.position.set(a[0],y+bob,-a[1]);d.rotation.set(0,HD(o,a[2]+(o.v<0?Math.PI:0),dt),0);d.scale.setScalar(ngt&&o.nh?0:o.s);d.updateMatrix();ib.setMatrixAt(k,d.matrix);d.position.y=y+bob+1.56*o.s;d.updateMatrix();ih.setMatrixAt(k,d.matrix)}
     ib.instanceMatrix.needsUpdate=true;ih.instanceMatrix.needsUpdate=true;if(SHB)return;
     if(!LIFE_LG&&window.__T4L){LIFE_LG={};window.__T4L.forEach(L=>{const key=Math.floor(L[0]/20)+"_"+Math.floor(L[2]/20);(LIFE_LG[key]||(LIFE_LG[key]=[])).push(L)})}
     const TT=(performance.now()/1000)%22;window.__CF=((window.__CF||0)+1)&3;const CF=window.__CF;
