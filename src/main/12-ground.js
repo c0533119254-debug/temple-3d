@@ -376,8 +376,8 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
   }
   g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
   const tm=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
-  /* 141.0: מחוץ לאזור צילום הלוויין המפורט, הקרקע הייתה צבע כללי עם רעש, ונראתה כמו חצץ בכל קו הרקיע. עכשיו יש עליה צילום לוויין חופשי: Sentinel-2 cloudless 2016 (EOX, CC BY 4.0, נתוני Copernicus), כ־2.2 מ' לפיקסל אחרי מתיחה, בצבעים שהותאמו לאריחי העיר. בטלפון נשאר הצבע הכללי, כמו בתוך העיר. */
-  if(!SMALL)new THREE.TextureLoader().load("sat_outer.jpg",t=>{t.encoding=THREE.sRGBEncoding;t.anisotropy=8;tm.map=t;tm.vertexColors=false;tm.color.setHex(0xffffff);tm.needsUpdate=true});
+  /* 141.0: מחוץ לאזור צילום הלוויין המפורט, הקרקע הייתה צבע כללי עם רעש, ונראתה כמו חצץ בכל קו הרקיע. עכשיו יש עליה צילום לוויין חופשי: Sentinel-2 cloudless 2016 (EOX, CC BY 4.0, נתוני Copernicus), כ־2.2 מ' לפיקסל אחרי מתיחה, בצבעים שהותאמו לאריחי העיר. בטלפון: ראו 141.5, כמו בתוך העיר. */
+  /* 141.5: גם בטלפון, בתמונה קטנה יותר (1024 פיקסלים, כ־4.5 מ׳ לפיקסל) */new THREE.TextureLoader().load(SMALL?"sat_outer_s.jpg":"sat_outer.jpg",t=>{t.encoding=THREE.sRGBEncoding;t.anisotropy=SMALL?2:8;tm.map=t;tm.normalMap=null;tm.vertexColors=false;tm.color.setHex(0xffffff);tm.needsUpdate=true});
   /* 141.0: הצילום הוא 10 מ׳ לפיקסל, ולכן מקרוב הוא מטושטש. מוסיפים עליו גרעיניות דקה של אדמה (חוזרת כל 6 מ׳ בערך) */
   if(!SMALL)tm.onBeforeCompile=sh=>{sh.uniforms.dTex={value:T.ground};sh.fragmentShader="uniform sampler2D dTex;\n"+sh.fragmentShader.replace("#include <map_fragment>","#include <map_fragment>\n#ifdef USE_MAP\n diffuseColor.rgb*=0.8+0.4*texture2D(dTex,vUv*vec2(760.,870.)).r*mix(1.,texture2D(dTex,vUv*vec2(97.,111.)).g*2.,0.4);\n#endif")};
   else{tm.normalMap=T.ground;tm.normalScale=new THREE.Vector2(0.3,0.3)}
