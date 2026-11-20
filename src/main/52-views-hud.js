@@ -102,8 +102,8 @@ window.addEventListener("pointerup",e=>{if(look&&e.pointerId===look[4])look=null
    ההבדל: העיגול מזיז את הדמות ביחס לכיוון המצלמה, הדמות פונה לכיוון ההליכה, וגרירה מסובבת את המצלמה סביבה. גלגלת או צביטה: מצלמה קרובה או רחוקה, עד מבט מהעיניים.
    קיר בין המצלמה לדמות מקרב את המצלמה, כדי שהיא לא תיכנס לתוך קיר או בית */
 const PER={on:false,p:new THREE.Vector3(),hd:0,D:4.5,cd:4.5,g:null,b:null,h:null,pinch:0,o:new THREE.Object3D()};
-function perMesh(){if(PER.g)return;const g=new THREE.Group(),b=FIG.mesh(1,FIG.mat(0xffffff)),h=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),1);
-  b.setColorAt(0,new THREE.Color(0x3e5c7a));h.setColorAt(0,new THREE.Color(0xc99a74));b.frustumCulled=h.frustumCulled=false;b.userData.noLOD=h.userData.noLOD=true;b.castShadow=h.castShadow=true;g.add(b,h);g.visible=false;scene.add(g);PER.g=g;PER.b=b;PER.h=h}
+function perMesh(){if(PER.g)return;const g=new THREE.Group(),b=FIG.mesh(1,FIG.mat(0xffffff),{ctx:"city",who:"m",seed:4}),h=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),1);
+  h.setColorAt(0,new THREE.Color(0xc99a74));b.frustumCulled=h.frustumCulled=false;b.userData.noLOD=h.userData.noLOD=true;b.castShadow=h.castShadow=true;g.add(b,h);g.visible=false;scene.add(g);PER.g=g;PER.b=b;PER.h=h}
 function perSpot(at){for(const r of[0,1.5,3,5,8,12,17,24,34,48,66])for(let k=0;k<(r?16:1);k++){const a=k*Math.PI/8,x=at.x+Math.cos(a)*r,z=at.z+Math.sin(a)*r,g=groundAt(x,z);if(isFinite(g)&&!blocked(x,z,g))return[x,z]}return null}
 function startPerson(at){const intro=document.getElementById("intro");if(intro)intro.hidden=true;const fw=new THREE.Vector3();camera.getWorldDirection(fw);
   if(!at){try{const r=renderer.domElement.getBoundingClientRect(),N=window.__NAV;at=N.groundHit(N.rayAt(r.left+r.width/2,r.top+r.height*0.55))}catch(e){}if(!at)at=controls.target.clone()}

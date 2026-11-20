@@ -32,7 +32,7 @@ function mkBeast(kind,col,L,H){const a=new THREE.Group(),U=THREE.BufferGeometryU
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});
-  const hp=FIG.mesh(1,FIG.mat(0xffffff));hp.frustumCulled=false;g.add(hp);const hpMat=hp.material;
+  const hp=FIG.mesh(1,FIG.mat(0xffffff),{role:"hp",hat:false});hp.frustumCulled=false;g.add(hp);const hpMat=hp.material;
   const head=new THREE.Mesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}));const mit=new THREE.Mesh(new THREE.CylinderGeometry(0.13,0.14,0.17,10),linen);const tz=new THREE.Mesh(new THREE.BoxGeometry(0.03,0.04,0.26),gold);
   const ephod=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.24,0.26),new THREE.MeshStandardMaterial({color:0x2a3f8a,roughness:0.6,metalness:0.2}));
   [head,mit,tz,ephod].forEach(m=>g.add(m));
@@ -63,7 +63,7 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
 // ---- life in the courts: priests at the altar, Levites on the platform, doves, people walking in the courts ----
 // ---- stage 9: the daily service (Mishnah Tamid), 13 priests that walk between places step by step ----
 function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
-  const N=13,fig=FIG.mesh(N,FIG.mat(0xfbfaf4));fig.frustumCulled=false;g.add(fig);
+  const N=13,fig=FIG.mesh(N,FIG.mat(0xfbfaf4),{role:"kohen",hat:false});fig.frustumCulled=false;g.add(fig);
   const head=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),N),hat=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.135,0.15,10),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.85}),N);
   [head,hat].forEach(m=>{m.frustumCulled=false;g.add(m)});
   const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"📜 כהן הדיוט לובש ארבעה בגדים: כתונת, מכנסיים ומגבעת של פשתן לבן, ואבנט (שמות כח, מ–מב). ⚖️ האבנט שלו של צמר צבוע ופשתן, ולא לבן כולו (רמב״ם, הלכות כלי המקדש ח, א–ב). לכהן הגדול שמונה בגדים, וביום הכיפורים בגדי לבן מיוחדים (ויקרא טז, ד). ⚖️ הכהנים עובדים יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס. 💡 מספר הדמויות הוא המחשה."};fig.userData=head.userData=info;cPick.push(fig);
@@ -117,12 +117,12 @@ function buildActors(W,y0A){const r=rng(777),d=new THREE.Object3D(),c=new THREE.
   // priests: wash at the laver, walk to the ramp, climb, serve at the fire, come down
   const loop=[[222,266,7.5],[236,286,7.5],[250,298,7.5],[250,282,12],[250,268,16.5],[246,262,16.5],[254,256,16.5],[250,268,16.5],[250,298,7.5],[232,290,7.5],[222,266,7.5]].map(q=>P(...q));
   const segL=[];let tot=0;for(let i=0;i<loop.length-1;i++){const l=Math.hypot(loop[i+1][0]-loop[i][0],loop[i+1][1]-loop[i][1],loop[i+1][2]-loop[i][2]);segL.push(l);tot+=l}
-  const NPr=SMALL?10:18,pr=FIG.mesh(NPr,FIG.mat(0xf7f5ee)),prH=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),NPr),prT=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.13,0.14,8),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),NPr);
+  const NPr=SMALL?10:18,pr=FIG.mesh(NPr,FIG.mat(0xf7f5ee),{role:"kohen",hat:false}),prH=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),NPr),prT=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.13,0.14,8),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),NPr);
   const PRS=[];for(let i=0;i<NPr;i++)PRS.push({s:i/NPr*tot,v:0.9+r()*0.3});for(let i=0;i<NPr;i++)pr.setSp(i,PRS[i].v);
   pr.userData=prH.userData={n:"כהנים בעבודה",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין",t:"כהנים בבגדי לבן: מקדשים ידיים ורגליים בכיור, עולים בכבש אל המזבח, מסדרים את העצים ומקריבים, ויורדים. הם הולכים יחפים על רצפת האבן."};[pr,prH,prT].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(pr);
   // Levites on the duchan, singing and playing
   const LV=[];[[214,258],[273,287]].forEach(([a,b])=>{for(let v=a;v<=b;v+=2.2)LV.push(P(285.5,v,9))});
-  const lv=FIG.mesh(LV.length,FIG.mat(0xe8e2cf)),lvH=new THREE.InstancedMesh(FIG.head(),prH.material,LV.length);
+  const lv=FIG.mesh(LV.length,FIG.mat(0xe8e2cf),{role:"levi"}),lvH=new THREE.InstancedMesh(FIG.head(),prH.material,LV.length);
   LV.forEach((p,i)=>{d.position.set(p[0],p[1],p[2]);d.rotation.set(0,Math.PI,0);d.scale.setScalar(1);d.updateMatrix();lv.setMatrixAt(i,d.matrix);d.position.y=p[1]+1.56;d.updateMatrix();lvH.setMatrixAt(i,d.matrix);lv.setAmp(i,0.25)});
   lv.userData={n:"הלוויים על הדוכן",r:"מידות ב, ו; ערכין יא ע״ב",t:"לוויים עומדים על הדוכן ושרים את שיר של יום, בכינורות ובנבלים, בשעה שמנסכים את היין על המזבח. \"ואין פוחתין משנים עשר לויים עומדין על הדוכן\"."};[lv,lvH].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(lv);
   // doves
