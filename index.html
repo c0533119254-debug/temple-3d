@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 142.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 143.1"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -10291,7 +10291,9 @@ setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.ar
     const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.84+0.1*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
     for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/16,vt=(y1-y0)/12.8;
       G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
-    for(let i=1;i<nv-1;i++){[P[0],P[i+1],P[i]].forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})}}
+    /* 143.0: גג לפי הצורה האמיתית (גם לבניין בצורת ח׳ או ר׳). קודם בניין עם יותר מ־8 פינות הפך למלבן גדול שעוטף אותו, ובניינים גדולים כמו בקמפוס הר הצופים נראו כגוש אחד */
+    const TR=nv===3?[[0,1,2]]:THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
+    TR.forEach(t=>{const a=P[t[0]],b=P[t[1]],d=P[t[2]],cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0;(cw?[a,d,b]:[a,b,d]).forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})})}
   Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
 }).catch(()=>{})},SMALL?8000:4000);
@@ -10314,6 +10316,11 @@ setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").t
     const b=new THREE.BufferGeometry();b.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));b.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));b.setAttribute("color",new THREE.Float32BufferAttribute(col,3));b.computeBoundingSphere();return b};
   const INF={n:"יערות ופארקים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL; Sentinel-2 cloudless 2016, EOX, CC BY 4.0",t:"📜 העצים עומדים בשטחים שמסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע, ורק במקומות שבהם בצילום הלוויין רואים צמרות. 💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים."};
   KS.forEach(k=>{if(!BY[k].length)return;const m=TREES5.plant(WG,k,BY[k],INF);if(m){m.userData.farGeo=far(k);m.userData.lodR=SMALL?140:200;m.userData.farMax=1400;m.name="outerTrees"}});window.__TR141={trees:n0}}).catch(()=>{})},SMALL?9000:5000);
+/* 143.0: הר הצופים: שמות המקומות הגדולים על ההר, לפי המפה הפתוחה (OpenStreetMap). 📜 גובה המגדל 56 מ׳ לפי המפה */
+__AFTER(()=>{try{const L=[["האוניברסיטה העברית",850,1600,34,{n:"האוניברסיטה העברית, הר הצופים",r:"📜 OpenStreetMap",t:"📜 הקמפוס של האוניברסיטה העברית על הר הצופים: הפקולטות למדעי הרוח, למשפטים ולמדעי החברה, ספריית בלומפילד, המכון לארכאולוגיה ומכון טרומן. 💡 גובה הבניינים משוער, חוץ מהמגדל."}],
+  ["מגדל הר הצופים",1058,1651,64,{n:"מגדל הר הצופים",r:"📜 OpenStreetMap",t:"📜 המגדל של הקמפוס בהר הצופים, כ־56 מ׳ לפי המפה. נראה מכל העיר."}],
+  ["הדסה הר הצופים",665,2120,36,{n:"בית החולים הדסה הר הצופים",r:"📜 OpenStreetMap",t:"📜 בית החולים הדסה בצפון הר הצופים. 💡 גובה הבניין משוער."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("scopus labels",e)}});
 // ---- topic 3, area 1: Jaffa Gate and the Citadel (Tower of David) ----
 (function(){try{
 const GS={wall:[],light:[],dark:[],lead:[],pave:[]};
@@ -12274,6 +12281,34 @@ await __Y(80);(function(){const r=rng(2024),cap=SMALL?900:2600,R=[];
     for(let i=0;i<m.count;i++){m.getMatrixAt(i,M);M.decompose(p,q,s);w.copy(p).applyMatrix4(m.matrixWorld);const gy=groundAt(w.x,w.z);if(w.y<gy-0.35){p.y=gy+0.3;M.compose(p,q,s);m.setMatrixAt(i,M);ch=true}}
     if(ch)m.instanceMatrix.needsUpdate=true})})(0);
 await __Y(84);let ACTS=null,CROWDT=null;
+/* 143.1: הטיילות של ארמון הנציב (הס, שרובר, גולדמן): נקודת התצפית הגדולה מדרום אל הר הבית והעיר העתיקה.
+   📜 קו הטיילות לפי המפה הפתוחה (OpenStreetMap, דרך Overture Maps).
+   📜 לפי תמונות בוויקישיתוף (Haas Promenade): ריצוף אבן, מעקה אבן נמוך בצד הנוף, ומתחת לטיילת הס קיר תמך מאבן עם קשתות עיוורות.
+   💡 רוחב הטיילות, גובה המעקה ואורך הקיר עם הקשתות משוערים. הקיר נבנה רק במקום שבו הקרקע יורדת מתחת לטיילת */
+(function(){try{const PR={haas:[[-790,-2492],[-782,-2476],[-781,-2454],[-754,-2453],[-735,-2475],[-703,-2504],[-664,-2530],[-632,-2545],[-584,-2560],[-551,-2568],[-473,-2580],[-423,-2582]],sher:[[-809,-1679],[-806,-1686],[-805,-1691],[-809,-1750],[-806,-1759],[-791,-1780],[-776,-1795],[-767,-1810],[-762,-1824],[-761,-1833],[-765,-1863],[-800,-1992],[-801,-2003],[-801,-2016],[-798,-2029],[-794,-2039],[-754,-2091],[-750,-2099],[-748,-2109],[-747,-2145],[-756,-2167],[-762,-2179],[-766,-2192],[-768,-2209],[-768,-2224],[-760,-2251],[-742,-2284],[-735,-2290],[-710,-2302],[-704,-2310],[-701,-2317],[-705,-2366],[-704,-2375],[-699,-2386],[-694,-2392],[-670,-2410],[-658,-2414],[-635,-2426],[-627,-2433],[-621,-2439],[-596,-2481],[-588,-2491],[-567,-2505],[-555,-2512],[-484,-2535],[-458,-2535],[-439,-2526],[-415,-2521],[-399,-2521],[-376,-2524],[-365,-2530],[-350,-2544],[-348,-2549],[-351,-2563],[-345,-2567],[-346,-2578]],gold:[[-239,-2637],[-223,-2631],[-210,-2613],[-196,-2598],[-185,-2592],[-164,-2562],[-150,-2530],[-115,-2484],[-105,-2477],[-90,-2470],[-72,-2471],[15,-2498],[52,-2501],[67,-2497],[90,-2484],[127,-2471],[136,-2464],[145,-2454],[160,-2452],[172,-2455],[179,-2459],[188,-2485],[199,-2530],[210,-2546],[236,-2574],[249,-2598],[258,-2609],[273,-2621],[278,-2633],[296,-2650],[306,-2656],[311,-2663],[338,-2674],[353,-2670],[388,-2682],[406,-2683]]};
+  const W={haas:8,sher:3.5,gold:4},ST=new THREE.MeshStandardMaterial({color:0xd9ccb2,roughness:0.95,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2}),PA=new THREE.MeshStandardMaterial({color:0xe2d6bd,roughness:0.9,side:THREE.DoubleSide});
+  /* קשתות עיוורות: קנבס אחד, קשת לכל 4 מ׳ */
+  const cv=document.createElement("canvas");cv.width=128;cv.height=128;const x=cv.getContext("2d");x.fillStyle="#e0d3b8";x.fillRect(0,0,128,128);x.fillStyle="#b8aa8e";x.beginPath();x.moveTo(22,128);x.lineTo(22,58);x.arc(64,58,42,Math.PI,0);x.lineTo(106,128);x.closePath();x.fill();x.strokeStyle="#cdbfa2";x.lineWidth=2;for(let j=0;j<128;j+=16){x.beginPath();x.moveTo(0,j);x.lineTo(128,j);x.stroke()}
+  const tx=new THREE.CanvasTexture(cv);tx.wrapS=THREE.RepeatWrapping;tx.encoding=THREE.sRGBEncoding;const AR=new THREE.MeshStandardMaterial({map:tx,roughness:0.92,side:THREE.DoubleSide});
+  const INF={haas:{n:"טיילת הס",r:"📜 OpenStreetMap; ויקישיתוף (Haas Promenade)",t:"📜 הטיילת בארמון הנציב, מדרום לעיר. ממנה רואים את הר הבית, העיר העתיקה, הר הזיתים ומדבר יהודה. ריצוף אבן ומעקה אבן, ומתחת לה קיר תמך עם קשתות. 💡 המידות משוערות."},
+    sher:{n:"טיילת שרובר",r:"📜 OpenStreetMap",t:"📜 הטיילת שיורדת מטיילת הס לכיוון אבו טור ודרך חברון, לאורך המדרון הצופה אל העיר. 💡 הרוחב משוער."},
+    gold:{n:"טיילת גולדמן",r:"📜 OpenStreetMap",t:"📜 הטיילת שממשיכה מזרחה מטיילת הס, מעל הכפר וכיוון מדבר יהודה. 💡 הרוחב משוער."}};
+  const lab=[];Object.keys(PR).forEach(k=>{const L=PR[k],w=W[k],pos=[],ppos=[],apos=[],auv=[];let au=0;
+    for(let s=0;s+1<L.length;s++){const a=L[s],b=L[s+1],dx=b[0]-a[0],dn=b[1]-a[1],len=Math.hypot(dx,dn);if(len<0.5)continue;const ux=dx/len,un=dn/len;let nx=-un,nn=ux;if(nn<0){nx=-nx;nn=-nn}/* הצד הצפוני = צד הנוף */
+      const K=Math.max(1,Math.ceil(len/4));for(let i=0;i<K;i++){const t0=i/K,t1=(i+1)/K,p0=[a[0]+dx*t0,a[1]+dn*t0],p1=[a[0]+dx*t1,a[1]+dn*t1],h0=H(p0[0],p0[1])+0.12,h1=H(p1[0],p1[1])+0.12;
+        const A0=[p0[0]-nx*w/2,p0[1]-nn*w/2],B0=[p0[0]+nx*w/2,p0[1]+nn*w/2],A1=[p1[0]-nx*w/2,p1[1]-nn*w/2],B1=[p1[0]+nx*w/2,p1[1]+nn*w/2];
+        const q=(P,h)=>[P[0],h,-P[1]];const T=(u,v,z)=>pos.push(...u,...v,...z);const a0=q(A0,Math.max(h0,H(A0[0],A0[1])+0.1)),b0=q(B0,Math.max(h0,H(B0[0],B0[1])+0.1)),a1=q(A1,Math.max(h1,H(A1[0],A1[1])+0.1)),b1=q(B1,Math.max(h1,H(B1[0],B1[1])+0.1));
+        T(a0,a1,b1);T(a0,b1,b0);
+        if(k==="haas"){/* מעקה אבן בצד הנוף: 0.9 מ׳ גובה, 0.45 עובי */const e0=[B0[0],B0[1]],e1=[B1[0],B1[1]],y0=b0[1],y1=b1[1],o0=[e0[0]+nx*0.45,e0[1]+nn*0.45],o1=[e1[0]+nx*0.45,e1[1]+nn*0.45];
+          const Q=(P0,P1,ya,yb,yc,yd)=>{ppos.push(P0[0],ya,-P0[1],P1[0],yb,-P1[1],P1[0],yd,-P1[1],P0[0],ya,-P0[1],P1[0],yd,-P1[1],P0[0],yc,-P0[1])};
+          Q(e0,e1,y0,y1,y0+0.9,y1+0.9);Q(o1,o0,y1-0.3,y0-0.3,y1+0.9,y0+0.9);Q(e0,e1,y0+0.9,y1+0.9,y0+0.9,y1+0.9);ppos.push(e0[0],y0+0.9,-e0[1],o1[0],y1+0.9,-o1[1],e1[0],y1+0.9,-e1[1],e0[0],y0+0.9,-e0[1],o0[0],y0+0.9,-o0[1],o1[0],y1+0.9,-o1[1]);
+          /* קיר תמך עם קשתות: רק במקום שבו הקרקע 4 מ׳ מצפון נמוכה מהטיילת ביותר מ־1.5 מ׳ */const g0=H(o0[0]+nx*4,o0[1]+nn*4),g1=H(o1[0]+nx*4,o1[1]+nn*4);
+          if(y0-g0>1.5&&y1-g1>1.5){const L2=Math.hypot(o1[0]-o0[0],o1[1]-o0[1]),hh=Math.max(y0-g0,y1-g1);apos.push(o0[0],g0-0.5,-o0[1],o1[0],g1-0.5,-o1[1],o1[0],y1-0.3,-o1[1],o0[0],g0-0.5,-o0[1],o1[0],y1-0.3,-o1[1],o0[0],y0-0.3,-o0[1]);
+            const vb=(y0-g0+0.2)/4.5,vb1=(y1-g1+0.2)/4.5;auv.push(au,0,au+L2/4.5,0,au+L2/4.5,vb1,au,0,au+L2/4.5,vb1,au,vb);au+=L2/4.5}}}}
+    const mk=(P,m,uv)=>{if(!P.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));if(uv)g.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));g.computeVertexNormals();const o=new THREE.Mesh(g,m);o.receiveShadow=true;o.userData=INF[k];WG.add(o);PICK.push(o)};
+    mk(pos,ST);mk(ppos,PA);mk(apos,AR,auv);const c=L[Math.floor(L.length/2)];lab.push([INF[k].n,c[0],c[1]])});
+  __AFTER(()=>{try{lab.forEach(([t,x,n])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+14,-q[1],null,INF[t==="טיילת הס"?"haas":t==="טיילת שרובר"?"sher":"gold"])})}catch(e){console.warn("prom labels",e)}});
+  window.__PROM143={n:Object.keys(PR).length}}catch(e){console.warn("promenades",e)}})();
 // ---- 133.0: one library for every animal in the model (sheep with a fat tail and wool, ram, goat, kid, bull, calf). Head toward +x, feet at y=0.
 // Legs, head and tail move in the vertex shader, so a walking flock costs nothing on the CPU. Near = full shape, far = a simple shape of the same animal.
 // 📜 the sheep of the land have a fat tail (אליה, ויקרא ג, ט). 💡 colors, wool and sizes are a proposal for the display.
