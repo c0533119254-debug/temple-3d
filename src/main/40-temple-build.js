@@ -772,13 +772,12 @@ function build(){
         rail(PEN[0],PEN[1],PEN[2],PEN[1]);rail(PEN[0],PEN[3],PEN[2],PEN[3]);rail(PEN[0],PEN[1],PEN[0],PEN[3]);rail(PEN[2],PEN[1],PEN[2],PEN[3]);
         const posts=[];for(let u=PEN[0];u<=PEN[2]+0.1;u+=(PEN[2]-PEN[0])/6)posts.push([u,PEN[1]],[u,PEN[3]]);for(let v=PEN[1]+7;v<PEN[3];v+=7)posts.push([PEN[0],v],[PEN[2],v]);
         const pm=new THREE.InstancedMesh(new THREE.BoxGeometry(0.12,1.05,0.12),wd,posts.length);posts.forEach((q,i)=>{const p=P3(q[0],q[1],3.5);setI(pm,i,p.x,p.y+0.52,p.z,0,1)});gPen.add(pick(pm,C.pen))}
-      const animal=(L,Hh,Wd,lg,horn)=>{const b=(w,h,d,x,y,z)=>{const g=new THREE.BoxGeometry(w,h,d);g.translate(x,y,z);return g},a=[b(L,Hh,Wd,0,lg+Hh/2,0),b(L*0.24,Hh*0.62,Wd*0.62,L/2+L*0.1,lg+Hh*0.92,0)];
-        [[1,1],[1,-1],[-1,1],[-1,-1]].forEach(([i,j])=>a.push(b(L*0.09,lg,L*0.09,i*L*0.38,lg/2,j*Wd*0.32)));if(horn)[-1,1].forEach(j=>a.push(b(0.05,horn,0.05,L/2+L*0.08,lg+Hh*1.25+horn/2,j*Wd*0.22)));return mrg(a)};
-      const herd=(geo,col,spots)=>{const m=new THREE.InstancedMesh(geo,std(col),spots.length);spots.forEach((q,i)=>{const p=P3(q[0],q[1],3.5);setI(m,i,p.x,p.y,p.z,Math.PI/2+(rs()-0.5)*0.5,0.94+rs()*0.12)});m.castShadow=true;gPen.add(pick(m,C.pen));return m};
-      const bulls=herd(animal(2.1,0.95,0.72,0.62,0.22),0x6f4426,Array.from({length:13},(_,i)=>[288+(i%7)*4.2,122.5+Math.floor(i/7)*5.5]));
-      const rams=herd(animal(1.25,0.6,0.46,0.42,0.16),0xd9d2c2,[[288,134.5],[292,134.5]]);
-      const goat=herd(animal(1.05,0.5,0.38,0.42,0.14),0x3d2f26,[[297,134.5]]);
-      const lambs=herd(animal(0.85,0.4,0.36,0.3,0),0xf1ece2,Array.from({length:14},(_,i)=>[287.5+(i%7)*4.2,139+Math.floor(i/7)*3.4]));
+      /* 133.0: בהמות אמיתיות מהספרייה (BEAST) במקום קופסאות. 📜 לכבשים אליה (ויקרא ג, ט). 💡 הצבעים והגדלים הם הצעה */
+      const herd=(kind,L,H,cols,spots)=>{const h=BEAST.herd(kind,L,H,spots.length,cols);spots.forEach((q,i)=>{const p=P3(q[0]+(rs()-0.5)*0.8,q[1]+(rs()-0.5)*0.8,3.5);h.set(i,p.x,p.y,p.z,Math.PI/2+(rs()-0.5)*0.9,0.92+rs()*0.14)});h.pick(m=>pick(m,C.pen));gPen.add(h.g);return h};
+      const bulls=herd("bull",2.1,1.45,[0x5e3a22,0x4a2c1a,0x7a4528,0x2e2420,0x8a5a36,0x6b4a33],Array.from({length:13},(_,i)=>[288+(i%7)*4.2,122.5+Math.floor(i/7)*5.5]));
+      const rams=herd("ram",1.25,0.95,[0xe6dccb,0xd9cdb8],[[288,134.5],[292,134.5]]);
+      const goat=herd("goat",1.05,0.85,[0x2b2521],[[297,134.5]]);
+      const lambs=herd("sheep",0.9,0.72,[0xf1ebdf,0xe9e0cf,0xf4efe6,0xe2d6c0],Array.from({length:14},(_,i)=>[287.5+(i%7)*4.2,139+Math.floor(i/7)*3.4]));
       /* ---- 6. הסוכה (לגגות העיר בלבד). גרסה 119: בחצר המקדש אין סוכות. 💡 הצורה, החומרים והצבעים הם הצעה לתצוגה ---- */
       const cvs=(w,h,f)=>{const c=document.createElement("canvas");c.width=w;c.height=h;f(c.getContext("2d"),w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
       const wallT=cvs(128,128,(x,w,h)=>{x.fillStyle="#cdb892";x.fillRect(0,0,w,h);for(let i=0;i<8;i++){const v=200+Math.floor(rs()*40);x.fillStyle="rgb("+v+","+Math.floor(v*0.88)+","+Math.floor(v*0.66)+")";x.fillRect(i*16+1,0,14,h);x.fillStyle="rgba(70,50,28,.55)";x.fillRect(i*16,0,1.5,h);for(let k=0;k<5;k++){x.fillStyle="rgba(90,66,38,"+(0.08+rs()*0.12)+")";x.fillRect(i*16+2+rs()*10,rs()*h,1,10+rs()*30)}}x.fillStyle="rgba(84,60,34,.8)";x.fillRect(0,18,w,5);x.fillRect(0,100,w,5)});
@@ -1074,7 +1073,7 @@ function build(){
         const PNIGHT={"15n":1,"16n":1},LEVC=0x9fb4c8,silM=std(0xd9dde2,{metalness:0.9,roughness:0.25});
         let phud=document.getElementById("pesHud");if(!phud){phud=document.createElement("div");phud.id="pesHud";phud.hidden=true;phud.setAttribute("dir","rtl");phud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(phud)}
         let phT="";const setP=t=>{if(t!==phT){phT=t;phud.textContent=t}};
-        const lambG=animal(0.85,0.4,0.36,0.3,0),lambM=std(0xf1ece2),carcG=(()=>{const g=animal(0.8,0.34,0.3,0.26,0);g.rotateZ(-Math.PI/2);return g})(),carcM=std(0xd9a99c,{roughness:0.8});
+        /* 133.0: הבהמות מהספרייה BEAST. לחבורות (הרבה שיות) הצורה הפשוטה */const lambG=BEAST.geo("sheep",0.9,0.72,true),lambM=BEAST.smat(0xf1ebdf),carcG=(()=>{const g=BEAST.still("kid",0.8,0.6,true);g.rotateZ(-Math.PI/2);return g})(),carcM=BEAST.smat(0xd9a99c);
         const spotsY=(sp,y,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],y);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
         const mkPath=nodes=>{const pts=nodes.map(q=>P3(q[0],q[1],q[2]===undefined?3.5:q[2])),L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));return{pts,L,len:L[L.length-1]}};
         const pAt=(pa,s,off)=>{let i=0;while(i<pa.L.length-2&&pa.L[i+1]<s)i++;const a=pa.pts[i],b=pa.pts[i+1],f=Math.min(1,Math.max(0,(s-pa.L[i])/((pa.L[i+1]-pa.L[i])||1))),dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1;return[a.x+dx*f-dz/l*off,a.y+(b.y-a.y)*f,a.z+dz*f+dx/l*off,Math.atan2(-dz,dx)]};
@@ -1247,7 +1246,7 @@ function build(){
         const LEVC=0x9fb4c8,KOH=0xf4f1e8,OFFC=0x6b3f86,CRAFT=0xb5651d,silM=std(0xd9dde2,{metalness:0.9,roughness:0.25}),wickM=std(0xb8935a,{roughness:1});
         let shud=document.getElementById("shvHud");if(!shud){shud=document.createElement("div");shud.id="shvHud";shud.hidden=true;shud.setAttribute("dir","rtl");shud.style.cssText="position:absolute;top:calc(env(safe-area-inset-top,0px) + 112px);left:50%;transform:translateX(-50%);z-index:6;max-width:92vw;padding:6px 14px;border-radius:999px;background:rgba(28,24,18,.82);color:#f3e7c9;font:600 13.5px/1.35 system-ui,sans-serif;text-align:center;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.35)";stage.appendChild(shud)}
         let shT="";const setS=t=>{if(t!==shT){shT=t;shud.textContent=t}};
-        const lambG=animal(0.85,0.4,0.36,0.3,0),lambM=std(0xf1ece2);
+        const lambG=BEAST.geo("sheep",0.9,0.72),lambM=BEAST.smat(0xf1ebdf);
         const spotsY=(sp,y,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],y);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
         const mkPathV=pts=>{const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+pts[i].distanceTo(pts[i-1]));return{pts,L,len:L[L.length-1]}};
         const mkPath=nodes=>mkPathV(nodes.map(q=>P3(q[0],q[1],q[2]===undefined?3.5:q[2])));
@@ -1278,8 +1277,8 @@ function build(){
           const path=mkPathV(pts);path.sR=path.L[iR];path.sG=path.L[iG];
           /* ---- המצעד: שור, חלילנים ונושאי סלים. 💡 מספר ---- */
           {const K=SMALL?2:3,BN=SMALL?10:16,FL=2,nb=K*BN,nf=K*FL,V=1.25;
-            const oxG=animal(2.4,1.0,0.8,0.8,0),oxHorn=(()=>{const a=[];[-1,1].forEach(j=>{const c=new THREE.ConeGeometry(0.05,0.42,6);c.rotateX(j*0.45);c.translate(1.34,2.18,j*0.22);a.push(c)});return mrg(a)})(),oxWr=(()=>{const t=new THREE.TorusGeometry(0.2,0.04,6,12);t.rotateX(Math.PI/2);t.translate(1.34,2.0,0);return t})();
-            const om=inst(g.gProc,oxG,std(0xa87b4f),K,SC.ox),hm=inst(g.gProc,oxHorn,M.gold,K,SC.ox),wm=inst(g.gProc,oxWr,std(0x6f8a3a),K,SC.ox);om.castShadow=true;
+            const oxG=BEAST.geo("bull",2.4,1.8),oxHorn=BEAST.hornGeo(2.4,1.8,1.25),oxWr=(()=>{const d=BEAST.dims("bull",2.4,1.8),t=new THREE.TorusGeometry(d.wid*0.44,0.03,6,14);t.rotateX(Math.PI/2);t.rotateZ(0.3);t.translate(d.hx-d.hl*0.1,d.hy+d.hl*0.3,0);return t})();
+            const om=inst(g.gProc,oxG,BEAST.smat(0xa87b4f,1),K,SC.ox),hm=inst(g.gProc,oxHorn,M.gold,K,SC.ox),wm=inst(g.gProc,oxWr,std(0x6f8a3a),K,SC.ox);om.castShadow=true;
             const ff=figset(g.gProc,nf,SC.ox,()=>0xd8c9a0),fl=inst(g.gProc,(()=>{const c=new THREE.CylinderGeometry(0.018,0.018,0.5,5);c.rotateZ(Math.PI/2);return c})(),std(0xc9b27a),nf,SC.ox);
             const bf=figset(g.gProc,nb,SC.bask,i=>ccol[(i*3+1)%ccol.length]);
             const bg=new THREE.CylinderGeometry(0.24,0.19,0.26,10),dg=(()=>{const a=[(()=>{const s=new THREE.SphereGeometry(0.1,6,4);s.scale(1.5,1,0.9);s.translate(0,0.09,0);return s})(),(()=>{const s=new THREE.SphereGeometry(0.045,5,4);s.translate(0.16,0.17,0);return s})(),(()=>{const b=new THREE.BoxGeometry(0.16,0.02,0.1);b.translate(-0.18,0.1,0);return b})()];return mrg(a)})();

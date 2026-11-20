@@ -1,34 +1,103 @@
-// ---- 124.4: animals with a real shape (body, neck, head, ears, horns, legs, tail) instead of boxes. Head toward +x, like before ----
-function mkBeast(kind,col,L,H){const a=new THREE.Group(),U=THREE.BufferGeometryUtils,G={b:[],d:[]};
-  const put=(k,geo,x,y,z,sx,sy,sz,rx,ry,rz)=>{const m=new THREE.Object3D();m.position.set(x,y,z);m.scale.set(sx||1,sy||1,sz||1);m.rotation.set(rx||0,ry||0,rz||0);m.updateMatrix();const g=(geo.index?geo.toNonIndexed():geo.clone());g.deleteAttribute("uv");g.applyMatrix4(m.matrix);G[k].push(g)};
-  const sph=new THREE.SphereGeometry(1,14,10),cyl=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,n||8),cone=(r,h)=>new THREE.ConeGeometry(r,h,8);
-  const bull=kind==="bull",sheep=kind==="sheep",dep=H*(bull?0.33:0.27),wid=H*(bull?0.26:0.2),by=H*0.66;
-  put("b",sph,0,by,0,L*0.42,dep,wid);                       // barrel
-  put("b",sph,L*0.26,by+dep*0.12,0,L*0.24,dep*1.08,wid*1.05); // chest and shoulders
-  put("b",sph,-L*0.3,by+dep*0.05,0,L*0.2,dep*0.95,wid*0.98);  // rump
-  if(bull)put("b",sph,L*0.3,by+dep*0.95,0,L*0.13,dep*0.35,wid*0.6); // hump over the shoulders
-  const nx=L*0.47,ny=by+dep*0.55,hl=H*(bull?0.32:0.3),hx=L*0.5+hl*0.62,hy=ny+H*(bull?0.06:0.16);
-  put("b",cyl(wid*0.72,wid*0.48,hl,10),nx,ny,0,1,1,1,0,0,-1.05);                 // neck
-  if(bull)put("b",sph,nx+0.02,ny-dep*0.55,0,L*0.08,dep*0.45,wid*0.32);             // dewlap
-  put("b",sph,hx,hy,0,hl*0.36,hl*0.3,wid*0.5);                                     // skull
-  put("b",cyl(wid*0.42,wid*0.3,hl*0.55,10),hx+hl*0.3,hy-hl*0.12,0,1,1,1,0,0,-2.1); // face down to the muzzle
-  put("d",sph,hx+hl*0.52,hy-hl*0.3,0,hl*0.11,hl*0.1,wid*0.3);                      // nose
-  [1,-1].forEach(j=>{
-    put("b",sph,hx-hl*0.12,hy+hl*0.12,j*wid*(sheep?0.55:0.5),hl*0.14,hl*0.06,hl*(sheep?0.22:0.18),j*0.5,0,0); // ears
-    if(bull)put("d",cone(wid*0.1,hl*0.45),hx-hl*0.1,hy+hl*0.26,j*wid*0.52,1,1,1,j*1.1,0,0.15);
-    if(kind==="goat")put("d",cone(wid*0.08,hl*0.6),hx-hl*0.22,hy+hl*0.42,j*wid*0.2,1,1,1,j*0.18,0,0.75);
-    [1,-1].forEach(i=>{const lx=i*L*0.33,lz=j*wid*0.55,lh=by-dep*0.55;
-      put("b",cyl(H*0.075,H*0.04,lh*0.6,8),lx,lh*0.7,lz);   // upper leg
-      put("b",cyl(H*0.04,H*0.034,lh*0.55,8),lx,lh*0.28,lz); // lower leg
-      put("d",cyl(H*0.04,H*0.044,H*0.05,8),lx,H*0.025,lz)}); // hoof
-  });
-  if(kind==="goat")put("d",cone(wid*0.12,hl*0.35),hx+hl*0.32,hy-hl*0.52,0,1,1,1,Math.PI,0,0); // beard
-  put("b",cyl(H*0.025,H*0.012,H*(bull?0.55:0.2),6),-L*0.5,by+dep*(bull?0.1:0.5),0,1,1,1,0,0,bull?-0.15:-0.9); // tail
-  if(bull)put("d",sph,-L*0.53,by-dep*1.0,0,H*0.04,H*0.07,H*0.04);
-  const mb=new THREE.MeshStandardMaterial({color:col,roughness:sheep?1:0.82}),md=new THREE.MeshStandardMaterial({color:0x1d1814,roughness:0.6});
-  [["b",mb],["d",md]].forEach(([k,m])=>{let gs=G[k];if(!gs.length)return;let geo=null;try{geo=U&&U.mergeBufferGeometries(gs,false)}catch(e){}
-    if(geo){const ms=new THREE.Mesh(geo,m);ms.castShadow=true;a.add(ms)}else gs.forEach(g=>{const ms=new THREE.Mesh(g,m);ms.castShadow=true;a.add(ms)})});
-  return a}
+// ---- 133.0: one library for every animal in the model (sheep with a fat tail and wool, ram, goat, kid, bull, calf). Head toward +x, feet at y=0.
+// Legs, head and tail move in the vertex shader, so a walking flock costs nothing on the CPU. Near = full shape, far = a simple shape of the same animal.
+// 📜 the sheep of the land have a fat tail (אליה, ויקרא ג, ט). 💡 colors, wool and sizes are a proposal for the display.
+const BEAST=(function(){const U=THREE.BufferGeometryUtils,cache={},HERDS=[],cp=new THREE.Vector3(),wp=new THREE.Vector3();
+  const VS="attribute float blg;attribute vec2 bpv;attribute float btn;attribute float iph;attribute float iam;attribute float isp;attribute vec3 icol;uniform float uT;\n";
+  const rot="float c_=cos(a_),s_=sin(a_);transformed.xy-=bpv;transformed.xy=vec2(c_*transformed.x-s_*transformed.y,s_*transformed.x+c_*transformed.y);transformed.xy+=bpv;";
+  // ST: for an InstancedMesh made elsewhere without per-animal attributes: phase from the place, one coat color, a fixed walk amount
+  const mk=(st,col,walk)=>{const m=new THREE.MeshStandardMaterial({color:0xffffff,vertexColors:true,roughness:0.93,metalness:0}),cc=new THREE.Color(col||0xffffff).convertSRGBToLinear();
+    m.onBeforeCompile=sh=>{sh.uniforms.uT=FIG.U.uT;sh.uniforms.uCol={value:cc};sh.uniforms.uWalk={value:walk||0};
+      const hd=st?"attribute float blg;attribute vec2 bpv;attribute float btn;uniform float uT;uniform vec3 uCol;uniform float uWalk;\n":VS;
+      const pre=st?"\n#ifdef USE_INSTANCING\nfloat iph=fract(sin(dot(instanceMatrix[3].xz,vec2(12.9898,78.233)))*43758.5)*6.283;\n#else\nfloat iph=0.0;\n#endif\nfloat iam=uWalk,isp=1.0;vec3 icol=uCol;\n":"";
+      sh.vertexShader=hd+sh.vertexShader.replace("void main() {","void main() {"+pre)
+      .replace("#include <color_vertex>","#include <color_vertex>\nvColor.rgb=mix(color.rgb,color.rgb*icol,btn);")
+      .replace("#include <begin_vertex>","#include <begin_vertex>\n{float ph=uT*6.2*isp+iph,L=abs(blg),a_=0.0;\n"+
+      "if(L>0.5&&L<2.5){a_=sin(ph+(L>1.5?3.1416:0.0))*iam*0.42*sign(blg);"+rot+"}\n"+
+      "else if(L>2.5&&L<3.5){float idle=1.0-clamp(iam,0.0,1.0);a_=sin(ph*2.0)*0.05*iam-idle*max(0.0,sin(uT*0.13+iph*5.0)-0.55)*2.4;"+rot+
+        "float y_=idle*sin(uT*0.37+iph*3.0)*0.32;float c2=cos(y_),s2=sin(y_);transformed.x-=bpv.x;transformed.xz=vec2(c2*transformed.x-s2*transformed.z,s2*transformed.x+c2*transformed.z);transformed.x+=bpv.x;}\n"+
+      "else if(L>3.5){float y_=sin(uT*2.6+iph)*0.35;float c2=cos(y_),s2=sin(y_);transformed.x-=bpv.x;transformed.xz=vec2(c2*transformed.x-s2*transformed.z,s2*transformed.x+c2*transformed.z);transformed.x+=bpv.x;}\n"+
+      "transformed.y+=abs(sin(ph))*0.018*iam;}")};
+    m.customProgramCacheKey=()=>"beast133"+(st?"s":"");return m};
+  const mat=mk(false),SM={};
+  const smat=(col,walk)=>{const k=col+"|"+(walk||0);return SM[k]||(SM[k]=mk(true,col,walk))};
+  // one part: geometry, place, scale, rotation, color, motion code (0 body, ±1 front leg, ±2 back leg, 3 head and neck, 4 tail), pivot, tinted by the coat color or not
+  function build(kind,L,H,lo){const parts=[],rs=(()=>{let s=7;return()=>(s=(s*16807)%2147483647)/2147483647})();
+    const S=(w,n,m)=>{const g=new THREE.SphereGeometry(1,lo?6:(n||10),lo?4:(m||7));if(w&&!lo){const p=g.attributes.position;for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),k=1+0.075*Math.sin(x*9.1+y*3.3)*Math.sin(y*8.3+z*2.1)*Math.sin(z*9.7+x*1.7)+0.03*Math.sin(x*23+z*19);p.setXYZ(i,x*k,y*k,z*k)}g.computeVertexNormals()}return g};
+    const C=(r0,r1,h,n)=>new THREE.CylinderGeometry(r1,r0,h,lo?4:(n||8));
+    const tube=(pts,r,n)=>{const c=new THREE.CatmullRomCurve3(pts.map(q=>new THREE.Vector3(q[0],q[1],q[2])));const g=new THREE.TubeGeometry(c,lo?4:(n||14),r,lo?3:6,false);
+      const p=g.attributes.position,seg=(lo?4:(n||14))+1,ring=(lo?3:6)+1;for(let i=0;i<p.count;i++){const t=Math.floor(i/ring)/(seg-1),q=c.getPointAt(Math.min(1,t)),f=1-0.75*t;p.setXYZ(i,q.x+(p.getX(i)-q.x)*f,q.y+(p.getY(i)-q.y)*f,q.z+(p.getZ(i)-q.z)*f)}g.computeVertexNormals();return g};
+    const put=(geo,x,y,z,sx,sy,sz,rx,ry,rz,col,code,pv,tint)=>{const m=new THREE.Matrix4().compose(new THREE.Vector3(x,y,z),new THREE.Quaternion().setFromEuler(new THREE.Euler(rx||0,ry||0,rz||0)),new THREE.Vector3(sx||1,sy||1,sz||1));
+      let g=geo.index?geo.toNonIndexed():geo.clone();if(g.attributes.uv)g.deleteAttribute("uv");if(g.attributes.uv2)g.deleteAttribute("uv2");g.applyMatrix4(m);const n=g.attributes.position.count,cc=new Float32Array(n*3),lg=new Float32Array(n),pa=new Float32Array(n*2),tn=new Float32Array(n);
+      const cl=col.map(v=>Math.pow(v,2.2));for(let i=0;i<n;i++){const j=lo?1:0.93+rs()*0.12;cc[i*3]=cl[0]*j;cc[i*3+1]=cl[1]*j;cc[i*3+2]=cl[2]*j;lg[i]=code||0;pa[i*2]=pv?pv[0]:0;pa[i*2+1]=pv?pv[1]:0;tn[i]=tint===false?0:1}
+      g.setAttribute("color",new THREE.BufferAttribute(cc,3));g.setAttribute("blg",new THREE.BufferAttribute(lg,1));g.setAttribute("bpv",new THREE.BufferAttribute(pa,2));g.setAttribute("btn",new THREE.BufferAttribute(tn,1));parts.push(g)};
+    const W=[1,1,1],DK=[0.13,0.11,0.1],bull=kind==="bull"||kind==="calf",sheep=kind==="sheep"||kind==="ram",goat=kind==="goat"||kind==="kid",young=kind==="calf"||kind==="kid";
+    const FACE=sheep?(kind==="ram"?[0.55,0.42,0.32]:[0.62,0.47,0.35]):W,HORN=kind==="ram"?[0.74,0.66,0.55]:goat?[0.36,0.33,0.3]:[0.86,0.8,0.68];
+    const by=H*(sheep?0.6:bull?0.62:0.63),dep=H*(sheep?0.25:bull?0.27:0.21),wid=H*(sheep?0.23:bull?0.24:0.17),hipY=by-dep*0.3,lh=by-dep*0.55;
+    // body: barrel, chest and rump (wool on the sheep)
+    put(S(sheep,16,10),0,by,0,L*0.47,dep,wid,0,0,0,W,0);
+    put(S(sheep,12,9),L*0.2,by+dep*0.1,0,L*0.27,dep*1.02,wid*0.98,0,0,0,W,0);
+    put(S(sheep,12,9),-L*0.24,by+dep*0.06,0,L*0.25,dep*0.97,wid*0.97,0,0,0,W,0);
+    if(!sheep)put(S(0),0,by-dep*0.18,0,L*0.36,dep*0.86,wid*1.04,0,0,0,W,0);                       // belly
+    if(kind==="bull")put(S(0),L*0.3,by+dep*0.88,0,L*0.12,dep*0.3,wid*0.55,0,0,0,W,0);          // small hump over the shoulders
+    if(sheep)put(S(1,12,9),-L*0.47,by-dep*0.42,0,L*0.1,dep*0.85,wid*0.72,0,0,0.12,W,0);          // 📜 the fat tail (alya), hanging over the hind legs
+    // neck and head (code 3: nods while walking; while standing it looks around and sometimes lowers the head)
+    const nx=L*0.46,ny=by+dep*(sheep?0.35:0.5),hl=H*(bull?0.31:sheep?0.27:0.27),hx=L*0.5+hl*(sheep?0.5:0.6),hy=ny+H*(bull?0.04:sheep?0.1:0.17),PV=[L*0.36,ny-dep*0.2];
+    put(C(wid*(sheep?0.8:0.66),wid*0.44,hl*1.05,10),nx,ny,0,1,1,1,0,0,sheep?-0.85:-1.0,sheep?W:W,3,PV);
+    if(bull&&!lo)put(S(0),nx+0.02,ny-dep*0.5,0,L*0.08,dep*0.45,wid*0.3,0,0,0,W,3,PV);           // dewlap
+    put(S(0,12,9),hx,hy,0,hl*0.36,hl*0.31,wid*(goat?0.46:0.5),0,0,0,FACE,3,PV,!sheep);              // skull
+    put(C(wid*0.42,wid*(bull?0.36:0.26),hl*(goat?0.62:0.55),10),hx+hl*0.3,hy-hl*0.14,0,1,1,1,0,0,-2.05,FACE,3,PV,!sheep); // face down to the muzzle
+    put(S(0),hx+hl*(goat?0.56:0.52),hy-hl*(goat?0.36:0.32),0,hl*0.11,hl*0.1,wid*(bull?0.34:0.26),0,0,0,DK,3,PV,false);   // nose
+    if(!lo)[1,-1].forEach(j=>put(S(0),hx+hl*0.2,hy+hl*0.08,j*wid*0.36,hl*0.035,hl*0.035,hl*0.035,0,0,0,DK,3,PV,false)); // eyes
+    [1,-1].forEach(j=>{
+      if(lo){}else if(sheep)put(S(0),hx-hl*0.12,hy-hl*0.02,j*wid*0.62,hl*0.09,hl*0.24,hl*0.05,j*0.35,0,0.5,FACE,3,PV,false);        // long drooping ears of the local sheep
+      else if(goat)put(S(0),hx-hl*0.08,hy-hl*0.12,j*wid*0.6,hl*0.08,hl*0.3,hl*0.04,j*0.25,0,0.25,W,3,PV);             // long hanging ears of the goat
+      else put(S(0),hx-hl*0.12,hy+hl*0.12,j*wid*0.52,hl*0.14,hl*0.06,hl*0.2,j*0.5,0,0,W,3,PV);
+      if(kind==="bull")put(tube([[hx-hl*0.12,hy+hl*0.24,j*wid*0.35],[hx-hl*0.1,hy+hl*0.34,j*wid*0.75],[hx+hl*0.05,hy+hl*0.52,j*wid*0.92]],wid*0.075,8),0,0,0,1,1,1,0,0,0,HORN,3,PV,false);
+      if(kind==="ram")put(tube([[hx-hl*0.1,hy+hl*0.28,j*wid*0.2],[hx-hl*0.42,hy+hl*0.42,j*wid*0.48],[hx-hl*0.55,hy+hl*0.05,j*wid*0.72],[hx-hl*0.25,hy-hl*0.3,j*wid*0.8],[hx+hl*0.02,hy-hl*0.1,j*wid*0.9],[hx-hl*0.05,hy+hl*0.12,j*wid*0.98]],wid*0.13,22),0,0,0,1,1,1,0,0,0,HORN,3,PV,false); // curled horns
+      if(kind==="goat")put(tube([[hx-hl*0.12,hy+hl*0.3,j*wid*0.2],[hx-hl*0.3,hy+hl*0.62,j*wid*0.28],[hx-hl*0.62,hy+hl*0.72,j*wid*0.36]],wid*0.07,8),0,0,0,1,1,1,0,0,0,HORN,3,PV,false);
+      // legs (two parts and a hoof). Diagonal pairs move together, like a real walk
+      [1,-1].forEach(i=>{const lx=i*L*0.31,lz=j*wid*0.55,code=(i>0?1:2)*j,col=sheep?FACE:W;
+        if(lo){put(C(H*(bull?0.07:0.055),H*0.035,lh,4),lx,lh*0.5,lz,1,1,1,0,0,0,col,code,[lx,hipY],!sheep);return}
+        put(C(H*(bull?0.075:0.06),H*0.042,lh*0.62,8),lx,lh*0.69,lz,1,1,1,0,0,0,W,code,[lx,hipY]);
+        put(C(H*0.04,H*(bull?0.034:0.028),lh*0.56,8),lx+(i>0?0:-H*0.015),lh*0.28,lz,1,1,1,0,0,0,col,code,[lx,hipY],!sheep);
+        put(C(H*0.036,H*0.042,H*0.05,8),lx,H*0.025,lz,1,1,1,0,0,0,DK,code,[lx,hipY],false)})});
+    if(goat&&!lo)put(new THREE.ConeGeometry(wid*0.12,hl*0.35,6),hx+hl*0.3,hy-hl*0.56,0,1,1,1,Math.PI,0,0,W,3,PV); // beard
+    if(goat)put(C(H*0.03,H*0.012,H*0.16,6),-L*0.49,by+dep*0.75,0,1,1,1,0,0,0.7,W,4,[-L*0.47,0]);          // short tail, up
+    if(bull){put(C(H*0.022,H*0.012,H*0.55,6),-L*0.5,by-dep*0.1,0,1,1,1,0,0,-0.08,W,4,[-L*0.5,0]);if(!lo)put(S(0),-L*0.52,by-dep*1.05,0,H*0.04,H*0.08,H*0.04,0,0,0,DK,4,[-L*0.5,0],false)}
+    const geo=U.mergeBufferGeometries(parts,false);geo.computeBoundingSphere();return geo}
+  // where the head is (for things put on the head: the gold on the horns and the olive crown of the bikkurim ox)
+  function dims(kind,L,H){const bull=kind==="bull"||kind==="calf",sheep=kind==="sheep"||kind==="ram",by=H*(sheep?0.6:bull?0.62:0.63),dep=H*(sheep?0.25:bull?0.27:0.21),wid=H*(sheep?0.23:bull?0.24:0.17),ny=by+dep*(sheep?0.35:0.5),hl=H*(bull?0.31:sheep?0.27:0.27);
+    return{hx:L*0.5+hl*(sheep?0.5:0.6),hy:ny+H*(bull?0.04:sheep?0.1:0.17),hl,wid}}
+  function hornGeo(L,H,k){const d=dims("bull",L,H),{hx,hy,hl,wid}=d,a=[];[1,-1].forEach(j=>{const c=new THREE.CatmullRomCurve3([[hx-hl*0.12,hy+hl*0.24,j*wid*0.35],[hx-hl*0.1,hy+hl*0.34,j*wid*0.75],[hx+hl*0.05,hy+hl*0.52,j*wid*0.92]].map(q=>new THREE.Vector3(q[0],q[1],q[2])));const g=new THREE.TubeGeometry(c,10,wid*0.075*(k||1.2),6,false);g.deleteAttribute("uv");a.push(g)});return U.mergeBufferGeometries(a,false)}
+  // a still copy (nothing moves): for a carcass carried home on the shoulder
+  function still(kind,L,H,lo){const b=geo(kind,L,H,lo),g=new THREE.BufferGeometry();for(const k in b.attributes)g.setAttribute(k,(k==="position"||k==="normal")?b.attributes[k].clone():b.attributes[k]);g.setAttribute("blg",new THREE.BufferAttribute(new Float32Array(b.attributes.position.count),1));return g}
+  function geo(kind,L,H,lo){const k=kind+"|"+L+"|"+H+"|"+(lo?1:0);return cache[k]||(cache[k]=build(kind,L,H,lo))}
+  // a view of the shared geometry with its own per-animal attributes (phase, walk amount, step rate, coat color)
+  function view(base,attrs){const g=new THREE.BufferGeometry();for(const k in base.attributes)g.setAttribute(k,base.attributes[k]);for(const k in attrs)g.setAttribute(k,attrs[k]);g.boundingSphere=base.boundingSphere;return g}
+  // one animal as a normal object (for the Yom Kippur actors and the tamid lamb)
+  function one(kind,col,L,H){const b=geo(kind,L,H),n=b.attributes.position.count,c=new THREE.Color(col).convertSRGBToLinear(),ar=(k,v)=>{const a=new Float32Array(n*k);for(let i=0;i<n;i++)for(let q=0;q<k;q++)a[i*k+q]=v[q];return new THREE.BufferAttribute(a,k)};
+    const ph=Math.random()*6.28,a=new THREE.Group(),m=new THREE.Mesh(view(b,{iph:ar(1,[ph]),iam:ar(1,[0]),isp:ar(1,[1]),icol:ar(3,[c.r,c.g,c.b])}),mat);m.castShadow=true;a.add(m);
+    a.walk=v=>{const at=m.geometry.attributes.iam;if(at.array[0]===v)return;at.array.fill(v);at.needsUpdate=true};return a}
+  // a group of animals of one kind: near (full) + far (simple), the same places, colors and steps
+  function herd(kind,L,H,n,cols,o){o=o||{};const g=new THREE.Group(),ph=new Float32Array(n),am=new Float32Array(n),sp=new Float32Array(n),ic=new Float32Array(n*3),c=new THREE.Color();
+    for(let i=0;i<n;i++){ph[i]=Math.random()*6.283;sp[i]=1;c.setHex(cols[i%cols.length]).convertSRGBToLinear();const j=0.85+Math.random()*0.25;ic[i*3]=c.r*j;ic[i*3+1]=c.g*j;ic[i*3+2]=c.b*j}
+    const A_={iph:new THREE.InstancedBufferAttribute(ph,1),iam:new THREE.InstancedBufferAttribute(am,1),isp:new THREE.InstancedBufferAttribute(sp,1),icol:new THREE.InstancedBufferAttribute(ic,3)};
+    const near=new THREE.InstancedMesh(view(geo(kind,L,H),A_),mat,n),far=new THREE.InstancedMesh(view(geo(kind,L,H,true),A_),mat,n);far.instanceMatrix=near.instanceMatrix;
+    [near,far].forEach(m=>{m.userData.noLOD=true;m.frustumCulled=false;m.castShadow=o.shadow!==false;g.add(m)});far.castShadow=false;far.visible=false;
+    const d=new THREE.Object3D(),h={g,near,far,n,kind,c:new THREE.Vector3(),r:1,dirty:true,
+      set(i,x,y,z,ry,s){d.position.set(x,y,z);d.rotation.set(0,ry||0,0);d.scale.setScalar(s||1);d.updateMatrix();near.setMatrixAt(i,d.matrix);near.instanceMatrix.needsUpdate=true;h.dirty=true},
+      walk(i,amt,rate){if(am[i]!==amt){am[i]=amt;A_.iam.needsUpdate=true}const q=Math.max(0.3,Math.min(2,rate||1));if(Math.abs(sp[i]-q)>0.02){sp[i]=q;A_.isp.needsUpdate=true}},
+      color(i,hex){c.setHex(hex).convertSRGBToLinear();ic[i*3]=c.r;ic[i*3+1]=c.g;ic[i*3+2]=c.b;A_.icol.needsUpdate=true},
+      get count(){return near.count},set count(v){near.count=far.count=Math.max(0,Math.min(n,v))},
+      pick(f){[near,far].forEach(m=>{f(m);m.userData=Object.assign({},m.userData,{noLOD:true})});return h}};
+    HERDS.push(h);return h}
+  // near or far by the distance of the camera from the group (checked a few times a second)
+  let acc=0;const NEAR=(typeof SMALL!=="undefined"&&SMALL)?38:60;
+  function tick(dt){acc+=dt;if(acc<0.25)return;acc=0;if(typeof camera==="undefined")return;cp.copy(camera.position);
+    for(const h of HERDS){if(!h.g.parent)continue;if(h.dirty){h.dirty=false;let n=h.near.count,sx=0,sy=0,sz=0;const a=h.near.instanceMatrix.array;for(let i=0;i<n;i++){sx+=a[i*16+12];sy+=a[i*16+13];sz+=a[i*16+14]}n=Math.max(1,n);h.c.set(sx/n,sy/n,sz/n);let r=0;for(let i=0;i<h.near.count;i++)r=Math.max(r,Math.hypot(a[i*16+12]-h.c.x,a[i*16+14]-h.c.z));h.r=r+2}
+      wp.copy(h.c);h.g.localToWorld(wp);const dd=wp.distanceTo(cp)-h.r,nr=dd<NEAR;if(h.near.visible!==nr){h.near.visible=nr;h.far.visible=!nr}}}
+  return{geo,mat,smat,one,herd,tick,dims,hornGeo,still,HERDS}})();
+function mkBeast(kind,col,L,H){return BEAST.one(kind,col,L,H)}
 // ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const P=(u,v,y)=>{const p=W(u,v);return new THREE.Vector3(p[0],y*A,p[1])};
   const gold=new THREE.MeshStandardMaterial({color:0xd8b04a,roughness:0.45,metalness:0.35}),linen=new THREE.MeshStandardMaterial({color:0xfbfaf3,roughness:0.85});
