@@ -663,7 +663,7 @@ function build(){
         for(let i=0;i<np;i++){fig.setColorAt(i,CC.setHex(CLOTH[(i*5)%CLOTH.length]));fig.setAmp(i,1)}
         const nR=WK.filter(w=>w.h).length+WK.filter(w=>w.p2!==undefined).length,rope=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.012,0.012,1,4),new THREE.MeshStandardMaterial({color:0x8a7550,roughness:1}),Math.max(1,nR));
         const nB=WK.filter(w=>w.k==="bird").length,cage=new THREE.InstancedMesh((()=>{const g=new THREE.CylinderGeometry(0.13,0.15,0.26,8);g.translate(0,-0.13,0);return g})(),new THREE.MeshStandardMaterial({color:0xb08d55,roughness:1}),Math.max(1,nB));
-        [fig,hd,rope,cage].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=FI;cPick.push(m);gF.add(m)});
+        [fig,hd,rope,cage].forEach(m=>{m.frustumCulled=false;m.castShadow=false;m.userData=FI;cPick.push(m);gF.add(m)});/* 139.0: מרחק */FIG.LOD.add([fig]);
         const putP=(i,q,sc)=>{D.position.set(q[0],q[1],q[2]);D.rotation.set(0,q[3],0);D.scale.setScalar(sc);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y+=1.56*sc;D.updateMatrix();hd.setMatrixAt(i,D.matrix)};
         const A0=new THREE.Vector3(),B0=new THREE.Vector3(),NK=new THREE.Vector3(),UP=new THREE.Vector3(0,1,0),Q=new THREE.Quaternion();
         const putR=(j,a,b)=>{const d=B0.copy(b).sub(a),l=d.length();D.position.copy(a).addScaledVector(d,0.5);D.quaternion.copy(Q.setFromUnitVectors(UP,d.normalize()));D.scale.set(1,l,1);D.updateMatrix();rope.setMatrixAt(j,D.matrix);D.rotation.set(0,0,0);D.scale.set(1,1,1)};
@@ -761,7 +761,8 @@ function build(){
       const figset=(grp,n,info,col,fo)=>{fo=fo||{};const fig=FIG.mesh(n,FIG.mat(0xffffff),{kit:"all",ctx:fo.ctx||"azara",who:fo.who===undefined?"m":fo.who}),head=new THREE.InstancedMesh(FIG.head(),skinM,n);fig.frustumCulled=head.frustumCulled=false;fig.castShadow=false;grp.add(fig,head);pick(fig,info);
         const o={fig,head,n,lul:null,set(i,x,y,z,a,s){s=s||1;setI(fig,i,x,y,z,a,s);setI(head,i,x,y+1.56*s,z,a,s)},col(i,c,id){const r=roleOf(c,fo),sd=(id==null?i:id)*131+(c&0xffff);if(r==="civ")fig.dress(i,fo.ctx||"azara",fo.who===undefined?"m":fo.who,sd);else fig.dress(i,r,null,sd)},done(){fig.instanceMatrix.needsUpdate=true;head.instanceMatrix.needsUpdate=true;if(fig.instanceColor)fig.instanceColor.needsUpdate=true;if(o.lul&&o.lulCopy){o.lul.instanceMatrix.array.set(fig.instanceMatrix.array);o.lul.instanceMatrix.needsUpdate=true}},
           withLulav(g2,copy){const l=new THREE.InstancedMesh(lulG,lulM,n);/* קהל עומד: עותק של המטריצות, כי מערכת ההרחקה (LOD) כותבת לכל רשת בנפרד. דמויות נעות: אותן מטריצות */if(copy)o.lulCopy=true;else l.instanceMatrix=fig.instanceMatrix;l.frustumCulled=false;l.castShadow=false;(g2||grp).add(l);pick(l,C.lulav);o.lul=l;return o}};
-        for(let i=0;i<n;i++){fig.setAmp(i,0);o.col(i,col?col(i):0xfbfaf4)}return o};
+        for(let i=0;i<n;i++){fig.setAmp(i,0);o.col(i,col?col(i):0xfbfaf4)}
+        /* 139.0: כל קבוצת אנשים נכנסת למערכת המרחק: מקרוב פנים מלאות, ממרחק בינוני גוף פשוט יותר, רחוק צללית. אחרי שהקוד שבנה אותה הוסיף ריקוד/לולב */if(n>=6)queueMicrotask(()=>{if(!fig.parent)return;const e=FIG.LOD.add([fig]);if(o.lul&&!o.lulCopy)FIG.LOD.follow(fig,o.lul)});return o};
       /* מקום פנוי: לא בתוך קיר, מדרגה או חפץ שיש לו התנגשות */
       const KEEP=[];const free=(u,v,yF,r)=>{const p=W(u,v),R=r*A;for(const k of KEEP)if(u>k[0]-r&&u<k[2]+r&&v>k[1]-r&&v<k[3]+r)return false;for(const c of COL){if(c.y1<yF*A+0.25||c.y0>yF*A+1.9)continue;if(p[0]>c.x0-R&&p[0]<c.x1+R&&p[1]>c.z0-R&&p[1]<c.z1+R)return false}return true};
       const scatter=(n,u0,v0,u1,v1,yF,r)=>{const out=[];let tr=0;while(out.length<n&&tr++<n*40){const u=u0+rs()*(u1-u0),v=v0+rs()*(v1-v0);if(free(u,v,yF,r))out.push([u,v])}return out};

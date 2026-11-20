@@ -9,7 +9,7 @@ const REVIEW=(()=>{try{if(/[?&#]review=1/.test(location.search+location.hash))re
 const reduce=REVIEW||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches);
 
 let ART=null;/* v114 · שערי העיר: מעבר אמיתי דרך מגדל השער במקום קשת אטומה. cor = מסדרונות [a0,a1,b0,b1] במערכת המגדל (a לאורך החומה, b לרוחבה); faces = [a,b,זווית הנורמל,רוחב,גובה,מחודד] */
-function gatePass(add,off,wbox,o){const {x,n,rot,w,d,base,hi,top,cor,ph}=o,E=1e-3;
+function gatePass(add,off,wbox,o){const {x,n,rot,w,d,base,hi,top,cor,ph}=o,E=1e-3;/* 136.0: מעבר השער מקורה — לקולות הרקע (הד) */(window.__GPAS=window.__GPAS||[]).push({x,n,rot,cor,ph});
   if(top-(hi+ph)>0.05)add("wall",wbox(w,top-(hi+ph),d,6),x,(top+hi+ph)/2,n,rot);
   if(hi-base>0.05)add("wall",wbox(w,hi-base,d,6),x,(hi+base)/2,n,rot);
   const cut=(v,lim)=>{const S=new Set([-lim,lim]);cor.forEach(c=>{[c[v],c[v+1]].forEach(q=>{if(q>-lim+E&&q<lim-E)S.add(q)})});return[...S].sort((p,q)=>p-q)},as=cut(0,w/2),bs=cut(2,d/2);
