@@ -11005,7 +11005,8 @@ const FIG=(function(){const U={uT:{value:0}};
     const rotZ=(g,a,cx,cy)=>{g.translate(-cx,-cy,0);g.rotateZ(a);g.translate(cx,cy,0);return g};
     const HC=1.565;
     /* שכבה מעל הראש (שיער/מטפחת): נשארת רק מעל קו משופע — גבוה מעל המצח, נמוך מאחור. מה שמתחת לקו נכנס לתוך הראש */
-    const shell=(k,f0,sl,ws,hs)=>{const g=ell(0.098*k,0.118*k,0.083*k,ws||8,hs||7,0,HC,0);const a=g.attributes.position;for(let i=0;i<a.count;i++){const x=a.getX(i),y=a.getY(i)-HC,z=a.getZ(i);if(y<f0+sl*x){const q=0.9/k;a.setXYZ(i,x*q,HC+y*q,z*q)}}g.computeVertexNormals();return g};
+    const jaw=(g,k)=>{const a=g.attributes.position;for(let i=0;i<a.count;i++){const y=a.getY(i);if(y<HC){const t=Math.min(1,(HC-y)/(0.118*k)),q=1-0.22*t*t;a.setX(i,a.getX(i)*q);a.setZ(i,a.getZ(i)*q)}}return g};
+    const shell=(k,f0,sl)=>{const g=jaw(ell(0.098*k,0.118*k,0.083*k,8,6,0,HC,0),k);const a=g.attributes.position;for(let i=0;i<a.count;i++){const x=a.getX(i),y=a.getY(i)-HC,z=a.getZ(i);if(y<f0+sl*x){const q=0.88/k;a.setXYZ(i,x*q,HC+y*q,z*q)}}g.computeVertexNormals();return g};
     if(far){/* צללית רחוקה: גוף, רגליים או חצאית, ראש ושיער/כובע. כ־60 משולשים */
       add(lathe([[0.15,0.86],[0.17,1.0],[0.2,1.36],[0.06,1.47]],5,0.62),PT.TOP);
       if(kit!=="koh")add(lathe([[0.07,0.02],[0.16,0.9]],4,0.6),PT.BOT,B.TR);
@@ -11033,13 +11034,13 @@ const FIG=(function(){const U={uT:{value:0}};
         add(lathe([[0.183,0.98],[0.185,1.08]],8,0.75),PT.ACC,B.AV);const e=new T.BoxGeometry(0.012,0.42,0.06);e.translate(0.133,0.8,0.04);add(e,PT.ACC,B.AV)}
       /* צוואר וראש עם פנים */
       add(cyl(0.05,0.047,1.41,1.5,6),PT.SKIN);
-      const hg=ell(0.098,0.118,0.083,8,6,0,HC,0);{const a=hg.attributes.position;for(let i=0;i<a.count;i++){const y=a.getY(i);if(y<HC){const t=(HC-y)/0.118,k=1-0.22*t*t;a.setX(i,a.getX(i)*k);a.setZ(i,a.getZ(i)*k)}}hg.computeVertexNormals()}add(hg,PT.SKIN,null,0,1);
+      const hg=jaw(ell(0.098,0.118,0.083,8,6,0,HC,0),1);hg.computeVertexNormals();add(hg,PT.SKIN,null,0,1);
       const no=new T.ConeGeometry(0.017,0.04,4);no.rotateZ(-Math.PI/2);no.translate(0.104,1.548,0);add(no,PT.SKIN,null,0,1);
       for(const s of[1,-1]){add(ell(0.007,0.011,0.014,3,2,0.089,1.578,0.034*s),PT.EYE,null,0,1);const br=new T.BoxGeometry(0.012,0.008,0.032);br.translate(0.088,1.6,0.035*s);add(br,PT.HAIR,null,0,1);add(ell(0.014,0.03,0.012,3,2,-0.005,1.56,0.084*s),PT.SKIN,null,0,1)}
       /* שיער קצר: כיפה מוטה לאחור כדי שהמצח פתוח */
-      add(shell(1.08,-0.03,0.66,7,5),PT.HAIR,B.HS,0,1);
+      add(shell(1.08,-0.03,0.66),PT.HAIR,B.HS,0,1);
       if(has(B.HL))add(cyl(0.105,0.085,1.36,1.6,6,-0.035,0).rotateY(0),PT.HAIR,B.HL,0,1);
-      if(has(B.TI)){add(shell(1.15,-0.035,0.8,7,5),PT.ACC,B.TI,0,1);add(ell(0.065,0.055,0.075,6,4,-0.105,1.53,0),PT.ACC,B.TI,0,1)}
+      if(has(B.TI)){add(shell(1.15,-0.035,0.8),PT.ACC,B.TI,0,1);add(ell(0.065,0.055,0.075,6,4,-0.105,1.53,0),PT.ACC,B.TI,0,1)}
       add(ell(0.103,0.122,0.088,6,2,0,HC,0,Math.PI*0.66,Math.PI*0.34,Math.PI*0.5,Math.PI),PT.HAIR,B.BD,0,1);
       {const c=new T.ConeGeometry(0.075,0.2,6);c.rotateZ(Math.PI);c.translate(0.065,1.4,0);add(c,PT.HAIR,B.BL,0,1)}
       if(has(B.KP))add(rotZ(ell(0.11,0.131,0.096,6,1,-0.008,HC+0.002,0,0,Math.PI*0.22),0.45,-0.008,HC),PT.KIP,B.KP,0,1);
