@@ -139,12 +139,21 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   const head=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),N),hat=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.135,0.15,10),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.85}),N);
   [head,hat].forEach(m=>{m.frustumCulled=false;g.add(m)});
   const info={n:"הכהנים בסדר התמיד",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין ו",t:"📜 כהן הדיוט לובש ארבעה בגדים: כתונת, מכנסיים ומגבעת של פשתן לבן, ואבנט (שמות כח, מ–מב). ⚖️ האבנט שלו של צמר צבוע ופשתן, ולא לבן כולו (רמב״ם, הלכות כלי המקדש ח, א–ב). לכהן הגדול שמונה בגדים, וביום הכיפורים בגדי לבן מיוחדים (ויקרא טז, ד). ⚖️ הכהנים עובדים יחפים על רצפת האבן. כל אחד עושה את העבודה שזכה בה בפיס. 💡 מספר הדמויות הוא המחשה."};fig.userData=head.userData=info;cPick.push(fig);
-  const silver=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.25}),fleece=new THREE.MeshStandardMaterial({color:0xf1ece2,roughness:1}),meat=new THREE.MeshStandardMaterial({color:0x9b3b32,roughness:0.7});
+  const silver=new THREE.MeshStandardMaterial({color:0xd9dde2,metalness:0.9,roughness:0.25}),goldM=new THREE.MeshStandardMaterial({color:0xd4af37,metalness:0.72,roughness:0.28}),woodM=new THREE.MeshStandardMaterial({color:0x7a5a3a,roughness:0.86}),coalM=new THREE.MeshStandardMaterial({color:0xff6a2a,emissive:0xff4a12,emissiveIntensity:0.85,roughness:0.6});
   const lamb=mkBeast("sheep",0xf1ece2,0.9,0.7);
+  lamb.scale.setScalar(1.15); /* 💡 מעט גדול מן המידה, כדי שהכבש ייקרא גם במבט הרחב של התחנה */
   lamb.traverse(o=>{if(o.isMesh){o.userData={n:"כבש התמיד",r:"במדבר כח, ג-ח; תמיד ג, ג-ד; ד, א",t:"📜 \"את הכבש אחד תעשה בבקר ואת הכבש השני תעשה בין הערבים\". ⚖️ מביאים אותו מלשכת הטלאים, בודקים אותו לאור האבוקות ומשקים אותו בכוס של זהב. שוחטים אותו בצפון המזבח, בקרן מזרחית־צפונית, ובערב — בקרן מערבית־צפונית."};cPick.push(o)}});g.add(lamb);
   const mkLimbMesh=()=>{const grp=new THREE.Group();const meatM=new THREE.MeshStandardMaterial({color:0x6e3a2c,roughness:0.84,metalness:0.02});const boneM=new THREE.MeshStandardMaterial({color:0xe6d7b8,roughness:0.55});const sh=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.075,0.48,12),meatM);sh.rotation.z=Math.PI/2;const jt=new THREE.Mesh(new THREE.SphereGeometry(0.07,10,8),meatM);jt.position.x=0.20;const bn=new THREE.Mesh(new THREE.CylinderGeometry(0.018,0.022,0.11,8),boneM);bn.rotation.z=Math.PI/2;bn.position.x=0.30;grp.add(sh,jt,bn);return grp};
   const limbs=[];for(let i=0;i<6;i++){const m=mkLimbMesh();m.userData={n:"הולכת האיברים",r:"תמיד ד, ג",t:"📜 שישה כהנים מוליכים את האיברים לכבש: הראש והרגל, שתי הידיים, העוקץ והרגל, החזה והגרה, שתי הדפנות, והקרביים. הם נותנים אותם בחצי התחתון של הכבש, במערבו, ומולחים אותם."};m.traverse(o=>{if(o.isMesh){o.userData=m.userData;cPick.push(o)}});limbs.push(m);g.add(m)}
   const trumpets=[0,1].map(()=>{const m=new THREE.Mesh(new THREE.ConeGeometry(0.05,0.75,10,1,true),silver);m.userData={n:"שתי חצוצרות של כסף",r:"תמיד ז, ג; במדבר י, י",t:"📜 \"ושני כהנים עומדים על שולחן החלבים ושתי חצוצרות בידן. תקעו, והריעו, ותקעו\". בכל פרק של השיר תוקעים, ובכל תקיעה העם משתחווה."};cPick.push(m);g.add(m);return m});
+  /* כלי העבודה של התמיד. הדם רק בתוך המזרק — בלי שפיכה ובלי כתם (תמיד ד, א: מקבל וזורק). */
+  const miz=new THREE.Group();{const o=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.08,0.07,12),goldM),inn=new THREE.Mesh(new THREE.CylinderGeometry(0.075,0.055,0.03,12),new THREE.MeshStandardMaterial({color:0x6e1c22,roughness:0.5}));inn.position.y=0.03;miz.add(o,inn);miz.userData={n:"מזרק",r:"תמיד ד, א",t:"📜 הכהן מקבל את הדם במזרק וזורק על המזבח שתי מתנות שהן ארבע. הדם נרמז בתוך הכלי בלבד."};miz.traverse(o=>{if(o.isMesh){o.userData=miz.userData;cPick.push(o)}});g.add(miz)}
+  const logs=[];for(let i=0;i<5;i++){const m=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.07,0.8,6),woodM);m.rotation.z=Math.PI/2;m.rotation.y=i*0.35;m.userData={n:"גזירי מערכה",r:"תמיד ב, ג",t:"📜 מסדרים מערכה גדולה של עצים, ולידה מערכה שנייה לקטורת."};cPick.push(m);g.add(m);logs.push(m)}
+  const coal=new THREE.Mesh(new THREE.SphereGeometry(0.22,8,6),coalM);coal.userData={n:"גחלים מאוכלות",r:"תמיד א, ד",t:"📜 חותה מן הגחלים המאוכלות הפנימיות במחתה של כסף."};cPick.push(coal);g.add(coal);
+  const cym=new THREE.Group();{const dsk=()=>new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.16,0.015,14),silver);const a=dsk(),b=dsk();a.rotation.x=Math.PI/2;b.rotation.x=Math.PI/2;cym.add(a,b);cym.userData.a=a;cym.userData.b=b;cym.userData.n="צלצל";cym.userData.r="תמיד ז, ג";cym.userData.t="📜 בן ארזא מקיש בצלצל, וזה האות ללוויים לשיר.";cym.traverse(o=>{if(o.isMesh){o.userData={n:cym.userData.n,r:cym.userData.r,t:cym.userData.t};cPick.push(o)}});g.add(cym)}
+  /* 💡 כנפיים בשער הפנימי הצפוני: תמיד א, ג המפתח והפשפש, ותמיד ג, ח שער הגדול. ביחזקאל אין מידת דלת לתמיד, ולכן הזוג הזה ממלא את שניהם. */
+  const gate=[];[-1,1].forEach(sg=>{const h=new THREE.Group(),p=P(250+sg*4.8,181,7.5);h.position.set(p.x,p.y,p.z);const leaf=new THREE.Mesh(new THREE.BoxGeometry(4.6*A,7.2*A,0.16*A),new THREE.MeshStandardMaterial({color:0x8d7344,metalness:0.35,roughness:0.5}));leaf.position.set(-sg*2.3*A,3.6*A,0);h.add(leaf);h.userData.sg=sg;g.add(h);gate.push(h)});
+  let gateOpen=0;
   const flag=new THREE.Group();{const st=new THREE.Mesh(new THREE.CylinderGeometry(0.015,0.015,1.4,6),M.wood);st.position.y=0.7;flag.add(st);const cl=new THREE.Mesh(new THREE.PlaneGeometry(0.55,0.4),new THREE.MeshStandardMaterial({color:0xffffff,side:THREE.DoubleSide,roughness:0.9}));cl.position.set(0.28,1.2,0);flag.add(cl);flag.userData.cloth=cl}
   flag.traverse(o=>{if(o.isMesh){o.userData={n:"הסגן והסודרין",r:"תמיד ז, ג",t:"📜 \"הסגן עומד על הקרן והסודרין בידו... הניף הסגן בסודרין, והקיש בן ארזא בצלצל, ודברו הלוים בשיר\" — הנפת הבד היא הסימן ללוויים להתחיל לשיר."};cPick.push(o)}});g.add(flag);
   // places: [u,v,y, face-u, face-v, act(0..1)]
@@ -166,23 +175,42 @@ function buildTM(W){const g=new THREE.Group();g.visible=false;group.add(g);const
     shema:line(283,293,299,293,7.56,7.56,7,292,290,0.2).concat(line(284,297.5,298,297.5,7.56,7.56,6,292,290,0.2)),
     ketoret:[[154,250,13.56,152,250,0.7],[176,247,13.56,152,250,0.1],[176,253,13.56,152,250,0.1]].concat(line(206,238,206,262,10.5,10.5,10,180,250,0)),
     birkat:line(203.5,241,203.5,259,11.5,11.5,9,240,250,1).concat(line(210,244,210,256,7.5,7.5,4,200,250,0)),
-    shir:[[238,262,16.5,234,266,0.7],[240.5,263,16.5,250,280,0.3],[250,267,16.5,250,280,0.3],[239.3,268.2,8.6,250,268,0.4],[239.3,270.4,8.6,250,268,0.4]].concat(line(247,286,247,270,ramp(286),ramp(270),8,250,262,0))};
-  const st=Array.from({length:N},(_,i)=>({pos:P(222+i*1.2,186,3.5),from:null,to:null,t0:0,dur:1,f:null,act:0,ff:null}));let key=null;
-  const api={g,fig,head,hat,show(v){g.visible=v},
-    set(k){const L=ST[k];if(!L)return;key=k;const now=performance.now();st.forEach((o,i)=>{const q=L[i]||L[L.length-1];o.from=o.pos.clone();o.to=P(q[0],q[1],q[2]);o.t0=now+i*90;o.dur=Math.min(4000,Math.max(900,o.from.distanceTo(o.to)/4*1000));o.ff=P(q[3],q[4],q[2]);o.act=q[5]});
-      lamb.visible=k==="lamb"||k==="shechita";if(k==="lamb"){lamb.position.copy(P(250,203,7.5));lamb.rotation.y=Math.PI/2}if(k==="shechita"){lamb.position.copy(P(244,216.3,7.5));lamb.rotation.y=0;lamb.rotation.z=0}
-      limbs.forEach((m,i)=>{const show=(k==="limbs"||k==="shir")&&i<3;m.visible=show;const spots=[[246.3,287.5],[246.85,287.1],[246.4,286.7]];const sp=spots[i]||spots[0];m.position.copy(P(sp[0],sp[1],ramp(sp[1])+0.08));m.rotation.set(0.15,0.4+i*0.7,0.2)});trumpets.forEach(m=>m.visible=k==="shir");flag.visible=k==="shir"},
-    tick(dt,tt){if(!g.visible)return;const now=performance.now(),D=new THREE.Object3D();
+    shir:[[252,257,16.5,250,252,0.8],[256,259,16.5,250,252,0.4],[250,262,16.5,250,252,0.2],[282,266,9,250,252,0.5],[282,270,9,250,252,0.5]].concat(line(247,286,247,270,ramp(286),ramp(270),8,250,262,0))};
+  const st=Array.from({length:N},(_,i)=>({pos:P(222+i*1.2,186,3.5),from:null,to:null,t0:0,dur:1,f:null,act:0,ff:null}));let key=null,t0=performance.now();
+  /* מלשכת הטלאים (מידות א, ו; תמיד ג, ג) אל הבדיקה, ומשם לשחיטה בצפון המזבח (תמיד ד, א). */
+  const LPATH=[[232,163,3.5],[246,168,4.2],[250,176,6.4],[250,190,7.5],[250,203,7.5]];
+  const along=(path,t)=>{const seg=path.length-1,x=Math.max(0,Math.min(0.999,t))*seg,i=Math.floor(x),f=x-i,a=path[i],b=path[i+1];return{u:a[0]+(b[0]-a[0])*f,v:a[1]+(b[1]-a[1])*f,y:a[2]+(b[2]-a[2])*f,du:b[0]-a[0],dv:b[1]-a[1]}};
+  const putLamb=(u,v,y,ry,rz,lift)=>{const p=P(u,v,y);lamb.position.set(p.x,p.y+lift,p.z);lamb.rotation.order="YZX";lamb.rotation.set(0,ry,rz)};
+  const age=()=>Math.max(0,(performance.now()-t0)/1000);
+  const api={g,fig,head,hat,show(v){g.visible=v;if(!v){gateOpen=0;lamb.visible=miz.visible=coal.visible=cym.visible=false;logs.forEach(m=>m.visible=false)}},
+    set(k){const L=ST[k];if(!L)return;key=k;t0=performance.now();const now=t0;st.forEach((o,i)=>{const q=L[i]||L[L.length-1];o.from=o.pos.clone();o.to=P(q[0],q[1],q[2]);o.t0=now+i*90;o.dur=Math.min(4000,Math.max(900,o.from.distanceTo(o.to)/4*1000));o.ff=P(q[3],q[4],q[2]);o.act=q[5]});
+      lamb.visible=k==="lamb"||k==="shechita";lamb.rotation.z=0;
+      miz.visible=k==="shechita";coal.visible=k==="deshen";cym.visible=k==="shir";
+      limbs.forEach((m,i)=>{const show=(k==="limbs"||k==="shir")&&i<6;m.visible=show;const spots=[[246.2,287.6],[246.7,287.1],[246.3,286.6],[247.2,287.4],[246.8,286.2],[247.4,286.9]];const sp=spots[i]||spots[0];m.position.copy(P(sp[0],sp[1],ramp(sp[1])+0.08));m.rotation.set(0.15,0.4+i*0.5,0.2)});trumpets.forEach(m=>m.visible=k==="shir");flag.visible=k==="shir"},
+    seek(sec){t0=performance.now()-Math.max(0,sec)*1000},
+    key(){return key},age,gate:()=>gateOpen,lambOn:()=>!!lamb.visible,
+    lambPose(){return{x:lamb.position.x,y:lamb.position.y,z:lamb.position.z,ry:lamb.rotation.y,rz:lamb.rotation.z,on:lamb.visible}},
+    tick(dt,tt){if(!g.visible)return;const now=performance.now(),D=new THREE.Object3D(),sec=age();
       st.forEach((o,i)=>{let walking=false;if(o.to&&now>=o.t0){const k=Math.min(1,(now-o.t0)/o.dur);o.pos.lerpVectors(o.from,o.to,k);walking=k<1;if(k>=1){o.from=null;o.to=null}}
         const p=o.pos;let ang;if(walking){const d=o.to.clone().sub(o.from);ang=Math.atan2(-d.z,d.x)}else if(o.ff){ang=Math.atan2(-(o.ff.z-p.z),o.ff.x-p.x)}else ang=0;
         D.position.copy(p);D.rotation.set(0,ang,0);D.scale.setScalar(1);D.updateMatrix();fig.setMatrixAt(i,D.matrix);fig.setAmp(i,walking?1:o.act*(0.6+0.4*Math.sin(tt*2+i)));
         D.position.y=p.y+1.56;D.updateMatrix();head.setMatrixAt(i,D.matrix);D.position.y=p.y+1.69;D.updateMatrix();hat.setMatrixAt(i,D.matrix);
         const fx=Math.cos(ang),fz=-Math.sin(ang);
         /* v106: deposited limbs stay on the west lower ramp (Tamid 4:3); they no longer follow the old instanced figures */
-        if(key==="shir"&&(i===3||i===4)){const m=trumpets[i-3];m.position.set(p.x+fx*0.45,p.y+1.45,p.z+fz*0.45);m.rotation.set(0,0,0);m.rotation.z=-Math.PI/2+0.25;m.rotation.y=ang;m.rotateZ(0)}
-        if(key==="shir"&&i===1){flag.position.set(p.x+fx*0.25,p.y+0.6,p.z+fz*0.25);flag.rotation.y=ang;flag.userData.cloth.rotation.y=Math.sin(tt*5)*0.6}});
+        if(key==="shir"&&(i===3||i===4)){const m=trumpets[i-3];m.position.set(p.x+fx*0.45,p.y+1.45,p.z+fz*0.45);m.rotation.set(Math.sin(tt*6)*0.15,-Math.PI/2+0.25,ang)}
+        if(key==="shir"&&i===1){flag.position.set(p.x+fx*0.25,p.y+0.6,p.z+fz*0.25);flag.rotation.y=ang;flag.userData.cloth.rotation.y=Math.sin(tt*8)*0.9}});
       fig.instanceMatrix.needsUpdate=head.instanceMatrix.needsUpdate=hat.instanceMatrix.needsUpdate=true;
-      if(lamb.visible&&key==="lamb"){const t=(now/1000)%1;lamb.position.y=7.5*A+Math.abs(Math.sin(t*Math.PI*2))*0.03}}};
+      /* שער: בלילה נפתח עם המפתח (תמיד א), ומשחיטת הבוקר הוא פתוח (תמיד ג, ח). */
+      const gWant=(key==="night")?Math.max(0,Math.min(1,(sec-1.2)/4.5)):(key==="lamb"||key==="shechita"||key==="heikhal"||key==="limbs"||key==="shema"||key==="pais4"||key==="ketoret"||key==="birkat"||key==="shir")?1:gateOpen;
+      gateOpen+=(gWant-gateOpen)*Math.min(1,dt*1.6);gate.forEach(h=>{h.rotation.y=h.userData.sg*gateOpen*(Math.PI/2);h.visible=key==="night"||key==="lamb"||key==="shechita"||gateOpen>0.04});
+      const woodOn=key==="wood"||key==="lamb"||key==="shechita"||key==="limbs"||key==="shir";
+      logs.forEach((m,i)=>{const show=woodOn&&(key!=="wood"||sec>0.8+i*0.7);m.visible=show;if(!show)return;const p=P(247.5+i*0.55,253.2+(i%2)*0.45,16.62);m.position.set(p.x,p.y,p.z)});
+      coal.visible=key==="deshen";if(coal.visible){const p=P(250,255.2,16.55);coal.position.set(p.x,p.y+Math.sin(tt*3)*0.04,p.z);coal.scale.setScalar(0.85+0.15*Math.sin(tt*5))}
+      if(lamb.visible&&key==="lamb"){const q=along(LPATH,Math.min(1,sec/6.5));const ry=Math.atan2(-q.dv,q.du);putLamb(q.u,q.v,q.y,ry,0,Math.abs(Math.sin(sec*6))*0.03);if(lamb.walk)lamb.walk(sec<6.2?1:0)}
+      if(lamb.visible&&key==="shechita"){const k=Math.min(1,sec/2.2);/* עקידה: ראשו לדרום, ושוכב על צדו (תמיד ד, א «לא היו כופתין אלא מעקדין»). 💡 הגלגול על הצד במקום קשירת רגליים מפורשת. */const p=P(243,212,7.5);lamb.position.set(p.x,p.y+0.1+k*0.42,p.z);const roll=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),k*(Math.PI/2));const yaw=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),-Math.PI/2);lamb.quaternion.copy(yaw).multiply(roll);if(lamb.walk)lamb.walk(0)}
+      miz.visible=key==="shechita";if(miz.visible){const k=Math.max(0,Math.min(1,(sec-1.4)/3.2));const u=246+(256-246)*k,v=212+(236-212)*k,y=8.4+(11.4-8.4)*k;const p=P(u,v,y);miz.position.set(p.x,p.y,p.z);miz.rotation.z=Math.sin(k*Math.PI)*0.5}
+      cym.visible=key==="shir";if(cym.visible){const p=P(284.2,268,9);cym.position.set(p.x,p.y+1.35,p.z);const s=Math.abs(Math.sin(tt*7));cym.userData.a.position.x=-0.02-s*0.08;cym.userData.b.position.x=0.02+s*0.08}}};
+  window.__TAMID={key:()=>api.key(),age:()=>api.age(),seek(s){try{if(window.__TOURFIG&&window.__TOURFIG.seek){window.__TOURFIG.seek(s);return}}catch(e){}api.seek(s)},lamb:()=>api.lambOn(),lambPose:()=>api.lambPose(),gate:()=>api.gate(),miz:()=>miz.visible,logs:()=>logs.filter(m=>m.visible).length};
   return api}
 function buildActors(W,y0A){const r=rng(777),d=new THREE.Object3D(),c=new THREE.Color(),ACT={tick(){}};
   const P=(u,v,y)=>{const p=W(u,v);return[p[0],y*A,p[1]]};
