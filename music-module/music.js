@@ -714,6 +714,10 @@
         "seg": "main"
       },
       {
+        "topic": "בית הטבילה",
+        "seg": "main"
+      },
+      {
         "topic": "הפיס הראשון",
         "seg": "main"
       },
@@ -735,6 +739,10 @@
       },
       {
         "topic": "השחיטה והזריקה",
+        "seg": "main"
+      },
+      {
+        "topic": "בית המטבחיים",
         "seg": "main"
       },
       {
@@ -776,7 +784,7 @@
       "niggun2": {"v": "HuO517YcLhs", "at": 130, "vol": 65, "fadeIn": 6000},
       "mareh": {"v": "SCRxUU5HcNA", "at": 10, "vol": 70, "fadeIn": 4000}
     },
-    "st": [{"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"},
+    "st": [{"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"}, {"seg": "niggun"},
            {"seg": "niggun"}, {"seg": "niggun", "endFade": 4500},
            {"seg": null}, {"seg": null},
            {"seg": "niggun2"}, {"seg": "niggun2", "endFade": 5000},
@@ -806,7 +814,7 @@
     "credit": "«מחרוזת ושמחת» · מקהלת מלכות (YouTube)",
     "segs": {"main": {"v": "5TCV0Wc2rvo", "at": 30, "vol": 70, "fadeIn": 4000}},
     "st": [{"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"}, {"seg": "main"},
-           {"seg": "main", "endFade": 6000}, {"seg": null}]
+           {"seg": "main", "endFade": 6000}, {"seg": null}, {"seg": null}]
   },
   "hakhel": {
     "credit": "«הקהל» · שמחה פרידמן ועמי כהן (YouTube)",
