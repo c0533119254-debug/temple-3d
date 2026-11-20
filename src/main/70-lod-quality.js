@@ -17,7 +17,7 @@ function add(list){const fresh=[];
     fresh.push({o,n,M,C,P,r,far:null,part:false,ver:-1,g})});
   // parts: same parent, same count, same first/last positions -> the biggest is the body, the rest are parts
   fresh.forEach(a=>{fresh.forEach(b=>{if(a===b||a.o.parent!==b.o.parent||a.n!==b.n||a.part)return;const d0=Math.hypot(a.P[0]-b.P[0],a.P[2]-b.P[2]),d1=Math.hypot(a.P[a.n*3-3]-b.P[b.n*3-3],a.P[a.n*3-1]-b.P[b.n*3-1]);if(d0<Math.max(0.6,b.r)&&d1<Math.max(0.6,b.r)&&a.r<b.r*0.8)a.part=true})});
-  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=(o.userData.lodR||Math.max(250,e.r*120))*KQ;e.rp=Math.max(220,e.r*900)*KQ;
+  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=(o.userData.lodR||Math.max(250,e.r*120))*KQ;e.rp=Math.max(220,e.r*900)*KQ;/* 141.9: farMax = מעבר למרחק הזה לא מציירים בכלל (עצי היערות מסביב לעיר, שממילא באובך) */e.fm=o.userData.farMax?(o.userData.farMax*KQ)**2:0;
     if(!e.part&&t>16){const bb=e.g.boundingBox,sz=bb.getSize(new THREE.Vector3()),ce=bb.getCenter(new THREE.Vector3());let fg;
       if(o.userData.farGeo){fg=o.userData.farGeo}else if(e.g.type==="BoxGeometry"){fg=new THREE.PlaneGeometry(sz.x,sz.z);fg.rotateX(-Math.PI/2);fg.translate(ce.x,bb.max.y,ce.z)}else{fg=new THREE.BoxGeometry(Math.max(sz.x,0.01),Math.max(sz.y,0.01),Math.max(sz.z,0.01));fg.translate(ce.x,ce.y,ce.z)}
       const f=new THREE.InstancedMesh(fg,o.material,e.n);f.count=0;f.castShadow=false;f.receiveShadow=o.receiveShadow;f.frustumCulled=false;f.userData=o.userData;f.matrixAutoUpdate=o.matrixAutoUpdate;f.position.copy(o.position);f.quaternion.copy(o.quaternion);f.scale.copy(o.scale);f.matrix.copy(o.matrix);f.renderOrder=o.renderOrder;
@@ -37,7 +37,7 @@ function upd(force){
     const A=o.instanceMatrix.array,CA=o.instanceColor&&o.instanceColor.array,R2=(e.part?e.rp:e.rn)**2;let k=0,kf=0;const F=e.far,FA=F&&F.instanceMatrix.array,FC=F&&F.instanceColor&&F.instanceColor.array;
     for(let i=0;i<e.n;i++){spC.center.set(e.P[i*3],e.P[i*3+1],e.P[i*3+2]);spC.radius=Math.max(8,e.r*4);if(!frC.intersectsSphere(spC))continue;const dx=e.P[i*3]-cam.x,dy=e.P[i*3+1]-cam.y,dz=e.P[i*3+2]-cam.z,d2=dx*dx+dy*dy+dz*dz;
       if(d2<R2){if(k!==i||!e.ok){for(let q=0;q<16;q++)A[k*16+q]=e.M[i*16+q];if(CA)for(let q=0;q<3;q++)CA[k*3+q]=e.C[i*3+q]}k++}
-      else if(F){for(let q=0;q<16;q++)FA[kf*16+q]=e.M[i*16+q];if(FC)for(let q=0;q<3;q++)FC[kf*3+q]=e.C[i*3+q];kf++}}
+      else if(F&&!(e.fm&&d2>e.fm)){for(let q=0;q<16;q++)FA[kf*16+q]=e.M[i*16+q];if(FC)for(let q=0;q<3;q++)FC[kf*3+q]=e.C[i*3+q];kf++}}
     e.ok=(k===e.n);if(o.count!==k)changed=true;o.count=k;o.instanceMatrix.needsUpdate=true;if(o.instanceColor)o.instanceColor.needsUpdate=true;e.ver=o.instanceMatrix.version;
     if(F){F.count=kf;F.visible=o.visible;F.instanceMatrix.needsUpdate=true;if(F.instanceColor)F.instanceColor.needsUpdate=true}}}
 let t0=performance.now();

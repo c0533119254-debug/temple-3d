@@ -10295,6 +10295,25 @@ setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.ar
   Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
 }).catch(()=>{})},SMALL?8000:4000);
+/* 141.9: היערות, הפארקים והמטעים מסביב לעיר כעצים בתלת־ממד. עד עכשיו מחוץ לאזור המפורט היה רק צילום לוויין שטוח, ובקו הרקיע לא היה אף עץ.
+   📜 היכן: השטחים המסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע (Overture Maps, מתוך OpenStreetMap), וגם עצים בודדים המסומנים במפה.
+   📜 בתוך השטחים עץ נשתל רק במקום שבו צילום הלוויין (Sentinel-2) כהה וירקרק, כלומר צמרות, ולא דשא, שביל או בניין. לא על כבישים, לא על בניינים, לא במגרשי ספורט ובבתי קברות.
+   💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים, בפארקים תערובת.
+   קובץ trees_outer.bin: לכל עץ x,n (חצאי מטר) וסוג. מקרוב העץ הרגיל, מרחוק צורה פשוטה של 8 משולשים, ומעבר ל־1.4 ק״מ לא מצוירים. בטלפון רק שליש מהעצים */
+setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab),KS=["pine","olive","cypress","carob","shade"];
+  /* מקומות שכבר יש בהם עץ (עצי האזורים האחרים): לא שותלים שוב */
+  const occ=new Set(),m4=new THREE.Matrix4(),p=new THREE.Vector3();WG.children.forEach(o=>{if(!o.isInstancedMesh||o.material!==TREES5.mat)return;for(let i=0;i<o.count;i++){o.getMatrixAt(i,m4);p.setFromMatrixPosition(m4);occ.add(Math.floor(p.x/5)+","+Math.floor(-p.z/5))}});
+  const BY={};KS.forEach(k=>BY[k]=[]);const rnd=k=>{const s=Math.sin(k*12.9898+3.1)*43758.5453;return s-Math.floor(s)};let n0=0;
+  for(let o=0,i=0;o+5<=ab.byteLength;o+=5,i++){if(SMALL&&i%3)continue;const x=v.getInt16(o,true)/2,n=v.getInt16(o+2,true)/2,k=KS[v.getUint8(o+4)]||"pine";
+    if(occ.has(Math.floor(x/5)+","+Math.floor(n/5))||bldTop(x,n)>-1e3)continue;BY[k].push([x,H(x,n),-n,0.75+rnd(i)*0.5,rnd(i+11)*6.28]);n0++}
+  /* צורה רחוקה: צמרת בלבד (תמנון מעוגל), 8 משולשים. מעבר ל־1.4 ק״מ לא מציירים, כי שם ממילא אובך */
+  const S={pine:[9.6,3.2,1.7,0x46592f,8],olive:[3.8,3.2,1.8,0x7d8a62,2],cypress:[6.8,1.0,6.4,0x2e3d26,0.6],carob:[4.2,3.1,2.2,0x3f5b2d,2],shade:[6,3.1,2.7,0x55713a,3.3]};
+  const far=k=>{const [cy,r,ry,hex,tr]=S[k],g=new THREE.OctahedronGeometry(1,0),P=g.attributes.position,N=g.attributes.normal,col=[],c=new THREE.Color(hex);
+    for(let i=0;i<P.count;i++){const X=P.getX(i),Y=P.getY(i),Z=P.getZ(i);N.setXYZ(i,X,Y,Z);P.setXYZ(i,X*r,Y<-0.9?(cy>9?cy-ry*1.5:0.3):cy+Y*ry,Z*r);/* באורן הצמרת שטוחה על גזע דק (שמרחוק לא רואים), בשאר העצים הצמרת יורדת עד הקרקע */const s=0.88+0.37*(Y*0.5+0.5);col.push(c.r*s,c.g*s,c.b*s)}
+    const pos=Array.from(P.array),nor=Array.from(N.array);
+    const b=new THREE.BufferGeometry();b.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));b.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));b.setAttribute("color",new THREE.Float32BufferAttribute(col,3));b.computeBoundingSphere();return b};
+  const INF={n:"יערות ופארקים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL; Sentinel-2 cloudless 2016, EOX, CC BY 4.0",t:"📜 העצים עומדים בשטחים שמסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע, ורק במקומות שבהם בצילום הלוויין רואים צמרות. 💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים."};
+  KS.forEach(k=>{if(!BY[k].length)return;const m=TREES5.plant(WG,k,BY[k],INF);if(m){m.userData.farGeo=far(k);m.userData.lodR=SMALL?140:200;m.userData.farMax=1400;m.name="outerTrees"}});window.__TR141={trees:n0}}).catch(()=>{})},SMALL?9000:5000);
 // ---- topic 3, area 1: Jaffa Gate and the Citadel (Tower of David) ----
 (function(){try{
 const GS={wall:[],light:[],dark:[],lead:[],pave:[]};
@@ -16703,7 +16722,7 @@ function add(list){const fresh=[];
     fresh.push({o,n,M,C,P,r,far:null,part:false,ver:-1,g})});
   // parts: same parent, same count, same first/last positions -> the biggest is the body, the rest are parts
   fresh.forEach(a=>{fresh.forEach(b=>{if(a===b||a.o.parent!==b.o.parent||a.n!==b.n||a.part)return;const d0=Math.hypot(a.P[0]-b.P[0],a.P[2]-b.P[2]),d1=Math.hypot(a.P[a.n*3-3]-b.P[b.n*3-3],a.P[a.n*3-1]-b.P[b.n*3-1]);if(d0<Math.max(0.6,b.r)&&d1<Math.max(0.6,b.r)&&a.r<b.r*0.8)a.part=true})});
-  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=(o.userData.lodR||Math.max(250,e.r*120))*KQ;e.rp=Math.max(220,e.r*900)*KQ;
+  fresh.forEach(e=>{const o=e.o,t=tris(e.g);e.rn=(o.userData.lodR||Math.max(250,e.r*120))*KQ;e.rp=Math.max(220,e.r*900)*KQ;/* 141.9: farMax = מעבר למרחק הזה לא מציירים בכלל (עצי היערות מסביב לעיר, שממילא באובך) */e.fm=o.userData.farMax?(o.userData.farMax*KQ)**2:0;
     if(!e.part&&t>16){const bb=e.g.boundingBox,sz=bb.getSize(new THREE.Vector3()),ce=bb.getCenter(new THREE.Vector3());let fg;
       if(o.userData.farGeo){fg=o.userData.farGeo}else if(e.g.type==="BoxGeometry"){fg=new THREE.PlaneGeometry(sz.x,sz.z);fg.rotateX(-Math.PI/2);fg.translate(ce.x,bb.max.y,ce.z)}else{fg=new THREE.BoxGeometry(Math.max(sz.x,0.01),Math.max(sz.y,0.01),Math.max(sz.z,0.01));fg.translate(ce.x,ce.y,ce.z)}
       const f=new THREE.InstancedMesh(fg,o.material,e.n);f.count=0;f.castShadow=false;f.receiveShadow=o.receiveShadow;f.frustumCulled=false;f.userData=o.userData;f.matrixAutoUpdate=o.matrixAutoUpdate;f.position.copy(o.position);f.quaternion.copy(o.quaternion);f.scale.copy(o.scale);f.matrix.copy(o.matrix);f.renderOrder=o.renderOrder;
@@ -16723,7 +16742,7 @@ function upd(force){
     const A=o.instanceMatrix.array,CA=o.instanceColor&&o.instanceColor.array,R2=(e.part?e.rp:e.rn)**2;let k=0,kf=0;const F=e.far,FA=F&&F.instanceMatrix.array,FC=F&&F.instanceColor&&F.instanceColor.array;
     for(let i=0;i<e.n;i++){spC.center.set(e.P[i*3],e.P[i*3+1],e.P[i*3+2]);spC.radius=Math.max(8,e.r*4);if(!frC.intersectsSphere(spC))continue;const dx=e.P[i*3]-cam.x,dy=e.P[i*3+1]-cam.y,dz=e.P[i*3+2]-cam.z,d2=dx*dx+dy*dy+dz*dz;
       if(d2<R2){if(k!==i||!e.ok){for(let q=0;q<16;q++)A[k*16+q]=e.M[i*16+q];if(CA)for(let q=0;q<3;q++)CA[k*3+q]=e.C[i*3+q]}k++}
-      else if(F){for(let q=0;q<16;q++)FA[kf*16+q]=e.M[i*16+q];if(FC)for(let q=0;q<3;q++)FC[kf*3+q]=e.C[i*3+q];kf++}}
+      else if(F&&!(e.fm&&d2>e.fm)){for(let q=0;q<16;q++)FA[kf*16+q]=e.M[i*16+q];if(FC)for(let q=0;q<3;q++)FC[kf*3+q]=e.C[i*3+q];kf++}}
     e.ok=(k===e.n);if(o.count!==k)changed=true;o.count=k;o.instanceMatrix.needsUpdate=true;if(o.instanceColor)o.instanceColor.needsUpdate=true;e.ver=o.instanceMatrix.version;
     if(F){F.count=kf;F.visible=o.visible;F.instanceMatrix.needsUpdate=true;if(F.instanceColor)F.instanceColor.needsUpdate=true}}}
 let t0=performance.now();
