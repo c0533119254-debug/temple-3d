@@ -367,7 +367,7 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
   const cRock=new THREE.Color(0xb3a588),cDry=new THREE.Color(0xa59a74),cGreen=new THREE.Color(0x7f8556),cUrban=new THREE.Color(0xc4baa4);
   for(let i=0;i<p.count;i++){
     const x=p.getX(i)+(X0+X1)/2,z=p.getZ(i)-(N0+N1)/2,n=-z;let h=H(x,n);h=underMount(x,n,h);h=roadAdj(x,n,h);
-    p.setX(i,x);p.setZ(i,z);p.setY(i,h-0.8);uv.setXY(i,x/260,n/260);
+    p.setX(i,x);p.setZ(i,z);p.setY(i,h-0.8);uv.setXY(i,(x-X0)/(X1-X0),(n-N0)/(N1-N0));
     const kd=segDist(x,n,KIDRON)[0],hd=segDist(x,n,HINNOM)[0];
     const c=cRock.clone().lerp(cDry,0.5+0.2*Math.sin(x*0.009)*Math.cos(n*0.007));
     const veg=Math.max(Math.exp(-Math.pow(kd/170,2)),Math.exp(-Math.pow(hd/120,2))*0.8,(x>500&&x<900)?0.45:0);
@@ -375,7 +375,12 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
     col.push(c.r,c.g,c.b);
   }
   g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
-  const tm=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,normalMap:T.ground,normalScale:new THREE.Vector2(0.3,0.3)});
+  const tm=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1});
+  /* 141.0: מחוץ לאזור צילום הלוויין המפורט, הקרקע הייתה צבע כללי עם רעש, ונראתה כמו חצץ בכל קו הרקיע. עכשיו יש עליה צילום לוויין חופשי: Sentinel-2 cloudless 2016 (EOX, CC BY 4.0, נתוני Copernicus), כ־2.2 מ' לפיקסל אחרי מתיחה, בצבעים שהותאמו לאריחי העיר. בטלפון נשאר הצבע הכללי, כמו בתוך העיר. */
+  if(!SMALL)new THREE.TextureLoader().load("sat_outer.jpg",t=>{t.encoding=THREE.sRGBEncoding;t.anisotropy=8;tm.map=t;tm.vertexColors=false;tm.color.setHex(0xffffff);tm.needsUpdate=true});
+  /* 141.0: הצילום הוא 10 מ׳ לפיקסל, ולכן מקרוב הוא מטושטש. מוסיפים עליו גרעיניות דקה של אדמה (חוזרת כל 6 מ׳ בערך) */
+  if(!SMALL)tm.onBeforeCompile=sh=>{sh.uniforms.dTex={value:T.ground};sh.fragmentShader="uniform sampler2D dTex;\n"+sh.fragmentShader.replace("#include <map_fragment>","#include <map_fragment>\n#ifdef USE_MAP\n diffuseColor.rgb*=0.8+0.4*texture2D(dTex,vUv*vec2(760.,870.)).r*mix(1.,texture2D(dTex,vUv*vec2(97.,111.)).g*2.,0.4);\n#endif")};
+  else{tm.normalMap=T.ground;tm.normalScale=new THREE.Vector2(0.3,0.3)}
   const idx=g.index.array,inn=[],out=[];for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2];(inSat(p.getX(a),-p.getZ(a))&&inSat(p.getX(b),-p.getZ(b))&&inSat(p.getX(c),-p.getZ(c))?inn:out).push(a,b,c)}
   const g2=g.clone();g.setIndex(out);g2.setIndex(inn);
   /* הרשת המלאה נשארת בשם terrain (מוסתרת) כדי שמדידת הגובה של הכבישים תמשיך לעבוד על אותה רשת. מה שנראה הוא אריחים של 640 מ׳ מאותם משולשים, והמצלמה מציירת רק את מה שבמסך. */
