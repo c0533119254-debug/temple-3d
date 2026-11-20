@@ -201,7 +201,7 @@ function buildActors(W,y0A){const r=rng(777),d=new THREE.Object3D(),c=new THREE.
   const ND=SMALL?14:30,dv=new THREE.InstancedMesh((()=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute([0,0,0,-0.15,0,0.45,0.12,0,0, 0,0,0,0.12,0,0,-0.15,0,-0.45, 0.25,0.02,0,-0.25,0.02,0.06,-0.25,0.02,-0.06],3));g.computeVertexNormals();return g})(),new THREE.MeshStandardMaterial({color:0xf2f0ea,side:THREE.DoubleSide,roughness:0.9}),ND);
   const DV=[];for(let i=0;i<ND;i++)DV.push({c:P(230+r()*60,230+r()*60,0),R:6+r()*16,h:22+r()*18,w:(0.35+r()*0.4)*(r()<0.5?1:-1),ph:r()*6});dv.frustumCulled=false;dv.visible=false;group.add(dv);
   // water in the laver
-  const wt=new THREE.Mesh(new THREE.CircleGeometry(1.3*A*1.1,24),new THREE.MeshStandardMaterial({color:0x6f9fb8,roughness:0.05,metalness:0.3,emissive:0x0a1a24}));{const p=P(222,263,9.45);wt.position.set(p[0],p[1],p[2]);wt.rotation.x=-Math.PI/2;group.add(wt)}
+  const wt=new THREE.Mesh(new THREE.CircleGeometry(1.3*A*1.1,24),new THREE.MeshStandardMaterial({color:0x6f9fb8,roughness:0.05,metalness:0.3,emissive:0x0a1a24}));{const p=P(222,263,9.45);wt.position.set(p[0],p[1],p[2]);/* 140.2: מקום הכיור, לקולות הרקע */window.__LAVER=[p[0],p[1],p[2]];wt.rotation.x=-Math.PI/2;group.add(wt)}
   // incense: thin wisps from the doorway of the Heikhal
   const NI=14,inc=new THREE.InstancedMesh(new THREE.SphereGeometry(1,8,6),M.smoke,NI),IN=[];for(let i=0;i<NI;i++)IN.push({t:i/NI,s:r()});const ib=P(197,250,13.56+20);inc.frustumCulled=false;group.add(inc);
   ACT.tick=(dt,tt)=>{
