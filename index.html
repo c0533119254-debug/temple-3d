@@ -14907,7 +14907,7 @@ const TOURFIGS=(function(){
   const actors=[],mixers=[];
   let proto=null,clips={},bindQ=null,ready=false,H=1.72,fail=false;
   const SKIN=0xc4a07a, EYEL=0xf2efe8, EYEIRIS=0x3d4a3a;
-  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0x1b2a66,pilgrim:0xcbb892,pilgrim2:0xb89b6a,levite:0xe8e2cf,king:0x6e2a43};
+  const robeCol={kohen:0xf4f0e4,gadolW:0xfbfaf3,gadolG:0x1b2a66,pilgrim:0xf2f0ea,pilgrim2:0x3e5c7a,levite:0xe8e2cf,king:0x6e2a43};
   const SKIN_BONES={Head:1,neck_01:1,hand_l:1,hand_r:1,foot_l:1,foot_r:1,ball_l:1,ball_r:1,ball_leaf_l:1,ball_leaf_r:1};
   "index middle pinky ring thumb".split(" ").forEach(f=>{[1,2,3].forEach(n=>{SKIN_BONES[f+"_0"+n+"_l"]=1;SKIN_BONES[f+"_0"+n+"_r"]=1});SKIN_BONES[f+"_04_leaf_l"]=1;SKIN_BONES[f+"_04_leaf_r"]=1});
   function robeMat(hex,skinHex){
@@ -15041,6 +15041,45 @@ const TOURFIGS=(function(){
     });
   }
   function linenMat(hex,rough){return new THREE.MeshStandardMaterial({color:hex,roughness:rough==null?0.88:rough,metalness:0.03,side:THREE.DoubleSide})}
+
+  /* 132.2 · גוף חדש לדמויות הסיורים (תוכנית: people/תוכנית-אנשים.md). הגוף המקורי (Quaternius "Superhero") מוסתר, ובמקומו חלקים פשוטים על אותן עצמות: ראש עם פנים, שיער וזקן, צוואר, גוף, כפות ידיים וכפות רגליים. השלד והתנועות (הליכה, נשיאת כפיים, השתחוויה, נשיאה) לא השתנו. עולי רגל: בבגדי היום (מכנסיים, חולצה, כיפה), בלי כתונת */
+  const NB_SKIN=[0xf0d5be,0xe8c4a4,0xdcb08c,0xd2a47e,0xc99a74,0xb08560,0xa7764f],NB_HAIR=[0x15110e,0x1f1712,0x2a1d14,0x3b2a1d,0x4a3324,0x6e4f33,0x8a8a86],NB_EYE=new THREE.MeshStandardMaterial({color:0x100d0b,roughness:0.5});
+  const isPil=k=>/^pilgrim/.test(k);
+  function newBody(root,kind){
+    const B=n=>findBone(root,n),Y=new THREE.Vector3(0,1,0),bp=b=>{const v=new THREE.Vector3();b.getWorldPosition(v);return v};
+    root.updateMatrixWorld(true);
+    root.traverse(o=>{if(o.isSkinnedMesh)o.visible=false});
+    const rnd=Math.random,pk=a=>a[Math.floor(rnd()*a.length)];
+    const skinM=new THREE.MeshStandardMaterial({color:pk(NB_SKIN),roughness:0.75}),hairM=new THREE.MeshStandardMaterial({color:kind==="king"?0x3b2a1d:pk(NB_HAIR),roughness:0.85});
+    const robe=robeCol[kind]||robeCol.kohen,clothM=linenMat(robe,0.9),pantM=new THREE.MeshStandardMaterial({color:pk([0x1c1f26,0x2a3446,0x3b4e6e,0x5c5246,0x2b2b2b]),roughness:0.9}),shoeM=new THREE.MeshStandardMaterial({color:0x1a1410,roughness:0.7});
+    const att=(bone,mesh,wpos,wq)=>{mesh.position.copy(wpos);if(wq)mesh.quaternion.copy(wq);else mesh.quaternion.identity();mesh.updateMatrixWorld(true);bone.attach(mesh);mesh.castShadow=false;mesh.receiveShadow=false;return mesh};
+    const seg=(a,b,r0,r1,mat,ext)=>{if(!a||!b)return;const pa=bp(a),pb=bp(b),d=pb.clone().sub(pa),L=d.length()*(ext||1);if(L<1e-3)return;d.normalize();const g=new THREE.CylinderGeometry(r1,r0,L,8,1,false);const q=new THREE.Quaternion().setFromUnitVectors(Y,d);return att(a,new THREE.Mesh(g,mat),pa.clone().addScaledVector(d,L/2),q)};
+    const pelvis=B("pelvis"),sp2=B("spine_02")||B("spine_03"),sp3=B("spine_03")||sp2,neck=B("neck_01"),head=B("Head"),uL=B("upperarm_l"),uR=B("upperarm_r");
+    /* ראש: מרכז מעט מעל עצם הראש, פנים לכיוון +z */
+    if(head){const hp=bp(head),HC=hp.y+0.085,c=new THREE.Vector3(hp.x,HC,hp.z+0.01),grp=new THREE.Group();
+      const ell=(rx,ry,rz,ws,hs,t0,tl,p0,pl)=>{const g=new THREE.SphereGeometry(1,ws,hs,p0||0,pl==null?Math.PI*2:pl,t0||0,tl==null?Math.PI:tl);g.scale(rx,ry,rz);return g};
+      const jaw=(g,k)=>{const a=g.attributes.position;for(let i=0;i<a.count;i++){const y=a.getY(i);if(y<0){const t=Math.min(1,-y/(0.118*k)),q=1-0.22*t*t;a.setX(i,a.getX(i)*q);a.setZ(i,a.getZ(i)*q)}}g.computeVertexNormals();return g};
+      /* בתוך הקבוצה: קדימה = +z */const H=jaw(ell(0.083,0.118,0.098,10,8),1);grp.add(new THREE.Mesh(H,skinM));
+      const no=new THREE.ConeGeometry(0.017,0.04,4);no.rotateX(Math.PI/2);no.translate(0,-0.017,0.104);grp.add(new THREE.Mesh(no,skinM));
+      for(const s of[1,-1]){const e=ell(0.014,0.011,0.007,4,3);e.translate(0.034*s,0.013,0.089);grp.add(new THREE.Mesh(e,NB_EYE));const br=new THREE.BoxGeometry(0.032,0.008,0.012);br.translate(0.035*s,0.035,0.089);grp.add(new THREE.Mesh(br,hairM));const ea=ell(0.012,0.03,0.014,4,3);ea.translate(0.084*s,-0.005,-0.005);grp.add(new THREE.Mesh(ea,skinM))}
+      /* שיער: שכבה מעל הראש רק מעל קו משופע (גבוה מעל המצח) */{const k=1.08,g=jaw(ell(0.083*k,0.118*k,0.098*k,10,8),k),a=g.attributes.position;for(let i=0;i<a.count;i++){const x=a.getX(i),y=a.getY(i),z=a.getZ(i);if(y<-0.03+0.66*z){const q=0.88/k;a.setXYZ(i,x*q,y*q,z*q)}}g.computeVertexNormals();grp.add(new THREE.Mesh(g,hairM))}
+      const old=rnd()<0.2;if(old)hairM.color.setHex(0x9a9a96);
+      if(!isPil(kind)||rnd()<0.5){const bd=ell(0.088,0.122,0.103,8,3,Math.PI*0.66,Math.PI*0.34,0,Math.PI);grp.add(new THREE.Mesh(bd,hairM));if(kind==="gadolG"||kind==="gadolW"||kind==="king"||rnd()<0.3){const cb=new THREE.ConeGeometry(0.07,0.18,6);cb.rotateX(Math.PI);cb.translate(0,-0.16,0.065);grp.add(new THREE.Mesh(cb,hairM))}}
+      if(isPil(kind)){const kp=ell(0.096,0.131,0.11,8,2,0,Math.PI*0.22);kp.rotateX(-0.45);grp.add(new THREE.Mesh(kp,new THREE.MeshStandardMaterial({color:pk([0x0a0a0a,0xeeeeee,0x1a2350,0x6b5640]),roughness:0.8})))}
+      grp.position.copy(c);grp.updateMatrixWorld(true);head.attach(grp)}
+    if(neck&&head)seg(neck,head,0.05,0.047,skinM,1.1);
+    /* גוף: פלג עליון על עמוד השדרה (מתכופף בהשתחוויה), אגן על עצם האגן */
+    if(pelvis&&sp2&&neck){const p=bp(pelvis),n=bp(neck),sw=uL&&uR?Math.abs(bp(uL).x-bp(uR).x)/2:0.2,k=Math.min(1.25,Math.max(0.85,sw/0.205)),y0=p.y+0.05,y1=n.y+0.02,F=t=>y0+(y1-y0)*t;
+      const top=new THREE.LatheGeometry([[0,0],[0.162,0.02],[0.155,0.18],[0.172,0.48],[0.19,0.75],[0.17,0.9],[0.07,0.99],[0,1]].map(q=>new THREE.Vector2(q[0]*k,F(q[1])-y0)),10);top.scale(1,1,0.66);
+      att(sp2,new THREE.Mesh(top,isPil(kind)?new THREE.MeshStandardMaterial({color:pk([0xf2f0ea,0xf2f0ea,0x3e5c7a,0x6f8fae,0x2f4a36,0x8a2f2a]),roughness:0.88}):clothM),new THREE.Vector3(p.x,y0,p.z));
+      const pg=new THREE.LatheGeometry([[0.15*k,-0.14],[0.168*k,-0.03],[0.165*k,0.06]].map(q=>new THREE.Vector2(q[0],q[1])),10);pg.scale(1,1,0.66);att(pelvis,new THREE.Mesh(pg,isPil(kind)?pantM:clothM),new THREE.Vector3(p.x,y0-0.0,p.z))}
+    /* כפות ידיים */
+    for(const s of["l","r"]){const h=B("hand_"+s),m=B("middle_01_"+s);if(h){const hp=bp(h),d=m?bp(m).sub(hp):new THREE.Vector3(0,-1,0);const L=Math.max(0.12,d.length()*1.9);d.normalize();const g=new THREE.SphereGeometry(1,6,4);g.scale(0.03,L/2,0.045);att(h,new THREE.Mesh(g,skinM),hp.clone().addScaledVector(d,L*0.45),new THREE.Quaternion().setFromUnitVectors(Y,d))}
+      /* רגליים: כהנים יחפים (⚖). עולי רגל: מכנסיים ונעליים */
+      const th=B("thigh_"+s),ca=B("calf_"+s),ft=B("foot_"+s),ba=B("ball_"+s);
+      if(isPil(kind)){seg(th,ca,0.085,0.07,pantM);seg(ca,ft,0.064,0.052,pantM)}else seg(ca,ft,0.055,0.045,skinM);
+      if(ft){const fp=bp(ft),bb=ba?bp(ba):fp.clone().add(new THREE.Vector3(0,-0.05,0.12)),d=bb.clone().sub(fp);d.y=0;const L=Math.max(0.2,d.length()+0.1);d.normalize();const g=new THREE.BoxGeometry(0.09,0.065,L);const fm=isPil(kind)?shoeM:skinM;const fq=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1),d);att(ft,new THREE.Mesh(g,fm),new THREE.Vector3((fp.x+bb.x)/2,Math.max(0.035,fp.y-0.05),(fp.z+bb.z)/2),fq)}}
+  }
   function addKit(root,kind){
     const pelvis=findBone(root,"pelvis"), spine=findBone(root,"spine_02")||findBone(root,"spine_03"), spine3=findBone(root,"spine_03");
     const head=findBone(root,"Head");
@@ -15059,7 +15098,7 @@ const TOURFIGS=(function(){
     }
     function bonePos(b){const v=new THREE.Vector3();b.getWorldPosition(v);return v}
     function boneAxis(b){const q=new THREE.Quaternion();b.getWorldQuaternion(q);return Y.clone().applyQuaternion(q).normalize()}
-    if(pelvis){
+    if(pelvis&&!isPil(kind)){
       const p=bonePos(pelvis);
       // long ketonet: world-vertical flared skirt down to the feet
       /* גרסה 116: הכתונת רחבה יותר ומתרחבת כלפי מטה, כדי שהרגליים לא יבלטו ממנה גם בצעד הליכה (נבדק בכמה פריימים של האנימציה); אורכה עד הקרסול כמו קודם */
@@ -15436,7 +15475,7 @@ const TOURFIGS=(function(){
         }
       }
     });
-    addKit(body,kind);try{kitMerge(body)}catch(e){}
+    addKit(body,kind);try{newBody(body,kind)}catch(e){console.warn("newBody",e)}try{kitMerge(body)}catch(e){}
     root.add(body);
     const mixer=new THREE.AnimationMixer(body);
     let clipName=spec.clip||"Idle";
