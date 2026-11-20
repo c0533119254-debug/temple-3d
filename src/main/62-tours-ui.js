@@ -946,8 +946,11 @@ const TOURFIGS=(function(){
     ambSt=st;
     actors.forEach(o=>{if(o.amb){if(!showAmb){o.root.visible=false;return}if(!o.root.visible&&(o.fade===undefined||o.fade>0.01))o.root.visible=true}if(o.spec&&o.spec.path){o.t=(o.t||0)+dt;place(o,dt)}});
   }
-  load();
-  const api={g,clear,tick,ambient,onStep:onStep2,refit,frameCheck,get ready(){return ready},get fail(){return fail},spawn,stylized};
+  function arm(){if(arm.d)return;arm.d=1;load()}
+  const api={g,clear,tick,ambient,onStep:onStep2,refit,frameCheck,arm,get ready(){return ready},get fail(){return fail},spawn,stylized};
+  /* 131.3: מודל הדמות נטען אחרי לחיצה על «כניסה», לא בזמן בניית העיר. סיור שמתחיל קודם מפעיל את הטעינה מיד. */
+  const kick=()=>{try{if(window.__ENTER&&window.__ENTER.entered)arm();else setTimeout(kick,400)}catch(e){arm()}};
+  setTimeout(kick,400);
   window.__TOURFIG=api;
   return api;
 })();
@@ -1019,6 +1022,7 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
   if(!STORY_API)return;
   const stop0=STORY_API.stop;
   STORY_API.stop=function(){try{TOURFIGS.clear()}catch(e){}if(camera){camera.fov=40;camera.updateProjectionMatrix()}return stop0.apply(this,arguments)};
+const startArm=STORY_API.start;STORY_API.start=function(){try{TOURFIGS.arm()}catch(e){}return startArm.apply(this,arguments)};
 })();
 if(typeof ACTS!=="undefined"&&ACTS){const tk=ACTS.tick;ACTS.tick=(dt,tt)=>{tk(dt,tt);try{TOURFIGS.tick(dt)}catch(e){}}}
 

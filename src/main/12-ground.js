@@ -378,7 +378,11 @@ function surfY(x,n){const gx=Math.floor((x-RG.x0)/RG.st),gn=Math.floor((n-RG.n0)
   const tm=new THREE.MeshStandardMaterial({vertexColors:true,roughness:1,normalMap:T.ground,normalScale:new THREE.Vector2(0.3,0.3)});
   const idx=g.index.array,inn=[],out=[];for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2];(inSat(p.getX(a),-p.getZ(a))&&inSat(p.getX(b),-p.getZ(b))&&inSat(p.getX(c),-p.getZ(c))?inn:out).push(a,b,c)}
   const g2=g.clone();g.setIndex(out);g2.setIndex(inn);
-  const m=new THREE.Mesh(g,tm);m.name="terrain";m.receiveShadow=true;WG.add(m);const m2=new THREE.Mesh(g2,tm);m2.name="terrainIn";m2.receiveShadow=true;CITYSAT.add(m2);
+  /* הרשת המלאה נשארת בשם terrain (מוסתרת) כדי שמדידת הגובה של הכבישים תמשיך לעבוד על אותה רשת. מה שנראה הוא אריחים של 640 מ׳ מאותם משולשים, והמצלמה מציירת רק את מה שבמסך. */
+  {const keep=new THREE.Mesh(g,tm);keep.name="terrain";keep.visible=false;WG.add(keep);
+    const pos=g.attributes.position,idx=g.index.array,B=new Map(),cell=640;for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2],x=(pos.getX(a)+pos.getX(b)+pos.getX(c))/3,z=(pos.getZ(a)+pos.getZ(b)+pos.getZ(c))/3,k=Math.floor(x/cell)+":"+Math.floor(z/cell);let L=B.get(k);if(!L)B.set(k,L=[]);L.push(a,b,c)}
+    B.forEach(arr=>{const gg=new THREE.BufferGeometry();gg.setAttribute("position",pos);gg.setAttribute("uv",g.attributes.uv);gg.setAttribute("normal",g.attributes.normal);if(g.attributes.color)gg.setAttribute("color",g.attributes.color);gg.setIndex(arr);gg.computeBoundingSphere();const m=new THREE.Mesh(gg,tm);m.name="terrainTile";m.receiveShadow=true;WG.add(m)})}
+  const m2=new THREE.Mesh(g2,tm);m2.name="terrainIn";m2.receiveShadow=true;CITYSAT.add(m2);
 })();
 
 /* 127.7: הטבעת הרחוקה (צבע הערפל, בגובה 6) כיסתה כל מה שמעבר ל־1750 מ׳. בכיוון מדבר יהודה הקרקע יורדת מתחת לגובה 6, והטבעת הסתירה את הנחל של יחזקאל. עכשיו יש בטבעת חור באזור DEM2 שבתוך רשת הקרקע, והקרקע האמיתית נראית שם */
