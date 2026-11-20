@@ -184,6 +184,7 @@ function routeTo(p,t,dur){if(!COMP){camAt(p,t);return}const Wq=(u,w,y)=>new THRE
   pts.push(p);tgs.push(t);tween={path:pts,tpath:tgs,start:performance.now(),dur:Math.max(1600,(dur||1200)*1.6),p0:pts[0],t0:tgs[0],p1:p,t1:t}}
 function needFade(p0,p1){const inH=q=>INTBOX&&q.x>INTBOX.x0-2&&q.x<INTBOX.x1+2&&q.z>INTBOX.z0-2&&q.z<INTBOX.z1+2&&q.y<INTBOX.y1;return inH(p0)||inH(p1)}
 function flyTo(v,dur){const [p,t]=viewPose(v);if(reduce||!dur){camAt(p,t);return}if(needFade(camera.position,p)){routeTo(p,t,dur);return}tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:p,t1:t,start:performance.now(),dur:dur}}
+window.__flyTo=flyTo;
 let OCCF=0,HUDF=0; // מכונות מצב: TOUR הישן לא קיבל ערך אף פעם (סיור ישן שהוסר), ולכן הוסר
 function segHit(a,b){const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z;let best=1;for(const c of COL){if(c.y1-c.y0<2.6||(c.x1-c.x0<1.6&&c.z1-c.z0<1.6))continue;if(a.x>c.x0-0.3&&a.x<c.x1+0.3&&a.z>c.z0-0.3&&a.z<c.z1+0.3&&a.y>c.y0-0.3&&a.y<c.y1+0.3)continue;let t0=0,t1=1;const sl=(o,d,lo,hi)=>{if(Math.abs(d)<1e-9)return o>=lo&&o<=hi;let u=(lo-o)/d,v=(hi-o)/d;if(u>v){const q=u;u=v;v=q}t0=Math.max(t0,u);t1=Math.min(t1,v);return t0<=t1};
   if(sl(a.x,dx,c.x0-0.25,c.x1+0.25)&&sl(a.y,dy,c.y0-0.25,c.y1+0.25)&&sl(a.z,dz,c.z0-0.25,c.z1+0.25)&&t0<best)best=t0}return best}

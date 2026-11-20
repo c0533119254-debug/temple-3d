@@ -82,8 +82,11 @@ const PLAZA_BIG=(()=>{const P=GEO.PLAZA;let cx=0,cn=0;P.forEach(q=>{cx+=q[0]/P.l
 const ROCK=(()=>{const q=G2S(GEO.ROCK[0],GEO.ROCK[1]);return{x:q[0],n:q[1]}})();
 
 const QSET=(()=>{try{return localStorage.getItem("tm_q")||"auto"}catch(e){return"auto"}})();const QL=REVIEW?"low":QSET!=="auto"?QSET:(()=>{let soft=false;try{const g=document.createElement("canvas").getContext("webgl"),x=g&&g.getExtension("WEBGL_debug_renderer_info");soft=!!(x&&/swiftshader|llvmpipe|software/i.test(g.getParameter(x.UNMASKED_RENDERER_WEBGL)))}catch(e){}const small=Math.min(innerWidth,innerHeight)<720,mem=navigator.deviceMemory||8,cpu=navigator.hardwareConcurrency||8;return(soft||(small&&(mem<=4||cpu<=6))||mem<=2||cpu<=2)?"low":"high"})();
-let renderer;try{renderer=new THREE.WebGLRenderer({antialias:QL!=="low",powerPreference:"high-performance",logarithmicDepthBuffer:false})}catch(e){if(window.__noGL)__noGL("renderer");return}
-const SMALL=Math.min(window.innerWidth,window.innerHeight)<720;const PRMAX=REVIEW?0.5:Math.min(QL==="low"?1:(SMALL?1.5:2),window.devicePixelRatio||1);let PR=PRMAX,frN=0,frT=0;renderer.setPixelRatio(PR);
+const SMALL=Math.min(window.innerWidth,window.innerHeight)<720;
+let renderer;try{renderer=new THREE.WebGLRenderer({antialias:QL!=="low"&&!SMALL,powerPreference:"high-performance",logarithmicDepthBuffer:false})}catch(e){if(window.__noGL)__noGL("renderer");return}
+/* 131.3: בטלפון תקרת פיקסלים 1 גם באיכות גבוהה (קודם 1.5), בלי החלקת קצוות. אותו ציור, פחות מילוי. */
+const PRMAX=REVIEW?0.5:Math.min((QL==="low"||SMALL)?1:2,window.devicePixelRatio||1);let PR=PRMAX,frN=0,frT=0;renderer.setPixelRatio(PR);
+if(SMALL){const ga=renderer.capabilities.getMaxAnisotropy.bind(renderer.capabilities);renderer.capabilities.getMaxAnisotropy=()=>Math.min(4,ga())}
 renderer.outputEncoding=THREE.sRGBEncoding;
 renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=0.55;
 renderer.shadowMap.enabled=!REVIEW;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.shadowMap.autoUpdate=false;renderer.shadowMap.needsUpdate=true;
@@ -96,7 +99,7 @@ controls.enableDamping=true;controls.dampingFactor=0.08;controls.rotateSpeed=0.4
 const sky=new THREE.Sky();sky.scale.setScalar(40000);scene.add(sky);
 const su=sky.material.uniforms;su.turbidity.value=3.2;su.rayleigh.value=2.2;su.mieCoefficient.value=0.004;su.mieDirectionalG.value=0.82;
 const hemi=new THREE.HemisphereLight(0xdfe8f2,0x7a6a52,0.45);scene.add(hemi);
-const sun=new THREE.DirectionalLight(0xfff1dc,2.2);sun.castShadow=QL!=="low";sun.shadow.mapSize.set(SMALL?1024:2048,SMALL?1024:2048);
+const sun=new THREE.DirectionalLight(0xfff1dc,2.2);sun.castShadow=QL!=="low";sun.shadow.mapSize.set(SMALL?512:2048,SMALL?512:2048);
 const sc=sun.shadow.camera;sc.left=-230;sc.right=230;sc.top=230;sc.bottom=-230;sc.near=200;sc.far=1700;sun.shadow.bias=-0.0012;sun.shadow.normalBias=1.2;
 scene.add(sun);scene.add(sun.target);
 const pmrem=new THREE.PMREMGenerator(renderer);
