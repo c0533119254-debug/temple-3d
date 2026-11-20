@@ -1630,7 +1630,7 @@ function build(){
   const KEYS={"הבית":"הבית","המזבח":"המזבח","שער צפון":"השער החיצוני הצפוני","שער דרום":"השער החיצוני הדרומי","שער המזרח · סגור":"שער המזרח — שער שושן (הצעה)","לשכות הכהנים":"לשכות"};
   const cl=(t,u,v,y)=>{const p=W(u,v);cLabels.push(label(t,p[0],y*A,p[1],"c",findI(KEYS[t]||t)))};
   cl("הבית",150,250,114);cl("המזבח",250,250,27);const gy=GATE==="high"?66:26;cl("שער צפון",250,25,gy);cl("שער דרום",250,475,gy);cl("שער המזרח · סגור",490,250,gy);cl("לשכות הכהנים",150,170,32);
-  (function(){const mg=I("המגרש","יחזקאל מ״ה, ב","\"וחמשים אמה מגרש לו סביב\" — 50 אמה פנויות סביב המקדש. לכן לא בונים כאן כלום.");
+  (function(){const mg=I("המגרש","יחזקאל מ״ה, ב","📜 \"וחמשים אמה מגרש לו סביב\" — 50 אמה פנויות סביב המקדש. לכן לא בונים כאן כלום.");
     /* 134.1: המגרש היה מתחת לריצוף של ההר, ורק כמה כתמים חומים נראו ליד השערים. עכשיו הוא רצועה אחידה מעל הריצוף, בגוון אבן בהיר, כדי שיראו את 50 האמה הפנויות סביב המקדש. */
     const mat=M.pave.clone();mat.color=new THREE.Color(0xe6dcc6);
     const tiles=[];const add=(u0,v0,u1,v1)=>{for(let u=u0;u<u1;u+=10)for(let v=v0;v<v1;v+=10){const q=W(u+5,v+5);if(inPoly(q[0],-q[1],MOUNT_S))tiles.push(q)}};
@@ -1651,8 +1651,12 @@ function build(){
     if(northIn>cN)stoa(sh(NE,NW,0.04),sh(NE,NW,0.96),1,14,9);
     const im=new THREE.InstancedMesh(colG,M.marble,cols.length);cols.forEach((c,i)=>{d.position.set(c[0],c[2]/2,-c[1]);d.updateMatrix();im.setMatrixAt(i,d.matrix)});im.castShadow=true;group.add(im)})();
   (function(){const mi=I("בתי טבילה","הצעה של התוכנית, פרק 9","💡 מקוואות לפני הכניסה למתחם, מחוץ למגרש של 50 אמה. כל מי שנכנס צריך לטבול. בפנים: מקוואות של 40 סאה, חדרי הלבשה ומים חיים.");
-    [[205,-75],[295,-75],[205,575],[295,575]].forEach(c=>{const p=W(c[0],c[1]);const n=-p[1];if(!inPoly(p[0],n,MOUNT_S))return;const m=new THREE.Mesh(wbox(16,6,12,4),M.stoneL);m.position.set(p[0],3,p[1]);m.castShadow=true;m.receiveShadow=true;m.userData=mi;cPick.push(m);group.add(m);COL.push({x0:p[0]-8,x1:p[0]+8,z0:p[1]-6,z1:p[1]+6,y0:0,y1:6});
-      const dm=new THREE.Mesh(new THREE.SphereGeometry(3.2,16,8,0,Math.PI*2,0,Math.PI/2),M.white);dm.position.set(p[0],6,p[1]);dm.userData=mi;cPick.push(dm);group.add(dm)})})();
+    /* 142.1: בית הטבילה היה קופסה חלקה עם כיפה לבנה בוהקת. עכשיו יש פתח בכל צד וחלונות קטנים, והכיפה מאבן כמו הבית (רשת אחת לכל הפתחים) */
+    const OPG=[],opB=(w,h,d,x,y,z)=>{const g=new THREE.BoxGeometry(w,h,d);g.translate(x,y,z);OPG.push(g)};
+    [[205,-75],[295,-75],[205,575],[295,575]].forEach(c=>{const p=W(c[0],c[1]);const n=-p[1];if(!inPoly(p[0],n,MOUNT_S))return;
+      [-1,1].forEach(sd=>{opB(2.2,3.2,0.2,p[0],1.6,p[1]+sd*6.05);opB(0.2,3.2,2.2,p[0]+sd*8.05,1.6,p[1]);[-5,5].forEach(dx=>opB(1,0.8,0.2,p[0]+dx,4.3,p[1]+sd*6.05))});const m=new THREE.Mesh(wbox(16,6,12,4),M.stoneL);m.position.set(p[0],3,p[1]);m.castShadow=true;m.receiveShadow=true;m.userData=mi;cPick.push(m);group.add(m);COL.push({x0:p[0]-8,x1:p[0]+8,z0:p[1]-6,z1:p[1]+6,y0:0,y1:6});
+      const dm=new THREE.Mesh(new THREE.SphereGeometry(3.2,16,8,0,Math.PI*2,0,Math.PI/2),M.stoneL);dm.position.set(p[0],6,p[1]);dm.userData=mi;cPick.push(dm);group.add(dm)});
+    if(OPG.length){const BU=THREE.BufferGeometryUtils,mg=BU&&BU.mergeBufferGeometries(OPG);if(mg){const om=new THREE.Mesh(mg,M.dark);om.userData=mi;group.add(om)}}})();
   }
   /* 137.0 · דרכי העולים: דרך מרוצפת מכל שער של הר הבית של היום, מסביב למגרש, אל השער הצפוני ואל השער הדרומי של המקדש.
      📜 "הבא דרך שער צפון... יצא דרך שער נגב" (יחזקאל מו, ט). ⚖️ "ולא יעשנו קפנדריא" (ברכות ט, ה): לא חוצים, "אלא יקיפו מבחוץ" (רמב״ם בית הבחירה ז, ב).
@@ -1789,7 +1793,7 @@ function build(){
     BEAST.flow(gW,dt=>{const an=actN();if(an!==ACT){ACT=an;D.position.set(0,-50,0);D.rotation.set(0,0,0);D.scale.setScalar(1e-4);D.updateMatrix();for(let i=an;i<N;i++){fig.setMatrixAt(i,D.matrix);hd.setMatrixAt(i,D.matrix)}}window.__OTW.act=an;for(let i=0;i<an;i++){const w=WK[i];w.s+=w.v*dt;if(w.s>w.r.len)w.s=0;const q=at(w.r,w.s,w.off);D.position.set(q[0],0.18,q[1]);D.rotation.set(0,q[2],0);D.scale.setScalar(1);D.updateMatrix();fig.setMatrixAt(i,D.matrix);D.position.y=0.18+1.52;D.updateMatrix();hd.setMatrixAt(i,D.matrix)}fig.instanceMatrix.needsUpdate=hd.instanceMatrix.needsUpdate=true});
     window.__OTW={N,routes:RT.length}})();
   // קירות שחורים (7.11.2026): מערכת ההרחקה (core/33) העלימה מרחוק את גושי המילוי, את קיר השפה ואת המגרש (קופסאות פשוטות בלי תחליף רחוק), ונראה החלל השחור שמתחתם. noLOD משאיר אותם תמיד.
-  {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
+  {const fi=I("מילוי וקיר תומך — הצעה הנדסית","סעיף 15.3; פרק 17.6","💡 איפה שהמתחם יוצא מעבר להר של היום, צריך להרחיב את הרחבה: למלא את המדרון ולבנות קיר תומך, כמו שהורדוס הרחיב את ההר בזמנו. הגוש הזה מראה כמה מילוי צריך. זו רק אפשרות אחת; אפשר גם לבחור אמה קטנה יותר או מיקום אחר על הסלע. ההכרעה — לפוסקים ולמהנדסים.");
     const S=500*A,st=4,cells=[];for(let x=X0+st/2;x<X0+S;x+=st)for(let n=N0-S+st/2;n<N0;n+=st){if(inPoly(x,n,MOUNT_S))continue;const h=HS(x,n);if(h<-0.5)cells.push([x,n,h])}
     if(cells.length){const im=new THREE.InstancedMesh(new THREE.BoxGeometry(st,1,st),M.wall,cells.length),d=new THREE.Object3D();cells.forEach((c,i)=>{const hh=-c[2]+1;d.position.set(c[0],c[2]+hh/2-1,-c[1]);d.scale.set(1,hh,1);d.updateMatrix();im.setMatrixAt(i,d.matrix)});im.castShadow=true;im.receiveShadow=true;fi.noLOD=true;im.userData=fi;cPick.push(im);group.add(im)}}
   // the edge of the mount: a retaining wall and a stone parapet all round, so nobody can walk off the edge
