@@ -488,3 +488,28 @@ __AFTER(()=>{try{const L=[["האוניברסיטה העברית",850,1600,34,{n:
   ["מגדל הר הצופים",1058,1651,64,{n:"מגדל הר הצופים",r:"📜 OpenStreetMap",t:"📜 המגדל של הקמפוס בהר הצופים, כ־56 מ׳ לפי המפה. נראה מכל העיר."}],
   ["הדסה הר הצופים",665,2120,36,{n:"בית החולים הדסה הר הצופים",r:"📜 OpenStreetMap",t:"📜 בית החולים הדסה בצפון הר הצופים. 💡 גובה הבניין משוער."}]];
   L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("scopus labels",e)}});
+/* 143.2: הכבישים והשבילים מחוץ לאזור המפורט, בתלת־ממד. עד עכשיו הכבישים המפורטים נגמרו בקצה האזור המפורט באמצע הרחוב, ומשם היו רק פסים כהים בצילום הלוויין (שייח׳ ג׳ראח, המושבה האמריקאית, גבעת התחמושת, הר הצופים, תלפיות, רחביה).
+   📜 קווי הכבישים, המדרכות והשבילים: Overture Maps (מתוך OpenStreetMap), עד 2 ק״מ ממרכז העיר. הרוחב לפי סוג הדרך. 💡 הרוחב והמדרכות (1.8 מ׳ לכל צד בכבישים) משוערים.
+   הכביש מונח בדיוק על משטח הקרקע (אותם משולשים כמו הקרקע מחוץ לעיר). מצוירים רק החלקים הקרובים למצלמה (עד כ־700 מ׳ במחשב, 450 בטלפון): רחוק יותר ממילא רואים את הכביש בצילום הלוויין. בטלפון רק הכבישים, בלי מדרכות ושבילים */
+setTimeout(()=>{fetch("roads_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab);
+  /* גובה משטח הקרקע החיצוני (12-ground: רשת 260×299, הקרקע 0.8 מ׳ מתחת ל־H), באותם משולשים */
+  const X0=-2200,X1=2400,N0=-3000,N1=2200,SX=260,SN=299,dx=(X1-X0)/SX,dn=(N1-N0)/SN,hn=(i,j)=>H(X0+i*dx,N1-j*dn)-0.8;
+  const mY=(x,n)=>{const fu=(x-X0)/dx,fv=(N1-n)/dn,i=Math.max(0,Math.min(SX-1,Math.floor(fu))),j=Math.max(0,Math.min(SN-1,Math.floor(fv))),u=fu-i,w=fv-j;
+    if(u+w<=1){const a=hn(i,j);return a+(hn(i+1,j)-a)*u+(hn(i,j+1)-a)*w}const c=hn(i+1,j+1);return c+(hn(i,j+1)-c)*(1-u)+(hn(i+1,j)-c)*(1-w)};
+  const W=[14,10,8,6,4.5,5,2.4],SW=[1.8,1.8,1.8,1.8,0,0,0],TS=400,T=new Map(),cA=new THREE.Color(0x505154).convertSRGBToLinear(),cS=new THREE.Color(0xbdb4a2).convertSRGBToLinear(),cP=new THREE.Color(0xcdbf9f).convertSRGBToLinear();/* צבעי קודקוד הם ליניאריים: בלי ההמרה הכביש יצא אפור בהיר */
+  const tile=(x,n)=>{const k=Math.floor(x/TS)+","+Math.floor(n/TS);let t=T.get(k);if(!t){t={p:[],c:[],x:(Math.floor(x/TS)+0.5)*TS,n:(Math.floor(n/TS)+0.5)*TS};T.set(k,t)}return t};
+  const quad=(t,a0,a1,b0,b1,col)=>{/* a0,a1 = שני צדי החתך הראשון, b0,b1 = של החתך הבא */[a0,b0,b1,a0,b1,a1].forEach(q=>{t.p.push(q[0],q[1],-q[2]);t.c.push(col.r,col.g,col.b)})};
+  let o=0;while(o+2<=ab.byteLength){const c=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}
+    if(SMALL&&c>3)continue;const w=W[c]/2,s=SMALL?0:SW[c];
+    /* נקודות כל 10 מ׳ לכל היותר */const Q=[P[0]];for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/10));for(let j=1;j<=k;j++)Q.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}
+    const S=Q.map((q,i)=>{const a=Q[Math.max(0,i-1)],b=Q[Math.min(Q.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1,nx=-(b[1]-a[1])/L,nn=(b[0]-a[0])/L;
+      const at=d=>{const x=q[0]+nx*d,n=q[1]+nn*d;return[x,mY(x,n)+0.12,n]};return{L:at(-w-s),l:at(-w),r:at(w),R:at(w+s)}});
+    for(let i=0;i+1<S.length;i++){const t=tile((Q[i][0]+Q[i+1][0])/2,(Q[i][1]+Q[i+1][1])/2),A=S[i],B=S[i+1];
+      quad(t,A.l,A.r,B.l,B.r,c>=5?cP:cA);if(s){quad(t,A.L,A.l,B.L,B.l,cS);quad(t,A.r,A.R,B.r,B.R,cS)}}}
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.93,envMapIntensity:0.15,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
+  const INF={n:"הכבישים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL",t:"📜 הכבישים, המדרכות והשבילים מחוץ לאזור המפורט, לפי המפה הפתוחה. 💡 הרוחב משוער לפי סוג הדרך."};
+  const M=[];T.forEach(t=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(t.p,3));g.setAttribute("color",new THREE.Float32BufferAttribute(t.c,3));g.computeVertexNormals();g.computeBoundingSphere();
+    const m=new THREE.Mesh(g,mat);m.name="outerRoads";m.receiveShadow=true;m.matrixAutoUpdate=false;m.updateMatrix();m.visible=false;m.userData=INF;m.__t=t;WG.add(m);M.push(m)});
+  /* רק אריחים קרובים למצלמה */const VR=(SMALL?450:700)+TS*0.71,p=new THREE.Vector3(),inv=new THREE.Matrix4();
+  const upd=()=>{WG.updateMatrixWorld();inv.copy(WG.matrixWorld).invert();p.copy(camera.position).applyMatrix4(inv);/* p.x = x, p.z = -n */M.forEach(m=>{m.visible=Math.hypot(m.__t.x-p.x,m.__t.n+p.z)<VR})};upd();setInterval(upd,400);
+  window.__RD143={tiles:M.length,tris:M.reduce((s,m)=>s+m.geometry.attributes.position.count/3,0)}}).catch(e=>console.warn("outer roads",e))},SMALL?10000:6000);
