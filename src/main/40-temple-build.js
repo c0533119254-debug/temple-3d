@@ -891,6 +891,13 @@ function build(){
             for(let j=0;j<n;j++){const q=spots[idx[j]];if(j<k){near.set(j,q[0],q[1],q[2],q[3],q[4]);near.col(j,q[5],idx[j])}else if(j<k+m){setI(fb,j-k,q[0],q[1],q[2],q[3],q[4]);fb.dress(j-k,fo.ctx||"azara",fo.who===undefined?"m":fo.who,idx[j]*131+(q[5]&0xffff))}else{setI(ff,j-k-m,q[0],q[1],q[2],q[3],q[4]);ff.setColorAt(j-k-m,CC.setHex(q[5]))}}
             near.fig.count=near.head.count=k;if(near.lul)near.lul.count=k;fb.count=fh.count=m;ff.count=nf;if(fl){fl.count=m;ffl.count=nf}near.done();[fb,ff].forEach(q=>{q.instanceMatrix.needsUpdate=true;if(q.instanceColor)q.instanceColor.needsUpdate=true})}}};
       const spotsOf=(sp,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],3.5);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
+      /* 144.3 · בשבת ובראש חודש, כשהשער הפנימי המזרחי פתוח, העם עומד בפתח השער (יחזקאל מו, ג). 📜 "והשתחוו עם הארץ פתח השער ההוא בשבתות ובחדשים לפני ה׳". 💡 עומדים ולא משתחווים, כי לדמויות אין תנוחת השתחוויה; המספר והמקום המדויק הם הצעה. כבוי בחול ובזמן סיור, ולכן אינו משנה את תקציב הציור */
+      {const hold=new THREE.Group();hold.name="SHABGATE";g0.add(hold);const gS=new THREE.Group();gS.visible=false;hold.add(gS);
+        const si=I("העם בפתח השער הפנימי המזרחי","יחזקאל מ״ו, א-ג","📜 \"והשתחוו עם הארץ פתח השער ההוא בשבתות ובחדשים לפני ה׳\" (מו, ג). 📜 הנשיא בא דרך אולם השער מבחוץ, \"ועמד על מזוזת השער... והשתחוה על מפתן השער ויצא, והשער לא יסגר עד הערב\" (מו, ב). 💡 העם מוצג עומד מול הפתח, כי בדגם אין דמות משתחווה. מספר האנשים ומקומם המדויק לא מפורשים.");
+        const sp=[];for(let u=361;u<=393;u+=2.6)for(let v=235;v<=265;v+=2.6){const uu=u+(rs()-0.5)*0.9,vv=v+(rs()-0.5)*0.9;if(Math.abs(vv-250)<3.5)continue;/* מעבר פנוי באמצע, אל השער */const p=W(uu,vv),R=0.8*A;let ok=true;for(const c of COL){if(c.y1<3.5*A+0.25||c.y0>3.5*A+1.9)continue;if(p[0]>c.x0-R&&p[0]<c.x1+R&&p[1]>c.z0-R&&p[1]<c.z1+R){ok=false;break}}/* כמו free, בלי המעבר שנשמר לתהלוכות החג (בחג הקהל הזה כבוי) */if(ok)sp.push([uu,vv])}
+        const T=tiers(gS,null,spotsOf(sp,325,250,0.5,1),SMALL?24:48,si,400,{ctx:"shabbat",who:null});
+        BEAST.flow(hold,()=>{const on=!!(EGATE&&EGATE[0]&&!EGATE[0].visible)&&DAY!=="chol"&&!STORY&&!SG.visible&&!SHOW_FEST;if(gS.visible!==on){gS.visible=on;if(on)T.update(camera.position,true)}else if(on)T.update(camera.position)});
+        window.__SHABGATE={g:gS,n:sp.length}}
       const dayT=tiers(gCrowd,gLul,spotsOf(gscat(SMALL?900:10000,8,8,492,492,3.5,0.9,1.7),250,250,1.2,1),SMALL?140:260,C.lulav,SMALL?1e9:1500,{ctx:"fest",who:null});
       /* קהל צפוף סביב הריקוד. 💡 הצפיפות והמספר הם הצעת תצוגה. רשתות מדורגות: קרובים דמות מלאה, רחוקים דמות פשוטה */
       const pack=[];{const cell=SMALL?1.9:1.22,capC=SMALL?2200:6200;
