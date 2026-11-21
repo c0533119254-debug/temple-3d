@@ -10334,6 +10334,14 @@ __AFTER(()=>{try{const O="📜 OpenStreetMap",L=[["רחביה",-1880,-420,40,{n:
   ["בית הכנסת הגדול",-1778,-245,32,{n:"בית הכנסת הגדול",r:O,t:"📜 בית הכנסת הגדול ברחוב המלך ג׳ורג׳."}],
   ["מגדל העיר",-1863,360,90,{n:"מגדל העיר",r:O,t:"📜 המגדל ברחוב המלך ג׳ורג׳, כ־85 מ׳ ו־21 קומות לפי המפה."}]];
   L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("west labels",e)}});
+/* 143.5: מרכז העיר: הכיכרות והגן הגדול, לפי המפה הפתוחה (OpenStreetMap) */
+__AFTER(()=>{try{const O="📜 OpenStreetMap",L=[["כיכר ציון",-1499,434,22,{n:"כיכר ציון",r:O,t:"📜 הכיכר במפגש רחוב יפו ומדרחוב בן יהודה, לב מרכז העיר. 📷 לפי צילומי הרחוב (Mapillary): ריצוף אבן, עצים ובתי קפה."}],
+  ["כיכר ספרא",-1102,258,22,{n:"כיכר ספרא",r:O,t:"📜 הכיכר של בניין העירייה, ליד רחוב יפו."}],
+  ["כיכר החתולות",-1426,211,18,{n:"כיכר החתולות",r:O,t:"📜 כיכר קטנה ומרוצפת בין רחוב שלומציון המלכה לרחוב יואל משה סלומון."}],
+  ["כיכר הדוידקה",-1922,733,20,{n:"כיכר הדוידקה",r:O,t:"📜 הכיכר ברחוב יפו, בין מרכז העיר לשוק מחנה יהודה."}],
+  ["מגרש הרוסים",-1220,387,26,{n:"מגרש הרוסים",r:O,t:"📜 המתחם שבנתה רוסיה במאה התשע־עשרה מחוץ לחומות, היום מתחם של בתי משפט, מוזיאון ובילוי."}],
+  ["גן העצמאות",-1586,-55,14,{n:"גן העצמאות",r:O,t:"📜 הגן הגדול של מרכז העיר, בין רחוב הלל לרחוב אגרון."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("center labels",e)}});
 /* 143.2: הכבישים והשבילים מחוץ לאזור המפורט, בתלת־ממד. עד עכשיו הכבישים המפורטים נגמרו בקצה האזור המפורט באמצע הרחוב, ומשם היו רק פסים כהים בצילום הלוויין (שייח׳ ג׳ראח, המושבה האמריקאית, גבעת התחמושת, הר הצופים, תלפיות, רחביה).
    📜 קווי הכבישים, המדרכות והשבילים: Overture Maps (מתוך OpenStreetMap), עד 2 ק״מ ממרכז העיר. הרוחב לפי סוג הדרך. 💡 הרוחב והמדרכות (1.8 מ׳ לכל צד בכבישים) משוערים.
    הכביש מונח בדיוק על משטח הקרקע (אותם משולשים כמו הקרקע מחוץ לעיר). מצוירים רק החלקים הקרובים למצלמה (עד כ־700 מ׳ במחשב, 450 בטלפון): רחוק יותר ממילא רואים את הכביש בצילום הלוויין. בטלפון רק הכבישים, בלי מדרכות ושבילים */
@@ -10342,18 +10350,23 @@ setTimeout(()=>{fetch("roads_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then
   const X0=-2200,X1=2400,N0=-3000,N1=2200,SX=260,SN=299,dx=(X1-X0)/SX,dn=(N1-N0)/SN,hn=(i,j)=>H(X0+i*dx,N1-j*dn)-0.8;
   const mY=(x,n)=>{const fu=(x-X0)/dx,fv=(N1-n)/dn,i=Math.max(0,Math.min(SX-1,Math.floor(fu))),j=Math.max(0,Math.min(SN-1,Math.floor(fv))),u=fu-i,w=fv-j;
     if(u+w<=1){const a=hn(i,j);return a+(hn(i+1,j)-a)*u+(hn(i,j+1)-a)*w}const c=hn(i+1,j+1);return c+(hn(i,j+1)-c)*(1-u)+(hn(i+1,j)-c)*(1-w)};
-  const W=[14,10,8,6,4.5,5,2.4],SW=[1.8,1.8,1.8,1.8,0,0,0],TS=400,T=new Map(),cA=new THREE.Color(0x505154).convertSRGBToLinear(),cS=new THREE.Color(0xbdb4a2).convertSRGBToLinear(),cP=new THREE.Color(0xcdbf9f).convertSRGBToLinear();/* צבעי קודקוד הם ליניאריים: בלי ההמרה הכביש יצא אפור בהיר */
+  const W=[14,10,8,6,4.5,5,2.4],SW=[1.8,1.8,1.8,1.8,0,0,0],TS=400,T=new Map(),cA=new THREE.Color(0x505154).convertSRGBToLinear(),cS=new THREE.Color(0xbdb4a2).convertSRGBToLinear(),cP=new THREE.Color(0xcdbf9f).convertSRGBToLinear();const cM=new THREE.Color(0xb3ada3).convertSRGBToLinear();/* 143.5: מדרחובות וכיכרות: אבן אפורה־בהירה, כמו בצילומי הרחוב *//* צבעי קודקוד הם ליניאריים: בלי ההמרה הכביש יצא אפור בהיר */
   const tile=(x,n)=>{const k=Math.floor(x/TS)+","+Math.floor(n/TS);let t=T.get(k);if(!t){t={p:[],c:[],x:(Math.floor(x/TS)+0.5)*TS,n:(Math.floor(n/TS)+0.5)*TS};T.set(k,t)}return t};
   const quad=(t,a0,a1,b0,b1,col)=>{/* a0,a1 = שני צדי החתך הראשון, b0,b1 = של החתך הבא */[a0,b0,b1,a0,b1,a1].forEach(q=>{t.p.push(q[0],q[1],-q[2]);t.c.push(col.r,col.g,col.b)})};
-  let o=0;while(o+2<=ab.byteLength){const c=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}
-    if(SMALL&&c>3)continue;const w=W[c]/2,s=SMALL?0:SW[c];
+  let o=0;while(o+2<=ab.byteLength){let c=v.getUint8(o);const nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}
+    if(SMALL&&c>3)continue;
+    if(c===255){/* 143.5: כיכר מרוצפת (מצולע). משולשים גדולים מחולקים עד צלע של 12 מ׳, כדי שהריצוף יישב על הקרקע */const tr=THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
+      const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<6&&Math.max(l(a,b),l(b,d),l(d,a))>12){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
+        const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,t=tile((a[0]+b[0]+d[0])/3,(a[1]+b[1]+d[1])/3);(cw?[a,d,b]:[a,b,d]).forEach(q=>{t.p.push(q[0],mY(q[0],q[1])+0.1,-q[1]);t.c.push(cM.r,cM.g,cM.b)})};
+      tr.forEach(i=>put(P[i[0]],P[i[1]],P[i[2]],0));continue}
+    /* 143.5: מדרחוב (c≥16): הרוחב = c−16 מ׳, הרוחב הפנוי בין הבתים לפי המפה */const w=(c>=16?c-16:W[c])/2,s=SMALL||c>=16?0:SW[c],cc=c>=16?cM:c>=5?cP:cA;
     /* נקודות כל 10 מ׳ לכל היותר */const Q=[P[0]];for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/10));for(let j=1;j<=k;j++)Q.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}
     const S=Q.map((q,i)=>{const a=Q[Math.max(0,i-1)],b=Q[Math.min(Q.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1,nx=-(b[1]-a[1])/L,nn=(b[0]-a[0])/L;
-      const at=d=>{const x=q[0]+nx*d,n=q[1]+nn*d;return[x,mY(x,n)+0.12,n]};return{L:at(-w-s),l:at(-w),r:at(w),R:at(w+s)}});
+      const at=d=>{const x=q[0]+nx*d,n=q[1]+nn*d;return[x,mY(x,n)+0.12,n]};return{L:at(-w-s),l:at(-w),m:at(0),r:at(w),R:at(w+s)}});
     for(let i=0;i+1<S.length;i++){const t=tile((Q[i][0]+Q[i+1][0])/2,(Q[i][1]+Q[i+1][1])/2),A=S[i],B=S[i+1];
-      quad(t,A.l,A.r,B.l,B.r,c>=5?cP:cA);if(s){quad(t,A.L,A.l,B.L,B.l,cS);quad(t,A.r,A.R,B.r,B.R,cS)}}}
+      if(w>4){quad(t,A.l,A.m,B.l,B.m,cc);quad(t,A.m,A.r,B.m,B.r,cc)}else quad(t,A.l,A.r,B.l,B.r,cc);if(s){quad(t,A.L,A.l,B.L,B.l,cS);quad(t,A.r,A.R,B.r,B.R,cS)}}}
   const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.93,envMapIntensity:0.15,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
-  const INF={n:"הכבישים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL",t:"📜 הכבישים, המדרכות והשבילים מחוץ לאזור המפורט, לפי המפה הפתוחה. 💡 הרוחב משוער לפי סוג הדרך."};
+  const INF={n:"הכבישים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL",t:"📜 הכבישים, המדרכות והשבילים מחוץ לאזור המפורט, לפי המפה הפתוחה. 💡 הרוחב משוער לפי סוג הדרך. 📜 במדרחובות (רחוב יפו, בן יהודה ועוד) הריצוף נמשך מבית לבית, לפי הרוחב הפנוי בין הבניינים במפה, והכיכרות המרוצפות (כיכר ציון, כיכר ספרא, כיכר החתולות ועוד) לפי השטח שלהן במפה."};
   const M=[];T.forEach(t=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(t.p,3));g.setAttribute("color",new THREE.Float32BufferAttribute(t.c,3));g.computeVertexNormals();g.computeBoundingSphere();
     const m=new THREE.Mesh(g,mat);m.name="outerRoads";m.receiveShadow=true;m.matrixAutoUpdate=false;m.updateMatrix();m.visible=false;m.userData=INF;m.__t=t;WG.add(m);M.push(m)});
   /* רק אריחים קרובים למצלמה */const VR=(SMALL?450:700)+TS*0.71,p=new THREE.Vector3(),inv=new THREE.Matrix4();
