@@ -960,10 +960,9 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
 
 (function patchTourStations(){
   const yk=STORIES.yk&&STORIES.yk.steps;if(yk){
-    wrapEnter(yk[0],()=>setTime("morning"));
-    wrapEnter(yk[1],()=>setTime("night"));
+    // Station-local time also handles direct jumps from the night station.
+    yk.forEach(st=>wrapEnter(st,()=>setTime(st.title==="הלילה"?"night":"morning")));
     yk[1].fov=36;
-    wrapEnter(yk[2],()=>setTime("morning"));
     yk[3].pose=AP(268,292,18,250,262,16.5);yk[3].fov=34;
     // from the east, along the Mishnah line (Yoma 3:8)
     yk[4].pose=AP(232,256,10.5,218,248,8.3);yk[4].fov=34;
@@ -977,6 +976,9 @@ const wrapEnter=(st,fn)=>{const e=st.enter;st.enter=()=>{fn(st);if(e)e()}};
   }
   /* 117: סיורי החגים נשארים בדיוק כמו ב-116, בלי הבמאי האוטומטי */for(const k of ["pesach","shavuot","sukkot","hakhel"])if(STORIES[k]&&STORIES[k].steps)STORIES[k].steps.forEach(x=>{x.nofc=true});const tm=STORIES.tamid&&STORIES.tamid.steps;if(tm){
     const byTopic=title=>tm.find(st=>st.title===title);
+    // Bind the night/morning boundary to the dawn topic, not station numbers.
+    const dawn=tm.findIndex(st=>st.title==="ברקאי — האיר המזרח");
+    if(dawn>=0)tm.forEach((st,i)=>wrapEnter(st,()=>setTime(i<dawn?"night":"morning")));
     byTopic("דישון המזבח הפנימי והמנורה").nofc=byTopic("הקטורת").nofc=true;byTopic("הפיס הראשון").pose=AP(328,306,12.2,310,295.2,8);byTopic("הפיס הראשון").fov=34;
     byTopic("תרומת הדשן").pose=AP(268,292,18.5,250,262,16.5);byTopic("תרומת הדשן").fov=34;
     byTopic("סידור המערכה").pose=AP(228,292,20,250,252,16.5);byTopic("סידור המערכה").fov=34;
