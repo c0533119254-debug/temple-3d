@@ -1,0 +1,28 @@
+name: Prepare YK goat palette change
+on:
+  push:
+    branches: [instinct/yk-goat-readability-20261123]
+    paths: [.github/workflows/instinct-goat-prepare.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PYCODE'
+          from pathlib import Path
+          p=Path('src/main/30-temple-life.js')
+          s=p.read_text()
+          assert s.count('0x2b2622') == 2
+          p.write_text(s.replace('0x2b2622','0x756557'))
+          PYCODE
+          python3 tools/templesrc.py build
+          python3 tools/templesrc.py check
+          rm .github/workflows/instinct-goat-prepare.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/main/30-temple-life.js index.html .github/workflows/instinct-goat-prepare.yml
+          git commit -m 'Improve readability of the Yom Kippur goat pair'
+          git push
