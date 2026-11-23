@@ -318,12 +318,17 @@ function showIntro(i){intro.hidden=false;intro.querySelector(".ill").innerHTML=I
   const end=()=>{intro.hidden=true;LS.set("tm_intro","1")};
   if(i<2){B("דלג",0,end);B("הבא",1,()=>showIntro(i+1)).focus()}else{B("✈ חקירה חופשית",0,end);B("🧭 סיור היכרות",1,()=>{end();startTour("pilgrim")}).focus()}}
 const dismissIntro=()=>{if(!intro.hidden){intro.hidden=true;LS.set("tm_intro","1")}};intro.addEventListener("click",e=>{if(e.target===intro)dismissIntro()});(document.querySelector("#stage canvas")||(typeof renderer!=="undefined"&&renderer.domElement))&&(document.querySelector("#stage canvas")||renderer.domElement).addEventListener("pointerdown",dismissIntro,{passive:true});
-function flyIn(then){try{const [p,t]=viewPose("olives");if(camera.position.distanceTo(p)>5)camAt(p,t);
-  // מכונות מצב: מי שעוצר את טיסת הפתיחה (נגיעה, גלגלת, מקש) כבר מתחיל לטייל, ולכן כרטיסי הפתיחה לא קופצים לו באמצע. אפשר לפתוח אותם מהעזרה ("מדריך קצר")
-  let cut=false;const stop=()=>{cut=true};const evs=["pointerdown","wheel","keydown","touchstart"];evs.forEach(ev=>addEventListener(ev,stop,{capture:true,passive:true}));
-  setTimeout(()=>{flyTo("home",4200);setTimeout(()=>{evs.forEach(ev=>removeEventListener(ev,stop,{capture:true}));if(!cut)then()},4300)},400)}catch(e){then()}}
+let introFlight=null;
+function cancelIntro(){if(introFlight)introFlight();intro.hidden=true;LS.set("tm_intro","1")}
+function flyIn(then){if(introFlight)introFlight();if(STORY)return;try{const [p,t]=viewPose("olives");if(camera.position.distanceTo(p)>5)camAt(p,t);
+  let cut=false,first=null,last=null,flightTween=null;const evs=["pointerdown","wheel","keydown","touchstart"];
+  const clean=()=>{evs.forEach(ev=>removeEventListener(ev,stop,{capture:true}));if(introFlight===stop)introFlight=null};
+  const stop=()=>{cut=true;clearTimeout(first);clearTimeout(last);if(flightTween&&tween===flightTween)tween=null;clean()};introFlight=stop;
+  evs.forEach(ev=>addEventListener(ev,stop,{capture:true,passive:true}));
+  first=setTimeout(()=>{if(cut||STORY){stop();return}flyTo("home",4200);flightTween=tween;last=setTimeout(()=>{clean();if(!cut&&!STORY)then()},4300)},400)
+}catch(e){if(!STORY)then()}}
 {const t0=performance.now();const wait=()=>{if($("loading")&&performance.now()-t0<240000){setTimeout(wait,200);return}const r=restore();if(!r&&!LS.get("tm_intro")&&!window.__EV){LS.set("tm_intro","1");if(window.__TOUCHED)showIntro(0);else flyIn(()=>showIntro(0))}};setTimeout(wait,300)}
-window.__UI={buildIndex,run,toggleDr,showIntro,share,shareURL,restore,closeDr,chip,flyIn};
+window.__UI={cancelIntro,buildIndex,run,toggleDr,showIntro,share,shareURL,restore,closeDr,chip,flyIn};
 })();
 // the stage must never scroll (focus on an off-screen item scrolled it sideways and showed a blue strip)
 {const st=document.getElementById("stage");const fix=()=>{if(st.scrollLeft||st.scrollTop){st.scrollLeft=0;st.scrollTop=0}};st.addEventListener("scroll",fix,{passive:true});setInterval(fix,500)}
