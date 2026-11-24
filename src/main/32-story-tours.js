@@ -69,6 +69,7 @@ const STORIES={};
     const ve=$("stVerse");if(st.verse){const h=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");ve.hidden=false;ve.innerHTML='<span>'+h(st.verse)+'</span><cite>'+h(st.verseRef||"")+'</cite>'}else ve.hidden=true;
     S.pending=st;S.narrDone=false;if("speechSynthesis" in window)speechSynthesis.cancel();const tx=$("stText");if(tx)tx.textContent="";settleNarr()};
   const api={start(key){const d=STORIES[key];if(!d)return;
+      if(window.__UI&&window.__UI.cancelIntro)window.__UI.cancelIntro();
       if(WALK)stopWalk();if(DRONE)stopDrone();if(TRN&&TRN.riding)TRN.stopRide();closeInfo();const introEl=document.getElementById("intro");if(introEl)introEl.hidden=true;
       document.querySelectorAll("#viewSeg button[data-v]").forEach(x=>x.setAttribute("aria-pressed","false"));S.def=d;S.key=key;S.paused=false;$("stTitle").textContent=d.title;$("stLearn").hidden=!d.learn;box.hidden=false;STORY=api;try{window.TempleMusic&&(TempleMusic.endLoading(),TempleMusic.startTour(key,d.steps.map(st=>st.title)))}catch(e){}SND.init();if(d.open)d.open();go(0)},
     pause(){if(!STORY||S.paused)return;S.paused=true;try{window.TempleMusic&&TempleMusic.pauseTour()}catch(e){}S.user=true;S.move=null;clearTimeout(S.timer);if("speechSynthesis" in window)speechSynthesis.pause();$("stPlay").textContent="▶ המשך סיור"},
