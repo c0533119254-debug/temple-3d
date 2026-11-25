@@ -33,8 +33,8 @@ for (const key of ['tamid', 'yk']) {
   const before = load(false), after = load(true);
   const a = before.scope.STORIES[key].steps, b = after.scope.STORIES[key].steps;
   const expected = key === 'tamid'
-    ? [...Array(5).fill('night'), ...Array(9).fill('morning')]
-    : ['morning', 'night', ...Array(10).fill('morning')];
+    ? [...Array(6).fill('night'), ...Array(10).fill('morning')]
+    : ['morning', 'night', ...Array(11).fill('morning')];
   a.forEach((st, i) => {
     before.actions.length = after.actions.length = 0;
     enter(st); enter(b[i]);
@@ -54,10 +54,10 @@ for (const key of ['tamid', 'yk']) {
 const inserted = load(true, true);
 const stations = inserted.scope.STORIES.tamid.steps;
 const dawn = stations.findIndex(st => st.title === 'ברקאי — האיר המזרח');
-assert.equal(dawn, 6);
+assert.equal(dawn, 7);
 stations.forEach((st, i) => {
   inserted.scope.TIME = i < dawn ? 'morning' : 'night';
   enter(st);
   assert.equal(inserted.scope.TIME, i < dawn ? 'night' : 'morning', `inserted station ${i + 1}`);
 });
-console.log(`PASS: ${transitions} direct transitions, 26 sequential stations, actor-action parity, insertion-safe dawn boundary`);
+console.log(`PASS: ${transitions} direct transitions, 29 sequential stations, actor-action parity, insertion-safe dawn boundary`);

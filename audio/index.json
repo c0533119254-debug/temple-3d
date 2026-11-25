@@ -12,6 +12,7 @@
   "yk_02.mp3",
   "yk_03.mp3",
   "yk_04.mp3",
+  null,
   "yk_05.mp3",
   "yk_06.mp3",
   "yk_07.mp3",
@@ -23,12 +24,14 @@
  ],
  "tamid": [
   "tamid_01.mp3",
+  null,
   "tamid_02.mp3",
   "tamid_03.mp3",
   "tamid_04.mp3",
   "tamid_05.mp3",
   "tamid_06.mp3",
   "tamid_07.mp3",
+  null,
   "tamid_08.mp3",
   "tamid_09.mp3",
   "tamid_10.mp3",
@@ -79,7 +82,8 @@
   "sukkot_04.mp3",
   "sukkot_05.mp3",
   "sukkot_06.mp3",
-  "sukkot_07.mp3"
+  "sukkot_07.mp3",
+  null
  ],
  "hakhel": [
   "hakhel_01.mp3",
@@ -97,6 +101,7 @@
   "shavuot_04.mp3",
   "shavuot_05.mp3",
   "shavuot_06.mp3",
-  "shavuot_07.mp3"
+  "shavuot_07.mp3",
+  null
  ]
 }
