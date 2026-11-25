@@ -110,7 +110,7 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   [head,mit,tz,ephod].forEach(m=>g.add(m));
   const tool=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.08,0.12,10),gold);g.add(tool);
   const mkAnimal=(col,L,Hh,hd,kind)=>mkBeast(kind||(L>1.5?"bull":"goat"),col,L,Hh);
-  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
+  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x756557,1.0,0.75,0.28),gB=mkAnimal(0x756557,1.0,0.75,0.28);
   const thread=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.06,0.3),new THREE.MeshStandardMaterial({color:0xb3261e}));gB.add(thread);thread.position.set(0.75,0.75,0);
   const kalpi=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.35),gold);[bull,gA,gB,kalpi].forEach(m=>g.add(m));
   const cloud=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xd8d2c8,transparent:true,opacity:0.08,depthWrite:false}),18);cloud.frustumCulled=false;g.add(cloud);cloud.visible=false;
@@ -191,17 +191,17 @@ function buildActors(W,y0A){const r=rng(777),d=new THREE.Object3D(),c=new THREE.
   const segL=[];let tot=0;for(let i=0;i<loop.length-1;i++){const l=Math.hypot(loop[i+1][0]-loop[i][0],loop[i+1][1]-loop[i][1],loop[i+1][2]-loop[i][2]);segL.push(l);tot+=l}
   const NPr=SMALL?10:18,pr=FIG.mesh(NPr,FIG.mat(0xf7f5ee),{role:"kohen",hat:false}),prH=new THREE.InstancedMesh(FIG.head(),new THREE.MeshStandardMaterial({color:0xc99a74,roughness:0.8}),NPr),prT=new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12,0.13,0.14,8),new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.8}),NPr);
   const PRS=[];for(let i=0;i<NPr;i++)PRS.push({s:i/NPr*tot,v:0.9+r()*0.3});for(let i=0;i<NPr;i++)pr.setSp(i,PRS[i].v);
-  pr.userData=prH.userData={n:"כהנים בעבודה",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין",t:"כהנים בבגדי לבן: מקדשים ידיים ורגליים בכיור, עולים בכבש אל המזבח, מסדרים את העצים ומקריבים, ויורדים. הם הולכים יחפים על רצפת האבן."};[pr,prH,prT].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(pr);
+  pr.userData=prH.userData={n:"כהנים בעבודה",r:"משנה תמיד; רמב״ם, הלכות תמידין ומוספין",t:"⚖️ כהנים בבגדי לבן: מקדשים ידיים ורגליים בכיור, עולים בכבש אל המזבח, מסדרים את העצים ומקריבים, ויורדים. הם הולכים יחפים על רצפת האבן."};[pr,prH,prT].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(pr);
   // Levites on the duchan, singing and playing
   const LV=[];[[214,258],[273,287]].forEach(([a,b])=>{for(let v=a;v<=b;v+=2.2)LV.push(P(285.5,v,9))});
   const lv=FIG.mesh(LV.length,FIG.mat(0xe8e2cf),{role:"levi"}),lvH=new THREE.InstancedMesh(FIG.head(),prH.material,LV.length);
   LV.forEach((p,i)=>{d.position.set(p[0],p[1],p[2]);d.rotation.set(0,Math.PI,0);d.scale.setScalar(1);d.updateMatrix();lv.setMatrixAt(i,d.matrix);d.position.y=p[1]+1.56;d.updateMatrix();lvH.setMatrixAt(i,d.matrix);lv.setAmp(i,0.25)});
-  lv.userData={n:"הלוויים על הדוכן",r:"מידות ב, ו; ערכין יא ע״ב",t:"לוויים עומדים על הדוכן ושרים את שיר של יום, בכינורות ובנבלים, בשעה שמנסכים את היין על המזבח. \"ואין פוחתין משנים עשר לויים עומדין על הדוכן\"."};[lv,lvH].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(lv);
+  lv.userData={n:"הלוויים על הדוכן",r:"מידות ב, ו; ערכין יא ע״ב",t:"📜 לוויים עומדים על הדוכן ושרים את שיר של יום, בכינורות ובנבלים, בשעה שמנסכים את היין על המזבח. \"ואין פוחתין משנים עשר לויים עומדין על הדוכן\"."};[lv,lvH].forEach(m=>{m.frustumCulled=false;group.add(m)});cPick.push(lv);
   // doves
   const ND=SMALL?14:30,dv=new THREE.InstancedMesh((()=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute([0,0,0,-0.15,0,0.45,0.12,0,0, 0,0,0,0.12,0,0,-0.15,0,-0.45, 0.25,0.02,0,-0.25,0.02,0.06,-0.25,0.02,-0.06],3));g.computeVertexNormals();return g})(),new THREE.MeshStandardMaterial({color:0xf2f0ea,side:THREE.DoubleSide,roughness:0.9}),ND);
   const DV=[];for(let i=0;i<ND;i++)DV.push({c:P(230+r()*60,230+r()*60,0),R:6+r()*16,h:22+r()*18,w:(0.35+r()*0.4)*(r()<0.5?1:-1),ph:r()*6});dv.frustumCulled=false;dv.visible=false;group.add(dv);
   // water in the laver
-  const wt=new THREE.Mesh(new THREE.CircleGeometry(1.3*A*1.1,24),new THREE.MeshStandardMaterial({color:0x6f9fb8,roughness:0.05,metalness:0.3,emissive:0x0a1a24}));{const p=P(222,263,9.45);wt.position.set(p[0],p[1],p[2]);wt.rotation.x=-Math.PI/2;group.add(wt)}
+  const wt=new THREE.Mesh(new THREE.CircleGeometry(1.3*A*1.1,24),new THREE.MeshStandardMaterial({color:0x6f9fb8,roughness:0.05,metalness:0.3,emissive:0x0a1a24}));{const p=P(222,263,9.45);wt.position.set(p[0],p[1],p[2]);/* 140.2: מקום הכיור, לקולות הרקע */window.__LAVER=[p[0],p[1],p[2]];wt.rotation.x=-Math.PI/2;group.add(wt)}
   // incense: thin wisps from the doorway of the Heikhal
   const NI=14,inc=new THREE.InstancedMesh(new THREE.SphereGeometry(1,8,6),M.smoke,NI),IN=[];for(let i=0;i<NI;i++)IN.push({t:i/NI,s:r()});const ib=P(197,250,13.56+20);inc.frustumCulled=false;group.add(inc);
   ACT.tick=(dt,tt)=>{

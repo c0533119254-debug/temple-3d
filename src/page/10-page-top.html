@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 138.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 144.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -318,6 +318,7 @@ body.pane .exitb{left:420px!important}
 #stStrip button{flex:none;border:1px solid var(--ln);background:rgba(255,255,255,.05);color:var(--cr2);border-radius:16px;padding:0 12px;height:32px;font:600 12.5px var(--f-body);cursor:pointer;white-space:nowrap}
 #stStrip button.on{background:var(--gold);color:#1a1408;border-color:var(--gold)}
 body.touring #chips,body.touring #rail,body.touring .dr{display:none!important}
+body.touring #pesHud,body.touring #shvHud,body.touring #sukHud{display:none!important} /* 142.4: בזמן סיור כרטיס הסיור כבר אומר מה רואים. התווית של החג כיסתה את אמצע התמונה בטלפון ואת כרטיס הסיור במחשב */
 /* Keep the requested source card above the tour controls, including on phones. */
 body.touring .infocard{bottom:88px!important;height:calc(100% - 88px)!important;transform:none!important;overflow-y:auto!important;touch-action:pan-y}
 @media(max-width:700px){body.touring .infocard{top:64px!important;height:calc(100% - 152px)!important}}
@@ -709,6 +710,7 @@ b.addEventListener("touchend",function(e){var t=e.changedTouches&&e.changedTouch
           <button type="button" data-o="labels" aria-pressed="true" id="oL">שמות</button>
           <button type="button" data-o="wall" aria-pressed="false" id="oW">חומת ההר היום</button>
           <button type="button" data-o="kz" aria-pressed="false" id="oK">מי רשאי לעמוד כאן</button>
+          <button type="button" data-o="reeds" aria-pressed="false" id="oR">500 קנים</button>
           <button type="button" data-o="fest" aria-pressed="false" id="oF">חג</button>
           <button type="button" data-o="mini" aria-pressed="false" id="oM">מפה קטנה</button>
           <button type="button" data-o="ssao" aria-pressed="false" id="oS">איכות גבוהה</button>
@@ -781,7 +783,7 @@ b.addEventListener("touchend",function(e){var t=e.changedTouches&&e.changedTouch
   </div>
   <footer class="foot">
     <p>מודל עקרוני ללימוד, לא תוכנית ביצוע. הר הבית מוצג כקרקע פנויה רעיונית: המודל לא מציג את המבנים שעומדים עליו היום ולא עוסק בהם, חוץ מבתצוגת "ההר היום" להשוואה.</p>
-    <p class="credits">מקורות ונתונים: בניינים ורחובות © OpenStreetMap contributors (ODbL) · Overture Maps · תמונות לוויין Esri, Maxar, Earthstar Geographics · גבהים AWS Terrain Tiles (SRTM) · שמיים וטקסטורת אבן Poly Haven (CC0)</p>
+    <p class="credits">מקורות ונתונים: בניינים ורחובות © OpenStreetMap contributors (ODbL) · Overture Maps (כולל Microsoft ML Buildings, ODbL) · תמונות לוויין Esri, Maxar, Earthstar Geographics · הקרקע מחוץ לעיר: Sentinel-2 cloudless – s2maps.eu, EOX IT Services GmbH (Contains modified Copernicus Sentinel data 2016, CC BY 4.0) · גבהים AWS Terrain Tiles (SRTM) · שמיים וטקסטורת אבן Poly Haven (CC0)</p>
   </footer>
 </div>
 

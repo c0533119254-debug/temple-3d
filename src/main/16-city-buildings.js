@@ -54,7 +54,7 @@ function facadeTex(old){const W=1024,Hh=512,bw=256,fh=128;let r;
 // the Heikhal rises 100 amot above a floor ~13.5 amot over the platform (platform top = 0): about 54 m even with the smallest amah.
 // No building in the city may come within 12 m of that: taller ones are cut down (on ground that is itself too high, to 2 floors at most).
 const CAPY=113.5*0.48-12;
-let BLDMAT=null;const LODS=[];let LODF=0;function lodTick(){if(++LODF%15)return;WG.updateMatrixWorld();const v=new THREE.Vector3();LODS.forEach(L=>{v.copy(L.c).applyMatrix4(WG.matrixWorld);L.m.visible=camera.position.distanceTo(v)<L.d})}
+let BLDMAT=null;const LODS=[];let LODF=0;const LODP=new THREE.Vector3(1e9,0,0);function lodTick(){/* 139.0: אחרי קפיצה של המצלמה (סיור, מעבר מבט) בודקים מיד, לא אחרי 15 פריימים */if(++LODF%15&&camera.position.distanceToSquared(LODP)<400)return;LODP.copy(camera.position);WG.updateMatrixWorld();const v=new THREE.Vector3();LODS.forEach(L=>{v.copy(L.c).applyMatrix4(WG.matrixWorld);L.m.visible=camera.position.distanceTo(v)<L.d})}
 const SUKC={roofs:[],apply:null,heads:null};const PESC={b:[],apply:null};const ROOFS=[],SANDC=LTX("tex_sand_diff.jpg"),SANDN=LTX("tex_sand_nor.jpg");
 [SANDC,SANDN].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.anisotropy=8});SANDC.encoding=THREE.sRGBEncoding;
 {const pc=LTX("tex_sand_diff.jpg"),pn=LTX("tex_sand_nor.jpg");[pc,pn].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);t.anisotropy=8});pc.encoding=THREE.sRGBEncoding;M.pave.map=pc;M.pave.normalMap=pn;M.pave.color.setHex(0xd8cdb9);M.pave.roughness=0.88;M.pave.needsUpdate=true;if(PLATTOP){PLATTOP.map=pc;PLATTOP.normalMap=pn;PLATTOP.color.setHex(0xd6cbb6);PLATTOP.needsUpdate=true}}
@@ -111,7 +111,7 @@ const SUKC={roofs:[],apply:null,heads:null};const PESC={b:[],apply:null};const R
   {const d=new THREE.Object3D();
     if(DOMES.length){const dm=new THREE.InstancedMesh(new THREE.SphereGeometry(1,14,7,0,Math.PI*2,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0xcfc4ad,roughness:0.9,envMapIntensity:0.3}),DOMES.length);DOMES.forEach((q,i)=>{d.position.set(q[0],q[1]-0.1,-q[2]);d.scale.set(q[3],q[3]*0.62,q[3]);d.updateMatrix();dm.setMatrixAt(i,d.matrix)});dm.castShadow=true;dm.receiveShadow=true;WG.add(dm)}
     ;}
-  const BUD={n:"בתי העיר",r:"עיריית ירושלים — שכבת הבניינים 2022; השלמות מ־OpenStreetMap",t:"כ־11,000 בניינים, כל אחד במקום, בצורה ובגובה האמיתיים שלו, לפי המדידה של עיריית ירושלים (2022). איפה שאין מדידה, הנתונים מ־OpenStreetMap. מבנים לשימור מסומנים באבן עתיקה כהה יותר, עם חלונות קשתיים."};wms.forEach(m=>{m.castShadow=true;m.receiveShadow=true;m.userData=BUD;WG.add(m);PICK.push(m)});
+  const BUD={n:"בתי העיר",r:"עיריית ירושלים — שכבת הבניינים 2022; השלמות מ־OpenStreetMap",t:"📜 כ־11,000 בניינים, כל אחד במקום, בצורה ובגובה האמיתיים שלו, לפי המדידה של עיריית ירושלים (2022). איפה שאין מדידה, הנתונים מ־OpenStreetMap. מבנים לשימור מסומנים באבן עתיקה כהה יותר, עם חלונות קשתיים."};wms.forEach(m=>{m.castShadow=true;m.receiveShadow=true;m.userData=BUD;WG.add(m);PICK.push(m)});
   const plain=new THREE.MeshStandardMaterial({color:0xe3d9c4,roughness:0.95,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2});
   {const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(RP,3));g.setAttribute("color",new THREE.Float32BufferAttribute(RC,3));g.computeVertexNormals();
     const sat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,envMapIntensity:0.25,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2}); /* ריצודים: הגג באותו גובה כמו ראש הקירות; הגג תמיד מעל *//* 123.5: הגגות בכמה אריחים (500 מ׳), כדי שהמצלמה תצייר רק את מה שבמסך. קודם היה רשת אחת לכל העיר */
@@ -145,15 +145,19 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
     const big=cm=>{let a=0;const p=cm.p;for(let k=0;k<p.length;k++){const q=p[k],o=p[(k+p.length-1)%p.length];a+=q[0]*o[1]-o[0]*q[1]}return Math.abs(a)/2>100000},CAP=[{o:SMALL?700:1800,w:SMALL?2500:6000,cw:[],co:[]},{o:SMALL?700:1600,w:SMALL?1600:4000,cw:[],co:[]}];
     F.cem.forEach(cm=>{const K=CAP[big(cm)?0:1];let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;cm.p.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});
       for(let x=xa;x<xb;x+=st)for(let n=na;n<nb;n+=st){if(!inPoly(x,n,cm.p)||!free(x,n)||PARA9.near(x,n))continue;const h=TY(x,n),lv=Math.floor(h/3.5);
-        [[st,0],[0,st]].forEach(([dx,dn])=>{const x2=x+dx,n2=n+dn;if(!inPoly(x2,n2,cm.p))return;const h2=TY(x2,n2);if(Math.floor(h2/3.5)===lv)return;const gx=TY(x+0.5,n)-TY(x-0.5,n),gn=TY(x,n+0.5)-TY(x,n-0.5),ang=Math.atan2(gn,gx)+Math.PI/2,mx=(x+x2)/2,mn=(n+n2)/2;K.cw.push([mx,Math.min(h,h2),mn,ang,Math.abs(h2-h),Math.min(lv,Math.floor(h2/3.5))])});
+        /* 142.0: הקיר הולך בדיוק על קו הגובה (marching squares בתא), כך שהקטעים של תאים שכנים נפגשים לקיר אחד רציף ולא לקוביות מדורגות */
+        {const C4=[[x,n],[x+st,n],[x+st,n+st],[x,n+st]];if(C4.every(q=>inPoly(q[0],q[1],cm.p))){const H4=C4.map(q=>TY(q[0],q[1])),lo=Math.min(...H4),hi=Math.max(...H4);
+          for(let L=Math.ceil(lo/3.5)*3.5;L<hi;L+=3.5){const P=[];for(let e=0;e<4;e++){const a=H4[e],b=H4[(e+1)%4];if((a<L)!==(b<L)){const t=(L-a)/(b-a),A0=C4[e],B0=C4[(e+1)%4];P.push([A0[0]+(B0[0]-A0[0])*t,A0[1]+(B0[1]-A0[1])*t])}}
+            if(P.length>=2){const[p1,p2]=P,ln=Math.hypot(p2[0]-p1[0],p2[1]-p1[1]);if(ln>0.2)K.cw.push([(p1[0]+p2[0])/2,L,(p1[1]+p2[1])/2,Math.atan2(p2[1]-p1[1],p2[0]-p1[0]),ln,Math.round(L/3.5)])}}}}
         if(Math.round(x/st)%3===0&&Math.round(n/st)%3===0&&r()<0.8)K.co.push([x+(r()-0.5)*2,TY(x,n),-(n+(r()-0.5)*2),0.75+r()*0.35,r()*6.28])}});
     /* 129.6: דילול אחיד לפי המכסה (עצים באקראי, טרסות לפי קומות שלמות כדי שלא ייראו שבורות), כך שכל בית קברות מקבל חלק לפי השטח שלו ולא רק הראשונים ברשימה */
     CAP.forEach((K,i)=>{const OUT=i?OL2:OL,po=Math.min(1,K.o/Math.max(1,K.co.length)),pw=Math.min(1,K.w/Math.max(1,K.cw.length));K.co.forEach(t=>{if(r()<po)OUT.push(t)});const sk=Math.ceil(1/pw);K.cw.forEach(w=>{if(((w[5]%sk)+sk)%sk===0)WL.push(w)})});
     if(OL.length)TREES5.plant(WG,"olive",OL,{n:"מטע זיתים בהר הזיתים",r:"זכריה יד, ד; 💡 הצעה",t:"📜 \"הר הזיתים אשר על פני ירושלים מקדם\" (זכריה יד, ד). 💡 בשטח של בתי הקברות של היום אין קברים (אחרי תחיית המתים), ובמקומם מטע זיתים על טרסות אבן. מספר העצים והטרסות הוא הצעה."});
     if(OL2.length)TREES5.plant(WG,"olive",OL2,{n:"מטע זיתים על טרסות",r:"💡 הצעה",t:"💡 בשטח של בית הקברות של היום אין קברים (אחרי תחיית המתים), ובמקומם מטע זיתים על טרסות אבן, כמו בהר הזיתים. מספר העצים והטרסות הוא הצעה."});
-    if(WL.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:0xcbbd9f,roughness:0.95,envMapIntensity:0.3}),WL.length);
-      WL.forEach((w,i)=>{const hh=Math.min(1.6,Math.max(0.6,w[4]+0.4));d.rotation.set(0,w[3],0);d.position.set(w[0],w[1]+hh/2-0.2,-w[2]);d.scale.set(3.1,hh,0.55);d.updateMatrix();wm.setMatrixAt(i,d.matrix);c.setRGB(0.95+r()*0.05,0.92+r()*0.06,0.86+r()*0.06);wm.setColorAt(i,c)});d.rotation.set(0,0,0);
-      wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"טרסות זיתים",r:"💡 הצעה",t:"💡 קירות אבן נמוכים בכל 3.5 מ׳ של גובה, ועליהם מטע זיתים. בהר הזיתים, בהר ציון ובמקומות אחרים יש היום בתי קברות. במודל של העתיד, אחרי תחיית המתים, אין קברים."};WG.add(wm);PICK.push(wm)}
+    if(WL.length){const wm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshStandardMaterial({color:0x948971,roughness:1,envMapIntensity:0.2}),WL.length);
+      /* 142.0 (בדיקת האיכות): הקירות היו קוביות לבנות נפרדות שבולטות מהמדרון ונראו כמו שורות מצבות. עכשיו הם קירות תמך של אבן שדה: בצבע האדמה, נמוכים, שקועים באדמה בצד התחתון, עם הראש בגובה הקרקע שמעליהם, וחופפים זה לזה כדי שייראו רציפים */
+      WL.forEach((w,i)=>{const top=w[1]+0.3,bot=w[1]-1.1,hh=top-bot;d.rotation.set(0,w[3],0);d.position.set(w[0],bot+hh/2,-w[2]);d.scale.set(w[4]+0.25,hh,0.6);d.updateMatrix();wm.setMatrixAt(i,d.matrix);const k=0.86+r()*0.14;c.setRGB(k,k*0.98,k*0.94);wm.setColorAt(i,c)});d.rotation.set(0,0,0);
+      wm.castShadow=true;wm.receiveShadow=true;wm.userData={n:"טרסות זיתים",r:"💡 הצעה",t:"💡 קירות אבן נמוכים לאורך קווי הגובה, בכל 3.5 מ׳ של גובה, ועליהם מטע זיתים. בהר הזיתים, בהר ציון ובמקומות אחרים יש היום בתי קברות. במודל של העתיד, אחרי תחיית המתים, אין קברים."};WG.add(wm);PICK.push(wm)}
     window.__OLV9={trees:OL.length,trees2:OL2.length,walls:WL.length}}
   // terrace and garden walls
   const WS=[];F.walls.forEach(w=>{for(let i=0;i<w.length-1;i++){const a=w[i],b=w[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L<0.3)continue;const mx=(a[0]+b[0])/2,mn=(a[1]+b[1])/2;if(inPoly(mx,mn,MOUNT_BIG)||inPoly(mx,mn,KZ)/* גרסה 122.2: בלי קירות OSM באמצע רחבת הכותל */||!clearAt(mx,mn,0.5)||!clearAt(a[0],a[1],0.3)||!clearAt(b[0],b[1],0.3))continue;WS.push([mx,mn,L,Math.atan2(b[1]-a[1],b[0]-a[0])])}});
@@ -168,7 +172,7 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
        for(const o of[0,1.2,2.4]){const ox=ux*sg*o,on=un*sg*o;if(clearAt(mx+ox,mn+on,0.6)&&clearAt(x0+ox,n0+on,0.3)&&clearAt(x1+ox,n1+on,0.3)){ZW.push([mx+ox,mn+on,L/k,Math.atan2(n1-n0,x1-x0)]);break}}}}});
    if(ZW.length){const zm=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,0.7),M.wall,ZW.length);ZW.forEach((w,i)=>{const cx=Math.cos(w[3])*w[2]/2,cn=Math.sin(w[3])*w[2]/2,g=[TY(w[0]-cx,w[1]-cn),TY(w[0],w[1]),TY(w[0]+cx,w[1]+cn)],lo=Math.min(...g)-0.6,hi=Math.max(...g)+2.8;/* החומה שקועה באדמה ועולה כ-3 מ׳ מעל הנקודה הגבוהה, כדי שבמדרון לא יהיו חורים */
      d.rotation.set(0,w[3],0);d.position.set(w[0],(lo+hi)/2,-w[1]);d.scale.set(w[2]+0.4,hi-lo,1);d.updateMatrix();zm.setMatrixAt(i,d.matrix)});d.rotation.set(0,0,0);
-     zm.castShadow=true;zm.receiveShadow=true;zm.userData={n:"חומות החצרות בהר ציון",r:"תמונות Mapillary",t:"בהר ציון החצרות סגורות בחומות אבן גבוהות, והסמטאות עוברות ביניהן, כמו שרואים בתמונות הרחוב של היום."};WG.add(zm);PICK.push(zm)}
+     zm.castShadow=true;zm.receiveShadow=true;zm.userData={n:"חומות החצרות בהר ציון",r:"תמונות Mapillary",t:"📜 בהר ציון החצרות סגורות בחומות אבן גבוהות, והסמטאות עוברות ביניהן, כמו שרואים בתמונות הרחוב של היום."};WG.add(zm);PICK.push(zm)}
    window.__ZW9=ZW.length}
 })();
 
@@ -281,7 +285,7 @@ function clip(P,U,M,own,outP,outU,t,R){
     for(let t=0;t+8<roadRenderInput.p.length;t+=9){const o=owner(t),first=P.length;clip(roadRenderInput.p,roadRenderInput.u,M,o,P,U,t,1e6);for(let q=first;q+8<P.length;q+=9)raster(M,P,q,o)}
     __v6=Object.assign(__v6||{},{roadRenderClip:{before:geo.a.p.length/9,after:P.length/9,ms:Math.round(performance.now()-started),cells:M.size}});geo.a.p=P;geo.a.u=U;roadRenderInput.p=null;roadRenderInput.u=null;
   }
-  const mk=(G,m,name)=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.computeVertexNormals();const me=new THREE.Mesh(g,m);me.name=G.nm||"road";me.receiveShadow=true;me.renderOrder=1;if(name)me.userData={n:name,r:"OpenStreetMap",t:"הכבישים והמדרכות של היום, לפי OpenStreetMap. בכבישים הראשיים — פסי הפרדה, אבני שפה ותאורה."};WG.add(me);if(name)PICK.push(me)};
+  const mk=(G,m,name)=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.computeVertexNormals();const me=new THREE.Mesh(g,m);me.name=G.nm||"road";me.receiveShadow=true;me.renderOrder=1;if(name)me.userData={n:name,r:"OpenStreetMap",t:"📜 הכבישים והמדרכות של היום, לפי OpenStreetMap. בכבישים הראשיים — פסי הפרדה, אבני שפה ותאורה."};WG.add(me);if(name)PICK.push(me)};
   const mkC=(G,m,name,R)=>{const C={};for(let t=0;t<G.p.length;t+=9){const cx=(G.p[t]+G.p[t+3]+G.p[t+6])/3,cz=(G.p[t+2]+G.p[t+5]+G.p[t+8])/3,k=Math.floor(cx/400)+"_"+Math.floor(cz/400);const c=C[k]||(C[k]={p:[],u:[]});for(let j=0;j<9;j++)c.p.push(G.p[t+j]);const tu=t/3*2;for(let j=0;j<6;j++)c.u.push(G.u[tu+j]||0)}Object.values(C).forEach(c=>{c.nm=G.nm;const n0=WG.children.length;mk(c,m,name);const me=WG.children[n0];if(me){me.geometry.computeBoundingSphere();LODS.push({m:me,c:me.geometry.boundingSphere.center.clone(),d:R*(QL==="low"||SMALL?0.7:1)+me.geometry.boundingSphere.radius})}})};geo.a.nm="road_a";geo.p.nm="road_p";geo.s.nm="road_s";mkC(geo.a,mA,"כבישים",1100);mkC(geo.p,mP,"מדרחובות",900);{const swT=tex(cv(256,256,(x,w,h)=>{x.fillStyle="#bdb6a8";x.fillRect(0,0,w,h);noiseFill(x,w,h,14,73);x.strokeStyle="rgba(70,64,54,.38)";x.lineWidth=2;for(let i=0;i<=8;i++){x.beginPath();x.moveTo(0,i*32);x.lineTo(w,i*32);x.stroke();x.beginPath();x.moveTo(i*32,0);x.lineTo(i*32,h);x.stroke()}}),true);
     mkC(geo.s,new THREE.MeshStandardMaterial({map:swT,roughness:0.92,envMapIntensity:0.15}),null,450)}
   {const P=geo.c.p,U=geo.c.u,C={};for(let t=0;t<P.length;t+=9){const cx=(P[t]+P[t+3]+P[t+6])/3,cz=(P[t+2]+P[t+5]+P[t+8])/3,k=Math.floor(cx/300)+"_"+Math.floor(cz/300);const c=C[k]||(C[k]={p:[],u:[]});for(let j=0;j<9;j++)c.p.push(P[t+j]);const tu=t/3*2;for(let j=0;j<6;j++)c.u.push(U[tu+j]||0)}
@@ -391,13 +395,13 @@ function clip(P,U,M,own,outP,outU,t,R){
     // large car parks only (capacity shown only where the data gives it)
     const sprite=(txt,bg,fg,w)=>{const fsz=txt.length>1?84:170;const cv=document.createElement("canvas");cv.width=256;cv.height=256;const c=cv.getContext("2d");c.fillStyle=bg;c.beginPath();c.roundRect?c.roundRect(8,8,240,240,30):c.rect(8,8,240,240);c.fill();c.fillStyle=fg;c.font="bold "+fsz+"px Arial";c.textAlign="center";c.textBaseline="middle";c.direction="rtl";c.fillText(txt,128,136);const t=new THREE.CanvasTexture(cv);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,toneMapped:false,depthTest:true}));s.scale.set(w,w,1);return s};
     {const g=mkG("pk");OSM4.pk.forEach(([x,n,nm,cap,ty])=>{x/=10;n/=10;const bt=bldTop(x,n),y=Math.max(TY(x,n),bt>-1e3?bt:-1e9),s=sprite("P","#1f56b8","#ffffff",3.2);s.position.set(x,y+7,-n);
-        s.userData={n:nm?"חניון "+nm.replace(/^חניון\s*/,""):"חניון",r:"OpenStreetMap (amenity=parking)",t:"חניון גדול"+(ty==="underground"?" תת-קרקעי":ty==="multi-storey"?" רב-קומות":"")+". "+(cap?"מספר מקומות: "+cap+".":"מספר המקומות לא מסומן בנתונים.")};g.add(s);PICK.push(s);
+        s.userData={n:nm?"חניון "+nm.replace(/^חניון\s*/,""):"חניון",r:"OpenStreetMap (amenity=parking)",t:"📜 חניון גדול"+(ty==="underground"?" תת-קרקעי":ty==="multi-storey"?" רב-קומות":"")+". "+(cap?"מספר מקומות: "+cap+".":"מספר המקומות לא מסומן בנתונים.")};g.add(s);PICK.push(s);
         const p=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,5.4,5),new THREE.MeshStandardMaterial({color:0x4a4f55}));p.position.set(x,y+2.7,-n);g.add(p)})}
     // planned fast railway (TAMA 108): two stations and a straight schematic line, NOT the real tunnel route
-    {const g=mkG("hsr"),A=OSM4.hsrL,info={n:"רכבת מהירה מתוכננת: קו סכמטי",r:"תת\"ל 108; מיקום התחנות מוויקיפדיה (בערך, 100 עד 200 מ')",t:"הקו הוא קו ישר בין שתי התחנות בלבד, ואינו התוואי האמיתי של המנהרה. אין תחנה מתוכננת בעיר העתיקה."};
+    {const g=mkG("hsr"),A=OSM4.hsrL,info={n:"רכבת מהירה מתוכננת: קו סכמטי",r:"תת\"ל 108; מיקום התחנות מוויקיפדיה (בערך, 100 עד 200 מ')",t:"📜 הקו הוא קו ישר בין שתי התחנות בלבד, ואינו התוואי האמיתי של המנהרה. אין תחנה מתוכננת בעיר העתיקה."};
       if(A.length===4){const ax=A[0]/10,an=A[1]/10,bx_=A[2]/10,bn=A[3]/10,L=Math.hypot(bx_-ax,bn-an),ang=Math.atan2(bn-an,bx_-ax),D=[];for(let t=0;t<L;t+=14)D.push(t);
         const dm=new THREE.InstancedMesh(new THREE.BoxGeometry(8,0.3,3),new THREE.MeshBasicMaterial({color:0xff8a1c,toneMapped:false,transparent:true,opacity:0.85}),D.length);D.forEach((t,i)=>{const x=ax+(bx_-ax)*t/L,n=an+(bn-an)*t/L;o3.rotation.set(0,ang,0);o3.position.set(x,Math.max(TY(x,n),bldTop(x,n))+3,-n);o3.updateMatrix();dm.setMatrixAt(i,o3.matrix)});dm.userData=info;g.add(dm);PICK.push(dm)}
-      OSM4.hsr.forEach(([q,nm,loc])=>{const x=q[0]/10,n=q[1]/10,y=TY(x,n),s=sprite("רכבת","#ff8a1c","#ffffff",6);s.position.set(x,y+14,-n);s.userData={n:"תחנת "+nm+" (מתוכננת, תת-קרקעית)",r:info.r,t:(loc?loc+". ":"")+"המיקום בערך. "+info.t};g.add(s);PICK.push(s);const p=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,11,6),new THREE.MeshStandardMaterial({color:0xff8a1c}));p.position.set(x,y+5.5,-n);g.add(p)})}
+      OSM4.hsr.forEach(([q,nm,loc])=>{const x=q[0]/10,n=q[1]/10,y=TY(x,n),s=sprite("רכבת","#ff8a1c","#ffffff",6);s.position.set(x,y+14,-n);s.userData={n:"תחנת "+nm+" (מתוכננת, תת-קרקעית)",r:info.r,t:"📜 "+(loc?loc+". ":"")+"המיקום בערך. "+info.t.replace("📜 ","")};g.add(s);PICK.push(s);const p=new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,11,6),new THREE.MeshStandardMaterial({color:0xff8a1c}));p.position.set(x,y+5.5,-n);g.add(p)})}
     // ⚖️ a kohen keeps 4 amot (about 2 m) away from a grave (Vayikra 21:1; Shulchan Arukh YD 371:5). The data gives only the cemetery outline,
     // so every road piece inside it or within 2.5 m of its edge is marked red. Where nothing is marked, the data shows no cemetery.
     if(0){const g=mkG("khn"),CP=OSM4.cem.map(([nm,rel,A])=>{const P=[];let x0=1e9,x1=-1e9,n0=1e9,n1=-1e9;for(let i=0;i<A.length;i+=2){const x=A[i]/10,n=A[i+1]/10;P.push([x,n]);x0=Math.min(x0,x);x1=Math.max(x1,x);n0=Math.min(n0,n);n1=Math.max(n1,n)}return{P,x0:x0-3,x1:x1+3,n0:n0-3,n1:n1+3}});
@@ -431,7 +435,109 @@ const TODAYG=new THREE.Group();WG.add(TODAYG);TODAYG.visible=false;
   // (rebuilt in detail: topic 3, area 5)
   // (Tower of David is now built in detail: topic 3, area 1)
   // today's Temple Mount buildings — shown only in "today" floor mode
-  L(-10,2,{n:"כיפת הסלע",r:"מצב \"היום\"",t:"המבנה שעומד היום מעל הסלע. מוצג רק בתצוגת \"היום\", להשוואה."},g=>{const oc=new THREE.Mesh(new THREE.CylinderGeometry(27,27,11,8),new THREE.MeshStandardMaterial({color:0x3f7fb5,roughness:0.6}));oc.rotation.y=Math.PI/8;oc.position.y=5.5;g.add(oc);cylr(g,12,8,0,11,0,new THREE.MeshStandardMaterial({color:0x3f7fb5,roughness:0.6}),24);dome(g,12,0,19,0,gold,1.1)},TODAYG);
-  L(36,-215,{n:"מסגד אל־אקצא",r:"מצב \"היום\"",t:"המבנה שבדרום ההר היום. מוצג רק בתצוגת \"היום\"."},g=>{box(g,55,14,80,0,0,0);dome(g,9,0,14,30,grey,0.9)},TODAYG);
+  L(-10,2,{n:"כיפת הסלע",r:"מצב \"היום\"",t:"📜 המבנה שעומד היום מעל הסלע. מוצג רק בתצוגת \"היום\", להשוואה."},g=>{const oc=new THREE.Mesh(new THREE.CylinderGeometry(27,27,11,8),new THREE.MeshStandardMaterial({color:0x3f7fb5,roughness:0.6}));oc.rotation.y=Math.PI/8;oc.position.y=5.5;g.add(oc);cylr(g,12,8,0,11,0,new THREE.MeshStandardMaterial({color:0x3f7fb5,roughness:0.6}),24);dome(g,12,0,19,0,gold,1.1)},TODAYG);
+  L(36,-215,{n:"מסגד אל־אקצא",r:"מצב \"היום\"",t:"📜 המבנה שבדרום ההר היום. מוצג רק בתצוגת \"היום\"."},g=>{box(g,55,14,80,0,0,0);dome(g,9,0,14,30,grey,0.9)},TODAYG);
 })();
 
+// ---- 141.1: the neighbourhoods on the skyline, outside the detailed area (Overture Maps buildings: OpenStreetMap + Microsoft ML Buildings, ODbL) ----
+/* 141.1 (גובה הגג: מעל אמצע המדרון, כמו בית מדורג על צלע ההר): מחוץ לאזור המפורט (ארמון הנציב, תלפיות, א־טור, הר הצופים, רחביה, טלביה ועוד) לא היו בניינים בכלל, וקו הרקיע נראה כמו גבעות ריקות.
+   📜 טביעות הרגל של 10,030 בניינים מ־Overture Maps (גרסה 2026-11-18: OpenStreetMap ו־Microsoft ML Buildings, ODbL), מפושטות לפינות עד 1.5 מ׳.
+   💡 הגובה: רק לכ־250 בניינים יש מספר קומות במפה. לשאר הגובה משוער לפי השטח (2 עד 5 קומות, 3.2 מ׳ לקומה), כמו בשכונות ירושלים.
+   הקובץ bld_outer.bin נטען רק במחשב, אחרי שהדגם עולה. בטלפון אין אותם, כדי לשמור על מהירות. ארבעה חלקים (צפון, דרום, מזרח, מערב), בלי צללים */
+/* 141.7: גם בטלפון, בגרסה קלה: 4,000 הבניינים הגדולים (מעל 285 מ״ר), כל אחד כמלבן (10 משולשים), כ־40 אלף משולשים בסך הכול. נטען 8 שניות אחרי שהדגם עולה */
+setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab);
+  /* 141.8: חומר כמו בעיר (מקבל את אור הסביבה), צבע אבן חם, חלונות קטנים יותר, ובערך רבע מהמקומות בלי חלון, כמו בבניינים שבאזור המפורט. קודם השכונות מסביב נראו כהות יותר מהעיר, והגבול ביניהן בלט. 4 על 4 חלונות בתמונה אחת. בלילה חלק מהחלונות דולקים (141.3), כמו בבניינים שבאזור המפורט */
+  const cv=document.createElement("canvas");cv.width=cv.height=256;const x=cv.getContext("2d"),cl=document.createElement("canvas");cl.width=cl.height=256;const xl=cl.getContext("2d");x.fillStyle="#dccaa6";x.fillRect(0,0,256,256);xl.fillStyle="#000";xl.fillRect(0,0,256,256);
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){const win=(i*3+j*5)%4!==0;if(win){x.fillStyle="#968c7a";x.fillRect(i*64+26,j*64+22,12,18)}x.fillStyle="#cfbd9a";x.fillRect(i*64,j*64+58,64,6);if(win&&(i*7+j*5+i*j*3)%8<3){xl.fillStyle="#ffcf8a";xl.fillRect(i*64+26,j*64+22,12,18)}}
+  const tx=new THREE.CanvasTexture(cv),tl=new THREE.CanvasTexture(cl);[tx,tl].forEach(t=>{t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.anisotropy=4});
+  const mat=new THREE.MeshStandardMaterial({roughness:0.95,envMapIntensity:0.55,map:tx,vertexColors:true,emissiveMap:tl,emissive:0x000000,emissiveIntensity:1.3});if(typeof BLDMAT!=="undefined"&&BLDMAT){mat.emissive.copy(BLDMAT.emissive);BLDMAT.userData.sky=mat}
+  const Q=[0,1,2,3].map(()=>({p:[],u:[],c:[]}));let o=0;const rnd=k=>{const s=Math.sin(k*12.9898)*43758.5453;return s-Math.floor(s)};let bi=0;
+  while(o+2<=ab.byteLength){const fl=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}bi++;
+    let cx=0,cn=0,lo=1e9,hi=-1e9;P.forEach(q=>{cx+=q[0];cn+=q[1];const h=H(q[0],q[1]);lo=Math.min(lo,h);hi=Math.max(hi,h)});cx/=nv;cn/=nv;
+    if(bldTop(cx,cn)>-1e3)continue;
+    const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.84+0.1*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
+    for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/16,vt=(y1-y0)/12.8;
+      G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
+    /* 143.0: גג לפי הצורה האמיתית (גם לבניין בצורת ח׳ או ר׳). קודם בניין עם יותר מ־8 פינות הפך למלבן גדול שעוטף אותו, ובניינים גדולים כמו בקמפוס הר הצופים נראו כגוש אחד */
+    const TR=nv===3?[[0,1,2]]:THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
+    TR.forEach(t=>{const a=P[t[0]],b=P[t[1]],d=P[t[2]],cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0;(cw?[a,d,b]:[a,b,d]).forEach(q=>{G.p.push(q[0],y1,-q[1]);G.u.push(0.125,0.985);G.c.push(c[0]*0.93,c[1]*0.93,c[2]*0.93)})})}
+  Q.forEach(G=>{if(!G.p.length)return;const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(G.p,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(G.u,2));g.setAttribute("color",new THREE.Float32BufferAttribute(G.c,3));g.computeVertexNormals();g.computeBoundingSphere();
+    const m=new THREE.Mesh(g,mat);m.name="skylineBld";m.matrixAutoUpdate=false;m.updateMatrix();m.userData={n:"השכונות מסביב",r:"Overture Maps (OpenStreetMap, Microsoft ML Buildings), ODbL",t:"📜 טביעות הרגל של הבניינים מחוץ לאזור המפורט. 💡 הגובה משוער לפי השטח, חוץ מבניינים שמספר הקומות שלהם מסומן במפה."};WG.add(m)})
+}).catch(()=>{})},SMALL?8000:4000);
+/* 141.9: היערות, הפארקים והמטעים מסביב לעיר כעצים בתלת־ממד. עד עכשיו מחוץ לאזור המפורט היה רק צילום לוויין שטוח, ובקו הרקיע לא היה אף עץ.
+   📜 היכן: השטחים המסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע (Overture Maps, מתוך OpenStreetMap), וגם עצים בודדים המסומנים במפה.
+   📜 בתוך השטחים עץ נשתל רק במקום שבו צילום הלוויין (Sentinel-2) כהה וירקרק, כלומר צמרות, ולא דשא, שביל או בניין. לא על כבישים, לא על בניינים, לא במגרשי ספורט ובבתי קברות.
+   💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים, בפארקים תערובת.
+   קובץ trees_outer.bin: לכל עץ x,n (חצאי מטר) וסוג. מקרוב העץ הרגיל, מרחוק צורה פשוטה של 8 משולשים, ומעבר ל־1.4 ק״מ לא מצוירים. בטלפון רק שליש מהעצים */
+setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab),KS=["pine","olive","cypress","carob","shade"];
+  /* מקומות שכבר יש בהם עץ (עצי האזורים האחרים): לא שותלים שוב */
+  const occ=new Set(),m4=new THREE.Matrix4(),p=new THREE.Vector3();WG.children.forEach(o=>{if(!o.isInstancedMesh||o.material!==TREES5.mat)return;for(let i=0;i<o.count;i++){o.getMatrixAt(i,m4);p.setFromMatrixPosition(m4);occ.add(Math.floor(p.x/5)+","+Math.floor(-p.z/5))}});
+  const BY={};KS.forEach(k=>BY[k]=[]);const rnd=k=>{const s=Math.sin(k*12.9898+3.1)*43758.5453;return s-Math.floor(s)};let n0=0;
+  for(let o=0,i=0;o+5<=ab.byteLength;o+=5,i++){if(SMALL&&i%3)continue;const x=v.getInt16(o,true)/2,n=v.getInt16(o+2,true)/2,k=KS[v.getUint8(o+4)]||"pine";
+    if(occ.has(Math.floor(x/5)+","+Math.floor(n/5))||bldTop(x,n)>-1e3)continue;BY[k].push([x,H(x,n),-n,0.75+rnd(i)*0.5,rnd(i+11)*6.28]);n0++}
+  /* צורה רחוקה: צמרת בלבד (תמנון מעוגל), 8 משולשים. מעבר ל־1.4 ק״מ לא מציירים, כי שם ממילא אובך */
+  const S={pine:[9.6,3.2,1.7,0x46592f,8],olive:[3.8,3.2,1.8,0x7d8a62,2],cypress:[6.8,1.0,6.4,0x2e3d26,0.6],carob:[4.2,3.1,2.2,0x3f5b2d,2],shade:[6,3.1,2.7,0x55713a,3.3]};
+  const far=k=>{const [cy,r,ry,hex,tr]=S[k],g=new THREE.OctahedronGeometry(1,0),P=g.attributes.position,N=g.attributes.normal,col=[],c=new THREE.Color(hex);
+    for(let i=0;i<P.count;i++){const X=P.getX(i),Y=P.getY(i),Z=P.getZ(i);N.setXYZ(i,X,Y,Z);P.setXYZ(i,X*r,Y<-0.9?(cy>9?cy-ry*1.5:0.3):cy+Y*ry,Z*r);/* באורן הצמרת שטוחה על גזע דק (שמרחוק לא רואים), בשאר העצים הצמרת יורדת עד הקרקע */const s=0.88+0.37*(Y*0.5+0.5);col.push(c.r*s,c.g*s,c.b*s)}
+    const pos=Array.from(P.array),nor=Array.from(N.array);
+    const b=new THREE.BufferGeometry();b.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));b.setAttribute("normal",new THREE.Float32BufferAttribute(nor,3));b.setAttribute("color",new THREE.Float32BufferAttribute(col,3));b.computeBoundingSphere();return b};
+  const INF={n:"יערות ופארקים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL; Sentinel-2 cloudless 2016, EOX, CC BY 4.0",t:"📜 העצים עומדים בשטחים שמסומנים במפה הפתוחה כיער, חורש, פארק, גינה או מטע, ורק במקומות שבהם בצילום הלוויין רואים צמרות. 💡 סוג העץ משוער: ביער בעיקר אורן ירושלים, במטעים זיתים. 📷 ברחביה ובטלביה יש עצים גם לאורך הרחובות ובחצרות שבין הבתים, כמו שרואים בצילומי הרחוב (Mapillary). 💡 המקום של כל עץ שם משוער."};
+  KS.forEach(k=>{if(!BY[k].length)return;const m=TREES5.plant(WG,k,BY[k],INF);if(m){m.userData.farGeo=far(k);m.userData.lodR=SMALL?140:200;m.userData.farMax=1400;m.name="outerTrees"}});window.__TR141={trees:n0}}).catch(()=>{})},SMALL?9000:5000);
+/* 143.0: הר הצופים: שמות המקומות הגדולים על ההר, לפי המפה הפתוחה (OpenStreetMap). 📜 גובה המגדל 56 מ׳ לפי המפה */
+__AFTER(()=>{try{const L=[["האוניברסיטה העברית",850,1600,34,{n:"האוניברסיטה העברית, הר הצופים",r:"📜 OpenStreetMap",t:"📜 הקמפוס של האוניברסיטה העברית על הר הצופים: הפקולטות למדעי הרוח, למשפטים ולמדעי החברה, ספריית בלומפילד, המכון לארכאולוגיה ומכון טרומן. 💡 גובה הבניינים משוער, חוץ מהמגדל."}],
+  ["מגדל הר הצופים",1058,1651,64,{n:"מגדל הר הצופים",r:"📜 OpenStreetMap",t:"📜 המגדל של הקמפוס בהר הצופים, כ־56 מ׳ לפי המפה. נראה מכל העיר."}],
+  ["הדסה הר הצופים",665,2120,36,{n:"בית החולים הדסה הר הצופים",r:"📜 OpenStreetMap",t:"📜 בית החולים הדסה בצפון הר הצופים. 💡 גובה הבניין משוער."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("scopus labels",e)}});
+/* 143.4: רחביה, טלביה והמושבה הגרמנית: שמות השכונות והמקומות הגדולים, לפי המפה הפתוחה (OpenStreetMap). 📜 הגבהים של המגדלים לפי המפה */
+__AFTER(()=>{try{const O="📜 OpenStreetMap",L=[["רחביה",-1880,-420,40,{n:"רחביה",r:O,t:"📜 שכונת גנים שתכנן ריכרד קאופמן בשנות העשרים של המאה העשרים: בתי אבן של שלוש וארבע קומות, חצרות עם עצים וחומות גן נמוכות. 📷 העצים ברחובות לפי צילומי הרחוב (Mapillary)."}],
+  ["טלביה",-1560,-900,40,{n:"טלביה",r:O,t:"📜 שכונה של וילות אבן גדולות מימי המנדט, בין רחביה למושבה הגרמנית. 📷 העצים ברחובות לפי צילומי הרחוב (Mapillary)."}],
+  ["המושבה הגרמנית",-1588,-1737,30,{n:"המושבה הגרמנית",r:O,t:"📜 המושבה שייסדו הטמפלרים במאה התשע־עשרה, לאורך רחוב עמק רפאים. 💡 גובה הבתים כאן משוער."}],
+  ["בית הנשיא",-1993,-914,22,{n:"בית הנשיא",r:O,t:"📜 משכן נשיא המדינה, בשכונת טלביה."}],
+  ["תיאטרון ירושלים",-1876,-999,26,{n:"תיאטרון ירושלים",r:O,t:"📜 מרכז האמנויות של ירושלים, בקצה טלביה."}],
+  ["ימק״א",-1313,-415,58,{n:"בניין ימק״א",r:O,t:"📜 בניין ימק״א ברחוב המלך דוד, עם המגדל שגובהו כ־53 מ׳ לפי המפה."}],
+  ["מלון המלך דוד",-1219,-403,42,{n:"מלון המלך דוד",r:O,t:"📜 המלון ברחוב המלך דוד, מול העיר העתיקה, כ־37 מ׳ לפי המפה."}],
+  ["בית הכנסת הגדול",-1778,-245,32,{n:"בית הכנסת הגדול",r:O,t:"📜 בית הכנסת הגדול ברחוב המלך ג׳ורג׳."}],
+  ["מגדל העיר",-1863,360,90,{n:"מגדל העיר",r:O,t:"📜 המגדל ברחוב המלך ג׳ורג׳, כ־85 מ׳ ו־21 קומות לפי המפה."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("west labels",e)}});
+/* 143.5: מרכז העיר: הכיכרות והגן הגדול, לפי המפה הפתוחה (OpenStreetMap) */
+__AFTER(()=>{try{const O="📜 OpenStreetMap",L=[["כיכר ציון",-1499,434,22,{n:"כיכר ציון",r:O,t:"📜 הכיכר במפגש רחוב יפו ומדרחוב בן יהודה, לב מרכז העיר. 📷 לפי צילומי הרחוב (Mapillary): ריצוף אבן, עצים ובתי קפה."}],
+  ["כיכר ספרא",-1102,258,22,{n:"כיכר ספרא",r:O,t:"📜 הכיכר של בניין העירייה, ליד רחוב יפו."}],
+  ["כיכר החתולות",-1426,211,18,{n:"כיכר החתולות",r:O,t:"📜 כיכר קטנה ומרוצפת בין רחוב שלומציון המלכה לרחוב יואל משה סלומון."}],
+  ["כיכר הדוידקה",-1922,733,20,{n:"כיכר הדוידקה",r:O,t:"📜 הכיכר ברחוב יפו, בין מרכז העיר לשוק מחנה יהודה."}],
+  ["מגרש הרוסים",-1220,387,26,{n:"מגרש הרוסים",r:O,t:"📜 המתחם שבנתה רוסיה במאה התשע־עשרה מחוץ לחומות, היום מתחם של בתי משפט, מוזיאון ובילוי."}],
+  ["גן העצמאות",-1586,-55,14,{n:"גן העצמאות",r:O,t:"📜 הגן הגדול של מרכז העיר, בין רחוב הלל לרחוב אגרון."}]];
+  L.forEach(([t,x,n,h,inf])=>{const q=G2S(x,n);label(t,q[0],H(x,n)+h,-q[1],null,inf)})}catch(e){console.warn("center labels",e)}});
+/* 143.2: הכבישים והשבילים מחוץ לאזור המפורט, בתלת־ממד. עד עכשיו הכבישים המפורטים נגמרו בקצה האזור המפורט באמצע הרחוב, ומשם היו רק פסים כהים בצילום הלוויין (שייח׳ ג׳ראח, המושבה האמריקאית, גבעת התחמושת, הר הצופים, תלפיות, רחביה).
+   📜 קווי הכבישים, המדרכות והשבילים: Overture Maps (מתוך OpenStreetMap), עד 2 ק״מ ממרכז העיר. הרוחב לפי סוג הדרך. 💡 הרוחב והמדרכות (1.8 מ׳ לכל צד בכבישים) משוערים.
+   הכביש מונח בדיוק על משטח הקרקע (אותם משולשים כמו הקרקע מחוץ לעיר). מצוירים רק החלקים הקרובים למצלמה (עד כ־700 מ׳ במחשב, 450 בטלפון): רחוק יותר ממילא רואים את הכביש בצילום הלוויין. בטלפון רק הכבישים, בלי מדרכות ושבילים */
+setTimeout(()=>{fetch("roads_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then(ab=>{if(!ab)return;const v=new DataView(ab);
+  /* גובה משטח הקרקע החיצוני (12-ground: רשת 260×299, הקרקע 0.8 מ׳ מתחת ל־H), באותם משולשים */
+  const X0=-2200,X1=2400,N0=-3000,N1=2200,SX=260,SN=299,dx=(X1-X0)/SX,dn=(N1-N0)/SN,hn=(i,j)=>H(X0+i*dx,N1-j*dn)-0.8;
+  const mY=(x,n)=>{const fu=(x-X0)/dx,fv=(N1-n)/dn,i=Math.max(0,Math.min(SX-1,Math.floor(fu))),j=Math.max(0,Math.min(SN-1,Math.floor(fv))),u=fu-i,w=fv-j;
+    if(u+w<=1){const a=hn(i,j);return a+(hn(i+1,j)-a)*u+(hn(i,j+1)-a)*w}const c=hn(i+1,j+1);return c+(hn(i,j+1)-c)*(1-u)+(hn(i+1,j)-c)*(1-w)};
+  const W=[14,10,8,6,4.5,5,2.4],SW=[1.8,1.8,1.8,1.8,0,0,0],TS=400,T=new Map(),cA=new THREE.Color(0x505154).convertSRGBToLinear(),cS=new THREE.Color(0xbdb4a2).convertSRGBToLinear(),cP=new THREE.Color(0xcdbf9f).convertSRGBToLinear();const cM=new THREE.Color(0xb3ada3).convertSRGBToLinear();const cWs=new THREE.Color(0xb8a27e).convertSRGBToLinear(),cWt=new THREE.Color(0xcdbd9c).convertSRGBToLinear();/* 143.5: מדרחובות וכיכרות: אבן אפורה־בהירה, כמו בצילומי הרחוב *//* צבעי קודקוד הם ליניאריים: בלי ההמרה הכביש יצא אפור בהיר */
+  const tile=(x,n)=>{const k=Math.floor(x/TS)+","+Math.floor(n/TS);let t=T.get(k);if(!t){t={p:[],c:[],x:(Math.floor(x/TS)+0.5)*TS,n:(Math.floor(n/TS)+0.5)*TS};T.set(k,t)}return t};
+  const quad=(t,a0,a1,b0,b1,col)=>{/* a0,a1 = שני צדי החתך הראשון, b0,b1 = של החתך הבא */[a0,b0,b1,a0,b1,a1].forEach(q=>{t.p.push(q[0],q[1],-q[2]);t.c.push(col.r,col.g,col.b)})};
+  let o=0;while(o+2<=ab.byteLength){let c=v.getUint8(o);const nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}
+    if(SMALL&&c>3)continue;
+    if(c===255){/* 143.5: כיכר מרוצפת (מצולע). משולשים גדולים מחולקים עד צלע של 12 מ׳, כדי שהריצוף יישב על הקרקע */const tr=THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
+      const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<6&&Math.max(l(a,b),l(b,d),l(d,a))>12){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
+        const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,t=tile((a[0]+b[0]+d[0])/3,(a[1]+b[1]+d[1])/3);(cw?[a,d,b]:[a,b,d]).forEach(q=>{t.p.push(q[0],mY(q[0],q[1])+0.1,-q[1]);t.c.push(cM.r,cM.g,cM.b)})};
+      tr.forEach(i=>put(P[i[0]],P[i[1]],P[i[2]],0));continue}
+    if(c===254){/* 143.6: חומת גן מאבן לאורך המדרכה (📷 Mapillary: רחביה, טלביה, רחוב הנביאים). 💡 גובה 1.5 מ׳, עובי 0.4 מ׳ */const Q=[P[0]];for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/10));for(let j=1;j<=k;j++)Q.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}
+      const S=Q.map((q,i)=>{const a=Q[Math.max(0,i-1)],b=Q[Math.min(Q.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1,nx=-(b[1]-a[1])/L*0.2,nn=(b[0]-a[0])/L*0.2,y=mY(q[0],q[1]);
+        return{a0:[q[0]-nx,y-0.4,q[1]-nn],a1:[q[0]-nx,y+1.5,q[1]-nn],b0:[q[0]+nx,y-0.4,q[1]+nn],b1:[q[0]+nx,y+1.5,q[1]+nn]}});
+      for(let i=0;i+1<S.length;i++){const t=tile((Q[i][0]+Q[i+1][0])/2,(Q[i][1]+Q[i+1][1])/2),A=S[i],B=S[i+1];quad(t,A.a0,A.a1,B.a0,B.a1,cWs);quad(t,A.b0,A.b1,B.b0,B.b1,cWs);quad(t,A.a1,A.b1,B.a1,B.b1,cWt)}continue}
+    /* 143.5: מדרחוב (c≥16): הרוחב = c−16 מ׳, הרוחב הפנוי בין הבתים לפי המפה */const w=(c>=16?c-16:W[c])/2,s=SMALL||c>=16?0:SW[c],cc=c>=16?cM:c>=5?cP:cA;
+    /* נקודות כל 10 מ׳ לכל היותר */const Q=[P[0]];for(let i=1;i<P.length;i++){const a=P[i-1],b=P[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.max(1,Math.ceil(L/10));for(let j=1;j<=k;j++)Q.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}
+    const S=Q.map((q,i)=>{const a=Q[Math.max(0,i-1)],b=Q[Math.min(Q.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1,nx=-(b[1]-a[1])/L,nn=(b[0]-a[0])/L;
+      const at=d=>{const x=q[0]+nx*d,n=q[1]+nn*d;return[x,mY(x,n)+0.12,n]};return{L:at(-w-s),l:at(-w),m:at(0),r:at(w),R:at(w+s)}});
+    for(let i=0;i+1<S.length;i++){const t=tile((Q[i][0]+Q[i+1][0])/2,(Q[i][1]+Q[i+1][1])/2),A=S[i],B=S[i+1];
+      if(w>4){quad(t,A.l,A.m,B.l,B.m,cc);quad(t,A.m,A.r,B.m,B.r,cc)}else quad(t,A.l,A.r,B.l,B.r,cc);if(s){quad(t,A.L,A.l,B.L,B.l,cS);quad(t,A.r,A.R,B.r,B.R,cS)}}}
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.93,envMapIntensity:0.15,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4});
+  const INF={n:"הכבישים מסביב לעיר",r:"Overture Maps (OpenStreetMap), ODbL",t:"📜 הכבישים, המדרכות והשבילים מחוץ לאזור המפורט, לפי המפה הפתוחה. 💡 הרוחב משוער לפי סוג הדרך. 📜 במדרחובות (רחוב יפו, בן יהודה ועוד) הריצוף נמשך מבית לבית, לפי הרוחב הפנוי בין הבניינים במפה, והכיכרות המרוצפות (כיכר ציון, כיכר ספרא, כיכר החתולות ועוד) לפי השטח שלהן במפה. 📷 ברחביה, בטלביה ובאזור רחוב הנביאים יש חומות גן מאבן לאורך המדרכות, כמו בצילומי הרחוב (Mapillary). 💡 הגובה (1.5 מ׳) משוער, והחומה עומדת רק במקום שאין בו בית או דרך אחרת."};
+  const M=[];T.forEach(t=>{const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(t.p,3));g.setAttribute("color",new THREE.Float32BufferAttribute(t.c,3));g.computeVertexNormals();g.computeBoundingSphere();
+    const m=new THREE.Mesh(g,mat);m.name="outerRoads";m.receiveShadow=true;m.matrixAutoUpdate=false;m.updateMatrix();m.visible=false;m.userData=INF;m.__t=t;WG.add(m);M.push(m)});
+  /* רק אריחים קרובים למצלמה */const VR=(SMALL?450:700)+TS*0.71,p=new THREE.Vector3(),inv=new THREE.Matrix4();
+  const upd=()=>{WG.updateMatrixWorld();inv.copy(WG.matrixWorld).invert();p.copy(camera.position).applyMatrix4(inv);/* p.x = x, p.z = -n */M.forEach(m=>{m.visible=Math.hypot(m.__t.x-p.x,m.__t.n+p.z)<VR})};upd();setInterval(upd,400);
+  window.__RD143={tiles:M.length,tris:M.reduce((s,m)=>s+m.geometry.attributes.position.count/3,0)}}).catch(e=>console.warn("outer roads",e))},SMALL?10000:6000);

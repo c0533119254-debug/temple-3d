@@ -73,7 +73,7 @@ if(oP.length!==P.length){g.setAttribute("position",new THREE.Float32BufferAttrib
   /* גרסה 122.1: קצה פתוח של קו (שפת המפה) נכנס לפתח מנהרה במקום להיעצר באמצע הכביש — 💡 הנחת עבודה: הקו ממשיך מתחת לאדמה מחוץ לתחום המודל */
   {const POR=[],seen=new Set();LINES.forEach(q=>{[[0,-1],[q.len,1]].forEach(([s0,sg])=>{if(sg>0&&q.cutE)return;if(q.shAt&&q.shAt(s0<1?0:q.len-0.01))return;const a=at(q,s0);/* Same-line segments can meet within the existing 6 m endpoint tolerance. A through connection is not a tunnel entrance. */const through=LINES.some(r=>r!==q&&r.n===q.n&&[[0,-1],[r.len,1]].some(([s1,sg1])=>{const b=at(r,s1);return Math.hypot(a[0]-b[0],a[1]-b[1])<=6&&Math.cos(a[2]-b[2])*sg*sg1<0}));if(through)return;const k=Math.round(a[0]/6)+"_"+Math.round(a[1]/6);if(seen.has(k))return;seen.add(k);POR.push([a[0],a[3],a[1],a[2],sg])})});
    const porM=new THREE.MeshStandardMaterial({color:0x8d8a82,roughness:0.9}),porB=new THREE.MeshStandardMaterial({color:0x08090b,roughness:1});
-   im(new THREE.BoxGeometry(3,6.6,10),porM,POR,p=>{d.rotation.set(0,p[3],0);d.scale.set(1,1,1);d.position.set(p[0]+Math.cos(p[3])*2.5*p[4],p[1]+3.0,-(p[2]+Math.sin(p[3])*2.5*p[4]))},{n:"פתח מנהרה של הרכבת הקלה (עתידי)",r:"💡 הנחת עבודה",t:"כאן הקו נכנס למנהרה ויוצא מתחום המודל."});
+   im(new THREE.BoxGeometry(3,6.6,10),porM,POR,p=>{d.rotation.set(0,p[3],0);d.scale.set(1,1,1);d.position.set(p[0]+Math.cos(p[3])*2.5*p[4],p[1]+3.0,-(p[2]+Math.sin(p[3])*2.5*p[4]))},{n:"פתח מנהרה של הרכבת הקלה (עתידי)",r:"💡 הנחת עבודה",t:"💡 כאן הקו נכנס למנהרה ויוצא מתחום המודל."});
    im(new THREE.BoxGeometry(0.2,5.2,7.2),porB,POR,p=>{d.rotation.set(0,p[3],0);d.scale.set(1,1,1);d.position.set(p[0]+Math.cos(p[3])*1.0*p[4],p[1]+2.5,-(p[2]+Math.sin(p[3])*1.0*p[4]))})}
   im(new THREE.BoxGeometry(34,0.12,3.6),canM,CAN,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1]+3.6,-p[2])});
   im(new THREE.CylinderGeometry(0.08,0.08,3.4,6),postM,POST,p=>{d.rotation.set(0,0,0);d.position.set(p[0],p[1]+1.9,-p[2])});
@@ -87,7 +87,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
   const entF=VC.merge([...[[-3.5,-2],[-3.5,2],[3.5,-2],[3.5,2]].map(([x,z])=>VC.bx(0.14,3.1,0.14,x,1.55,z,0x3d4248)),VC.bx(7.2,0.18,0.18,0,3.12,-2.05,0x3d4248),VC.bx(7.2,0.18,0.18,0,3.12,2.05,0x3d4248),
     VC.bx(6.4,0.06,3.4,0.2,0.05,0,0x15171a),...[0,1,2,3,4].map(k=>VC.bx(0.5,0.08,3.2,3.0-k*0.9,0.06+k*0.02,0,0x8d8f8c)),VC.bx(7,0.9,0.12,0,0.45,-1.8,0xb8b2a4),VC.bx(7,0.9,0.12,0,0.45,1.8,0xb8b2a4)]);
   im(entF,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.6,metalness:0.3}),ENT,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1],-p[2])});
-  im(entG,entM,ENT,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1],-p[2])},{n:"כניסה למטרו (עתידי)",r:"תוכנית האב 2050 — קווי המטרו",t:"המטרו של ירושלים נוסע במנהרות עמוק מתחת לעיר. כאן רואים רק את הכניסות: מדרגות נעות ומעליות שיורדות לרציפים."});
+  im(entG,entM,ENT,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1],-p[2])},{n:"כניסה למטרו (עתידי)",r:"תוכנית האב 2050 — קווי המטרו",t:"📜 המטרו של ירושלים נוסע במנהרות עמוק מתחת לעיר. כאן רואים רק את הכניסות: מדרגות נעות ומעליות שיורדות לרציפים."});
   {const cv=document.createElement("canvas");cv.width=cv.height=128;const c=cv.getContext("2d");c.fillStyle="#d8322b";c.fillRect(0,0,128,128);c.fillStyle="#fff";c.font="bold 96px Arial";c.textAlign="center";c.textBaseline="middle";c.fillText("M",64,70);
     im(new THREE.BoxGeometry(1.2,1.2,0.12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv),toneMapped:false}),ENT,p=>{d.rotation.set(0,p[3]+Math.PI/2,0);d.position.set(p[0]+Math.cos(p[3])*4.4,p[1]+4.4,-p[2]+Math.sin(p[3])*4.4)});
     im(new THREE.CylinderGeometry(0.06,0.06,3.8,6),postM,ENT,p=>{d.rotation.set(0,0,0);d.position.set(p[0]+Math.cos(p[3])*4.4,p[1]+1.9,-p[2]+Math.sin(p[3])*4.4)})}
@@ -128,7 +128,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
     q.z0=q.l[a];q.z1=q.l[b];q.tS=a===0;q.tE=b===P.length-1;P.forEach((p,i)=>{if(p[2])q.h[i]=DUNG.top(DUNG.UV(p[0],p[1])[0])+0.03})});
   const offK=(q,s)=>q.z0==null?1:Math.min(1,Math.max(0,Math.max(q.z0-s,s-q.z1)/8));
   const SHEL=[];TR.stops.forEach(s=>{const sp=toS(s);let best=null;BUSP.forEach(q=>{const pr=proj(q,sp[0],sp[1]);if(pr[0]<9){q.st.push({s:pr[1]});if(!best||pr[0]<best[0])best=[pr[0],q,pr[1]]}});if(best&&clearAt(s[0],s[1],2.4)){const a=at(best[1],best[2]);SHEL.push([sp[0],TY(s[0],s[1]),sp[1],a[2]])}});
-  im(new THREE.BoxGeometry(4,0.1,1.6),canM,SHEL,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1]+2.5,-p[2])},{n:"תחנת אוטובוס",r:"משרד התחבורה — GTFS",t:"תחנות האוטובוס במקומות האמיתיים שלהן."});
+  im(new THREE.BoxGeometry(4,0.1,1.6),canM,SHEL,p=>{d.rotation.set(0,p[3],0);d.position.set(p[0],p[1]+2.5,-p[2])},{n:"תחנת אוטובוס",r:"משרד התחבורה — GTFS",t:"📜 תחנות האוטובוס במקומות האמיתיים שלהן."});
   im(new THREE.BoxGeometry(4,2.3,0.06),canM,SHEL,p=>{d.rotation.set(0,p[3],0);const nx=-Math.sin(p[3]),nn=Math.cos(p[3]);d.position.set(p[0]+nx*0.75,p[1]+1.3,-(p[2]+nn*0.75))});
   // ---- vehicles
   const winM=new THREE.MeshStandardMaterial({color:0x1b2430,roughness:0.15,metalness:0.6,emissive:0x000000});
@@ -163,7 +163,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
     tn=new THREE.InstancedMesh(TG.nose,tvM,TRAINS.length*2),tpn=new THREE.InstancedMesh(TG.pan,tvM,TRAINS.length);
   [tn,tpn].forEach(m=>{m.castShadow=true;m.frustumCulled=false;g.add(m)});
   TRAINS.forEach((t,i)=>{for(let k=0;k<SEG;k++)tc.setColorAt(i*SEG+k,t.q.col)});
-  tb.userData={n:"רכבת קלה",train:1,r:"",t:""};PICK.push(tb);[tb,tc,tw].forEach(m=>{m.castShadow=true;m.frustumCulled=false;g.add(m)});
+  tb.userData={n:"רכבת קלה",train:1,r:"תוכנית האב לתחבורה בירושלים 2050; תחנות הרכבת הקלה (data.gov.il)",t:"📜 הרכבת הקלה נוסעת בקווים המתוכננים ועוצרת בתחנות. לחיצה עליה — נסיעה בתוכה."};PICK.push(tb);[tb,tc,tw].forEach(m=>{m.castShadow=true;m.frustumCulled=false;g.add(m)});
   const BUSES=[];BUSP.forEach(q=>{q.st.sort((a,b)=>a.s-b.s);const n=Math.max(1,Math.round(q.len/(SMALL?1400:700)));for(let k=0;k<n;k++)BUSES.push({q,dir:r()<0.5?1:-1,s:r()*q.len,v:0,dw:0,lw:0,vmax:8+r()*3,last:-1})});
   const busCols=[0x14562c,0x14562c,0x14562c,0x8a1a16,0x123d73,0xcfccc4];
   // ---- topic 4 stage 6: bus shapes (💡 a 12 m low-floor city bus, 2.55 m wide, 3.1 m high) ----
@@ -186,7 +186,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
   const bb=new THREE.InstancedMesh(BG_.bbG,new THREE.MeshStandardMaterial({color:0xffffff,roughness:0.4,metalness:0.2}),BUSES.length),
     bw=new THREE.InstancedMesh(BG_.bwG,winM,BUSES.length),
     bd=new THREE.InstancedMesh(BG_.bdG,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.5,metalness:0.2}),BUSES.length);bd.castShadow=true;bd.frustumCulled=false;g.add(bd);
-  BUSES.forEach((b,i)=>{c.setHex(busCols[Math.floor(r()*busCols.length)]);bb.setColorAt(i,c)});bb.userData={n:"אוטובוס",r:"משרד התחבורה — GTFS, מסלולי הקווים",t:"אוטובוסים בנתיבים הראשיים, לפי המסלולים האמיתיים של הקווים. הם עוצרים בתחנות."};PICK.push(bb);[bb,bw].forEach(m=>{m.castShadow=true;m.frustumCulled=false;g.add(m)});
+  BUSES.forEach((b,i)=>{c.setHex(busCols[Math.floor(r()*busCols.length)]);bb.setColorAt(i,c)});bb.userData={n:"אוטובוס",r:"משרד התחבורה — GTFS, מסלולי הקווים",t:"📜 אוטובוסים בנתיבים הראשיים, לפי המסלולים האמיתיים של הקווים. הם עוצרים בתחנות."};PICK.push(bb);[bb,bw].forEach(m=>{m.castShadow=true;m.frustumCulled=false;g.add(m)});
   // ---- cable car (approximate line from published plans)
   const CAB=[];let cabQ=[];
   if(TR.cable){const raw=TR.cable,pts=[];for(let i=0;i<raw.length-1;i++){const a=raw[i],b=raw[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=1;for(let j=0;j<k;j++)pts.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}pts.push(raw[raw.length-1]);
@@ -226,7 +226,7 @@ const VC=(()=>{const U=THREE.BufferGeometryUtils,strip=g=>{g=g.index?g.toNonInde
     shp=new THREE.InstancedMesh((()=>{const b=new THREE.SphereGeometry(0.42,6,4);b.scale(1.4,0.8,0.8);b.translate(0,0.55,0);return b})(),new THREE.MeshStandardMaterial({color:0xefe9dc,roughness:1}),NPg);
   const pcl=[0xf2efe6,0xf2efe6,0xe8e2d2,0x2f4a6b,0xd9cfb8,0x5b4a3a,0xffffff,0x3b5f86],skin=[0xe0b896,0xc99a74,0xa7764f,0xf0cfb2];
   const PG=[];for(let k=0;k<NPg;k++){const n=PN[k%PN.length];const xt=k>=NPg0;PG.push({x:xt,rev:xt&&k%2===1,ln:r()*2.2,n,mode:(!xt&&k%5===1)?"back":(!xt&&k%5===3)?"in":"walk",lane:0.35+(k%3)*0.4,hold:0,nx:"walk",t:r()*PILP[n].len,v:(xt?0.8:1.0)+r()*0.4,sheep:!xt&&r()<0.25,ph:r()*6,s:1,w:null});/* 132.0: עולי רגל = משפחות בבגדי חג (💡) */pgB.dress(k,"fest")}
-  pgB.userData={n:"עולי רגל",r:"",t:"עולי רגל ביום חג: יורדים מהרכבת בתחנות שליד העיר העתיקה, הולכים בסמטאות האמיתיות אל הר הבית, ונכנסים בשערי המקדש. חלקם מביאים כבש לקרבן."};PICK.push(pgB);[pgB,pgH,shp].forEach(m=>{m.frustumCulled=false;g.add(m)});FIG.LOD.add([pgB,pgH,shp]);/* 130.3: עולי הרגל והכבשים הם גם מקור הקול (66-ambient-sound) */window.__PGM={b:pgB,s:shp};/* 130.4: הרכבות והאוטובוסים (העולם: x, n=-z) לקול של כלי הרכב */window.__VEH=()=>{const o=[];TRAINS.forEach(t=>{if(t.f&&t.cx)o.push([t.f[0],t.f[1],1])});BUSES.forEach(b=>{if(b.lx!==undefined&&!b.lay)o.push([b.lx,b.ln,0])});return o};
+  pgB.userData={n:"עולי רגל",r:"דברים טז, טז",t:"📜 \"שלוש פעמים בשנה יראה כל זכורך... ולא יראה את פני ה' ריקם\" (דברים טז, טז). 💡 בדגם, עולי רגל ביום חג יורדים מהרכבת בתחנות שליד העיר העתיקה, הולכים בסמטאות האמיתיות אל הר הבית, ונכנסים בשערי המקדש. חלקם מביאים כבש לקרבן."};PICK.push(pgB);[pgB,pgH,shp].forEach(m=>{m.frustumCulled=false;g.add(m)});FIG.LOD.add([pgB,pgH,shp]);/* 130.3: עולי הרגל והכבשים הם גם מקור הקול (66-ambient-sound) */window.__PGM={b:pgB,s:shp};/* 130.4: הרכבות והאוטובוסים (העולם: x, n=-z) לקול של כלי הרכב */window.__VEH=()=>{const o=[];TRAINS.forEach(t=>{if(t.f&&t.cx)o.push([t.f[0],t.f[1],1])});BUSES.forEach(b=>{if(b.lx!==undefined&&!b.lay)o.push([b.lx,b.ln,0])});return o};
   let gateFor=null,compSeen=null;
   const gates=()=>{if(!COMP)return null;if(compSeen===COMP)return gateFor;compSeen=COMP;const Wg=(u,v)=>[COMP.X0+u*A,COMP.N0-v*A];gateFor={N:[Wg(250,-4),Wg(250,40),Wg(250,95)],S:[Wg(250,504),Wg(250,460),Wg(250,405)]};try{tailBuild(gateFor)}catch(e){console.warn("tail",e)}return gateFor};
   /* v114 · פס הדרך הזהוב נמשך עד שער המתחם: קודם הוא נעצר בסוף נתוני הרחוב, 90–184 מ׳ לפני השער, והעולים המשיכו בלי פס. הקטע הזה נבנה מחדש בכל החלפת תוכנית, באותן נקודות שבהן הולכים העולים */

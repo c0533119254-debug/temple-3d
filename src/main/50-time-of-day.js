@@ -91,9 +91,9 @@ function applyTime0(){renderer.shadowMap.needsUpdate=true;
   NIGHT.dir=skyVec(Math.max(20,-sp.el),sp.az+180);
   su.sunPosition.value.copy(d2);sky.visible=!night;stars.visible=night;
   if(night)nightSky();scene.background=night?NIGHT.tex:null;if(NIGHT.moon){NIGHT.moon.visible=night;NIGHT.moon.position.copy(NIGHT.dir).multiplyScalar(14000).add(camera.position);NIGHT.moon.lookAt(camera.position)}
-  scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
+  scene.fog=new THREE.FogExp2(t.fog,night?0.00022:0.00009);/* 141.3: כשעל הטבעת יש צילום לוויין (במחשב) לא צובעים אותה בצבע האובך (היא מוארת כמו שאר הקרקע) */if(RING.material.map)RING.material.color.setScalar(1);else RING.material.color.copy(scene.fog.color).multiplyScalar(night?1:0.85);
   renderer.toneMappingExposure=t.exp;
-  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
+  if(BLDMAT){[BLDMAT,BLDMAT.userData.twin,BLDMAT.userData.sky].forEach(m=>{if(!m)return;m.emissive.setHex(night?0xffb866:0x000000);m.emissiveIntensity=1.3})}M.wall.emissive.setHex(night?0x1c140b:0x000000);if(TRN)TRN.night(night);
   if(night){sun.color.set(NIGHT.moonC);sun.intensity=NIGHT.moonI;sun.position.copy(C).addScaledVector(NIGHT.dir,900)}
   else{sun.color.set(TIME==="evening"?0xffc28a:TIME==="morning"?0xffd3a0:0xfff1dc);sun.intensity=t.sunI;sun.position.copy(C).addScaledVector(d2,900)}
   sun.target.position.copy(C);hemi.intensity=t.hemi;hemi.color.set(night?NIGHT.hemiS:0xdfe8f2);hemi.groundColor.set(night?NIGHT.hemiG:0x7a6a52);

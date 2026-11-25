@@ -89,7 +89,7 @@ const archP=(P,w,h)=>{const r=w/2;P.moveTo(-r,0);P.lineTo(-r,h-r);P.absarc(0,h-r
 const archG=(w,h,dep)=>{const g=new THREE.ExtrudeGeometry(archP(new THREE.Shape(),w,h),{depth:dep,bevelEnabled:false,curveSegments:5});g.translate(0,0,-dep);return g};
 const rnd=rng(4242);
 // one covered lane along a polyline. lw = lane width, sd = shop-row depth (0 = thin frontage wall), hs = vault springing height
-function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;
+function lane(pl,lw,sd,hs,opt){opt=opt||{};const r=lw/2,STEP=3.2;let k=0;/* 136.0: רחוב מקורה — לקולות הרקע (הד) */(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);
@@ -328,7 +328,7 @@ const archP=(P,w,h,pt)=>{const r=w/2;P.moveTo(-r,0);if(pt){P.lineTo(-r,h-w*0.62)
 const archG=(w,h,dep,pt)=>{const g=new THREE.ExtrudeGeometry(archP(new THREE.Shape(),w,h,pt),{depth:dep,bevelEnabled:false,curveSegments:5});g.translate(0,0,-dep);return g};
 const rnd=rng(1336);
 // a Mamluk covered market: a tall pointed vault on two storeys of shops, lit from openings in the roof
-function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;
+function lane(pl,lw,sd,hs){const r=lw/2,STEP=3.4;let k=0;(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);
       add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);const top=hs+r+0.9;
@@ -391,7 +391,7 @@ begin({n:"שער האריות",r:"שערי העיר העתיקה",t:"📜 שער
   [-4.2,-2.9,2.9,4.2].forEach(u=>{const p=off(gx,gn,T.rot,u,T.out*4.65);add("light",wbox(1.1,0.75,0.25,1),p[0],T.hi+7.6,p[1],T.rot);add("dark",wbox(0.8,0.45,0.1,1),p[0],T.hi+7.6,p[1]+0,T.rot)})}
 // ===== Khan al-Zeit: the southern, roofed part of the market street from Damascus Gate =====
 begin({n:"חאן א־זית",r:"הרובע המוסלמי",t:"📜 רחוב השוק הראשי, שיורד משער שכם דרומה עד השווקים המקבילים. הוא נמצא על הקו של הקרדו הרומי. 📜 החלק הדרומי שלו מקורה בקמרונות. 💡 החנויות מצוירות בפשטות."});
-{const pl=[[-426,140],[-426,111],[-424,83],[-424,64],[-423,44],[-423,19]],lw=3.6,r=lw/2,hs=3.6,STEP=3.2,rnd=rng(77);let k=0;
+{const pl=[[-426,140],[-426,111],[-424,83],[-424,64],[-423,44],[-423,19]],lw=3.6,r=lw/2,hs=3.6,STEP=3.2,rnd=rng(77);let k=0;(window.__COVL=window.__COVL||[]).push({p:pl,r,h:hs+r+0.3});
   for(let i=1;i<pl.length;i++){const a=pl[i-1],b=pl[i],L=Math.hypot(b[0]-a[0],b[1]-a[1]),rot=Math.atan2(b[1]-a[1],b[0]-a[0]),ns=Math.max(1,Math.round(L/STEP)),st=L/ns;
     for(let j=0;j<ns;j++,k++){const t=(j+0.5)/ns,x=a[0]+(b[0]-a[0])*t,n=a[1]+(b[1]-a[1])*t,y=gy(x,n);add("pave",wbox(st+0.02,0.4,lw+0.2,2),x,y-0.05,n,rot);
       [1,-1].forEach(s=>{const c=off(x,n,rot,0,s*(r+0.35));add("stone",wbox(st+0.03,hs+r+2,0.7,4),c[0],y+(hs+r)/2,c[1],rot);const f=off(x,n,rot,0,s*r);add("dark",archG(2.2,2.9,1.2).translate(0,0,0.12),f[0],y,f[1],rot+(s>0?0:Math.PI));
@@ -446,7 +446,9 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
 // 📜 בתמונות הרחוב (Mapillary, 2018–2023) ברחוב דוד, ברחוב השלשלת, בחאן א־זית, בוויה דולורוזה ובמוריסטן, קומת הרחוב היא שורה של חנויות פתוחות:
 // פתח כהה, סחורה על דוכן לפני הפתח, תריס מתכת מגולגל מעל, ולפעמים סוכך בד. בדגם היה שם קיר עם חלונות. השווקים המקורים (אזור 2) כבר בנויים עם חנויות ולא נוגעים בהם.
 (function(){try{
-  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]]];
+  const SP=[[[-720,-165],[-631,-142.5],[-568,-142.5],[-510,-139],[-478,-137],[-440,-122]],[[-440,-125],[-300,-131],[-120,-117]],[[-462,400],[-424,80],[-418,20]],[[-120,296],[-300,300],[-424,290]],[[-545,-30],[-518,-60],[-490,-90]],[[-462,400],[-350,300]],
+    /* 141.2 (תמונות Mapillary 2015–2023 ברובע הנוצרי): רחוב הנוצרים (חארת א־נסארה), מרחוב דוד צפונה עד ליד כנסיית הקבר, הוא רחוב שוק עם חנויות משני הצדדים, ובדגם היו בו רק קירות */
+    [[-538,-140],[-534,-94],[-545,-77],[-546,-34],[-537,5],[-535,31]]];
   const nearSpine=(x,n)=>SP.some(L=>{for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],l2=dx*dx+dn*dn,t=Math.max(0,Math.min(1,((x-a[0])*dx+(n-a[1])*dn)/l2));if(Math.hypot(a[0]+dx*t-x,a[1]+dn*t-n)<9)return true}return false});
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const souq=(x,n)=>x>-442&&x<-384&&n>-140&&n<22;
@@ -474,7 +476,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     {const p=P(0,-0.08);d.position.set(p[0],f.g+Hh+0.2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.14,0.4,W+0.1);d.updateMatrix();shut.setMatrixAt(i,d.matrix)}
     for(let k=0;k<3;k++){const al=(k-1)*W/3,h=0.3+((f.o2*7+k*3)%1)*0.45,p=P(al,-0.25);d.position.set(p[0],f.g+h/2,-p[1]);d.rotation.set(0,f.a,0);d.scale.set(0.4,h,W/3-0.15);d.updateMatrix();goods.setMatrixAt(gi,d.matrix);goods.setColorAt(gi,col.setHex(PAL[Math.floor(((f.o3*13+k*5)%1)*PAL.length)]));gi++}
     if(f.o3<(f.w>=4?0.45:0.3)&&f.w>=2.6){const p=P(0,-0.42);d.position.set(p[0],f.g+Hh+0.05,-p[1]);d.rotation.set(0,f.a,0.3);d.scale.set(0.85,0.04,W+0.2);d.updateMatrix();awn.setMatrixAt(ai,d.matrix);awn.setColorAt(ai,col.setHex(f.o<0.5?0x9c3b2c:0x2e5f7a));ai++}});
-  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
+  awn.count=ai;[dark,shut,goods,awn].forEach(m=>{m.instanceMatrix.needsUpdate=true;if(m.instanceColor)m.instanceColor.needsUpdate=true;m.userData={n:"חנויות ברחובות השוק",r:"תמונות רחוב (Mapillary, 2018–2023)",t:"📜 ברחובות השוק של העיר העתיקה (רחוב דוד, השלשלת, חאן א־זית, ויה דולורוזה, המוריסטן, רחוב הנוצרים) קומת הרחוב היא שורה של חנויות פתוחות, עם סחורה לפני הפתח, תריס מתכת מעל, ולפעמים סוכך. 💡 צבעי הסחורה ומקום כל חנות בדיוק הם השלמה."};WG.add(m);PICK.push(m)});
 
 }catch(e){console.warn("shops",e)}})();
 
@@ -521,6 +523,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
   const DI={n:"רחוב דוד",r:"תמונות רחוב (Mapillary, 2015–2023)",t:"📜 רחוב השוק הראשי משער יפו מזרחה: צר, כ־3 מ׳, יורד במדרגות רחבות ונמוכות, עם חנויות משני הצדדים, ובחלקו המזרחי מקורה בקמרון אבן עם קשתות מחודדות. 💡 המקום שבו מתחיל הקירוי ופתחי האור בגג הם השלמה."};
   const inB=(x,n)=>{const Lb=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!Lb)return false;for(const o of Lb){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const W=2.8,L=DAVID_ST,d=new THREE.Object3D(),RF=[],RB=[],ST=[],VA=[];
+  /* 136.0: החלק המקורה (מזרחית ל־x -596) — לקולות הרקע */(window.__COVL=window.__COVL||[]).push({p:[[-596,-142.5]].concat(L.filter(q=>q[0]>-596)),r:W/2,h:4.6});
   let acc=0,lastY=null,bay=0;
   for(let i=0;i<L.length-1;i++){const a=L[i],b=L[i+1],dx=b[0]-a[0],dn=b[1]-a[1],len=Math.hypot(dx,dn),ux=dx/len,un=dn/len,ang=Math.atan2(dn,dx);
     for(let s=0;s<len;s+=0.5){const x=a[0]+ux*s,n=a[1]+un*s,g=surfY(x,n);acc+=0.5;
@@ -597,7 +600,7 @@ Object.keys(GS).forEach(k=>{if(!GS[k].length)return;const mg=THREE.BufferGeometr
     add("light",wbox(1.2,0.5,6,2),gx+3.4,g+4.7,gn,0,INF.gihon);
     for(let k=0;k<6;k++)add("light",wbox(0.9,0.6,5,2),gx+3.9+k*0.9,g-0.2*(k+1)-0.3,gn,0,INF.gihon);
     const pc=[gx+12,gn],pg=top(pc[0],pc[1]),py=Math.min(pg,g-1.1);add("wall",wbox(7,1.2,6,3),pc[0],py-0.1,pc[1],0,INF.gihon);add("water",new THREE.BoxGeometry(5.8,0.05,4.8),pc[0],py+0.42,pc[1],0,INF.gihon);
-    add("light",wbox(7.4,0.2,6.4,3),pc[0],py+0.6,pc[1],0,INF.gihon);cwAdd(gx-2,gn,0,10,9,g-1,g+6);C.gihonY=g}
+    add("light",wbox(7.4,0.2,6.4,3),pc[0],py+0.6,pc[1],0,INF.gihon);cwAdd(gx-2,gn,0,10,9,g-1,g+6);C.gihonY=g;/* 136.2: המים לקולות הרקע: המעיין והבריכה הקטנה */(window.__WATERS=window.__WATERS||[]).push({k:"gihon",x:pc[0],n:pc[1],hw:3,hl:2.5,r:0})}
   // merge by material; each merged mesh carries the card of its first part (the cards differ by area, so split by card)
   Object.keys(GS).forEach(k=>{const by=new Map();GS[k].forEach((geo,i)=>{const inf=GI[k][i];if(!by.has(inf))by.set(inf,[]);by.get(inf).push(geo)});
     by.forEach((list,inf)=>{const mg=THREE.BufferGeometryUtils.mergeBufferGeometries(list,false);if(!mg)return;const m=new THREE.Mesh(mg,MATS[k]);m.renderOrder=inf===INF.pool?-2:0;m.castShadow=k!=="pave"&&k!=="water";m.receiveShadow=true;m.userData=inf;WG.add(m);PICK.push(m)})});
@@ -676,7 +679,7 @@ function cardoY(x,n){const C=cardoGeom.C;if(!C)return null;const dx=x-C.cx,dn=n-
 // 📜 ירמיהו לא, מ: "וכל העמק הפגרים והדשן ... עד נחל קדרון ... קדש לה'". 💡 העיצוב הוא הצעה.
 (function(){try{
   const C=HIN11,P=C.P,MAT=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.88},o||{})),r=rng(1278);
-  const INFP={n:"בריכת הסולטן",r:"צילום לוויין; מודל גובה",t:"בריכה עתיקה בקרקעית גיא בן הינום. הסכר בצדה הדרומי, שהדרך לחברון עוברת עליו, נבנה מחדש בימי סולימאן (1536). היום הבריכה יבשה וקרקעיתה מדשאה, וכך היא בדגם"};
+  const INFP={n:"בריכת הסולטן",r:"צילום לוויין; מודל גובה",t:"📜 בריכה עתיקה בקרקעית גיא בן הינום. הסכר בצדה הדרומי, שהדרך לחברון עוברת עליו, נבנה מחדש בימי סולימאן (1536). היום הבריכה יבשה וקרקעיתה מדשאה, וכך היא בדגם."};
   const INFV={n:"גיא בן הינום",r:"ירמיהו לא, מ; ירמיהו ז, לא; 💡 הצעה",t:"📜 \"וכל העמק הפגרים והדשן וכל השדמות עד נחל קדרון ... קדש לה', לא ינתש ולא יהרס עוד לעולם\" (ירמיהו לא, מ). בימי הבית הראשון עבדו כאן עבודה זרה (\"במות התפת אשר בגיא בן הנם\", ירמיהו ז, לא). לפי הנבואה, בעתיד הגיא הוא חלק מהעיר הקדושה. 💡 בדגם: חורשת אורנים במקומות שבהם יש עצים היום (לפי צילום הלוויין), שביל אבן בקרקעית הגיא, ובגיא התחתון טרסות אבן עם זיתים ותאנים. אין כאן קברים."};
   const inB=(x,n)=>{const L=CB.b.get(cbK(Math.floor(x/CB.st),Math.floor(n/CB.st)));if(!L)return false;for(const o of L){if(x<o.xa||x>o.xb||n<o.na||n>o.nb)continue;if(inPoly(x,n,o.p))return true}return false};
   const GS={stone:[],light:[],dark:[],wood:[]},MATS={stone:M.stoneL||M.stone,light:M.stone||M.stoneL,dark:MAT(0x3a3530,{roughness:0.95}),wood:MAT(0x6b4a2f,{roughness:0.9})};

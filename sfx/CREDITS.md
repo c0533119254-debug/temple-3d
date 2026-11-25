@@ -1,4 +1,4 @@
-# קרדיטים לקולות הרקע (גרסה 130.0–130.3)
+# קרדיטים לקולות הרקע (גרסה 130.0–136.3)
 
 כל הקבצים מוויקישיתוף (Wikimedia Commons), ברישיון חופשי. כל קובץ כאן חתוך ללולאה, מונו, ועוצמתו מנורמלת.
 
@@ -11,6 +11,10 @@
 | crickets.mp3 | [Field cricket unedited.ogg](https://commons.wikimedia.org/wiki/File:Field_cricket_unedited.ogg) | Thatcher | CC BY-SA 3.0 |
 | steps.mp3 | [Church people walking steps with reverb.ogg](https://commons.wikimedia.org/wiki/File:Church_people_walking_steps_with_reverb.ogg) | stephan (pdsounds.org) | נחלת הכלל |
 | sheep.mp3 | [Corner of a sheep field in summer.ogg](https://commons.wikimedia.org/wiki/File:Corner_of_a_sheep_field_in_summer.ogg) | earthcalling (pdsounds.org) | נחלת הכלל |
+| cattle.mp3 | [Boerlaedje vatches.ogg](https://commons.wikimedia.org/wiki/File:Boerlaedje_vatches.ogg) | Lucyin | CC BY-SA 4.0 |
+| cattle.mp3 (הגעייה האחרונה) | [Mudchute cow 1.ogg](https://commons.wikimedia.org/wiki/File:Mudchute_cow_1.ogg) | Secretlondon | CC BY-SA 3.0 |
 | coins.mp3 | [Bag of coins.ogg](https://commons.wikimedia.org/wiki/File:Bag_of_coins.ogg) | cori (pdsounds.org) | נחלת הכלל |
 
-השינויים (חיתוך, לולאה, סינון, נרמול) הם של פרויקט בית המקדש התלת־ממדי. crickets.mp3 משותף באותו רישיון (CC BY-SA 3.0).
+השינויים (חיתוך, לולאה, סינון, נרמול) הם של פרויקט בית המקדש התלת־ממדי. crickets.mp3 משותף באותו רישיון (CC BY-SA 3.0), ו־cattle.mp3 ברישיון CC BY-SA 4.0.
+
+הרוח, ההד ורעש כלי הרכב מחושבים בדפדפן, בלי קובץ.
