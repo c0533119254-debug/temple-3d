@@ -12,6 +12,7 @@
 const { chromium, devices } = require("playwright");
 const fs = require("fs");
 const path = require("path");
+require("./tour-time-jumps.js");
 
 const URL = process.argv[2] || "http://localhost:8765/";
 const OUT = process.argv[3] || "usage-matrix-out";

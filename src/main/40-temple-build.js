@@ -891,6 +891,13 @@ function build(){
             for(let j=0;j<n;j++){const q=spots[idx[j]];if(j<k){near.set(j,q[0],q[1],q[2],q[3],q[4]);near.col(j,q[5],idx[j])}else if(j<k+m){setI(fb,j-k,q[0],q[1],q[2],q[3],q[4]);fb.dress(j-k,fo.ctx||"azara",fo.who===undefined?"m":fo.who,idx[j]*131+(q[5]&0xffff))}else{setI(ff,j-k-m,q[0],q[1],q[2],q[3],q[4]);ff.setColorAt(j-k-m,CC.setHex(q[5]))}}
             near.fig.count=near.head.count=k;if(near.lul)near.lul.count=k;fb.count=fh.count=m;ff.count=nf;if(fl){fl.count=m;ffl.count=nf}near.done();[fb,ff].forEach(q=>{q.instanceMatrix.needsUpdate=true;if(q.instanceColor)q.instanceColor.needsUpdate=true})}}};
       const spotsOf=(sp,fu,fv,jit,k3)=>sp.map((q,i)=>{const p=P3(q[0],q[1],3.5);return[p.x,p.y,p.z,Math.atan2(-(fv-q[1]),fu-q[0])+(rs()-0.5)*jit,0.86+rs()*0.16,ccol[(i*k3)%ccol.length]]});
+      /* 144.3 · בשבת ובראש חודש, כשהשער הפנימי המזרחי פתוח, העם עומד בפתח השער (יחזקאל מו, ג). 📜 "והשתחוו עם הארץ פתח השער ההוא בשבתות ובחדשים לפני ה׳". 💡 עומדים ולא משתחווים, כי לדמויות אין תנוחת השתחוויה; המספר והמקום המדויק הם הצעה. כבוי בחול ובזמן סיור, ולכן אינו משנה את תקציב הציור */
+      {const hold=new THREE.Group();hold.name="SHABGATE";g0.add(hold);const gS=new THREE.Group();gS.visible=false;hold.add(gS);
+        const si=I("העם בפתח השער הפנימי המזרחי","יחזקאל מ״ו, א-ג","📜 \"והשתחוו עם הארץ פתח השער ההוא בשבתות ובחדשים לפני ה׳\" (מו, ג). 📜 הנשיא בא דרך אולם השער מבחוץ, \"ועמד על מזוזת השער... והשתחוה על מפתן השער ויצא, והשער לא יסגר עד הערב\" (מו, ב). 💡 העם מוצג עומד מול הפתח, כי בדגם אין דמות משתחווה. מספר האנשים ומקומם המדויק לא מפורשים.");
+        const sp=[];for(let u=361;u<=393;u+=2.6)for(let v=235;v<=265;v+=2.6){const uu=u+(rs()-0.5)*0.9,vv=v+(rs()-0.5)*0.9;if(Math.abs(vv-250)<3.5)continue;/* מעבר פנוי באמצע, אל השער */const p=W(uu,vv),R=0.8*A;let ok=true;for(const c of COL){if(c.y1<3.5*A+0.25||c.y0>3.5*A+1.9)continue;if(p[0]>c.x0-R&&p[0]<c.x1+R&&p[1]>c.z0-R&&p[1]<c.z1+R){ok=false;break}}/* כמו free, בלי המעבר שנשמר לתהלוכות החג (בחג הקהל הזה כבוי) */if(ok)sp.push([uu,vv])}
+        const T=tiers(gS,null,spotsOf(sp,325,250,0.5,1),SMALL?24:48,si,400,{ctx:"shabbat",who:null});
+        BEAST.flow(hold,()=>{const on=!!(EGATE&&EGATE[0]&&!EGATE[0].visible)&&DAY!=="chol"&&!STORY&&!SG.visible&&!SHOW_FEST;if(gS.visible!==on){gS.visible=on;if(on)T.update(camera.position,true)}else if(on)T.update(camera.position)});
+        window.__SHABGATE={g:gS,n:sp.length}}
       const dayT=tiers(gCrowd,gLul,spotsOf(gscat(SMALL?900:10000,8,8,492,492,3.5,0.9,1.7),250,250,1.2,1),SMALL?140:260,C.lulav,SMALL?1e9:1500,{ctx:"fest",who:null});
       /* קהל צפוף סביב הריקוד. 💡 הצפיפות והמספר הם הצעת תצוגה. רשתות מדורגות: קרובים דמות מלאה, רחוקים דמות פשוטה */
       const pack=[];{const cell=SMALL?1.9:1.22,capC=SMALL?2200:6200;
@@ -1580,7 +1587,7 @@ function build(){
       window.__BRIDGES=X.map(c=>({x:+c.x.toFixed(1),n:+c.n.toFixed(1),sx:c.sx,sz:c.sz,len:c.len,y:c.y,w:c.w}))}
     const nearBr=(x,z)=>BRS.some(b=>Math.hypot(x-b[0],z-b[1])<b[2]);
     /* 127.7: בסוף הקטע המצויר — הנחל ממשיך אל ים המלח (יחזקאל מ״ז, ח-י) */
-    {const e=pts[pts.length-1],inf=I("הנחל ממשיך אל ים המלח","יחזקאל מ״ז, ח-י","📜 \"המים האלה יוצאים אל הגלילה הקדמונה, וירדו על הערבה, ובאו הימה... ונרפאו המים\" (מ״ז, ח). 📜 \"ועמדו עליו דוגים מעין גדי ועד עין עגלים, משטוח לחרמים יהיו\" (מ״ז, י). 💡 כאן נגמר הקטע המצויר, כ־"+Math.round(AC[AC.length-1]/A)+" אמה מהמעיין. משם הנחל ממשיך בעמק קדרון, דרך מדבר יהודה, עד ים המלח.");
+    {const e=pts[pts.length-1],inf=I("הנחל ממשיך אל ים המלח","יחזקאל מ״ז, ח-י","📜 \"המים האלה יוצאים אל הגלילה הקדמונה, וירדו על הערבה, ובאו הימה... ונרפאו המים\" (מ״ז, ח). 📜 \"ועמדו עליו דוגים מעין גדי ועד עין עגלים, משטוח לחרמים יהיו\" (מ״ז, י). 📜 \"בצאתו וגבאיו ולא ירפאו, למלח נתנו\" (מ״ז, יא): הביצות שליד הים נשארות מלוחות. 💡 כאן נגמר הקטע המצויר, כ־"+Math.round(AC[AC.length-1]/A)+" אמה מהמעיין. משם הנחל ממשיך בעמק קדרון, דרך מדבר יהודה, עד ים המלח.");
       __AFTER(()=>{try{if(!labels.some(l=>l.txt==="הנחל ממשיך אל ים המלח"))label("הנחל ממשיך אל ים המלח",e[0],e[1]+14,e[2],null,inf)}catch(err){console.warn("river end label",err)}});window.__RIVPTS=pts;window.__RIVER={len:Math.round(AC[AC.length-1]),amot:Math.round(AC[AC.length-1]/A),pts:pts.length}}
     // the four measures of Ezekiel 47:3-5
     {const MS=[[1000,"מי אפסים","\"ויעברני במים, מי אפסים\" — המים מגיעים עד הקרסוליים."],[2000,"מים ברכים","\"ויעברני במים, מים ברכים\" — עד הברכיים."],[3000,"מי מתנים","\"ויעברני, מי מתנים\" — עד המותניים."],[4000,"נחל שלא עוברים","\"נחל אשר לא אוכל לעבר, כי גאו המים, מי שחו\" — צריך לשחות."]];
@@ -1839,13 +1846,25 @@ function build(){
   const wlStart=group.children.length;
   // today's wall line, shown where the 500-amah square goes past it
   {const S=500*A,QX=X0+((0))*A,QN=N0-((0))*A,inC=(x,n)=>x>QX-1&&x<QX+S+1&&n<QN+1&&n>QN-S-1,red=new THREE.MeshBasicMaterial({color:0xe0412f}),cur=new THREE.MeshBasicMaterial({color:0xe0412f,transparent:true,opacity:0.28,side:THREE.DoubleSide,depthWrite:false});let mid=null,cnt=0;
-    const wi={n:"חומת הר הבית של היום",r:"OpenStreetMap; פרק 15",t:"📜 הקו האדום הוא החומה של הר הבית היום. איפה שהמתחם עובר אותו, הריבוע המצויר של 500 על 500 אמה יוצא מעבר להר הקיים. 💡 הריבוע הזה הוא החומה החיצונה של החצרות, כמו \"הר הבית היה חמש מאות אמה על חמש מאות אמה\" (מידות ב, א). ⚖️ ביחזקאל מב, טו–כ נמדד היקף של \"חמש מאות קנים\" לכל רוח, והמלבי״ם מפרש שם קנים ולא אמות, כלומר גבול רחב בהרבה מסביב. הגבול הרחב הזה לא מצויר בהדמיה. 💡 הפתרון ההלכתי וההנדסי במקום שהריבוע יוצא מההר הוא שאלה לפוסקים ולמהנדסים."};
+    const wi={n:"חומת הר הבית של היום",r:"OpenStreetMap; פרק 15",t:"📜 הקו האדום הוא החומה של הר הבית היום. איפה שהמתחם עובר אותו, הריבוע המצויר של 500 על 500 אמה יוצא מעבר להר הקיים. 💡 הריבוע הזה הוא החומה החיצונה של החצרות, כמו \"הר הבית היה חמש מאות אמה על חמש מאות אמה\" (מידות ב, א). ⚖️ ביחזקאל מב, טו–כ נמדד היקף של \"חמש מאות קנים\" לכל רוח, והמלבי״ם מפרש שם קנים ולא אמות, כלומר גבול רחב בהרבה מסביב. אפשר לראות את הגבול הרחב הזה בשכבה \"500 קנים\". 💡 הפתרון ההלכתי וההנדסי במקום שהריבוע יוצא מההר הוא שאלה לפוסקים ולמהנדסים."};
     for(let i=0;i<MOUNT_S.length;i++){const a=MOUNT_S[i],b=MOUNT_S[(i+1)%MOUNT_S.length],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.max(1,Math.ceil(L/2));
       for(let k=0;k<m;k++){const t0=k/m,t1=(k+1)/m,x0=a[0]+(b[0]-a[0])*t0,n0=a[1]+(b[1]-a[1])*t0,x1=a[0]+(b[0]-a[0])*t1,n1=a[1]+(b[1]-a[1])*t1,xm=(x0+x1)/2,nm=(n0+n1)/2;if(!inC(xm,nm))continue;
         const l=Math.hypot(x1-x0,n1-n0),ang=Math.atan2(n1-n0,x1-x0);const ln=new THREE.Mesh(new THREE.BoxGeometry(l+0.05,0.45,0.45),red);ln.position.set(xm,13.5,-nm);ln.rotation.y=ang;ln.userData=wi;cPick.push(ln);group.add(ln);
         const cu=new THREE.Mesh(new THREE.PlaneGeometry(l+0.05,13.5),cur);cu.position.set(xm,6.75,-nm);cu.rotation.y=ang;cu.renderOrder=3;group.add(cu);cnt++;if(!mid||cnt%2===0)mid=[xm,nm]}}
     if(mid){const m=Math.floor(cnt/2);const WL=label("קו החומה של היום",mid[0],16,-mid[1],"c",wi);WL.wall=true;cLabels.push(WL)}}
   {const g=new THREE.Group();group.children.slice(wlStart).forEach(o=>g.add(o));group.add(g);g.visible=SHOW_WALL;WALLG=g}
+  /* 144.1 · שכבה "500 קנים": הגבול של הר הבית לפי יחזקאל מב, טו-כ ("חמש מאות קנים... להבדיל בין הקדש לחול"). ⚖️ רש״י והמלבי״ם: קנה של 6 אמות, 3000 על 3000 אמה; המלבי״ם (מה, ב): ועוד 50 אמה מגרש סביב. 💡 רק קו על הקרקע (לא חומה), מסביב למרכז הריבוע של 500 האמה. כבוי בהתחלה, ולכן אינו משנה את תקציב הציור */
+  {const rg=new THREE.Group(),cx=X0+250*A,cn=N0-250*A,fl=(x,n)=>{let y=H(x,n);try{if(typeof floorAt==="function")y=Math.max(y,floorAt(x,-n))}catch(e){}return y};
+    const ri=HELP.reeds||{n:"הר הבית: 500 קנים לכל רוח",r:"יחזקאל מ״ב, טו-כ",t:""};
+    const ribbon=(half,w,col,op)=>{const pos=[],idx=[];const C4=[[cx-half,cn+half],[cx+half,cn+half],[cx+half,cn-half],[cx-half,cn-half]];
+      for(let sd=0;sd<4;sd++){const a=C4[sd],b=C4[(sd+1)%4],L=Math.hypot(b[0]-a[0],b[1]-a[1]),m=Math.ceil(L/4),ux=(b[0]-a[0])/L,un=(b[1]-a[1])/L,px=-un*w/2,pn=ux*w/2,base=pos.length/3;
+        for(let k=0;k<=m;k++){const x=a[0]+(b[0]-a[0])*k/m,n=a[1]+(b[1]-a[1])*k/m,y=fl(x,n)+0.6;pos.push(x+px,y,-(n+pn),x-px,y,-(n-pn));if(k){const q=base+(k-1)*2;idx.push(q,q+1,q+2,q+1,q+3,q+2)}}}
+      const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setIndex(idx);
+      const solid=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide,transparent:op<1,opacity:op,depthWrite:false,fog:false,toneMapped:false}));solid.renderOrder=4;solid.userData=ri;cPick.push(solid);rg.add(solid);
+      const ghost=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide,transparent:true,opacity:op*0.45,depthTest:false,depthWrite:false,fog:false,toneMapped:false}));ghost.renderOrder=5;rg.add(ghost)};
+    ribbon(1500*A,7,0xf0b419,1);ribbon(1550*A,2.5,0xf0b419,0.6);
+    group.add(rg);rg.visible=SHOW_REEDS;REEDG=rg;
+    const RL=label("גבול 500 הקנים",cx,fl(cx,cn+1500*A)+14,-(cn+1500*A),"c",ri);RL.reeds=true;cLabels.push(RL)}
   COMP={X0,N0,vmin,vmax,nst:(FMODE==="ez"?10:12)};
   const cp=W(250,250);C.set(cp[0],15,cp[1]);
   fixModern();mergeStatic();fixInst();if(ART)try{ART.built()}catch(e){console.warn("art",e)}renderer.shadowMap.needsUpdate=true;applyTime();fitCheck(X0+((0))*A,N0-((0))*A);if(window.__FLOORREADY)applyFloor(); /* v100 · משימה 08: אחרי בנייה מחדש (אמה/תוכנית/שער) מחילים שוב את מצב הרקע, כדי שבחירת "ההר היום" לא תחזיר את המקדש */try{renderer.compile(scene,camera)}catch(e){}

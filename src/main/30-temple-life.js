@@ -110,7 +110,7 @@ function buildYK(W){const g=new THREE.Group();g.visible=false;group.add(g);const
   [head,mit,tz,ephod].forEach(m=>g.add(m));
   const tool=new THREE.Mesh(new THREE.CylinderGeometry(0.11,0.08,0.12,10),gold);g.add(tool);
   const mkAnimal=(col,L,Hh,hd,kind)=>mkBeast(kind||(L>1.5?"bull":"goat"),col,L,Hh);
-  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x2b2622,1.0,0.75,0.28),gB=mkAnimal(0x2b2622,1.0,0.75,0.28);
+  const bull=mkAnimal(0x3a2618,2.2,1.5,0.55,"bull"),gA=mkAnimal(0x756557,1.0,0.75,0.28),gB=mkAnimal(0x756557,1.0,0.75,0.28);
   const thread=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.06,0.3),new THREE.MeshStandardMaterial({color:0xb3261e}));gB.add(thread);thread.position.set(0.75,0.75,0);
   const kalpi=new THREE.Mesh(new THREE.BoxGeometry(0.45,0.55,0.35),gold);[bull,gA,gB,kalpi].forEach(m=>g.add(m));
   const cloud=new THREE.InstancedMesh(new THREE.SphereGeometry(1,10,8),new THREE.MeshBasicMaterial({color:0xd8d2c8,transparent:true,opacity:0.08,depthWrite:false}),18);cloud.frustumCulled=false;g.add(cloud);cloud.visible=false;

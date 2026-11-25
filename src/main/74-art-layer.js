@@ -102,7 +102,7 @@ try{(function(){
   /* משטחים שיושבים באותו מישור (ריצוף מול חומה/רצפת לשכה) הבהבו: הריצוף נדחק מעט לאחור בעומק בלבד */
   try{M.pave.polygonOffset=true;M.pave.polygonOffsetFactor=1.5;M.pave.polygonOffsetUnits=3;M.pave.needsUpdate=true}catch(e){}
   /* רצפת הזהב בהיכל: פחות מראָה, בלי כתמי סנוור לבנים. חיפוי הזהב: פחות השתקפות שמיים כחולה */
-  try{M.goldFloor.roughness=0.78;M.goldFloor.envMapIntensity=0.28;M.goldFloor.metalness=0.7;M.goldFloor.needsUpdate=true;
+  try{M.goldFloor.roughnessMap=null;M.goldFloor.roughness=0.78;M.goldFloor.envMapIntensity=0.28;M.goldFloor.metalness=0.7;M.goldFloor.needsUpdate=true;
       M.panel.metalness=0.66;M.panel.roughness=0.52;M.panel.envMapIntensity=0.55;M.panel.userData.e0=0.55;M.panel.needsUpdate=true}catch(e){}
   try{M.win2.emissive.setHex(0xff9a3c)}catch(e){}
   /* גוף הבית מבחוץ: אבן חמה ועמומה, לא משטח מבריק שמחזיר את כחול השמיים ונראה כמו מגדל זכוכית */
