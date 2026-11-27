@@ -11,6 +11,7 @@ main/20-living-city.js	// ---- living city: pedestrians on the alleys and street
 main/22-mount-gates.js	// ---- gates of the Temple Mount, joined to the streets they open onto ----
 main/24-transport.js	// ---- public transport, as if every plan already runs (Jerusalem master plan 2050) ----
 main/26-hills-osm.js	// ---- topic 5 (Claude): the ground of the hills: limestone outcrops on the open slopes. This file belongs to Claude (l
+main/28-station-quarter.js	// ---- 145.0: the First Station quarter (רובע התחנה הראשונה), per the Jerusalem municipality plan and the Khan station 
 main/30-temple-life.js	// ---- Yom Kippur actors: the High Priest, the bull, the two goats, the lottery box, incense ----
 main/32-story-tours.js	// ---- narrated story tours (pilgrim; Yom Kippur) ----
 main/40-temple-build.js	/* גרסה 116: בתחנות 1, 3 ו־5 של סיור יום הכיפורים המצלמה קרובה יותר לכהן הגדול (כ־16 אמה, מאותו כיוון). רק המצלמה זזה */

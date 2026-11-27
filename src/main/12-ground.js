@@ -325,6 +325,8 @@ const ROADS=(function(){const __r=(function(){const raw=[{"c":2,"w":8,"b":0,"p":
     for(let i=raw.length-1;i>=0;i--){const rd=raw[i];if(rd.c!==4||rd.tidy||rd.p.length>8||!rd.p.some(q=>q[0]>-230&&q[0]<-175&&q[1]>-155&&q[1]<-115&&dG(q[0],q[1])<1.5))continue;const P=rd.p.filter(q=>dG(q[0],q[1])>=1.5);if(P.length<2)raw.splice(i,1);else rd.p=P}}
    raw.push({c:4,w:4,b:0,tidy:1,p:[[-208,-29],[-205,-45],[-202,-66],[-200,-80],[-197,-99],[-195,-114]]})}
   /* 127.5: מדרחוב ממילא (MAM10 ב־10-setup) — מדרחוב אבן מרוצף בין שתי שורות החנויות */
+  /* 145.0: רובע התחנה הראשונה: השבילים של הדק ושל החניונים יורדים (הרחבה החדשה במקומם). הכבישים עצמם (רמז, הכיכר, דרך חברון ודרך בית לחם) נשארים */
+  for(let i=raw.length-1;i>=0;i--){const rd=raw[i];if(rd.c!==0&&rd.c!==4)continue;const k=rd.p.filter(q=>STQ.clear(q[0],q[1])).length;if(k>=rd.p.length*0.5||(rd.c===0&&STQ.clear(rd.p[0][0],rd.p[0][1])))raw.splice(i,1)}
   raw.push({c:4,w:MAM10.w,b:0,mam:1,p:[MAM10.a,[(MAM10.a[0]+MAM10.b[0])/2,(MAM10.a[1]+MAM10.b[1])/2],MAM10.b]});
   /* 127.8: שביל אבן בקרקעית גיא בן הינום, מהסכר של בריכת הסולטן דרומה (HIN11 ב־10-setup) */
   raw.push({c:4,w:3.6,b:0,mam:1,p:HIN11.path.map(q=>q.slice())});
