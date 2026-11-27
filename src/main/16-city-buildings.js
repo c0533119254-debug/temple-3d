@@ -83,6 +83,7 @@ const SUKC={roofs:[],apply:null,heads:null};const PESC={b:[],apply:null};const R
   let k=0,bi=0;
   while(k<a.length){let h=a[k]/10;const nvf=a[k+1],nv=nvf&4095,fl=nvf>>12;k+=2;const pts=[];for(let i=0;i<nv;i++){pts.push([a[k]/10,a[k+1]/10]);k+=2}
     let ymR=false,ymM=false;{let ax=0,an=0;pts.forEach(q=>{ax+=q[0];an+=q[1]});ax/=nv;an/=nv;/* 127.5: מתחם ממילא — הרצועה של המדרחוב פנויה, והגובה נמדד מהחניון: שורת החנויות בדרום־מערב 3 קומות מעל המדרחוב, והשורה מול הכביש קומה וחצי */if(YM12.zone(ax,an)){if(YM12.plaza(ax,an)){bi++;continue}ymM=YM12.mish(ax,an);if(ymM)h=5;else if(YM12.guess(h))h=7;ymR=!ymM&&h<=9&&nv>=4}/* 129.7 ימין משה: גובה של קומה או שתיים, ומשכנות שאננים בקומה אחת */if(MAM10.zone(ax,an)){const q=MAM10.loc(ax,an);if(MAM10.onAve(ax,an)){bi++;continue}if(h>20)h=q[1]>0?12:7}if((Math.hypot(ax+464,an-412)<14&&h>14&&h<15.5)||(Math.abs(ax+203)<1.5&&Math.abs(an+1)<1.5)||(Math.abs(ax+178.9)<1.5&&Math.abs(an+115.3)<1.5)||(Math.abs(ax+730.84)<1.5&&Math.abs(an+137.59)<1.5)||(Math.abs(ax+286.67)<1.5&&Math.abs(an+286.04)<1.5)||(Math.abs(ax+738.69)<1.5&&Math.abs(an+155.59)<1.5)||(Math.abs(ax+738.3)<1.5&&Math.abs(an+151.7)<1.5)||(Math.abs(ax+189)<1.5&&Math.abs(an-8)<1.5)||(Math.abs(ax+178)<1.5&&Math.abs(an-9)<1.5)||(Math.abs(ax+161)<1.5&&Math.abs(an-2)<1.5)||(Math.abs(ax+609)<2&&Math.abs(an+651)<2)||(fl&1&&Math.hypot(ax+543,an+565)<8)||(Math.abs(ax+391)<2&&Math.abs(an+306)<2)||(Math.abs(ax+200)<2&&Math.abs(an+263)<2)||(Math.abs(ax+531)<2&&Math.abs(an-54)<2)||(Math.abs(ax+452)<2&&Math.abs(an+12)<2)||(fl&1&&((Math.abs(ax+440)<3&&Math.abs(an+103)<3)||(Math.abs(ax+409)<3&&Math.abs(an+83)<3)||(Math.abs(ax+385)<3&&Math.abs(an+89)<3)||(Math.abs(ax+431)<3&&Math.abs(an+10)<3)))||(ax>-745&&ax<-648&&an>-262&&an<-150&&!(ax>-700&&an<-255))||Math.hypot(ax+741,an+154)<7){bi++;continue}}
+    {let sx=0,sn=0;pts.forEach(q=>{sx+=q[0];sn+=q[1]});if(STQ.clear(sx/nv,sn/nv)){bi++;continue}}/* 145.0: רובע התחנה */
     if(pts.some(q=>COD8.clear(q[0],q[1])||PARA9.clear(q[0],q[1])||(inPoly(q[0],q[1],MOUNT)&&nearEdge(q[0],q[1],MOUNT)[0]>1.2)||inPoly(q[0],q[1],PLAZA_BIG)||(q[0]>-140&&q[0]<-55&&q[1]>-300&&q[1]<-105&&!inPoly(q[0],q[1],MOUNT))||(q[0]>-75&&q[0]<90&&q[1]>-305&&q[1]<-230&&!inPoly(q[0],q[1],MOUNT))||(q[0]<-40&&q[1]>-330&&q[1]<-60&&!inPoly(q[0],q[1],MOUNT)&&nearEdge(q[0],q[1],MOUNT)[0]<14))){bi++;continue}
     let hmin=1e9,hmax=-1e9,hs=0,cx=0,cn=0;pts.forEach(q=>{const y=H(q[0],q[1]),yt=TY(q[0],q[1]);hmin=Math.min(hmin,y,yt);hmax=Math.max(hmax,y);hs+=y;cx+=q[0]/nv;cn+=q[1]/nv});
     const y0=hmin-0.8,OLDB=(fl&1)===1;let y1=Math.max(hs/nv+h,hmax+Math.min(h,3));if(y1>CAPY)y1=Math.min(y1,Math.max(CAPY,hs/nv+Math.min(h,6)));{const K=chunk(cx,cn,OLDB);wp=K.p;wu=K.u;wc=K.c}c.copy(base).multiplyScalar(0.86+rr()*0.2);c.r*=1+(rr()-0.5)*0.06;c.b*=1+(rr()-0.5)*0.08;if(OLDB){c.r*=0.93;c.g*=0.9;c.b*=0.82}
@@ -137,7 +138,8 @@ await __Y(56);(function(){const F={"trees":[[-32.1,-312.5],[-23.1,-310.5],[-14.4
   // topic 5: each tree gets a species and its own shape from the tree library (TREES5, core/02). 0 = city tree, 1 = cypress, 2 = forest, 3 = orchard.
   // 💡 until OSM species data arrives: forests = mostly Jerusalem pine, orchards = olives, city trees = a mix.
   const KIND=t=>t[2]===1?"cypress":t[2]===3?"olive":t[2]===2?(r()<0.75?"pine":"carob"):(q=>q<0.4?"shade":q<0.65?"olive":q<0.85?"pine":"palm")(r());
-  PESC.trees=T;const BY={};T.forEach(t=>{const k=KIND(t),s=t[2]===3?0.7+r()*0.35:0.75+r()*0.5;(BY[k]||(BY[k]=[])).push([t[0],TY(t[0],t[1]),-t[1],s,r()*6.28])});
+  /* 145.4: העצים של רובע התחנה (STQ) יורדים רק כאן, אחרי שכל עץ קיבל מין, גודל וסיבוב. כך סדר המספרים האקראיים נשאר כמו קודם, ושאר העצים בעיר לא מתחלפים */
+  PESC.trees=T.filter(t=>!STQ.clear(t[0],t[1]));const BY={};T.forEach(t=>{const k=KIND(t),s=t[2]===3?0.7+r()*0.35:0.75+r()*0.5,ro=r()*6.28;if(STQ.clear(t[0],t[1]))return;(BY[k]||(BY[k]=[])).push([t[0],TY(t[0],t[1]),-t[1],s,ro])});
   Object.keys(BY).forEach(k=>TREES5.plant(WG,k,BY[k],{n:TREES5.NAMES[k],r:"OpenStreetMap (natural=tree, landuse=forest/orchard)",t:"עץ במקום שלו לפי OpenStreetMap. 💡 המין משוער לפי סוג השטח (יער, מטע, גינה) עד שיגיעו נתוני המינים."}));
   // 126.9: במקום שורות הקברים (שמואל: אין קברים, כי תחיית המתים), השטח של בתי הקברות של היום הוא מטע זיתים על טרסות אבן.
   // 📜 הר הזיתים; 💡 הטרסות (קיר אבן נמוך בכל 3.5 מ׳ של גובה) והמטע הם הצעה. העצים לא עומדים על קו הראייה של הפרה (מידות ב, ד)
@@ -394,7 +396,7 @@ function clip(P,U,M,own,outP,outU,t,R){
         me.userData={n:"בית קברות",inst:h=>{const fi=h.faceIndex||0,e=INF.find(e=>fi>=e[0]&&fi<e[1]);return e?e[2]:me.userData}};g.add(me);PICK.push(me)}}
     // large car parks only (capacity shown only where the data gives it)
     const sprite=(txt,bg,fg,w)=>{const fsz=txt.length>1?84:170;const cv=document.createElement("canvas");cv.width=256;cv.height=256;const c=cv.getContext("2d");c.fillStyle=bg;c.beginPath();c.roundRect?c.roundRect(8,8,240,240,30):c.rect(8,8,240,240);c.fill();c.fillStyle=fg;c.font="bold "+fsz+"px Arial";c.textAlign="center";c.textBaseline="middle";c.direction="rtl";c.fillText(txt,128,136);const t=new THREE.CanvasTexture(cv);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,toneMapped:false,depthTest:true}));s.scale.set(w,w,1);return s};
-    {const g=mkG("pk");OSM4.pk.forEach(([x,n,nm,cap,ty])=>{x/=10;n/=10;const bt=bldTop(x,n),y=Math.max(TY(x,n),bt>-1e3?bt:-1e9),s=sprite("P","#1f56b8","#ffffff",3.2);s.position.set(x,y+7,-n);
+    {const g=mkG("pk");OSM4.pk.forEach(([x,n,nm,cap,ty])=>{x/=10;n/=10;if(STQ.clear(x,n))return;/* 145.4: החניונים הפתוחים של רובע התחנה ירדו (החניה מתחת לאדמה) */const bt=bldTop(x,n),y=Math.max(TY(x,n),bt>-1e3?bt:-1e9),s=sprite("P","#1f56b8","#ffffff",3.2);s.position.set(x,y+7,-n);
         s.userData={n:nm?"חניון "+nm.replace(/^חניון\s*/,""):"חניון",r:"OpenStreetMap (amenity=parking)",t:"📜 חניון גדול"+(ty==="underground"?" תת-קרקעי":ty==="multi-storey"?" רב-קומות":"")+". "+(cap?"מספר מקומות: "+cap+".":"מספר המקומות לא מסומן בנתונים.")};g.add(s);PICK.push(s);
         const p=new THREE.Mesh(new THREE.CylinderGeometry(0.06,0.06,5.4,5),new THREE.MeshStandardMaterial({color:0x4a4f55}));p.position.set(x,y+2.7,-n);g.add(p)})}
     // planned fast railway (TAMA 108): two stations and a straight schematic line, NOT the real tunnel route
@@ -454,7 +456,7 @@ setTimeout(()=>{fetch(SMALL?"bld_outer_s.bin":"bld_outer.bin").then(r=>r.ok?r.ar
   const Q=[0,1,2,3].map(()=>({p:[],u:[],c:[]}));let o=0;const rnd=k=>{const s=Math.sin(k*12.9898)*43758.5453;return s-Math.floor(s)};let bi=0;
   while(o+2<=ab.byteLength){const fl=v.getUint8(o),nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}bi++;
     let cx=0,cn=0,lo=1e9,hi=-1e9;P.forEach(q=>{cx+=q[0];cn+=q[1];const h=H(q[0],q[1]);lo=Math.min(lo,h);hi=Math.max(hi,h)});cx/=nv;cn/=nv;
-    if(bldTop(cx,cn)>-1e3)continue;
+    if(bldTop(cx,cn)>-1e3||STQ.clear(cx,cn))continue;
     const G=Q[Math.abs(cx)>Math.abs(cn)?(cx>0?0:1):(cn>0?2:3)],y0=lo-1.5,y1=Math.max(hi+2.5,(lo+hi)/2+fl*3.2),r=0.84+0.1*rnd(bi),c=[r,r*(0.97+0.03*rnd(bi+7)),r*(0.9+0.06*rnd(bi+3))];
     for(let i=0;i<nv;i++){const a=P[i],b=P[(i+1)%nv],L=Math.hypot(b[0]-a[0],b[1]-a[1])/16,vt=(y1-y0)/12.8;
       G.p.push(a[0],y0,-a[1],b[0],y0,-b[1],b[0],y1,-b[1],a[0],y0,-a[1],b[0],y1,-b[1],a[0],y1,-a[1]);G.u.push(0,0,L,0,L,vt,0,0,L,vt,0,vt);for(let k=0;k<6;k++)G.c.push(c[0],c[1],c[2])}
@@ -474,7 +476,7 @@ setTimeout(()=>{if(typeof TREES5==="undefined")return;fetch("trees_outer.bin").t
   const occ=new Set(),m4=new THREE.Matrix4(),p=new THREE.Vector3();WG.children.forEach(o=>{if(!o.isInstancedMesh||o.material!==TREES5.mat)return;for(let i=0;i<o.count;i++){o.getMatrixAt(i,m4);p.setFromMatrixPosition(m4);occ.add(Math.floor(p.x/5)+","+Math.floor(-p.z/5))}});
   const BY={};KS.forEach(k=>BY[k]=[]);const rnd=k=>{const s=Math.sin(k*12.9898+3.1)*43758.5453;return s-Math.floor(s)};let n0=0;
   for(let o=0,i=0;o+5<=ab.byteLength;o+=5,i++){if(SMALL&&i%3)continue;const x=v.getInt16(o,true)/2,n=v.getInt16(o+2,true)/2,k=KS[v.getUint8(o+4)]||"pine";
-    if(occ.has(Math.floor(x/5)+","+Math.floor(n/5))||bldTop(x,n)>-1e3)continue;BY[k].push([x,H(x,n),-n,0.75+rnd(i)*0.5,rnd(i+11)*6.28]);n0++}
+    if(occ.has(Math.floor(x/5)+","+Math.floor(n/5))||bldTop(x,n)>-1e3||STQ.clear(x,n))continue;BY[k].push([x,H(x,n),-n,0.75+rnd(i)*0.5,rnd(i+11)*6.28]);n0++}
   /* צורה רחוקה: צמרת בלבד (תמנון מעוגל), 8 משולשים. מעבר ל־1.4 ק״מ לא מציירים, כי שם ממילא אובך */
   const S={pine:[9.6,3.2,1.7,0x46592f,8],olive:[3.8,3.2,1.8,0x7d8a62,2],cypress:[6.8,1.0,6.4,0x2e3d26,0.6],carob:[4.2,3.1,2.2,0x3f5b2d,2],shade:[6,3.1,2.7,0x55713a,3.3]};
   const far=k=>{const [cy,r,ry,hex,tr]=S[k],g=new THREE.OctahedronGeometry(1,0),P=g.attributes.position,N=g.attributes.normal,col=[],c=new THREE.Color(hex);
@@ -523,6 +525,7 @@ setTimeout(()=>{fetch("roads_outer.bin").then(r=>r.ok?r.arrayBuffer():null).then
   const quad=(t,a0,a1,b0,b1,col)=>{/* a0,a1 = שני צדי החתך הראשון, b0,b1 = של החתך הבא */[a0,b0,b1,a0,b1,a1].forEach(q=>{t.p.push(q[0],q[1],-q[2]);t.c.push(col.r,col.g,col.b)})};
   let o=0;while(o+2<=ab.byteLength){let c=v.getUint8(o);const nv=v.getUint8(o+1);o+=2;const P=[];for(let i=0;i<nv;i++){P.push([v.getInt16(o,true)/2,v.getInt16(o+2,true)/2]);o+=4}
     if(SMALL&&c>3)continue;
+    if(c>=5&&c!==254){let sx=0,sn=0;P.forEach(q=>{sx+=q[0];sn+=q[1]});if(STQ.clear(sx/nv,sn/nv))continue}/* 145.0: השבילים והחניונים של היום ברובע התחנה מתפנים */
     if(c===255){/* 143.5: כיכר מרוצפת (מצולע). משולשים גדולים מחולקים עד צלע של 12 מ׳, כדי שהריצוף יישב על הקרקע */const tr=THREE.ShapeUtils.triangulateShape(P.map(q=>new THREE.Vector2(q[0],q[1])),[]);
       const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<6&&Math.max(l(a,b),l(b,d),l(d,a))>12){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
         const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,t=tile((a[0]+b[0]+d[0])/3,(a[1]+b[1]+d[1])/3);(cw?[a,d,b]:[a,b,d]).forEach(q=>{t.p.push(q[0],mY(q[0],q[1])+0.1,-q[1]);t.c.push(cM.r,cM.g,cM.b)})};
