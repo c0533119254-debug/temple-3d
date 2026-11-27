@@ -4,7 +4,7 @@
    ובניין התחנה ההיסטורי (1892) נבנה מחדש לפי טביעת הרגל שלו במפה הפתוחה, עם גגות רעפים אדומים.
    הכבישים (רחוב רמז והכיכר, דרך חברון, דרך בית לחם) והרכבת הקלה נשארים כמו שהם. 💡 = משוער */
 __AFTER(()=>{try{
-  const Y=(x,n)=>{const y=surfY(x,n);return isNaN(y)?H(x,n):y};
+  const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)}/* 145.2: לא מתחת לשכבת צילום הלוויין (0.25 מ׳ מתחת ל־H) */;
   const LRT=[[-1010.7,-1442.6],[-1015.5,-1432.9],[-1025.4,-1408.3],[-1034.1,-1383.3],[-1041.5,-1357.8],[-1081.3,-1207.2],[-1084,-1193],[-1085.5,-1178.7],[-1085.7,-1164.3],[-1084.8,-1149.9],[-1082.6,-1135.7],[-1076.5,-1105]];
   const TEAL=[[-1129,-1169.6],[-1119.3,-1152.7],[-1078.1,-1110.6],[-1071.6,-1089.2]];
   const NB=[[-1044,-1135.5],[-1027,-1134.5],[-1025.5,-1187],[-1042.3,-1188]],SB=[[-1042,-1191.5],[-1010.5,-1195.5],[-1008,-1251.5],[-1039.5,-1253]];
@@ -20,7 +20,7 @@ __AFTER(()=>{try{
     if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>5){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
     const cx=(a[0]+b[0]+d[0])/3,cn=(a[1]+b[1]+d[1])/3;if(onRoad(cx,cn)||inB(cx,cn)||Math.hypot(cx-FOUNT.x,cn-FOUNT.n)<FOUNT.r)return;
     const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,c=((Math.floor(cx/6)+Math.floor(cn/6))&1)?cA:cB;
-    (cw?[a,d,b]:[a,b,d]).forEach(q=>{pos.push(q[0],Y(q[0],q[1])+0.09,-q[1]);col.push(c.r,c.g,c.b)})};
+    (cw?[a,d,b]:[a,b,d]).forEach(q=>{pos.push(q[0],Y(q[0],q[1])+0.22,-q[1]);col.push(c.r,c.g,c.b)})};
   tr.forEach(i=>put(STQ.P0[i[0]],STQ.P0[i[1]],STQ.P0[i[2]],0));
   {const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
     const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.85,envMapIntensity:0.2,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4}));
@@ -64,7 +64,7 @@ __AFTER(()=>{try{
    💡 הבניין מעל הכניסה הראשית עוד לא אושר (כך נאמר במפגש). הוא בנוי כאן כהצעה, 5 קומות כמו רוב הבניינים בתוכנית.
    💡 המקום המדויק של כל כניסה ופתח, והגודל שלהם, בקירוב */
 __AFTER(()=>{try{
-  const Y=(x,n)=>{const y=surfY(x,n);return isNaN(y)?H(x,n):y},ylo=(x0,x1,n0,n1)=>Math.min(Y(x0,n0),Y(x1,n0),Y(x0,n1),Y(x1,n1),Y((x0+x1)/2,(n0+n1)/2));
+  const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)}/* 145.2: לא מתחת לשכבת צילום הלוויין (0.25 מ׳ מתחת ל־H) */,ylo=(x0,x1,n0,n1)=>Math.min(Y(x0,n0),Y(x1,n0),Y(x0,n1),Y(x1,n1),Y((x0+x1)/2,(n0+n1)/2));
   const R="📜 מפגש התושבים על תחנת חאן; תוכנית רובע התחנה הראשונה, עיריית ירושלים";
   const KHAN="📜 תחנת חאן של הקו המהיר מתל אביב (המשך הקו לירושלים, מתוכנן). התחנה בעומק 42 מ׳ מתחת לאדמה: שני אולמות קמורים ובהם ארבע מסילות. יש לה שלוש כניסות: הראשית ליד מבנה התחנה ההיסטורי, אחת בגן הפעמון ואחת מדרך חברון.";
   const GL=new THREE.MeshStandardMaterial({color:0xa9c3cc,roughness:0.08,metalness:0.35,transparent:true,opacity:0.5,envMapIntensity:1,depthWrite:false}),
@@ -74,7 +74,11 @@ __AFTER(()=>{try{
   const box=(x0,x1,n0,n1,y0,h,m,inf)=>{const o=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,h,n1-n0),m);o.position.set((x0+x1)/2,y0+h/2,-(n0+n1)/2);return add(o,inf)};
   const flat=(x0,x1,n0,n1,y,m,inf)=>{const o=new THREE.Mesh(new THREE.PlaneGeometry(x1-x0,n1-n0),m);o.rotation.x=-Math.PI/2;o.position.set((x0+x1)/2,y,-(n0+n1)/2);return add(o,inf)};
   // a glass pavilion: thin white roof slab with overhang, glass walls, white corner posts, and the dark opening of the stairs and escalators inside
-  const pav=(x0,x1,n0,n1,h,inf)=>{const y=ylo(x0,x1,n0,n1)-0.3;box(x0,x1,n0,n1,y,h,GL,inf);box(x0-1.2,x1+1.2,n0-1.2,n1+1.2,y+h,0.6,FR,inf);
+  /* 145.2: לפי ההדמיות יש שני סוגים של ביתני כניסה: ביתן זכוכית עגול ונמוך, וביתן עם גג זהוב שטוח ועמודים דקים. 💡 איזה ביתן שייך לאיזו כניסה משוער */
+  const GOLD=new THREE.MeshStandardMaterial({color:0xd8a93e,roughness:0.4,metalness:0.3,emissive:0x2a1c00});
+  const round=(x,n,r,h,inf)=>{const y=Y(x,n)-0.3,c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,32,1,true),GL);c.position.set(x,y+h/2,-n);add(c,inf);const t=new THREE.Mesh(new THREE.CylinderGeometry(r+1,r+1,0.5,32),FR);t.position.set(x,y+h+0.25,-n);add(t,inf);
+    const d=new THREE.Mesh(new THREE.CircleGeometry(r*0.55,24),DK);d.rotation.x=-Math.PI/2;d.position.set(x,Y(x,n)+0.12,-n);add(d,inf);cb(x-r,x+r,n-r,n+r,y+h+0.5);return y+h+0.5};
+  const pav=(x0,x1,n0,n1,h,inf,roofM)=>{const y=ylo(x0,x1,n0,n1)-0.3;box(x0,x1,n0,n1,y,h,GL,inf);box(x0-1.2,x1+1.2,n0-1.2,n1+1.2,y+h,0.6,roofM||FR,inf);
     [[x0,n0],[x1,n0],[x1,n1],[x0,n1]].forEach(([x,n])=>box(x-0.25,x+0.25,n-0.25,n+0.25,y,h,FR,inf));
     const mx=(x0+x1)/2,mn=(n0+n1)/2,dx=(x1-x0)*0.3,dn=(n1-n0)*0.3;flat(mx-dx,mx+dx,mn-dn,mn+dn,Y(mx,mn)+0.12,DK,inf);cb(x0,x1,n0,n1,y+h+0.6);return y+h+0.6};
   // a car ramp going down: a dark lane between two low concrete walls, with a sign frame over the mouth
@@ -83,10 +87,10 @@ __AFTER(()=>{try{
     else{box(x0,x1,n0-0.3,n0,y-0.2,1.3,FR,inf);box(x0,x1,n1,n1+0.3,y-0.2,1.3,FR,inf);box(x1,x1+0.4,n0-0.3,n1+0.3,y-0.2,1.3,FR,inf)}
     let xa=x0-0.3,xb=x1+0.3,na=n0-0.4,nb=n1+0.3;cbAdd(CB.b,{p:[[xa,na],[xb,na],[xb,nb],[xa,nb]],y1:y+1.1,xa,xb,na,nb},xa,xb,na,nb)};
   const IM={n:"תחנת חאן: הכניסה הראשית",r:R,t:KHAN+" 📜 הכניסה הראשית היא מבנה זכוכית ליד מבנה התחנה ההיסטורי, ובה מעליות ומדרגות נעות אל אולמות התחנה. 💡 הצורה והגודל לפי ההדמיות, בקירוב."};
-  const IB={n:"תחנת חאן: כניסת גן הפעמון",r:R,t:KHAN+" 📜 הכניסה הצפונית, בגן הפעמון. 💡 המקום והגודל בקירוב."};
-  const IH={n:"תחנת חאן: הכניסה מדרך חברון",r:R,t:KHAN+" 📜 הכניסה הדרומית, מדרך חברון, בשני מפלסים. 💡 המקום והגודל בקירוב."};
+  const IB={n:"תחנת חאן: כניסת גן הפעמון",r:R,t:KHAN+" 📜 הכניסה הצפונית, בגן הפעמון, בערך במקום הקיוסק של החניון של היום. 💡 ביתן זכוכית עגול ונמוך כמו בהדמיות; המקום והגודל בקירוב."};
+  const IH={n:"תחנת חאן: הכניסה מדרך חברון",r:R,t:KHAN+" 📜 הכניסה הדרומית, מדרך חברון, בשני מפלסים: מדרך חברון הגבוהה ומהכיכר הפנימית. 💡 ביתן עם גג זהוב שטוח ועמודים דקים כמו בהדמיות; המקום והגודל בקירוב."};
   const IO={n:"הבניין מעל הכניסה הראשית (הצעה)",r:"💡 הצעה. "+R,t:"💡 במפגש התושבים נאמר שהבניין מעל הכניסה הראשית לתחנת חאן עוד לא אושר. כאן הוא בנוי כהצעה: 5 קומות, כמו רוב הבניינים בתוכנית (עד 10 קומות), בקיר אבן ועם גג ירוק."};
-  const yM=pav(-1026,-998,-1278,-1260,7.5,IM);pav(-1112,-1102,-1066,-1058,4.2,IB);pav(-958,-950,-1392,-1380,4.2,IH);
+  const yM=pav(-1026,-998,-1278,-1260,7.5,IM);round(-1107,-1062,4.2,3.6,IB);pav(-958,-950,-1392,-1380,4.2,IH,GOLD);
   // the proposed building over the main entrance, south of the glass hall: stone, 5 floors, a green roof
   {const x0=-1030,x1=-994,n0=-1318,n1=-1282,y=ylo(x0,x1,n0,n1)-0.5,h=5*3.4+0.5,b=box(x0,x1,n0,n1,y,h,M.stoneL||M.wall,IO);if(M.win2&&M.win2.map){const t=M.win2.map.clone();t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(9,5);t.needsUpdate=true;b.material=new THREE.MeshStandardMaterial({map:t,roughness:0.9,envMapIntensity:0.4})}
     flat(x0+1,x1-1,n0+1,n1-1,y+h+0.06,new THREE.MeshStandardMaterial({color:0x6f8a4a,roughness:0.95}),IO);[[x0,x1,n0,n0+0.4],[x0,x1,n1-0.4,n1],[x0,x0+0.4,n0,n1],[x1-0.4,x1,n0,n1]].forEach(([a,b,c,d])=>box(a,b,c,d,y+h,0.9,FR,IO));cb(x0,x1,n0,n1,y+h+0.9)}
@@ -96,3 +100,36 @@ __AFTER(()=>{try{
   {const q=G2S(-1012,-1269);label("תחנת חאן",q[0],yM+5,-q[1],null,IM)}
   window.__STQ1451={main:yM};
 }catch(e){console.warn("khan station",e)}});
+/* 145.2: פרטים לפי התוכנית: 📜 מבנה התחנה עומד על מדרגה גבוהה, ומאחוריו (ממערב) סככת הרציף הישנה; 📜 ברחוב רמז נתיב לאוטובוסים (נת״צ);
+   📜 תחנות אוטובוס בדרך חברון (ליד הכניסה הדרומית לתחנת חאן) ובדרך בית לחם (ליד הרכבת הקלה). 💡 המקום המדויק של התחנות והגודל של הסככה בקירוב.
+   הקו הכחול, הקו התכלת, תחנת "החאן" שלהם ותחנת הרכבל נבדקו מול מפת העירייה והמפה הפתוחה: הם כבר במקום, ולא השתנו */
+__AFTER(()=>{try{
+  const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)}/* 145.2: לא מתחת לשכבת צילום הלוויין (0.25 מ׳ מתחת ל־H) */,R="📜 תוכנית רובע התחנה הראשונה, עיריית ירושלים";
+  const INF_S={n:"התחנה הראשונה",r:R,t:"📜 לפי ההדמיות של התוכנית, מבנה התחנה מ־1892 עומד על מדרגה גבוהה במרכז הרחבה, ומאחוריו סככת הרציף הישנה. 💡 הגובה והגודל בקירוב."};
+  const SM=M.stoneL||M.wall,MET=new THREE.MeshStandardMaterial({color:0x4b5650,roughness:0.6,metalness:0.4,side:THREE.DoubleSide});
+  const put=(o,inf)=>{o.userData=inf;o.castShadow=o.receiveShadow=true;WG.add(o);PICK.push(o);return o};
+  // the high step (plinth) around the station: the footprint pushed out 2.5 m, 0.7 m over the lowest ground
+  const prism=(C,y0,y1,m,inf)=>{const P=[];for(let i=0;i<C.length;i++){const a=C[i],b=C[(i+1)%C.length];[[a,y0],[b,y0],[b,y1],[a,y0],[b,y1],[a,y1]].forEach(([q,y])=>P.push(q[0],y,-q[1]))}
+    THREE.ShapeUtils.triangulateShape(C.map(q=>new THREE.Vector2(q[0],q[1])),[]).forEach(t=>{const a=C[t[0]],b=C[t[1]],d=C[t[2]],cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0;(cw?[a,d,b]:[a,b,d]).forEach(q=>P.push(q[0],y1,-q[1]))});
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();const o=new THREE.Mesh(g,m);o.material.side=THREE.DoubleSide;return put(o,inf)};
+  const out=(C,k)=>{let cx=0,cn=0;C.forEach(q=>{cx+=q[0]/C.length;cn+=q[1]/C.length});return C.map(q=>{const dx=q[0]-cx,dn=q[1]-cn,L=Math.hypot(dx,dn)||1;return[q[0]+dx/L*k,q[1]+dn/L*k]})};
+  const PL=out([[-1044,-1135.5],[-1027,-1134.5],[-1025.5,-1187],[-1010.5,-1195.5],[-1008,-1251.5],[-1039.5,-1253],[-1042.3,-1188]],2.5);
+  {let lo=1e9,hi=-1e9;PL.forEach(q=>{const y=Y(q[0],q[1]);lo=Math.min(lo,y);hi=Math.max(hi,y)});prism(PL,lo-0.4,Math.max(hi,lo+0.7)-0.55,new THREE.MeshStandardMaterial({color:0xcdb994,roughness:0.9}),INF_S)}
+  // the old platform shed, west of the north block: thin posts and a long sloping metal roof
+  {const x0=-1053,x1=-1044.5,n0=-1186,n1=-1137,y=Y(-1048,-1160),h=4.6,posts=[];for(let n=n0;n<=n1+0.1;n+=7)posts.push([x0+0.6,n]);
+    posts.forEach(([x,n])=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(0.15,0.15,h,6),MET);c.position.set(x,y+h/2,-n);put(c,INF_S)});
+    const P=[];[[x0,n0,h],[x1,n0,h+0.9],[x1,n1,h+0.9],[x0,n0,h],[x1,n1,h+0.9],[x0,n1,h]].forEach(([x,n,hh])=>P.push(x,y+hh,-n));const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();put(new THREE.Mesh(g,MET),INF_S)}
+  // the bus lane on Remez St: the south lane, painted, from Kikar Remez to Hebron Rd
+  {const C=[[-1000,-1191.2],[-979,-1192.3],[-940,-1191.4],[-915,-1191]],P=[],m=new THREE.MeshStandardMaterial({color:0x8a3b30,roughness:0.9,polygonOffset:true,polygonOffsetFactor:-4,polygonOffsetUnits:-12});
+    for(let i=0;i<C.length-1;i++){const a=C[i],b=C[i+1],k=Math.max(1,Math.ceil(Math.hypot(b[0]-a[0],b[1]-a[1])/4));for(let j=0;j<k;j++){const p=[a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k],q=[a[0]+(b[0]-a[0])*(j+1)/k,a[1]+(b[1]-a[1])*(j+1)/k];
+      const v=[[p[0],p[1]-0.6],[q[0],q[1]-0.6],[q[0],q[1]-3.6],[p[0],p[1]-3.6]].map(z=>[z[0],Y(z[0],z[1])+0.05,-z[1]]);[v[0],v[2],v[1],v[0],v[3],v[2]].forEach(z=>P.push(z[0],z[1],z[2]))}}
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();const o=new THREE.Mesh(g,m);o.userData={n:"נתיב תחבורה ציבורית ברחוב רמז",r:R,t:"📜 לפי התוכנית, ברחוב רמז יהיו מדרכות רחבות, פחות מכוניות ונתיב לאוטובוסים (נת״צ). 💡 הצבע והצד של הנתיב משוערים."};o.receiveShadow=true;WG.add(o);PICK.push(o)}
+  // bus shelters: glass back wall, a flat roof on two posts, along the road
+  const SH={n:"תחנת אוטובוס",r:R,t:"📜 לפי התוכנית יש תחנות אוטובוס בדרך חברון ובדרך בית לחם, ליד הרכבת הקלה, ליד הרכבל וליד הכניסה מדרך חברון לתחנת חאן. 💡 המקום המדויק בקירוב."};
+  const GLs=new THREE.MeshStandardMaterial({color:0xb8cdd4,roughness:0.1,metalness:0.3,transparent:true,opacity:0.45,depthWrite:false}),ROOF=new THREE.MeshStandardMaterial({color:0x3e4247,roughness:0.5,metalness:0.5});
+  const shelter=(x,n,ang)=>{const g=new THREE.Group(),y=Y(x,n);g.position.set(x,y,-n);g.rotation.y=ang;const add=(geo,m,px,py,pz)=>{const o=new THREE.Mesh(geo,m);o.position.set(px,py,pz);o.userData=SH;g.add(o);PICK.push(o)};
+    add(new THREE.BoxGeometry(6,2.3,0.06),GLs,0,1.25,-0.8);add(new THREE.BoxGeometry(7,0.15,2),ROOF,0,2.65,0);[-3,3].forEach(px=>add(new THREE.BoxGeometry(0.1,2.6,0.1),ROOF,px,1.3,-0.8));add(new THREE.BoxGeometry(4,0.45,0.4),ROOF,0,0.45,-0.5);WG.add(g)};
+  const ang=(a,b)=>Math.atan2(b[1]-a[1],b[0]-a[0]);/* הכיוון של הכביש; הקיר האחורי בצד הרחוק מהכביש */
+  shelter(-948.5,-1368,ang([-938,-1353],[-953,-1546])+Math.PI);shelter(-1087,-1258,ang([-1101,-1203],[-1088,-1301]));
+  window.__STQ1452=1;
+}catch(e){console.warn("station quarter 145.2",e)}});
