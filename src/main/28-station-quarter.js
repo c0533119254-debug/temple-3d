@@ -184,3 +184,35 @@ __AFTER(()=>{try{
     const m=TREES5.plant(WG,"shade",T,{n:"עצים ברחובות הרובע",r:RM,t:"📜 לפי התוכנית: שדרות עצים, ערוגות ודשא, ומעל החניונים יש מספיק אדמה לעצים גבוהים. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-trees2"}
   {const q=G2S(-995,-1470);label("רובע התחנה",q[0],Y(-995,-1470)+26,-q[1],null,INF)}
 }catch(e){console.warn("station quarter 145.3",e)}});
+/* 145.4: פארק המסילה בתוך הרובע. 📜 לפי התוכנית פארק המסילה נכנס לרובע מפינת "מיץ פטל" (דרך בית לחם) וממשיך עד החזית של התחנה ההיסטורית,
+   ומהפארק יש מעבר נגיש לדרך חברון, בשיפוע ובלי מדרגות. 📜 ברובע יהיו 1,000 מ׳ שבילי אופניים. 📜 לאורך הכול שדרות עצים, דשא וספסלים.
+   התוואי לפי תוואי המסילה הישנה במפה הפתוחה; בצפון הוא מתרחק מעט מערבה מתוואי הקו הכחול, שעובר שם לידו.
+   💡 הרוחב (שביל הליכה 5 מ׳, שביל אופניים 2.5 מ׳, רצועות דשא), מקום המעבר לדרך חברון ומקום הספסלים בקירוב */
+__AFTER(()=>{try{
+  const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)},RM="📜 תוכנית רובע התחנה הראשונה, עיריית ירושלים; OpenStreetMap (תוואי המסילה הישנה)";
+  const PK=[[-1064,-1340],[-1048,-1400],[-1035,-1450],[-1030,-1476],[-1036,-1532],[-1068,-1590],[-1125,-1636]];
+  const INF={n:"פארק המסילה ברובע התחנה",r:RM,t:"📜 פארק המסילה, על תוואי מסילת הרכבת הישנה, נכנס לרובע מפינת דרך בית לחם וממשיך עד התחנה ההיסטורית. לאורכו שביל הליכה, שביל אופניים (בתוכנית 1,000 מ׳ שבילי אופניים ברובע), דשא ושדרות עצים. 💡 הרוחב ומקום הספסלים בקירוב."};
+  // points every 3 m along the line, with the side direction
+  const D=[];for(let i=0;i<PK.length-1;i++){const a=PK[i],b=PK[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),k=Math.ceil(L/3);for(let j=0;j<k;j++)D.push([a[0]+(b[0]-a[0])*j/k,a[1]+(b[1]-a[1])*j/k])}D.push(PK[PK.length-1]);
+  const S=D.map((q,i)=>{const a=D[Math.max(0,i-1)],b=D[Math.min(D.length-1,i+1)],L=Math.hypot(b[0]-a[0],b[1]-a[1])||1;return[q,[(b[1]-a[1])/L,-(b[0]-a[0])/L]]});/* צד = מזרח בערך */
+  const strip=(o0,o1,h,hex,name)=>{const P=[],c=new THREE.Color(hex);for(let i=0;i+1<S.length;i++){const v=[[S[i],o0],[S[i+1],o0],[S[i+1],o1],[S[i],o1]].map(([[q,s],o])=>{const x=q[0]+s[0]*o,n=q[1]+s[1]*o;return[x,Y(x,n)+h,-n]});
+      [v[0],v[2],v[1],v[0],v[3],v[2]].forEach(z=>P.push(z[0],z[1],z[2]))}const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:c,roughness:0.9,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-6}));m.receiveShadow=true;m.name=name;m.userData=INF;WG.add(m);PICK.push(m);return m};
+  strip(-9,9,0.25,0x7f9256,"stq-park-lawn");strip(-3.5,1.5,0.29,0xd8c8a4,"stq-park-walk");strip(2.2,4.7,0.3,0x6d7073,"stq-park-bike");
+  // benches every ~18 m on the west edge of the walk, facing the path
+  {const BM=new THREE.MeshStandardMaterial({color:0x8a6a48,roughness:0.8}),list=[];for(let i=3;i<S.length;i+=6){const[q,s]=S[i];list.push([q[0]-s[0]*4.3,q[1]-s[1]*4.3,Math.atan2(s[1],s[0])])}
+    const im=new THREE.InstancedMesh(new THREE.BoxGeometry(0.5,0.45,1.8).translate(0,0.45,0),BM,list.length),d=new THREE.Object3D();list.forEach(([x,n,a],i)=>{d.position.set(x,Y(x,n)+0.25,-n);d.rotation.set(0,a,0);d.updateMatrix();im.setMatrixAt(i,d.matrix)});
+    im.userData=INF;im.receiveShadow=true;im.name="stq-benches";WG.add(im);PICK.push(im)}
+  // two rows of trees on the lawns
+  if(typeof TREES5!=="undefined"){const T=[];for(let i=2;i<S.length;i+=4){const[q,s]=S[i];[-7,7.2].forEach(o=>{const x=q[0]+s[0]*o,n=q[1]+s[1]*o;if(bldTop(x,n)<-1e3)T.push([x,Y(x,n),-n,0.85+0.2*Math.abs(Math.sin(i)),i*0.7])})}
+    const m=TREES5.plant(WG,"shade",T,{n:"שדרת העצים בפארק המסילה",r:RM,t:"📜 לפי התוכנית: שדרות עצים לאורך הפארק. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-park-trees"}
+  // the step-free way up to Hebron Rd: a gently sloping walk with railings, from the inner street to the Hebron Rd pavement
+  {const x0=-975,x1=-956,n0=-1497,n1=-1493,P=[],R=[],m=new THREE.MeshStandardMaterial({color:0xd8c8a4,roughness:0.9,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-6});
+    const inf={n:"מעבר נגיש לדרך חברון",r:"📜 תוכנית רובע התחנה הראשונה, עיריית ירושלים",t:"📜 לפי התוכנית, מפארק המסילה ומהרובע יש מעבר נגיש לדרך חברון, בשיפוע ובלי מדרגות. 💡 המקום והרוחב בקירוב."};
+    for(let x=x0;x<x1;x+=1){const a=[[x,n0],[x+1,n0],[x+1,n1],[x,n1]].map(q=>[q[0],Y(q[0],q[1])+0.3,-q[1]]);[a[0],a[2],a[1],a[0],a[3],a[2]].forEach(z=>P.push(z[0],z[1],z[2]));
+      [n0,n1].forEach(n=>{const y0=Y(x,n)+0.3,y1=Y(x+1,n)+0.3;R.push(x,y0+1,-n,x+1,y1+1,-n)})}
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();const o=new THREE.Mesh(g,m);o.userData=inf;o.receiveShadow=true;WG.add(o);PICK.push(o);
+    const rg=new THREE.BufferGeometry();rg.setAttribute("position",new THREE.Float32BufferAttribute(R,3));WG.add(new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0x50555a})))}
+  {const q=G2S(-1040,-1470);label("פארק המסילה",q[0],Y(-1040,-1470)+10,-q[1],null,INF)}
+  window.__STQ1454={pts:S.length};
+}catch(e){console.warn("station quarter 145.4",e)}});
