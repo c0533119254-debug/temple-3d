@@ -3,6 +3,7 @@
    בשלב הזה: האתר מתפנה (הדק, החניון הקטן, המחסנים שמדרום לתחנה), במקומם רחבה מרוצפת עם שורות עצים ובריכת מזרקה עגולה,
    ובניין התחנה ההיסטורי (1892) נבנה מחדש לפי טביעת הרגל שלו במפה הפתוחה, עם גגות רעפים אדומים.
    הכבישים (רחוב רמז והכיכר, דרך חברון, דרך בית לחם) והרכבת הקלה נשארים כמו שהם. 💡 = משוער */
+__AFTER(()=>{STQ.W0=WG.children.length});/* 145.4: מכאן והלאה כל מה שנוסף ל־WG שייך לרובע (ראו למטה, הציור מרחוק) */
 __AFTER(()=>{try{
   const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)}/* 145.2: לא מתחת לשכבת צילום הלוויין (0.25 מ׳ מתחת ל־H) */;
   const LRT=[[-1010.7,-1442.6],[-1015.5,-1432.9],[-1025.4,-1408.3],[-1034.1,-1383.3],[-1041.5,-1357.8],[-1081.3,-1207.2],[-1084,-1193],[-1085.5,-1178.7],[-1085.7,-1164.3],[-1084.8,-1149.9],[-1082.6,-1135.7],[-1076.5,-1105]];
@@ -17,7 +18,7 @@ __AFTER(()=>{try{
   const pos=[],col=[],cA=new THREE.Color(0xd9ccb0),cB=new THREE.Color(0xcbbd9f);
   const tr=THREE.ShapeUtils.triangulateShape(STQ.P0.map(q=>new THREE.Vector2(q[0],q[1])),[]);
   const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];
-    if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>5){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
+    if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>8){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
     const cx=(a[0]+b[0]+d[0])/3,cn=(a[1]+b[1]+d[1])/3;if(onRoad(cx,cn)||inB(cx,cn)||Math.hypot(cx-FOUNT.x,cn-FOUNT.n)<FOUNT.r)return;
     const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,c=((Math.floor(cx/6)+Math.floor(cn/6))&1)?cA:cB;
     (cw?[a,d,b]:[a,b,d]).forEach(q=>{pos.push(q[0],Y(q[0],q[1])+0.22,-q[1]);col.push(c.r,c.g,c.b)})};
@@ -46,14 +47,14 @@ __AFTER(()=>{try{
     const tri=(a,ya,b,yb,c,yc)=>R.push(a[0],ya,-a[1],b[0],yb,-b[1],c[0],yc,-c[1]);
     tri(E[0],y1,E[3],y1,r1,yr);tri(E[0],y1,r1,yr,r0,yr);tri(E[1],y1,r0,yr,r1,yr);tri(E[1],y1,r1,yr,E[2],y1);tri(E[0],y1,r0,yr,E[1],y1);tri(E[3],y1,E[2],y1,r1,yr);
     if(!hip){const wall=[];[[E[0],E[1],r0],[E[3],E[2],r1]].forEach(([a,b,r])=>wall.push(a[0],y1,-a[1],b[0],y1,-b[1],r[0],yr,-r[1]));const gw=new THREE.BufferGeometry();gw.setAttribute("position",new THREE.Float32BufferAttribute(wall,3));gw.computeVertexNormals();const gm=new THREE.Mesh(gw,new THREE.MeshStandardMaterial({color:0xd8c39c,roughness:0.9,side:THREE.DoubleSide}));gm.userData=INF_S;WG.add(gm)}
-    const gr=new THREE.BufferGeometry();gr.setAttribute("position",new THREE.Float32BufferAttribute(R,3));gr.computeVertexNormals();const r=new THREE.Mesh(gr,RM);r.castShadow=r.receiveShadow=true;r.userData=INF_S;WG.add(r);PICK.push(r);
+    const gr=new THREE.BufferGeometry();gr.setAttribute("position",new THREE.Float32BufferAttribute(R,3));gr.computeVertexNormals();const r=new THREE.Mesh(gr,RM);r.name="stq-sroof";r.castShadow=r.receiveShadow=true;r.userData=INF_S;WG.add(r);PICK.push(r);
     let xa=1e9,xb=-1e9,na=1e9,nb=-1e9;C.forEach(q=>{xa=Math.min(xa,q[0]);xb=Math.max(xb,q[0]);na=Math.min(na,q[1]);nb=Math.max(nb,q[1])});cbAdd(CB.b,{p:C,y1:yr,xa,xb,na,nb},xa,xb,na,nb);return yr};
   const yN=block(NB,5.5,1,3.2,false),yS=block(SB,4.8,2,4.5,true);
   // trees: two rows of shade trees across the plaza, east of the deck line and along Remez St (💡 like the renderings)
   if(typeof TREES5!=="undefined"){const T=[];const ok=(x,n)=>STQ.clear(x,n)&&!onRoad(x,n)&&!inB(x,n)&&[NB,SB].every(B=>segDist(x,n,B.concat([B[0]]))[0]>4)&&Math.hypot(x-FOUNT.x,n-FOUNT.n)>FOUNT.r+4;
     for(let n=-1140;n>-1340;n-=11){[-1055,-1066].forEach(x=>{if(ok(x,n))T.push([x,Y(x,n),-n,0.85+0.15*Math.sin(n),n*1.7])})}
     for(let x=-1002;x<-976;x+=9)[-1262,-1300,-1330].forEach(n=>{if(ok(x,n))T.push([x,Y(x,n),-n,0.9,x])});
-    const m=TREES5.plant(WG,"shade",T,{n:"עצים ברחבת התחנה",r:"💡 לפי ההדמיות של תוכנית הרובע",t:"💡 שורות עצי צל ברחבה, כמו בהדמיות של התוכנית. סוג העץ והמקום המדויק משוערים."});if(m)m.name="stq-trees"}
+    STQ.T=(STQ.T||[]).concat(T)/* 145.4: כל העצים של הרובע נשתלים יחד בסוף, ברשת אחת עם ציור פשוט מרחוק */}
   {const q=G2S(-1030,-1192);label("התחנה הראשונה",q[0],yS+6,-q[1],null,INF_S);const p=G2S(-1062,-1290);label("רחבת התחנה",p[0],Y(-1062,-1290)+8,-p[1],null,INF_P)}
   window.__STQ145={plazaTris:pos.length/9,roofN:yN,roofS:yS};
 }catch(e){console.warn("station quarter",e)}});
@@ -160,7 +161,7 @@ __AFTER(()=>{try{
     // ground floor: shops behind a colonnade (the floor above sticks out 2 m over the walk), upper floors, a parapet and a green roof
     G.g.push(bx(w-4,gh+0.6,d-4,cx,y0+(gh+0.6)/2,-cn,4,gh+0.6));
     G.w.push(bx(w,top-(y0+0.6+gh),d,cx,(top+y0+0.6+gh)/2,-cn));
-    for(let px=x0+1;px<x1-0.5;px+=5)[n0+1,n1-1].forEach(pn=>G.p.push(bx(0.6,gh+0.6,0.6,px,y0+(gh+0.6)/2,-pn,1,1)));
+    for(let px=x0+1;px<x1-0.5;px+=7)[n0+1,n1-1].forEach(pn=>G.p.push(bx(0.6,gh+0.6,0.6,px,y0+(gh+0.6)/2,-pn,1,1)));
     [[w,0.5,cx,n0+0.25],[w,0.5,cx,n1-0.25]].forEach(([a,b,px,pn])=>G.p.push(bx(a,1,b,px,top+0.5,-pn,1,1)));[[x0+0.25],[x1-0.25]].forEach(([px])=>G.p.push(bx(0.5,1,d,px,top+0.5,-cn,1,1)));
     G.r.push(bx(w-1,0.2,d-1,cx,top+0.1,-cn,1,1));
     let yt=top+1;if(tw){const r=7.5,tx=tw===2?x0+r:x1-r,tn=tw===3?n0+r:n1-r,h=10*FL+gh-FL;G.w.push(cyl(r,h-(top-y0-0.6),tx,(top+y0+0.6+h)/2,-tn));G.r.push(new THREE.CylinderGeometry(r+0.4,r+0.4,0.6,28).translate(tx,y0+0.6+h+0.3,-tn));yt=y0+0.6+h+0.6}
@@ -171,7 +172,7 @@ __AFTER(()=>{try{
   // paving between the new buildings (the inner streets), as in the renderings
   {const pos=[],col=[],cA=new THREE.Color(0xd9ccb0),cB=new THREE.Color(0xcfc1a3),Zp=STQ.Z,LRT=[[-1041.5,-1357.8],[-1081.3,-1207.2]];
     const inB=(x,n)=>B.some(b=>x>b[0]&&x<b[1]&&n>b[2]&&n<b[3])||STQ.inK(x,n,0.6)||(x>STQ.GAS[0]&&x<STQ.GAS[1]&&n>STQ.GAS[2]&&n<STQ.GAS[3])||inPoly(x,n,STQ.P0);
-    const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>7){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
+    const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>11){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
       const cx=(a[0]+b[0]+d[0])/3,cn=(a[1]+b[1]+d[1])/3;if(inB(cx,cn)||segDist(cx,cn,LRT)[0]<5.5)return;const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,c=((Math.floor(cx/7)+Math.floor(cn/7))&1)?cA:cB;
       (cw?[a,d,b]:[a,b,d]).forEach(q=>{pos.push(q[0],Y(q[0],q[1])+0.22,-q[1]);col.push(c.r,c.g,c.b)})};
     THREE.ShapeUtils.triangulateShape(Zp.map(q=>new THREE.Vector2(q[0],q[1])),[]).forEach(i=>put(Zp[i[0]],Zp[i[1]],Zp[i[2]],0));
@@ -181,7 +182,7 @@ __AFTER(()=>{try{
   // trees along the inner streets
   if(typeof TREES5!=="undefined"){const T=[];const ok=(x,n)=>inPoly(x,n,STQ.Z)&&!B.some(b=>x>b[0]-3&&x<b[1]+3&&n>b[2]-3&&n<b[3]+3)&&!STQ.inK(x,n,3)&&!(x>STQ.GAS[0]-2&&x<STQ.GAS[1]+2&&n>STQ.GAS[2]-2&&n<STQ.GAS[3]+2);
     for(let n=-1270;n>-1630;n-=9)for(let x=-1045;x<-945;x+=11){const jx=x+((n/9)&1?5:0);if(ok(jx,n))T.push([jx,Y(jx,n),-n,0.8+0.25*Math.abs(Math.sin(jx*n)),jx+n])}
-    const m=TREES5.plant(WG,"shade",T,{n:"עצים ברחובות הרובע",r:RM,t:"📜 לפי התוכנית: שדרות עצים, ערוגות ודשא, ומעל החניונים יש מספיק אדמה לעצים גבוהים. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-trees2"}
+    STQ.T=(STQ.T||[]).concat(T)/* 145.4: כל העצים של הרובע נשתלים יחד בסוף, ברשת אחת עם ציור פשוט מרחוק */}
   {const q=G2S(-995,-1470);label("רובע התחנה",q[0],Y(-995,-1470)+26,-q[1],null,INF)}
 }catch(e){console.warn("station quarter 145.3",e)}});
 /* 145.4: פארק המסילה בתוך הרובע. 📜 לפי התוכנית פארק המסילה נכנס לרובע מפינת "מיץ פטל" (דרך בית לחם) וממשיך עד החזית של התחנה ההיסטורית,
@@ -205,7 +206,7 @@ __AFTER(()=>{try{
     im.userData=INF;im.receiveShadow=true;im.name="stq-benches";WG.add(im);PICK.push(im)}
   // two rows of trees on the lawns
   if(typeof TREES5!=="undefined"){const T=[];for(let i=2;i<S.length;i+=4){const[q,s]=S[i];[-7,7.2].forEach(o=>{const x=q[0]+s[0]*o,n=q[1]+s[1]*o;if(bldTop(x,n)<-1e3)T.push([x,Y(x,n),-n,0.85+0.2*Math.abs(Math.sin(i)),i*0.7])})}
-    const m=TREES5.plant(WG,"shade",T,{n:"שדרת העצים בפארק המסילה",r:RM,t:"📜 לפי התוכנית: שדרות עצים לאורך הפארק. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-park-trees"}
+    const m=TREES5.plant(STQ.FAR=STQ.FAR||new THREE.Group(),"shade",T.concat(STQ.T||[]),{n:"העצים של רובע התחנה",r:RM,t:"📜 לפי התוכנית: שדרות עצים ברחבה, ברחובות ולאורך פארק המסילה, ומעל החניונים יש מספיק אדמה לעצים גבוהים. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-park-trees"}
   // the step-free way up to Hebron Rd: a gently sloping walk with railings, from the inner street to the Hebron Rd pavement
   {const x0=-975,x1=-956,n0=-1497,n1=-1493,P=[],R=[],m=new THREE.MeshStandardMaterial({color:0xd8c8a4,roughness:0.9,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-6});
     const inf={n:"מעבר נגיש לדרך חברון",r:"📜 תוכנית רובע התחנה הראשונה, עיריית ירושלים",t:"📜 לפי התוכנית, מפארק המסילה ומהרובע יש מעבר נגיש לדרך חברון, בשיפוע ובלי מדרגות. 💡 המקום והרוחב בקירוב."};
@@ -214,5 +215,10 @@ __AFTER(()=>{try{
     const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(P,3));g.computeVertexNormals();const o=new THREE.Mesh(g,m);o.userData=inf;o.receiveShadow=true;WG.add(o);PICK.push(o);
     const rg=new THREE.BufferGeometry();rg.setAttribute("position",new THREE.Float32BufferAttribute(R,3));WG.add(new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0x50555a})))}
   {const q=G2S(-1040,-1470);label("פארק המסילה",q[0],Y(-1040,-1470)+10,-q[1],null,INF)}
+  /* 145.4 · מהירות: מרחוק (יותר מ־800 מ׳ מהרובע, למשל מהמקדש) רואים רק את הבניינים ואת גגות התחנה. הריצוף, העצים, הספסלים, הביתנים והפרטים הקטנים
+     מוסתרים, ומתחתם צילום הלוויין. כך הרובע לא מכביד על מבטים רחוקים */
+  {const F=STQ.FAR||new THREE.Group(),KEEP=/^(stq-bld|stq-shops|stq-roofs|stq-station|stq-sroof)$/;F.name="stq-far";const L=WG.children.slice(STQ.W0||WG.children.length);
+    L.forEach(o=>{if(o===F||KEEP.test(o.name||""))return;F.add(o)});WG.add(F);const c=G2S(-1010,-1400),cp=new THREE.Vector3(c[0],0,-c[1]);
+    setInterval(()=>{const cam=window.__GA&&window.__GA.getCam&&window.__GA.getCam();if(!cam)return;const d=Math.hypot(cam.position.x-cp.x,cam.position.z-cp.z);if(F.visible&&d>800)F.visible=false;else if(!F.visible&&d<760)F.visible=true},400)}
   window.__STQ1454={pts:S.length};
 }catch(e){console.warn("station quarter 145.4",e)}});
