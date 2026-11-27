@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 145.2"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
+<script>window.__ERRS=[];addEventListener("error",function(e){__ERRS.push((e.message||"")+" @"+(e.lineno||"")+":"+(e.colno||""))});addEventListener("unhandledrejection",function(e){__ERRS.push("P: "+String(e.reason&&e.reason.message||e.reason))});setTimeout(function(){var v=document.createElement("div");v.id="verTag";v.textContent="גרסה 145.3"+(__ERRS.length?" · שגיאה: "+__ERRS.slice(0,2).join(" | "):"");v.style.cssText="position:fixed;left:6px;top:6px;z-index:99999;font:11px/1.3 Arial,sans-serif;color:#F0D58C;background:rgba(9,13,10,.75);padding:2px 7px;border-radius:8px;max-width:90vw;pointer-events:none;direction:rtl";document.body.appendChild(v);0},12000)
 /* גרסה 120: טעינת מרקם עם ניסיון חוזר אחד, כדי שרצפה לא תישאר שחורה אחרי תקלת רשת רגעית */window.LTX=function(u){var t=new THREE.TextureLoader().load(u,undefined,undefined,function(){setTimeout(function(){new THREE.ImageLoader().load(u,function(img){t.image=img;t.needsUpdate=true})},2500)});return t};
 </script>
 <title>והראנו בבניינו · הדמיית בית המקדש השלישי</title>
@@ -9172,7 +9172,11 @@ const STQ=(()=>{const Q=[[-1082,-1112],[-1025,-1130],[-1022,-1165],[-1000,-1196]
   /* 145.1: K = מקומות שצריכים להיות פנויים מבניינים ומעצים: כניסות תחנת חאן, פתחי החניון, הבניין מעל הכניסה הראשית [x0,x1,n0,n1] */
   const K=[[-1026,-998,-1278,-1260],[-1112,-1102,-1066,-1058],[-958,-950,-1392,-1380],[-988,-981,-1236,-1203],[-966,-959,-1474,-1440],[-1030,-994,-1318,-1282]];
   const inK=(x,n,m)=>{m=m||0;return K.some(r=>x>r[0]-m&&x<r[1]+m&&n>r[2]-m&&n<r[3]+m)};
-  return{Q,P0,K,inK,box,clear:(x,n)=>box(x,n)&&(inPoly(x,n,P0)||inK(x,n,2))}})();
+  /* 145.3: Z = החלק המזרחי של הרובע, בין פארק המסילה לדרך חברון, שבו נבנים הבניינים החדשים (המחסנים והחניון הגדול של היום יורדים).
+     נשארים: תחנת הדלק (GAS, לפי התוכנית פתח החניון "מדרום לתחנת הדלק"), בית JVP והשכנים שלו, והמבנים שממערב לפארק המסילה */
+  const Z=[[-990,-1262],[-938,-1268],[-938,-1310],[-945,-1360],[-955,-1450],[-962,-1545],[-970,-1630],[-1030,-1638],[-1060,-1600],[-1030,-1540],[-1022,-1476],[-1038,-1390],[-1050,-1345],[-1000,-1345]];
+  const GAS=[-1002,-952,-1432,-1392],gas=(x,n)=>x>GAS[0]&&x<GAS[1]&&n>GAS[2]&&n<GAS[3];
+  return{Q,P0,K,Z,GAS,inK,box,clear:(x,n)=>box(x,n)&&(inPoly(x,n,P0)||inK(x,n,2)||(inPoly(x,n,Z)&&!gas(x,n)))}})();
 /* 126.9: הר הזיתים — קו הראייה ממקום שריפת הפרה אל פתח ההיכל (מידות ב, ד). הקו על ציר הבית (z=-3 בעולם, n=3 במערכת ההר), ממזרח לנחל קדרון עד מעבר למקום השריפה.
    clear = הבניינים שעל הקו (רצועה של 8 מ׳ לכל צד) ומסביב למתחם השריפה (30 מ׳) יורדים */
 /* 127.5: מדרחוב ממילא, משער יפו צפון־מערבה (קו האמצע לפי צילום הלוויין; הרוחב 7 מ׳, כמו הרווח בין שתי שורות הבניינים בנתוני העירייה). zone = מתחם ממילא, שבו גובה הבניינים בנתונים (25.6 מ׳) נמדד מרצפת החניון */
@@ -12516,6 +12520,57 @@ __AFTER(()=>{try{
   shelter(-948.5,-1368,ang([-938,-1353],[-953,-1546])+Math.PI);shelter(-1087,-1258,ang([-1101,-1203],[-1088,-1301]));
   window.__STQ1452=1;
 }catch(e){console.warn("station quarter 145.2",e)}});
+/* 145.3: הבניינים החדשים של הרובע. 📜 תוכנית האב (2019): עד 10 קומות בגלל הקרבה לעיר העתיקה, רוב הבניינים 5 קומות, ובנקודות בליטות של עד 10.
+   📜 המגרשים שאושרו: מתחמי מרגלית (שלב א׳ 17 דונם ליד JVP בדרך חברון 24; שלב ב׳ 20 דונם, עד 10 קומות) ומגרש המדינה (רמ״י, 43 דונם):
+   מגורים, מלונות, משרדים, מסחר, גני ילדים, בית ספר ובית כנסת.
+   💡 אין מפה מדויקת של כל בניין. המקום והצורה לפי ההדמיות: אבן בהירה, קומת קרקע של חנויות עם קולונדה, גגות ירוקים, ושני מגדלים עגולים.
+   הבניינים לא נוגעים בתוואי הקו הכחול (לפי המפה הפתוחה), בפארק המסילה, בכניסות לתחנת חאן ובתחנת הדלק. מגרש רמי לוי ומורדוך לא נבנה, כי אין מקום מדויק שלו */
+__AFTER(()=>{try{
+  const Y=(x,n)=>{const y=surfY(x,n);return Math.max(isNaN(y)?H(x,n):y,H(x,n)-0.25)},FL=3.4;
+  const RM="📜 תוכנית רובע התחנה הראשונה, עיריית ירושלים; תוכנית האב (2019)";
+  const MRG={n:"מתחמי מרגלית (בניינים חדשים)",r:RM,t:"📜 מתחם מרגלית שלב א׳ (17 דונם, ליד JVP בדרך חברון 24): כ־220 דירות, משרדים, מסחר ובית ספר. שלב ב׳ (20 דונם, עד 10 קומות): דירות, חדרי מלון, משרדים ומסחר, עם רחוב פנימי. 💡 המקום והצורה של כל בניין לפי ההדמיות, בקירוב."};
+  const ILA={n:"מגרש המדינה (בניינים חדשים)",r:RM,t:"📜 מגרש המדינה (רמ״י, אדריכלית נעמה מליס), 43 דונם: כ־200 דירות ו־250 דירות של דיור מוגן, מסחר בקומת הרחוב, גני ילדים, בית ספר ובית כנסת. 💡 המקום והצורה של כל בניין לפי ההדמיות, בקירוב."};
+  const HOT={n:"מלון ליד התחנה (בניין חדש)",r:RM,t:"📜 בתוכנית כ־1,400 חדרי מלון ברובע. בהדמיות יש מגדל מלון של כ־10 קומות ליד התחנה והרכבת הקלה. 💡 המקום והצורה בקירוב."};
+  // [x0,x1,n0,n1,floors,info,tower] tower = a round tower of 10 floors at the block's corner (💡 like the renderings)
+  const B=[[-990,-966,-1292,-1268,5,MRG],[-990,-956,-1324,-1300,5,MRG,1],[-998,-964,-1356,-1332,5,MRG],[-1024,-990,-1388,-1364,7,HOT,2],[-981,-962,-1388,-1364,5,MRG],
+    [-986,-970,-1484,-1460,5,ILA],[-1015,-999,-1516,-1492,5,ILA],[-1019,-988,-1548,-1524,5,ILA],[-1033,-999,-1580,-1556,5,ILA],[-1050,-1016,-1612,-1588,6,ILA],[-1007,-975,-1612,-1588,5,ILA,3]];
+  const tex=(win)=>{const c=document.createElement("canvas");c.width=64;c.height=64;const x=c.getContext("2d");x.fillStyle="#e4d5b5";x.fillRect(0,0,64,64);x.fillStyle="#d3c19c";x.fillRect(0,60,64,4);
+    if(win){x.fillStyle="#5e5a52";x.fillRect(14,12,36,38);x.fillStyle="#cdbd99";x.fillRect(10,50,44,4);x.fillStyle="#7d8486";x.fillRect(12,46,40,1.5)}else{x.fillStyle="#3c3a36";x.fillRect(6,8,52,56)}
+    const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
+  const WM=new THREE.MeshStandardMaterial({map:tex(true),roughness:0.88,envMapIntensity:0.4}),GM=new THREE.MeshStandardMaterial({map:tex(false),roughness:0.85,envMapIntensity:0.3}),
+    GR=new THREE.MeshStandardMaterial({color:0x718c4c,roughness:0.95}),PR=new THREE.MeshStandardMaterial({color:0xe9dfca,roughness:0.8});
+  // a box whose side faces repeat the texture every 4 m across and every floor up
+  const bx=(w,h,d,x,y,z,sx,sy)=>{const g=new THREE.BoxGeometry(w,h,d),uv=g.attributes.uv,S=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];for(let f=0;f<6;f++)for(let k=0;k<4;k++){const i=f*4+k;uv.setXY(i,uv.getX(i)*S[f][0]/(sx||4),uv.getY(i)*S[f][1]/(sy||FL))}g.translate(x,y,z);return g};
+  const cyl=(r,h,x,y,z)=>{const g=new THREE.CylinderGeometry(r,r,h,28,1,true),uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*2*Math.PI*r/4,uv.getY(i)*h/FL);g.translate(x,y,z);return g};
+  const G={w:[],g:[],r:[],p:[]},PK=[];
+  B.forEach(([x0,x1,n0,n1,f,inf,tw],bi)=>{let lo=1e9;[[x0,n0],[x1,n0],[x1,n1],[x0,n1],[(x0+x1)/2,(n0+n1)/2]].forEach(q=>lo=Math.min(lo,Y(q[0],q[1])));const y0=lo-0.6,w=x1-x0,d=n1-n0,cx=(x0+x1)/2,cn=(n0+n1)/2,gh=4.4,top=y0+0.6+gh+(f-1)*FL;
+    // ground floor: shops behind a colonnade (the floor above sticks out 2 m over the walk), upper floors, a parapet and a green roof
+    G.g.push(bx(w-4,gh+0.6,d-4,cx,y0+(gh+0.6)/2,-cn,4,gh+0.6));
+    G.w.push(bx(w,top-(y0+0.6+gh),d,cx,(top+y0+0.6+gh)/2,-cn));
+    for(let px=x0+1;px<x1-0.5;px+=5)[n0+1,n1-1].forEach(pn=>G.p.push(bx(0.6,gh+0.6,0.6,px,y0+(gh+0.6)/2,-pn,1,1)));
+    [[w,0.5,cx,n0+0.25],[w,0.5,cx,n1-0.25]].forEach(([a,b,px,pn])=>G.p.push(bx(a,1,b,px,top+0.5,-pn,1,1)));[[x0+0.25],[x1-0.25]].forEach(([px])=>G.p.push(bx(0.5,1,d,px,top+0.5,-cn,1,1)));
+    G.r.push(bx(w-1,0.2,d-1,cx,top+0.1,-cn,1,1));
+    let yt=top+1;if(tw){const r=7.5,tx=tw===2?x0+r:x1-r,tn=tw===3?n0+r:n1-r,h=10*FL+gh-FL;G.w.push(cyl(r,h-(top-y0-0.6),tx,(top+y0+0.6+h)/2,-tn));G.r.push(new THREE.CylinderGeometry(r+0.4,r+0.4,0.6,28).translate(tx,y0+0.6+h+0.3,-tn));yt=y0+0.6+h+0.6}
+    cbAdd(CB.b,{p:[[x0,n0],[x1,n0],[x1,n1],[x0,n1]],y1:yt,xa:x0,xb:x1,na:n0,nb:n1},x0,x1,n0,n1);PK.push([bi,inf,cx,cn,yt])});
+  const INF={n:"הבניינים החדשים של רובע התחנה",r:RM,t:"📜 לפי תוכנית האב: עד 10 קומות, רוב הבניינים 5 קומות. קומת קרקע של חנויות עם קולונדה, וגגות ירוקים. 💡 המקום והצורה של כל בניין לפי ההדמיות, בקירוב."};
+  [[G.w,WM,"stq-bld"],[G.g,GM,"stq-shops"],[G.r,GR,"stq-roofs"],[G.p,PR,"stq-trim"]].forEach(([L,m,nm])=>{if(!L.length)return;const g=THREE.BufferGeometryUtils.mergeBufferGeometries(L,false);if(!g)return;const o=new THREE.Mesh(g,m);o.name=nm;o.castShadow=o.receiveShadow=true;
+    o.userData={n:INF.n,inst:h=>{const p=WG.worldToLocal(h.point.clone());let best=null,bd=1e9;const gx=p.x,gn=-p.z;PK.forEach(e=>{const dd=Math.hypot(e[2]-gx,e[3]-gn);if(dd<bd){bd=dd;best=e}});return best?best[1]:INF}};WG.add(o);PICK.push(o)});
+  // paving between the new buildings (the inner streets), as in the renderings
+  {const pos=[],col=[],cA=new THREE.Color(0xd9ccb0),cB=new THREE.Color(0xcfc1a3),Zp=STQ.Z,LRT=[[-1041.5,-1357.8],[-1081.3,-1207.2]];
+    const inB=(x,n)=>B.some(b=>x>b[0]&&x<b[1]&&n>b[2]&&n<b[3])||STQ.inK(x,n,0.6)||(x>STQ.GAS[0]&&x<STQ.GAS[1]&&n>STQ.GAS[2]&&n<STQ.GAS[3])||inPoly(x,n,STQ.P0);
+    const put=(a,b,d,k)=>{const l=(u,w)=>Math.hypot(u[0]-w[0],u[1]-w[1]),m=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];if(k<8&&Math.max(l(a,b),l(b,d),l(d,a))>7){const ab=m(a,b),bd=m(b,d),da=m(d,a);put(a,ab,da,k+1);put(ab,b,bd,k+1);put(da,bd,d,k+1);put(ab,bd,da,k+1);return}
+      const cx=(a[0]+b[0]+d[0])/3,cn=(a[1]+b[1]+d[1])/3;if(inB(cx,cn)||segDist(cx,cn,LRT)[0]<5.5)return;const cw=(b[0]-a[0])*(d[1]-a[1])-(b[1]-a[1])*(d[0]-a[0])<0,c=((Math.floor(cx/7)+Math.floor(cn/7))&1)?cA:cB;
+      (cw?[a,d,b]:[a,b,d]).forEach(q=>{pos.push(q[0],Y(q[0],q[1])+0.22,-q[1]);col.push(c.r,c.g,c.b)})};
+    THREE.ShapeUtils.triangulateShape(Zp.map(q=>new THREE.Vector2(q[0],q[1])),[]).forEach(i=>put(Zp[i[0]],Zp[i[1]],Zp[i[2]],0));
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("color",new THREE.Float32BufferAttribute(col,3));g.computeVertexNormals();
+    const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.85,envMapIntensity:0.2,polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-4}));m.receiveShadow=true;m.name="stq-streets";
+    m.userData={n:"הרחובות הפנימיים של הרובע",r:RM,t:"📜 לפי התוכנית כל הרובע להולכי רגל ולאופניים, במפלס אחד נגיש, והחניה מתחת לאדמה. 💡 הריצוף בקירוב."};WG.add(m);PICK.push(m);window.__STQ1453={blds:B.length,streetTris:pos.length/9}}
+  // trees along the inner streets
+  if(typeof TREES5!=="undefined"){const T=[];const ok=(x,n)=>inPoly(x,n,STQ.Z)&&!B.some(b=>x>b[0]-3&&x<b[1]+3&&n>b[2]-3&&n<b[3]+3)&&!STQ.inK(x,n,3)&&!(x>STQ.GAS[0]-2&&x<STQ.GAS[1]+2&&n>STQ.GAS[2]-2&&n<STQ.GAS[3]+2);
+    for(let n=-1270;n>-1630;n-=9)for(let x=-1045;x<-945;x+=11){const jx=x+((n/9)&1?5:0);if(ok(jx,n))T.push([jx,Y(jx,n),-n,0.8+0.25*Math.abs(Math.sin(jx*n)),jx+n])}
+    const m=TREES5.plant(WG,"shade",T,{n:"עצים ברחובות הרובע",r:RM,t:"📜 לפי התוכנית: שדרות עצים, ערוגות ודשא, ומעל החניונים יש מספיק אדמה לעצים גבוהים. 💡 סוג העץ והמקום בקירוב."});if(m)m.name="stq-trees2"}
+  {const q=G2S(-995,-1470);label("רובע התחנה",q[0],Y(-995,-1470)+26,-q[1],null,INF)}
+}catch(e){console.warn("station quarter 145.3",e)}});
 // ---- 133.0: one library for every animal in the model (sheep with a fat tail and wool, ram, goat, kid, bull, calf). Head toward +x, feet at y=0.
 // Legs, head and tail move in the vertex shader, so a walking flock costs nothing on the CPU. Near = full shape, far = a simple shape of the same animal.
 // 📜 the sheep of the land have a fat tail (אליה, ויקרא ג, ט). 💡 colors, wool and sizes are a proposal for the display.
